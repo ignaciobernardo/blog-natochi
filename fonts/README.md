@@ -1,10 +1,10 @@
-# Fuentes PP Mondwest
+# Fuentes
 
 Coloca aquí los archivos de la fuente PP Mondwest:
 
-- `PP-Mondwest-Regular.woff2` (recomendado)
-- `PP-Mondwest-Regular.woff` (fallback)
-- `PP-Mondwest-Regular.ttf` (fallback)
+- `PPMondwest-Regular.woff2` (recomendado)
+- `PPMondwest-Regular.woff` (alternativa)
+- `PPMondwest-Regular.ttf` (fallback)
 
-El CSS ya está configurado para usar estos archivos.
+El CSS está configurado para cargar la fuente desde esta carpeta.
 

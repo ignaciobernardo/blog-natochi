@@ -4,9 +4,9 @@
 
 @font-face {
     font-family: 'PP Mondwest';
-    src: url('fonts/PP-Mondwest-Regular.woff2') format('woff2'),
-         url('fonts/PP-Mondwest-Regular.woff') format('woff'),
-         url('fonts/PP-Mondwest-Regular.ttf') format('truetype');
+    src: url('fonts/PPMondwest-Regular.woff2') format('woff2'),
+         url('fonts/PPMondwest-Regular.woff') format('woff'),
+         url('fonts/PPMondwest-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
