@@ -430,6 +430,7 @@ html.dark-mode .stamps-toggle.active svg {
     border-radius: 4px;
     transition: opacity 0.3s ease, visibility 0.3s ease;
     z-index: 1001;
+    text-align: center;
 }
 
 html.dark-mode .stamps-tooltip {
