@@ -410,6 +410,10 @@ html.dark-mode .stamps-toggle.active svg {
     fill: #ff8800;
 }
 
+.stamps-toggle {
+    position: relative;
+}
+
 .stamps-tooltip {
     position: absolute;
     bottom: -35px;
