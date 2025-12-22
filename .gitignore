@@ -2,8 +2,8 @@
 node_modules/
 package-lock.json
 
-# Generated files
-blog/*.html
+# Generated files (commented out for GitHub Pages)
+# blog/*.html
 
 # OS files
 .DS_Store
