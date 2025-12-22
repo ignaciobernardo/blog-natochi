@@ -354,11 +354,11 @@ html.dark-mode .back-link a {
 }
 
 .theme-toggle {
-    right: 5rem;
+    right: 2rem;
 }
 
 .stamps-toggle {
-    right: 2rem;
+    right: 5rem;
 }
 
 .theme-toggle:hover,
