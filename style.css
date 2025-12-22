@@ -1,0 +1,465 @@
+/* ============================================
+   Reset & Base Styles
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+::selection {
+    background-color: #ff6600;
+    color: #fff;
+}
+
+html.dark-mode ::selection {
+    background-color: #ff8800;
+    color: #1a1a1a;
+}
+
+html.dark-mode {
+    background-color: #1a1a1a;
+}
+
+body {
+    font-family: 'PP Mondwest', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: #e5e5e5;
+    color: #000;
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+html.dark-mode body {
+    background-color: #1a1a1a;
+    color: #e5e5e5;
+}
+
+/* ============================================
+   Layout
+   ============================================ */
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    padding: 2rem;
+    position: relative;
+}
+
+.content {
+    background-color: #e5e5e5;
+    transition: background-color 0.3s ease;
+}
+
+html.dark-mode .content {
+    background-color: #1a1a1a;
+}
+
+/* ============================================
+   Typography
+   ============================================ */
+
+h1 {
+    font-size: 1.2rem;
+    font-weight: normal;
+    margin-bottom: 0.5rem;
+    color: #000;
+    transition: color 0.3s ease;
+}
+
+html.dark-mode h1 {
+    color: #e5e5e5;
+}
+
+p {
+    margin: 0.2rem 0;
+    color: #000;
+    line-height: 1.4;
+    transition: color 0.3s ease;
+}
+
+html.dark-mode p {
+    color: #e5e5e5;
+}
+
+.separator {
+    margin: 0.5rem 0;
+    color: #000;
+    line-height: 1.2;
+    transition: color 0.3s ease;
+}
+
+html.dark-mode .separator {
+    color: #e5e5e5;
+}
+
+/* ============================================
+   Blog List
+   ============================================ */
+
+.blog-list {
+    list-style: none;
+    margin: 1rem 0;
+}
+
+.blog-list li {
+    margin: 0.3rem 0;
+}
+
+.blog-list li.hidden {
+    display: none;
+}
+
+.blog-list a {
+    color: #ff6600;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+html.dark-mode .blog-list a {
+    color: #ff8800;
+}
+
+.blog-list a:hover {
+    text-decoration: none;
+    color: #ff5500;
+}
+
+html.dark-mode .blog-list a:hover {
+    color: #ffaa00;
+}
+
+/* ============================================
+   Blog Post
+   ============================================ */
+
+.blog-post {
+    margin: 1rem 0;
+}
+
+.blog-post h2 {
+    font-size: 1.2rem;
+    font-weight: normal;
+    margin-bottom: 0.5rem;
+}
+
+.blog-post .date {
+    margin-top: 1rem;
+    color: #000;
+    transition: color 0.3s ease;
+}
+
+html.dark-mode .blog-post .date {
+    color: #e5e5e5;
+}
+
+.blog-content {
+    margin: 1rem 0;
+}
+
+.blog-content p {
+    margin: 0.8rem 0;
+}
+
+.blog-content h1,
+.blog-content h2,
+.blog-content h3,
+.blog-content h4,
+.blog-content h5,
+.blog-content h6 {
+    margin: 1.2rem 0 0.8rem 0;
+    font-weight: normal;
+}
+
+/* ============================================
+   Images
+   ============================================ */
+
+.image-container {
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+.image-container img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* ============================================
+   Links
+   ============================================ */
+
+.link a {
+    color: #ff6600;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+html.dark-mode .link a {
+    color: #ff8800;
+}
+
+.link a:hover {
+    text-decoration: none;
+    color: #ff5500;
+}
+
+html.dark-mode .link a:hover {
+    color: #ffaa00;
+}
+
+.more-link {
+    margin-top: 1.5rem;
+}
+
+.more-link a {
+    color: #000;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+html.dark-mode .more-link a {
+    color: #e5e5e5;
+}
+
+/* ============================================
+   Music Section
+   ============================================ */
+
+.music-section {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    opacity: 0;
+    visibility: hidden;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease, max-height 0.3s ease, margin 0.3s ease;
+}
+
+.music-section.visible {
+    opacity: 1;
+    visibility: visible;
+    max-height: 200px;
+}
+
+.music-item {
+    margin: 0.5rem 0;
+    line-height: 1.4;
+}
+
+.music-label {
+    color: #000;
+    transition: color 0.3s ease;
+}
+
+html.dark-mode .music-label {
+    color: #e5e5e5;
+}
+
+.music-item a {
+    color: #ff6600;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+html.dark-mode .music-item a {
+    color: #ff8800;
+}
+
+.music-item a:hover {
+    text-decoration: none;
+    color: #ff5500;
+}
+
+html.dark-mode .music-item a:hover {
+    color: #ffaa00;
+}
+
+.info-link {
+    margin-top: 2rem;
+}
+
+.info-link a {
+    color: #ff6600;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+html.dark-mode .info-link a {
+    color: #ff8800;
+}
+
+.info-link a:hover {
+    text-decoration: none;
+    color: #ff5500;
+}
+
+html.dark-mode .info-link a:hover {
+    color: #ffaa00;
+}
+
+.back-link {
+    margin-top: 4rem;
+}
+
+.back-link a {
+    color: #000;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+html.dark-mode .back-link a {
+    color: #e5e5e5;
+}
+
+/* ============================================
+   Toggle Buttons
+   ============================================ */
+
+.theme-toggle,
+.stamps-toggle {
+    position: fixed;
+    top: 2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+.theme-toggle {
+    right: 2rem;
+}
+
+.stamps-toggle {
+    right: 5rem;
+}
+
+.theme-toggle:hover,
+.stamps-toggle:hover {
+    opacity: 1;
+}
+
+.theme-toggle svg,
+.stamps-toggle svg {
+    width: 20px;
+    height: 20px;
+    fill: #000;
+    transition: fill 0.3s ease;
+}
+
+html.dark-mode .theme-toggle svg,
+html.dark-mode .stamps-toggle svg {
+    fill: #e5e5e5;
+}
+
+.theme-toggle svg {
+    stroke: #000;
+    stroke-width: 2;
+    stroke-linecap: round;
+    transition: fill 0.3s ease, stroke 0.3s ease;
+}
+
+html.dark-mode .theme-toggle svg {
+    stroke: #e5e5e5;
+}
+
+.theme-toggle .sun-icon {
+    display: none;
+}
+
+html.dark-mode .theme-toggle .moon-icon {
+    display: none;
+}
+
+html.dark-mode .theme-toggle .sun-icon {
+    display: block;
+}
+
+.stamps-toggle.active svg {
+    fill: #ff6600;
+}
+
+html.dark-mode .stamps-toggle.active svg {
+    fill: #ff8800;
+}
+
+/* ============================================
+   Stamps
+   ============================================ */
+
+.stamps-footer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 10;
+    overflow: visible;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.stamps-footer.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.stamp {
+    position: fixed;
+    width: 150px;
+    height: 180px;
+    cursor: grab;
+    pointer-events: all;
+    transform: rotate(var(--rotation, 0deg));
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.stamp:active {
+    cursor: grabbing;
+    z-index: 100;
+    filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.stamp img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+}
+
+/* ============================================
+   Utilities
+   ============================================ */
+
+.hidden {
+    display: none;
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+
+@media (max-width: 768px) {
+    .stamp {
+        width: 100px;
+        height: 120px;
+    }
+}

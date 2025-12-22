@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>natochi (╬`益´)</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" href="favicon.ico">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://natochi.com/">
+    <meta property="og:title" content="natochi (╬`益´)">
+    <meta property="og:description" content="blogcito de natochi">
+    <meta property="og:image" content="https://natochi.com/og-image.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://natochi.com/">
+    <meta property="twitter:title" content="natochi (╬`益´)">
+    <meta property="twitter:description" content="blogcito de natochi">
+    <meta property="twitter:image" content="https://natochi.com/og-image.png">
+    
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <polygon points="22 17 22 19 21 19 21 20 20 20 20 21 18 21 18 22 16 22 16 23 10 23 10 22 8 22 8 21 6 21 6 20 5 20 5 19 4 19 4 17 3 17 3 15 2 15 2 9 3 9 3 7 4 7 4 5 5 5 5 4 6 4 6 3 8 3 8 2 10 2 10 1 15 1 15 2 13 2 13 3 11 3 11 4 10 4 10 6 9 6 9 8 8 8 8 12 9 12 9 14 10 14 10 16 11 16 11 17 13 17 13 18 15 18 15 19 19 19 19 18 21 18 21 17 22 17"/>
+        </svg>
+        <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+    </button>
+    <button class="stamps-toggle" id="stamps-toggle" aria-label="Toggle stamps">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <polygon points="18 5 18 11 17 11 17 12 15 12 15 13 14 13 14 15 9 15 9 12 10 12 10 11 11 11 11 10 13 10 13 9 14 9 14 7 13 7 13 6 11 6 11 7 10 7 10 8 9 8 9 9 8 9 8 8 7 8 7 7 6 7 6 6 5 6 5 5 6 5 6 4 7 4 7 3 9 3 9 2 15 2 15 3 16 3 16 4 17 4 17 5 18 5"/>
+            <polygon points="13 18 14 18 14 21 13 21 13 22 10 22 10 21 9 21 9 18 10 18 10 17 13 17 13 18"/>
+        </svg>
+    </button>
+    
+    <div class="container">
+        <div class="content">
+            <h1>natochi (╬`益´)</h1>
+            <div class="separator">-</div>
+            
+            <ul class="blog-list">
+                <li><a href="blog/1.html">1. founding fathers</a></li>
+            </ul>
+            
+            <div class="more-link">
+                <a href="#" id="load-more">v</a>
+            </div>
+            
+            <div class="music-section">
+                <div class="music-item">
+                    <span class="music-label">~</span>
+                    <a href="#" target="_blank" rel="noopener noreferrer"></a>
+                </div>
+                <div class="music-item">
+                    <span class="music-label">~</span>
+                    <a href="#" target="_blank" rel="noopener noreferrer"></a>
+                </div>
+            </div>
+            
+            <div class="info-link">
+                <a href="info.html">who am i?</a>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="stamps-footer">
+        <div class="stamp" data-stamp="1" style="--rotation: -5deg;"><img src="stamps/stamp1.png" alt="Stamp 1"></div>
+        <div class="stamp" data-stamp="2" style="--rotation: 8deg;"><img src="stamps/stamp2.png" alt="Stamp 2"></div>
+        <div class="stamp" data-stamp="3" style="--rotation: -3deg;"><img src="stamps/stamp3.png" alt="Stamp 3"></div>
+        <div class="stamp" data-stamp="4" style="--rotation: 6deg;"><img src="stamps/stamp4.png" alt="Stamp 4"></div>
+        <div class="stamp" data-stamp="5" style="--rotation: -7deg;"><img src="stamps/stamp5.png" alt="Stamp 5"></div>
+        <div class="stamp" data-stamp="6" style="--rotation: 4deg;"><img src="stamps/stamp6.png" alt="Stamp 6"></div>
+        <div class="stamp" data-stamp="7" style="--rotation: -6deg;"><img src="stamps/stamp7.png" alt="Stamp 7"></div>
+        <div class="stamp" data-stamp="8" style="--rotation: 9deg;"><img src="stamps/stamp8.png" alt="Stamp 8"></div>
+        <div class="stamp" data-stamp="9" style="--rotation: -4deg;"><img src="stamps/stamp9.png" alt="Stamp 9"></div>
+        <div class="stamp" data-stamp="10" style="--rotation: 7deg;"><img src="stamps/stamp10.png" alt="Stamp 10"></div>
+    </footer>
+    
+    <script src="script.js"></script>
+</body>
+</html>

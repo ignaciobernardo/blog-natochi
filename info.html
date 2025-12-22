@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>who am i?</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" href="favicon.ico">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://natochi.com/info.html">
+    <meta property="og:title" content="who am i?">
+    <meta property="og:description" content="Soy Nacho Bernardo. Learning about ai safety & venture capital.">
+    <meta property="og:image" content="https://natochi.com/og-image.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://natochi.com/info.html">
+    <meta property="twitter:title" content="who am i?">
+    <meta property="twitter:description" content="Soy Nacho Bernardo. learning about ai safety & venture capital.">
+    <meta property="twitter:image" content="https://natochi.com/og-image.png">
+    
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="info-page">
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <polygon points="22 17 22 19 21 19 21 20 20 20 20 21 18 21 18 22 16 22 16 23 10 23 10 22 8 22 8 21 6 21 6 20 5 20 5 19 4 19 4 17 3 17 3 15 2 15 2 9 3 9 3 7 4 7 4 5 5 5 5 4 6 4 6 3 8 3 8 2 10 2 10 1 15 1 15 2 13 2 13 3 11 3 11 4 10 4 10 6 9 6 9 8 8 8 8 12 9 12 9 14 10 14 10 16 11 16 11 17 13 17 13 18 15 18 15 19 19 19 19 18 21 18 21 17 22 17"/>
+        </svg>
+        <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+    </button>
+    
+    <div class="container">
+        <div class="content">
+            <h1>soy nacho bernardo</h1>
+            <div class="separator">-</div>
+            
+            <p>rn?</p>
+            <p>learning about ai safety,</p>
+            <p>& venture capital.</p>
+            
+            <p class="link"><a href="mailto:ernesto@indies.cl">ernesto@indies.cl</a></p>
+            
+            <div class="separator">-</div>
+            <p>~ projects.</p>
+            <p class="link"><a href="https://www.3x10.lat/">[>] 3x10</a></p>
+            <p class="link"><a href="https://indies.cl/">[>] indies.cl</a></p>
+            
+            <div class="separator">-</div>
+            <p>~ my startup.</p>
+            <p class="link"><a href="https://southcone.co/">[>]southcone.co</a></p>
+            
+            <div class="back-link">
+                <a href="index.html">../</a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

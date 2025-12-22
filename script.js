@@ -1,0 +1,315 @@
+// ============================================
+// Constants & State
+// ============================================
+
+const moreEntries = []; // Automatically updated by generate.js
+let entriesLoaded = false;
+
+// Music favorites - can be updated manually or via Spotify API in the future
+const musicFavorites = {
+    song: {
+        title: 'Love Takes Miles',
+        artist: 'Cameron Winter',
+        url: 'https://open.spotify.com/intl-es/track/2zf1izCOz2F22PF27uhxRF?si=016a191521fe45a6'
+    },
+    album: {
+        title: 'Lift Your Skinny Fists Like Antennas To Heaven',
+        artist: 'Godspeed You! Black Emperor',
+        url: 'https://godspeedyoublackemperor.bandcamp.com/album/lift-your-skinny-fists-like-antennas-to-heaven'
+    }
+};
+
+// ============================================
+// Theme Management
+// ============================================
+
+function toggleTheme() {
+    document.documentElement.classList.toggle('dark-mode');
+    const isDark = document.documentElement.classList.contains('dark-mode');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+}
+
+// ============================================
+// Stamps Visibility Management
+// ============================================
+
+function toggleStamps() {
+    const stampsFooter = document.querySelector('.stamps-footer');
+    const stampsToggle = document.getElementById('stamps-toggle');
+    const musicSection = document.querySelector('.music-section');
+    
+    if (!stampsFooter || !stampsToggle) return;
+    
+    stampsFooter.classList.toggle('visible');
+    stampsToggle.classList.toggle('active');
+    
+    // Show/hide music section when stamps are toggled
+    if (musicSection) {
+        musicSection.classList.toggle('visible');
+    }
+    
+    const isVisible = stampsFooter.classList.contains('visible');
+    localStorage.setItem('stampsVisible', isVisible ? 'true' : 'false');
+}
+
+function initStampsVisibility() {
+    const stampsFooter = document.querySelector('.stamps-footer');
+    const stampsToggle = document.getElementById('stamps-toggle');
+    const musicSection = document.querySelector('.music-section');
+    const savedVisibility = localStorage.getItem('stampsVisible');
+    
+    if (stampsFooter && stampsToggle && savedVisibility === 'true') {
+        stampsFooter.classList.add('visible');
+        stampsToggle.classList.add('active');
+        if (musicSection) {
+            musicSection.classList.add('visible');
+        }
+    }
+}
+
+// ============================================
+// Music Section
+// ============================================
+
+function initMusicSection() {
+    const songLink = document.querySelector('.music-item:first-child a');
+    const albumLink = document.querySelector('.music-item:last-child a');
+    
+    if (songLink && musicFavorites.song) {
+        songLink.href = musicFavorites.song.url;
+        songLink.textContent = `${musicFavorites.song.title} - ${musicFavorites.song.artist}`;
+    }
+    
+    if (albumLink && musicFavorites.album) {
+        albumLink.href = musicFavorites.album.url;
+        albumLink.textContent = `${musicFavorites.album.title} - ${musicFavorites.album.artist}`;
+    }
+}
+
+// ============================================
+// Blog Posts Management
+// ============================================
+
+function initLoadMorePosts() {
+    const loadMoreLink = document.getElementById('load-more');
+    const blogList = document.querySelector('.blog-list');
+    
+    if (!loadMoreLink || !blogList) return;
+    
+    let isExpanded = false;
+    
+    // Hide all posts except the first 3
+    const allPosts = blogList.querySelectorAll('li');
+    allPosts.forEach((post, index) => {
+        if (index >= 3) {
+            post.classList.add('hidden');
+        }
+    });
+    
+    // Show/hide collapsed posts when clicking "v" or "∧"
+    loadMoreLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        const hiddenPosts = blogList.querySelectorAll('li.hidden');
+        
+        if (isExpanded) {
+            // Collapse: hide posts after the first 3
+            allPosts.forEach((post, index) => {
+                if (index >= 3) {
+                    post.classList.add('hidden');
+                }
+            });
+            loadMoreLink.textContent = 'v';
+            isExpanded = false;
+        } else {
+            // Expand: show all hidden posts
+            if (hiddenPosts.length > 0) {
+                hiddenPosts.forEach(post => {
+                    post.classList.remove('hidden');
+                });
+            }
+            
+            // Load additional entries from moreEntries if available
+            if (moreEntries.length > 0 && !entriesLoaded) {
+                moreEntries.forEach(entry => {
+                    const li = document.createElement('li');
+                    const a = document.createElement('a');
+                    
+                    a.href = `blog/${entry.num}.html`;
+                    a.textContent = `${entry.num}. ${entry.title}`;
+                    
+                    li.appendChild(a);
+                    blogList.appendChild(li);
+                });
+                
+                entriesLoaded = true;
+            }
+            
+            loadMoreLink.textContent = '∧';
+            isExpanded = true;
+        }
+    });
+}
+
+// ============================================
+// Draggable Stamps
+// ============================================
+
+const STAMP_CONFIG = {
+    WIDTH: 150,
+    HEIGHT: 180,
+    OVERLAP: 30 // Overlap between stamps (not 100%) - reduced for more space
+};
+
+function calculateInitialPositions() {
+    const { WIDTH, HEIGHT, OVERLAP } = STAMP_CONFIG;
+    const totalStamps = 10;
+    
+    // Calculate total width needed with overlaps
+    const totalWidth = totalStamps * WIDTH - (totalStamps - 1) * OVERLAP;
+    
+    // Center the stamps horizontally
+    const startX = (window.innerWidth - totalWidth) / 2;
+    
+    // Position at middle of bottom edge (not completely at bottom)
+    const bottomY = window.innerHeight - HEIGHT / 2;
+    
+    // Create positions for all stamps along the bottom edge
+    const positions = [];
+    for (let i = 0; i < totalStamps; i++) {
+        positions.push({
+            x: startX + i * (WIDTH - OVERLAP),
+            y: bottomY
+        });
+    }
+    
+    return positions;
+}
+
+function createDragHandlers(stamp) {
+    let isDragging = false;
+    let currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0;
+    
+    const stampId = stamp.getAttribute('data-stamp');
+    const savedPos = loadStampPosition(stampId);
+    const edgePositions = calculateInitialPositions();
+    const index = parseInt(stampId) - 1;
+    
+    // Set initial position
+    if (savedPos) {
+        xOffset = savedPos.x;
+        yOffset = savedPos.y;
+    } else if (edgePositions[index]) {
+        xOffset = edgePositions[index].x;
+        yOffset = edgePositions[index].y;
+    } else {
+        const { WIDTH, HEIGHT } = STAMP_CONFIG;
+        xOffset = Math.random() * (window.innerWidth - WIDTH);
+        yOffset = Math.random() * (window.innerHeight - HEIGHT);
+    }
+    
+    setTranslate(xOffset, yOffset, stamp);
+    
+    function dragStart(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const rect = stamp.getBoundingClientRect();
+        const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+        
+        initialX = clientX - rect.left;
+        initialY = clientY - rect.top;
+        
+        isDragging = true;
+        stamp.style.transition = 'none';
+        stamp.style.zIndex = '100';
+    }
+    
+    function drag(e) {
+        if (!isDragging) return;
+        
+        e.preventDefault();
+        
+        const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+        
+        currentX = clientX - initialX;
+        currentY = clientY - initialY;
+        
+        xOffset = currentX;
+        yOffset = currentY;
+        
+        setTranslate(xOffset, yOffset, stamp);
+    }
+    
+    function dragEnd() {
+        if (!isDragging) return;
+        
+        isDragging = false;
+        stamp.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
+        stamp.style.zIndex = '10';
+        
+        saveStampPosition(stampId, xOffset, yOffset);
+    }
+    
+    stamp.addEventListener('mousedown', dragStart);
+    stamp.addEventListener('touchstart', dragStart);
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('touchmove', drag);
+    document.addEventListener('mouseup', dragEnd);
+    document.addEventListener('touchend', dragEnd);
+}
+
+function initDraggableStamps() {
+    const stamps = document.querySelectorAll('.stamp');
+    if (stamps.length === 0) return;
+    
+    stamps.forEach(stamp => createDragHandlers(stamp));
+}
+
+function setTranslate(xPos, yPos, el) {
+    const rotation = getComputedStyle(el).getPropertyValue('--rotation') || '0deg';
+    el.style.left = `${xPos}px`;
+    el.style.top = `${yPos}px`;
+    el.style.transform = `rotate(${rotation})`;
+}
+
+function saveStampPosition(stampId, x, y) {
+    const positions = JSON.parse(localStorage.getItem('stampPositions') || '{}');
+    positions[stampId] = { x, y };
+    localStorage.setItem('stampPositions', JSON.stringify(positions));
+}
+
+function loadStampPosition(stampId) {
+    const positions = JSON.parse(localStorage.getItem('stampPositions') || '{}');
+    return positions[stampId] || null;
+}
+
+// ============================================
+// Initialization
+// ============================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Theme toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+    
+    // Stamps toggle
+    const stampsToggle = document.getElementById('stamps-toggle');
+    if (stampsToggle) {
+        stampsToggle.addEventListener('click', toggleStamps);
+        initStampsVisibility();
+    }
+    
+    // Load more posts
+    initLoadMorePosts();
+    
+    // Initialize music section
+    initMusicSection();
+    
+    // Draggable stamps
+    initDraggableStamps();
+});
