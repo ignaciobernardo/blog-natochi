@@ -1,11 +1,10 @@
 // ============================================
-// Constants & State
+// Constants & Configuration
 // ============================================
 
 const moreEntries = []; // Automatically updated by generate.js
 let entriesLoaded = false;
 
-// Music favorites - can be updated manually or via Spotify API in the future
 const musicFavorites = {
     song: {
         title: 'Love Takes Miles',
@@ -17,6 +16,12 @@ const musicFavorites = {
         artist: 'Godspeed You! Black Emperor',
         url: 'https://godspeedyoublackemperor.bandcamp.com/album/lift-your-skinny-fists-like-antennas-to-heaven'
     }
+};
+
+const STAMP_CONFIG = {
+    WIDTH: 150,
+    HEIGHT: 180,
+    OVERLAP: 30
 };
 
 // ============================================
@@ -154,12 +159,6 @@ function initLoadMorePosts() {
 // ============================================
 // Draggable Stamps
 // ============================================
-
-const STAMP_CONFIG = {
-    WIDTH: 150,
-    HEIGHT: 180,
-    OVERLAP: 30 // Overlap between stamps (not 100%) - reduced for more space
-};
 
 function calculateInitialPositions() {
     const { WIDTH, HEIGHT, OVERLAP } = STAMP_CONFIG;
