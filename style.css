@@ -376,6 +376,7 @@ html.dark-mode .back-link a {
     height: 20px;
     fill: #000;
     transition: fill 0.3s ease;
+    display: block;
 }
 
 html.dark-mode .theme-toggle svg,
@@ -417,8 +418,8 @@ html.dark-mode .stamps-toggle.active svg {
 .stamps-tooltip {
     position: fixed;
     top: calc(2rem + 20px + 10px);
-    right: calc(4.5rem + 10px);
-    transform: translateX(50%);
+    left: calc(100% - 4.5rem - 10px);
+    transform: translateX(-50%);
     white-space: nowrap;
     opacity: 0;
     visibility: hidden;
@@ -430,7 +431,6 @@ html.dark-mode .stamps-toggle.active svg {
     border-radius: 4px;
     transition: opacity 0.3s ease, visibility 0.3s ease;
     z-index: 1001;
-    text-align: center;
 }
 
 html.dark-mode .stamps-tooltip {
