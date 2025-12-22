@@ -415,10 +415,10 @@ html.dark-mode .stamps-toggle.active svg {
 }
 
 .stamps-tooltip {
-    position: absolute;
-    bottom: -35px;
-    left: 50%;
-    transform: translateX(-50%);
+    position: fixed;
+    top: calc(2rem + 20px + 10px);
+    right: 4.5rem;
+    transform: translateX(50%);
     white-space: nowrap;
     opacity: 0;
     visibility: hidden;
