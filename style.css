@@ -358,7 +358,7 @@ html.dark-mode .back-link a {
 }
 
 .stamps-toggle {
-    right: 5rem;
+    right: 4.5rem;
 }
 
 .theme-toggle:hover,
@@ -408,10 +408,6 @@ html.dark-mode .theme-toggle .sun-icon {
 
 html.dark-mode .stamps-toggle.active svg {
     fill: #ff8800;
-}
-
-.stamps-toggle {
-    position: relative;
 }
 
 .stamps-tooltip {
