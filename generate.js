@@ -109,6 +109,13 @@ function generatePostHTML(title, content, date, postNumber) {
             <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
         </svg>
     </button>
+    <button class="stamps-toggle" id="stamps-toggle" aria-label="Toggle stamps">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <polygon points="18 5 18 11 17 11 17 12 15 12 15 13 14 13 14 15 9 15 9 12 10 12 10 11 11 11 11 10 13 10 13 9 14 9 14 7 13 7 13 6 11 6 11 7 10 7 10 8 9 8 9 9 8 9 8 8 7 8 7 7 6 7 6 6 5 6 5 5 6 5 6 4 7 4 7 3 9 3 9 2 15 2 15 3 16 3 16 4 17 4 17 5 18 5"/>
+            <polygon points="13 18 14 18 14 21 13 21 13 22 10 22 10 21 9 21 9 18 10 18 10 17 13 17 13 18"/>
+        </svg>
+        <span class="stamps-tooltip">with love from <a href="https://www.linkedin.com/in/trinidadmatta/" target="_blank" rel="noopener noreferrer">tonchi</a> !</span>
+    </button>
     <div class="container">
         <div class="content">
             <div class="blog-post">
@@ -125,6 +132,28 @@ ${content}
             </div>
         </div>
     </div>
+    
+    <footer class="stamps-footer">
+        <div class="stamp" data-stamp="1" style="--rotation: -5deg;"><img src="../stamps/stamp1.PNG" alt="Stamp 1"></div>
+        <div class="stamp" data-stamp="2" style="--rotation: 8deg;"><img src="../stamps/stamp2.PNG" alt="Stamp 2"></div>
+        <div class="stamp" data-stamp="3" style="--rotation: -3deg;"><img src="../stamps/stamp3.PNG" alt="Stamp 3"></div>
+        <div class="stamp" data-stamp="4" style="--rotation: 6deg;"><img src="../stamps/stamp4.PNG" alt="Stamp 4"></div>
+        <div class="stamp" data-stamp="5" style="--rotation: -7deg;"><img src="../stamps/stamp5.PNG" alt="Stamp 5"></div>
+        <div class="stamp" data-stamp="6" style="--rotation: 4deg;"><img src="../stamps/stamp6.PNG" alt="Stamp 6"></div>
+        <div class="stamp" data-stamp="7" style="--rotation: -6deg;"><img src="../stamps/stamp7.PNG" alt="Stamp 7"></div>
+        <div class="stamp" data-stamp="8" style="--rotation: 9deg;"><img src="../stamps/stamp8.PNG" alt="Stamp 8"></div>
+        <div class="stamp" data-stamp="9" style="--rotation: -4deg;"><img src="../stamps/stamp9.PNG" alt="Stamp 9"></div>
+        <div class="stamp" data-stamp="10" style="--rotation: 7deg;"><img src="../stamps/stamp10.PNG" alt="Stamp 10"></div>
+        <div class="stamp" data-stamp="11" style="--rotation: -2deg;"><img src="../stamps/stamp11.PNG" alt="Stamp 11"></div>
+        <div class="stamp" data-stamp="12" style="--rotation: 5deg;"><img src="../stamps/stamp12.PNG" alt="Stamp 12"></div>
+        <div class="stamp" data-stamp="13" style="--rotation: -8deg;"><img src="../stamps/stamp13.PNG" alt="Stamp 13"></div>
+        <div class="stamp" data-stamp="14" style="--rotation: 3deg;"><img src="../stamps/stamp14.PNG" alt="Stamp 14"></div>
+        <div class="stamp" data-stamp="15" style="--rotation: -6deg;"><img src="../stamps/stamp15.PNG" alt="Stamp 15"></div>
+        <div class="stamp" data-stamp="16" style="--rotation: 10deg;"><img src="../stamps/stamp16.PNG" alt="Stamp 16"></div>
+        <div class="stamp" data-stamp="17" style="--rotation: -1deg;"><img src="../stamps/stamp17.PNG" alt="Stamp 17"></div>
+        <div class="stamp" data-stamp="18" style="--rotation: 6deg;"><img src="../stamps/stamp18.PNG" alt="Stamp 18"></div>
+    </footer>
+    
     <script src="../script.js"></script>
 </body>
 </html>`;
