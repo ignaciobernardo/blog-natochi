@@ -361,6 +361,10 @@ html.dark-mode .back-link a {
     right: 4.5rem;
 }
 
+.stamps-toggle {
+    position: fixed !important;
+}
+
 .theme-toggle:hover,
 .stamps-toggle:hover {
     opacity: 1;
