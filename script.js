@@ -163,7 +163,8 @@ const STAMP_CONFIG = {
 
 function calculateInitialPositions() {
     const { WIDTH, HEIGHT, OVERLAP } = STAMP_CONFIG;
-    const totalStamps = 10;
+    const stamps = document.querySelectorAll('.stamp');
+    const totalStamps = stamps.length;
     
     // Calculate total width needed with overlaps
     const totalWidth = totalStamps * WIDTH - (totalStamps - 1) * OVERLAP;
@@ -195,17 +196,17 @@ function createDragHandlers(stamp) {
     const edgePositions = calculateInitialPositions();
     const index = parseInt(stampId) - 1;
     
-    // Set initial position
-    if (savedPos) {
-        xOffset = savedPos.x;
-        yOffset = savedPos.y;
-    } else if (edgePositions[index]) {
+    // Set initial position - always use bottom edge positions
+    if (edgePositions[index]) {
         xOffset = edgePositions[index].x;
         yOffset = edgePositions[index].y;
+        // Clear saved position to use new bottom layout
+        localStorage.removeItem(`stamp_${stampId}_pos`);
     } else {
         const { WIDTH, HEIGHT } = STAMP_CONFIG;
-        xOffset = Math.random() * (window.innerWidth - WIDTH);
-        yOffset = Math.random() * (window.innerHeight - HEIGHT);
+        // Fallback: position at bottom center if calculation fails
+        xOffset = (window.innerWidth - WIDTH) / 2;
+        yOffset = window.innerHeight - HEIGHT / 2;
     }
     
     setTranslate(xOffset, yOffset, stamp);
