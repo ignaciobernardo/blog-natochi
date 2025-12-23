@@ -48,8 +48,8 @@ function toggleStamps() {
     stampsFooter.classList.toggle('visible');
     stampsToggle.classList.toggle('active');
     
-    // Show/hide music section when stamps are toggled
-    if (musicSection) {
+    // Show/hide music section when stamps are toggled (only on index page)
+    if (musicSection && !musicSection.classList.contains('visible')) {
         musicSection.classList.toggle('visible');
     }
     
@@ -66,7 +66,8 @@ function initStampsVisibility() {
     if (stampsFooter && stampsToggle && savedVisibility === 'true') {
         stampsFooter.classList.add('visible');
         stampsToggle.classList.add('active');
-        if (musicSection) {
+        // Only toggle music section if it exists and is not already visible (index page)
+        if (musicSection && !musicSection.classList.contains('visible')) {
             musicSection.classList.add('visible');
         }
     }
