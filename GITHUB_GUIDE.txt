@@ -1,0 +1,125 @@
+Guía para Pushear a GitHub
+============================
+
+Comandos Básicos
+----------------
+
+1. Ver el estado de tus cambios
+   git status
+   Muestra qué archivos han sido modificados, agregados o eliminados.
+
+2. Agregar archivos al staging area
+   git add .
+   (Agrega todos los archivos modificados)
+   
+   git add nombre-del-archivo.html
+   (Agrega un archivo específico)
+   
+   git add archivo1.html archivo2.css
+   (Agrega múltiples archivos)
+
+3. Hacer commit (guardar los cambios)
+   git commit -m "Descripción de los cambios"
+   
+   Ejemplos de mensajes de commit:
+   - git commit -m "Add new blog post"
+   - git commit -m "Update styles and fix tooltip"
+   - git commit -m "Refactor code for better organization"
+
+4. Pushear a GitHub
+   git push origin main
+
+
+Flujo Completo (Paso a Paso)
+-----------------------------
+
+Primera vez (si ya tienes el repo configurado):
+   1. Ver qué cambió
+      git status
+   
+   2. Agregar todos los cambios
+      git add .
+   
+   3. Hacer commit
+      git commit -m "Descripción de tus cambios"
+   
+   4. Pushear
+      git push origin main
+
+Si hay cambios en GitHub que no tienes localmente:
+   1. Primero traer los cambios remotos
+      git pull origin main
+   
+   2. Si hay conflictos, resuélvelos y luego:
+      git add .
+      git commit -m "Merge remote changes"
+      git push origin main
+
+
+Comandos Útiles
+---------------
+
+Ver el historial de commits:
+   git log --oneline
+
+Ver diferencias antes de hacer commit:
+   git diff
+
+Deshacer cambios en un archivo (antes de hacer add):
+   git restore nombre-del-archivo.html
+
+Deshacer el último commit (manteniendo los cambios):
+   git reset --soft HEAD~1
+
+Ver qué branch estás usando:
+   git branch
+
+
+Solución de Problemas Comunes
+------------------------------
+
+Error: "Your branch is ahead of 'origin/main'"
+   Esto significa que tienes commits locales que no has pusheado.
+   Simplemente ejecuta:
+   git push origin main
+
+Error: "Updates were rejected because the remote contains work"
+   Primero trae los cambios remotos:
+   git pull origin main
+   Luego vuelve a intentar el push.
+
+Error: "Permission denied (publickey)"
+   Necesitas configurar tu clave SSH. Ejecuta:
+   ssh-add ~/.ssh/id_ed25519
+   (Introduce tu passphrase si la tienes)
+
+
+Atajos Rápidos
+--------------
+
+Todo en un solo comando (si estás seguro de los cambios):
+   git add . && git commit -m "Tus cambios" && git push origin main
+
+Ver estado y diferencias:
+   git status && git diff
+
+
+Buenas Prácticas
+----------------
+
+1. Haz commits frecuentes con mensajes descriptivos
+2. Revisa los cambios con git status y git diff antes de commitear
+3. Haz pull antes de push si trabajas en múltiples computadoras
+4. Usa mensajes de commit claros que expliquen qué cambió y por qué
+
+
+Estructura Típica de un Commit
+-------------------------------
+
+git add .                    # Agregar cambios
+git commit -m "Mensaje"      # Guardar cambios
+git push origin main         # Subir a GitHub
+
+
+¡Listo! Con estos comandos puedes manejar tu repositorio de GitHub fácilmente.
+
