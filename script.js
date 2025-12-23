@@ -2,12 +2,7 @@
 // Constants & Configuration
 // ============================================
 
-const moreEntries = [
-    {
-        "num": 1,
-        "title": "the idea of creation"
-    }
-]; // Automatically updated by generate.js
+const moreEntries = []; // Automatically updated by generate.js
 let entriesLoaded = false;
 
 const musicFavorites = {
