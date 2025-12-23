@@ -105,23 +105,46 @@ function initAllPostsPage() {
     const allPostsList = document.getElementById('all-posts-list');
     if (!allPostsList) return;
     
-    // Get visible posts from index.html structure
-    const visiblePosts = [];
-    const indexBlogList = document.querySelector('.blog-list');
-    if (indexBlogList) {
-        indexBlogList.querySelectorAll('li').forEach(li => {
+    // Get all posts from the current page's blog list (if on index.html)
+    const currentBlogList = document.querySelector('.blog-list');
+    const allPosts = [];
+    
+    if (currentBlogList) {
+        currentBlogList.querySelectorAll('li').forEach(li => {
             const link = li.querySelector('a');
             if (link) {
-                visiblePosts.push({
+                allPosts.push({
                     href: link.href,
-                    text: link.textContent
+                    text: link.textContent,
+                    num: parseInt(link.textContent.match(/^\d+/) || [0])[0]
                 });
             }
         });
     }
     
-    // Add all posts (visible + hidden from moreEntries)
-    visiblePosts.forEach(post => {
+    // Add entries from moreEntries
+    if (moreEntries.length > 0) {
+        moreEntries.forEach(entry => {
+            allPosts.push({
+                href: `blog/${entry.num}.html`,
+                text: `${entry.num}. ${entry.title}`,
+                num: entry.num
+            });
+        });
+    }
+    
+    // Sort by number (descending) and remove duplicates
+    const uniquePosts = {};
+    allPosts.forEach(post => {
+        if (!uniquePosts[post.num]) {
+            uniquePosts[post.num] = post;
+        }
+    });
+    
+    const sortedPosts = Object.values(uniquePosts).sort((a, b) => b.num - a.num);
+    
+    // Render all posts
+    sortedPosts.forEach(post => {
         const li = document.createElement('li');
         const a = document.createElement('a');
         a.href = post.href;
@@ -129,18 +152,6 @@ function initAllPostsPage() {
         li.appendChild(a);
         allPostsList.appendChild(li);
     });
-    
-    // Add entries from moreEntries
-    if (moreEntries.length > 0) {
-        moreEntries.forEach(entry => {
-            const li = document.createElement('li');
-            const a = document.createElement('a');
-            a.href = `blog/${entry.num}.html`;
-            a.textContent = `${entry.num}. ${entry.title}`;
-            li.appendChild(a);
-            allPostsList.appendChild(li);
-        });
-    }
 }
 
 // ============================================

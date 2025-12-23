@@ -240,6 +240,28 @@ function updateScript(hiddenPosts) {
 }
 
 /**
+ * Actualiza posts.html con todos los posts
+ */
+function updatePostsPage(allPosts) {
+    const postsPath = path.join(__dirname, 'posts.html');
+    if (!fs.existsSync(postsPath)) return;
+    
+    let postsContent = fs.readFileSync(postsPath, 'utf-8');
+    
+    const postsList = allPosts
+        .map(post => `                <li><a href="blog/${post.filename}">${post.number}. ${post.title}</a></li>`)
+        .join('\n');
+    
+    const listRegex = /<ul class="blog-list" id="all-posts-list">[\s\S]*?<\/ul>/;
+    const newList = `<ul class="blog-list" id="all-posts-list">\n${postsList}\n            </ul>`;
+    
+    postsContent = postsContent.replace(listRegex, newList);
+    fs.writeFileSync(postsPath, postsContent);
+    
+    console.log('✓ posts.html actualizado');
+}
+
+/**
  * Actualiza index.html con la lista de posts
  */
 function updateIndex(posts) {
@@ -273,6 +295,7 @@ function main() {
     
     if (posts.length > 0) {
         updateIndex(posts);
+        updatePostsPage(posts);
         console.log('\n✓ Blog generado exitosamente!');
     } else {
         console.log('\n⚠ No se encontraron posts. Crea archivos .md en la carpeta posts/');
