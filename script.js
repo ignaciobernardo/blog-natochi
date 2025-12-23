@@ -308,8 +308,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load more posts
     initLoadMorePosts();
     
-    // Initialize music section
-    initMusicSection();
+    // Initialize music section (only on things.html where it's visible by default)
+    if (document.querySelector('.music-section.visible')) {
+        initMusicSection();
+    }
     
     // Draggable stamps
     initDraggableStamps();
