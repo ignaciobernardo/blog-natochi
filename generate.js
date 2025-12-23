@@ -128,7 +128,7 @@ ${content}
             </div>
             
             <div class="back-link">
-                <a href="../index.html">../</a>
+                <a href="../index.html">. . /</a>
             </div>
         </div>
     </div>
