@@ -9,7 +9,7 @@ const CONFIG = {
     BLOG_DIR: path.join(__dirname, 'blog'),
     INDEX_PATH: path.join(__dirname, 'index.html'),
     SCRIPT_PATH: path.join(__dirname, 'script.js'),
-    VISIBLE_POSTS: 11,
+    VISIBLE_POSTS: 3,
     AUTHOR_NAME: 'Nacho'
 };
 

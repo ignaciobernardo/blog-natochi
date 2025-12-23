@@ -2,7 +2,12 @@
 // Constants & Configuration
 // ============================================
 
-const moreEntries = []; // Automatically updated by generate.js
+const moreEntries = [
+    {
+        "num": 1,
+        "title": "the idea of creation"
+    }
+]; // Automatically updated by generate.js
 let entriesLoaded = false;
 
 const musicFavorites = {
@@ -102,56 +107,8 @@ function initLoadMorePosts() {
 }
 
 function initAllPostsPage() {
-    const allPostsList = document.getElementById('all-posts-list');
-    if (!allPostsList) return;
-    
-    // Get all posts from the current page's blog list (if on index.html)
-    const currentBlogList = document.querySelector('.blog-list');
-    const allPosts = [];
-    
-    if (currentBlogList) {
-        currentBlogList.querySelectorAll('li').forEach(li => {
-            const link = li.querySelector('a');
-            if (link) {
-                allPosts.push({
-                    href: link.href,
-                    text: link.textContent,
-                    num: parseInt(link.textContent.match(/^\d+/) || [0])[0]
-                });
-            }
-        });
-    }
-    
-    // Add entries from moreEntries
-    if (moreEntries.length > 0) {
-        moreEntries.forEach(entry => {
-            allPosts.push({
-                href: `blog/${entry.num}.html`,
-                text: `${entry.num}. ${entry.title}`,
-                num: entry.num
-            });
-        });
-    }
-    
-    // Sort by number (descending) and remove duplicates
-    const uniquePosts = {};
-    allPosts.forEach(post => {
-        if (!uniquePosts[post.num]) {
-            uniquePosts[post.num] = post;
-        }
-    });
-    
-    const sortedPosts = Object.values(uniquePosts).sort((a, b) => b.num - a.num);
-    
-    // Render all posts
-    sortedPosts.forEach(post => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = post.href;
-        a.textContent = post.text;
-        li.appendChild(a);
-        allPostsList.appendChild(li);
-    });
+    // This function is no longer needed as generate.js now populates posts.html directly
+    // Keeping it empty for backwards compatibility
 }
 
 // ============================================
