@@ -20,8 +20,23 @@
               "icon": "lucide-file",
               "title": "1."
             }
+          },
+          {
+            "id": "7d837818a8613eda",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "3..md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "3."
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -183,14 +198,14 @@
       "bases:Create new base": false
     }
   },
-  "active": "7a5cb69b9ee4cd01",
+  "active": "7d837818a8613eda",
   "lastOpenFiles": [
     "2..md",
+    "3..md",
     "1..md",
     "3x10.lat.md",
     "4..md",
     "og_image.png",
-    "3..md",
     "2.md",
     "stamp2.png",
     "9..md",
