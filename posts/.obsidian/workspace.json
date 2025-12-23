@@ -34,9 +34,51 @@
               "icon": "lucide-file",
               "title": "1."
             }
+          },
+          {
+            "id": "e74a43bb9b3b10bc",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "2..md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "2."
+            }
+          },
+          {
+            "id": "54eb6fcbfbf9c573",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "3..md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "3."
+            }
+          },
+          {
+            "id": "7a5cb69b9ee4cd01",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "4..md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "4."
+            }
           }
         ],
-        "currentTab": 1
+        "currentTab": 4
       }
     ],
     "direction": "vertical"
@@ -198,14 +240,15 @@
       "bases:Create new base": false
     }
   },
-  "active": "93768581aac780de",
+  "active": "7a5cb69b9ee4cd01",
   "lastOpenFiles": [
+    "3..md",
+    "4..md",
+    "2..md",
+    "1..md",
     "2.md",
     "stamp2.png",
-    "1..md",
     "9..md",
-    "3..md",
-    "2..md",
     "10..md",
     "8..md",
     "7..md",
