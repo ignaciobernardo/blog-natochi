@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>natochi (╬`益´)</title>
+    <title>posts - natochi</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -11,16 +11,16 @@
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://natochi.cv/">
-    <meta property="og:title" content="natochi (╬`益´)">
-    <meta property="og:description" content="blogcito de natochi">
+    <meta property="og:url" content="https://natochi.cv/posts.html">
+    <meta property="og:title" content="posts - natochi">
+    <meta property="og:description" content="All blog posts - natochi">
     <meta property="og:image" content="https://natochi.cv/og-image.png">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://natochi.cv/">
-    <meta property="twitter:title" content="natochi (╬`益´)">
-    <meta property="twitter:description" content="blogcito de natochi">
+    <meta property="twitter:url" content="https://natochi.cv/posts.html">
+    <meta property="twitter:title" content="posts - natochi">
+    <meta property="twitter:description" content="All blog posts - natochi">
     <meta property="twitter:image" content="https://natochi.cv/og-image.png">
     
     <script>
@@ -34,7 +34,7 @@
     </script>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="info-page">
     <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
         <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <polygon points="22 17 22 19 21 19 21 20 20 20 20 21 18 21 18 22 16 22 16 23 10 23 10 22 8 22 8 21 6 21 6 20 5 20 5 19 4 19 4 17 3 17 3 15 2 15 2 9 3 9 3 7 4 7 4 5 5 5 5 4 6 4 6 3 8 3 8 2 10 2 10 1 15 1 15 2 13 2 13 3 11 3 11 4 10 4 10 6 9 6 9 8 8 8 8 12 9 12 9 14 10 14 10 16 11 16 11 17 13 17 13 18 15 18 15 19 19 19 19 18 21 18 21 17 22 17"/>
@@ -61,26 +61,15 @@
     
     <div class="container">
         <div class="content">
-            <h1>natochi (╬`益´) </h1>
+            <h1>posts</h1>
             <div class="separator">-</div>
             
-            <ul class="blog-list">
-                <li><a href="blog/4.html">4. founding fathers</a></li>
-                <li><a href="blog/3.html">3. 3x10</a></li>
-                <li><a href="blog/2.html">2. the idea of creation</a></li>
-                <li><a href="blog/1.html">1. 2026</a></li>
+            <ul class="blog-list" id="all-posts-list">
+                <!-- Posts will be loaded dynamically -->
             </ul>
             
-            <div class="more-link">
-                <a href="posts.html">v</a>
-            </div>
-            
-            <div class="info-link">
-                <a href="info.html">who am i?</a>
-            </div>
-            
-            <div class="info-link">
-                <a href="things.html">things i fancy</a>
+            <div class="back-link">
+                <a href="index.html">../</a>
             </div>
         </div>
     </div>
@@ -109,3 +98,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+

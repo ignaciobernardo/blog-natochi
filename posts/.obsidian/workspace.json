@@ -69,12 +69,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "4..md",
+                "file": "1..md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "4."
+              "title": "1."
             }
           }
         ],
@@ -242,9 +242,9 @@
   },
   "active": "7a5cb69b9ee4cd01",
   "lastOpenFiles": [
+    "2..md",
     "3..md",
     "4..md",
-    "2..md",
     "1..md",
     "2.md",
     "stamp2.png",
@@ -254,7 +254,6 @@
     "7..md",
     "6..md",
     "5..md",
-    "4..md",
     "agents-bg-img.png",
     "agents-bg-img 1.png",
     "Constraints.md",

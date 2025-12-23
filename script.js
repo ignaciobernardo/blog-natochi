@@ -97,64 +97,50 @@ function initMusicSection() {
 // ============================================
 
 function initLoadMorePosts() {
-    const loadMoreLink = document.getElementById('load-more');
-    const blogList = document.querySelector('.blog-list');
+    // This function is no longer needed as "v" now links to posts.html
+    // Keeping it for backwards compatibility but it does nothing
+}
+
+function initAllPostsPage() {
+    const allPostsList = document.getElementById('all-posts-list');
+    if (!allPostsList) return;
     
-    if (!loadMoreLink || !blogList) return;
-    
-    let isExpanded = false;
-    
-    // Hide all posts except the first 3
-    const allPosts = blogList.querySelectorAll('li');
-    allPosts.forEach((post, index) => {
-        if (index >= 3) {
-            post.classList.add('hidden');
-        }
-    });
-    
-    // Show/hide collapsed posts when clicking "v" or "∧"
-    loadMoreLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        
-        const hiddenPosts = blogList.querySelectorAll('li.hidden');
-        
-        if (isExpanded) {
-            // Collapse: hide posts after the first 3
-            allPosts.forEach((post, index) => {
-                if (index >= 3) {
-                    post.classList.add('hidden');
-                }
-            });
-            loadMoreLink.textContent = 'v';
-            isExpanded = false;
-        } else {
-            // Expand: show all hidden posts
-            if (hiddenPosts.length > 0) {
-                hiddenPosts.forEach(post => {
-                    post.classList.remove('hidden');
+    // Get visible posts from index.html structure
+    const visiblePosts = [];
+    const indexBlogList = document.querySelector('.blog-list');
+    if (indexBlogList) {
+        indexBlogList.querySelectorAll('li').forEach(li => {
+            const link = li.querySelector('a');
+            if (link) {
+                visiblePosts.push({
+                    href: link.href,
+                    text: link.textContent
                 });
             }
-            
-            // Load additional entries from moreEntries if available
-            if (moreEntries.length > 0 && !entriesLoaded) {
-                moreEntries.forEach(entry => {
-                    const li = document.createElement('li');
-                    const a = document.createElement('a');
-                    
-                    a.href = `blog/${entry.num}.html`;
-                    a.textContent = `${entry.num}. ${entry.title}`;
-                    
-                    li.appendChild(a);
-                    blogList.appendChild(li);
-                });
-                
-                entriesLoaded = true;
-            }
-            
-            loadMoreLink.textContent = '∧';
-            isExpanded = true;
-        }
+        });
+    }
+    
+    // Add all posts (visible + hidden from moreEntries)
+    visiblePosts.forEach(post => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = post.href;
+        a.textContent = post.text;
+        li.appendChild(a);
+        allPostsList.appendChild(li);
     });
+    
+    // Add entries from moreEntries
+    if (moreEntries.length > 0) {
+        moreEntries.forEach(entry => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = `blog/${entry.num}.html`;
+            a.textContent = `${entry.num}. ${entry.title}`;
+            li.appendChild(a);
+            allPostsList.appendChild(li);
+        });
+    }
 }
 
 // ============================================
@@ -305,8 +291,11 @@ document.addEventListener('DOMContentLoaded', () => {
         initStampsVisibility();
     }
     
-    // Load more posts
+    // Load more posts (only on index.html)
     initLoadMorePosts();
+    
+    // Initialize all posts page (only on posts.html)
+    initAllPostsPage();
     
     // Initialize music section (only on things.html where it's visible by default)
     if (document.querySelector('.music-section.visible')) {
