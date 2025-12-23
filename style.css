@@ -539,9 +539,56 @@ html.dark-mode .stamps-tooltip a:hover {
    Responsive
    ============================================ */
 
+/* Small screens */
 @media (max-width: 768px) {
     .stamp {
         width: 100px;
         height: 120px;
+    }
+    
+    body {
+        font-size: 0.9rem;
+    }
+    
+    h1 {
+        font-size: 1.1rem;
+    }
+}
+
+/* Large screens */
+@media (min-width: 1400px) {
+    body {
+        font-size: 1.2rem;
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+    }
+    
+    .blog-post h2 {
+        font-size: 1.5rem;
+    }
+    
+    .container {
+        max-width: 1000px;
+    }
+}
+
+/* Extra large screens */
+@media (min-width: 1920px) {
+    body {
+        font-size: 1.4rem;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    .blog-post h2 {
+        font-size: 1.8rem;
+    }
+    
+    .container {
+        max-width: 1200px;
     }
 }
