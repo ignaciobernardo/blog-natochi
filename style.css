@@ -129,22 +129,30 @@ html.dark-mode .separator {
 }
 
 .blog-list a {
-    color: #ff6600;
+    color: #ffaa00 !important;
     text-decoration: underline;
     transition: color 0.3s ease;
 }
 
+.blog-list a:visited {
+    color: #ffaa00 !important;
+}
+
 html.dark-mode .blog-list a {
-    color: #ff8800;
+    color: #ffaa00 !important;
+}
+
+html.dark-mode .blog-list a:visited {
+    color: #ffaa00 !important;
 }
 
 .blog-list a:hover {
     text-decoration: none;
-    color: #ff5500;
+    color: #ffaa00 !important;
 }
 
 html.dark-mode .blog-list a:hover {
-    color: #ffaa00;
+    color: #ffaa00 !important;
 }
 
 /* ============================================
@@ -376,8 +384,16 @@ html.dark-mode .info-link a:hover {
     transition: color 0.3s ease;
 }
 
+.back-link a:hover {
+    color: #ffaa00;
+}
+
 html.dark-mode .back-link a {
     color: #e5e5e5;
+}
+
+html.dark-mode .back-link a:hover {
+    color: #ffaa00;
 }
 
 /* ============================================
