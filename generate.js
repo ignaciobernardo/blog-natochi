@@ -119,7 +119,7 @@ function generatePostHTML(title, content, date, postNumber) {
     <div class="container">
         <div class="content">
             <div class="blog-post">
-                <h2>${title}</h2>
+                <h1>${title}</h1>
                 <div class="separator">-</div>
                 <div class="blog-content">
 ${content}

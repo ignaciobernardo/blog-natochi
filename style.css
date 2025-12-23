@@ -152,17 +152,24 @@ html.dark-mode .blog-list a:hover {
    ============================================ */
 
 .blog-post {
-    margin: 1rem 0;
+    margin: 0;
 }
 
-.blog-post h2 {
+.blog-post h1 {
     font-size: 1.2rem;
     font-weight: normal;
     margin-bottom: 0.5rem;
+    color: #000;
+    transition: color 0.3s ease;
+}
+
+html.dark-mode .blog-post h1 {
+    color: #e5e5e5;
 }
 
 .blog-post .date {
-    margin-top: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0;
     color: #000;
     transition: color 0.3s ease;
 }
@@ -173,10 +180,11 @@ html.dark-mode .blog-post .date {
 
 .blog-content {
     margin: 1rem 0;
+    line-height: 1.6;
 }
 
 .blog-content p {
-    margin: 0.8rem 0;
+    margin: 1rem 0;
 }
 
 .blog-content h1,
@@ -187,6 +195,26 @@ html.dark-mode .blog-post .date {
 .blog-content h6 {
     margin: 1.2rem 0 0.8rem 0;
     font-weight: normal;
+}
+
+.blog-content ol,
+.blog-content ul {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.blog-content li {
+    margin: 0.5rem 0;
+}
+
+.blog-content hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 1.5rem 0;
+}
+
+html.dark-mode .blog-content hr {
+    border-top-color: #444;
 }
 
 /* ============================================
