@@ -8,62 +8,6 @@
         "type": "tabs",
         "children": [
           {
-            "id": "d9e887aefe1bf016",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "1..md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "1."
-            }
-          },
-          {
-            "id": "93768581aac780de",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "1..md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "1."
-            }
-          },
-          {
-            "id": "e74a43bb9b3b10bc",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "2..md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "2."
-            }
-          },
-          {
-            "id": "54eb6fcbfbf9c573",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "3..md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "3."
-            }
-          },
-          {
             "id": "7a5cb69b9ee4cd01",
             "type": "leaf",
             "state": {
@@ -77,8 +21,7 @@
               "title": "1."
             }
           }
-        ],
-        "currentTab": 4
+        ]
       }
     ],
     "direction": "vertical"
@@ -242,8 +185,9 @@
   },
   "active": "7a5cb69b9ee4cd01",
   "lastOpenFiles": [
-    "4..md",
     "1..md",
+    "3x10.lat.md",
+    "4..md",
     "og_image.png",
     "2..md",
     "3..md",
