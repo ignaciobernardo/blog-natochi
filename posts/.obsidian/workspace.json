@@ -34,9 +34,21 @@
               "icon": "lucide-file",
               "title": "3."
             }
+          },
+          {
+            "id": "9b79fb3e5598c805",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.11.4"
+              },
+              "icon": "lucide-book-up",
+              "title": "Release Notes 1.11.4"
+            }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -198,7 +210,7 @@
       "bases:Create new base": false
     }
   },
-  "active": "7d837818a8613eda",
+  "active": "9b79fb3e5598c805",
   "lastOpenFiles": [
     "2..md",
     "1..md",
