@@ -2,9 +2,11 @@
    Fonts
    ============================================ */
 
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
 @font-face {
     font-family: 'PP Mondwest';
-    src: url('/fonts/PPMondwest-Regular.otf') format('opentype');
+    src: url('fonts/PPMondwest-Regular.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -21,23 +23,18 @@
 }
 
 ::selection {
-    background-color: #ff6600;
-    color: #fff;
-}
-
-html.dark-mode ::selection {
     background-color: #ff8800;
     color: #1a1a1a;
 }
 
-html.dark-mode {
+html {
     background-color: #1a1a1a;
 }
 
 body {
     font-family: 'PP Mondwest', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background-color: #e5e5e5;
-    color: #000;
+    background-color: #1a1a1a;
+    color: #e5e5e5;
     line-height: 1.5;
     min-height: 100vh;
     display: flex;
@@ -46,11 +43,6 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
     overflow-x: auto;
     overflow-y: auto;
-}
-
-html.dark-mode body {
-    background-color: #1a1a1a;
-    color: #e5e5e5;
 }
 
 /* ============================================
@@ -65,12 +57,8 @@ html.dark-mode body {
 }
 
 .content {
-    background-color: #e5e5e5;
-    transition: background-color 0.3s ease;
-}
-
-html.dark-mode .content {
     background-color: #1a1a1a;
+    transition: background-color 0.3s ease;
 }
 
 /* ============================================
@@ -81,34 +69,22 @@ h1 {
     font-size: 1.2rem;
     font-weight: normal;
     margin-bottom: 0.5rem;
-    color: #000;
-    transition: color 0.3s ease;
-}
-
-html.dark-mode h1 {
     color: #e5e5e5;
+    transition: color 0.3s ease;
 }
 
 p {
     margin: 0.2rem 0;
-    color: #000;
+    color: #e5e5e5;
     line-height: 1.4;
     transition: color 0.3s ease;
 }
 
-html.dark-mode p {
-    color: #e5e5e5;
-}
-
 .separator {
     margin: 0.5rem 0;
-    color: #000;
+    color: #e5e5e5;
     line-height: 1.2;
     transition: color 0.3s ease;
-}
-
-html.dark-mode .separator {
-    color: #e5e5e5;
 }
 
 /* ============================================
@@ -138,20 +114,8 @@ html.dark-mode .separator {
     color: #ffaa00 !important;
 }
 
-html.dark-mode .blog-list a {
-    color: #ffaa00 !important;
-}
-
-html.dark-mode .blog-list a:visited {
-    color: #ffaa00 !important;
-}
-
 .blog-list a:hover {
     text-decoration: none;
-    color: #ffaa00 !important;
-}
-
-html.dark-mode .blog-list a:hover {
     color: #ffaa00 !important;
 }
 
@@ -167,23 +131,15 @@ html.dark-mode .blog-list a:hover {
     font-size: 1.2rem;
     font-weight: normal;
     margin-bottom: 0.5rem;
-    color: #000;
-    transition: color 0.3s ease;
-}
-
-html.dark-mode .blog-post h1 {
     color: #e5e5e5;
+    transition: color 0.3s ease;
 }
 
 .blog-post .date {
     margin-top: 1.5rem;
     margin-bottom: 0;
-    color: #000;
-    transition: color 0.3s ease;
-}
-
-html.dark-mode .blog-post .date {
     color: #e5e5e5;
+    transition: color 0.3s ease;
 }
 
 .blog-content {
@@ -217,12 +173,8 @@ html.dark-mode .blog-post .date {
 
 .blog-content hr {
     border: none;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid #444;
     margin: 1.5rem 0;
-}
-
-html.dark-mode .blog-content hr {
-    border-top-color: #444;
 }
 
 /* ============================================
@@ -246,21 +198,13 @@ html.dark-mode .blog-content hr {
    ============================================ */
 
 .link a {
-    color: #ff6600;
+    color: #ff8800;
     text-decoration: underline;
     transition: color 0.3s ease;
 }
 
-html.dark-mode .link a {
-    color: #ff8800;
-}
-
 .link a:hover {
     text-decoration: none;
-    color: #ff5500;
-}
-
-html.dark-mode .link a:hover {
     color: #ffaa00;
 }
 
@@ -269,15 +213,11 @@ html.dark-mode .link a:hover {
 }
 
 .more-link a {
-    color: #000;
+    color: #e5e5e5;
     text-decoration: none;
     font-size: 1.0rem;
     font-style: italic;
     transition: color 0.3s ease;
-}
-
-html.dark-mode .more-link a {
-    color: #e5e5e5;
 }
 
 /* ============================================
@@ -310,12 +250,8 @@ html.dark-mode .more-link a {
 
 .fancy-list li {
     margin: 0.3rem 0;
-    color: #000;
-    transition: color 0.3s ease;
-}
-
-html.dark-mode .fancy-list li {
     color: #e5e5e5;
+    transition: color 0.3s ease;
 }
 
 .music-item {
@@ -324,30 +260,18 @@ html.dark-mode .fancy-list li {
 }
 
 .music-label {
-    color: #000;
+    color: #e5e5e5;
     transition: color 0.3s ease;
 }
 
-html.dark-mode .music-label {
-    color: #e5e5e5;
-}
-
 .music-item a {
-    color: #ff6600;
+    color: #ff8800;
     text-decoration: underline;
     transition: color 0.3s ease;
 }
 
-html.dark-mode .music-item a {
-    color: #ff8800;
-}
-
 .music-item a:hover {
     text-decoration: none;
-    color: #ff5500;
-}
-
-html.dark-mode .music-item a:hover {
     color: #ffaa00;
 }
 
@@ -356,21 +280,13 @@ html.dark-mode .music-item a:hover {
 }
 
 .info-link a {
-    color: #ff6600;
+    color: #ff8800;
     text-decoration: underline;
     transition: color 0.3s ease;
 }
 
-html.dark-mode .info-link a {
-    color: #ff8800;
-}
-
 .info-link a:hover {
     text-decoration: none;
-    color: #ff5500;
-}
-
-html.dark-mode .info-link a:hover {
     color: #ffaa00;
 }
 
@@ -379,7 +295,7 @@ html.dark-mode .info-link a:hover {
 }
 
 .back-link a {
-    color: #000;
+    color: #e5e5e5;
     text-decoration: none;
     transition: color 0.3s ease;
 }
@@ -388,117 +304,74 @@ html.dark-mode .info-link a:hover {
     color: #ffaa00;
 }
 
-html.dark-mode .back-link a {
-    color: #e5e5e5;
-}
-
-html.dark-mode .back-link a:hover {
-    color: #ffaa00;
-}
-
 /* ============================================
    Toggle Buttons
    ============================================ */
 
-.theme-toggle,
 .stamps-toggle {
+    display: none !important;
+}
+
+.cal-link {
     position: fixed;
     top: 2rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.7;
-    transition: opacity 0.3s ease;
-    z-index: 1000;
-}
-
-.theme-toggle {
     right: 2rem;
+    font-family: 'IBM Plex Mono', 'PP Mondwest', monospace;
+    font-size: 0.75rem;
+    color: rgba(229, 229, 229, 0.4);
+    text-decoration: none;
+    text-align: right;
+    line-height: 1.5;
+    z-index: 1000;
+    transition: color 0.2s ease;
 }
 
-.stamps-toggle {
-    right: 4.5rem;
+.cal-link span {
+    color: #FF8800;
+    text-decoration: underline;
+    transition: color 0.2s ease, background-color 0.2s ease;
 }
 
-.stamps-toggle {
-    position: fixed !important;
+.cal-link:hover span {
+    color: #e5e5e5;
+    background-color: #FF8800;
+    text-decoration: none;
 }
 
-.theme-toggle:hover,
-.stamps-toggle:hover {
-    opacity: 1;
+@media (max-width: 767px) {
+    .cal-link {
+        display: none;
+    }
 }
 
-.theme-toggle svg,
 .stamps-toggle svg {
     width: 20px;
     height: 20px;
-    fill: #000;
+    fill: #e5e5e5;
     transition: fill 0.3s ease;
     display: block;
 }
 
-html.dark-mode .theme-toggle svg,
-html.dark-mode .stamps-toggle svg {
-    fill: #e5e5e5;
-}
-
-.theme-toggle svg {
-    stroke: #000;
-    stroke-width: 2;
-    stroke-linecap: round;
-    transition: fill 0.3s ease, stroke 0.3s ease;
-}
-
-html.dark-mode .theme-toggle svg {
-    stroke: #e5e5e5;
-}
-
-.theme-toggle .sun-icon {
-    display: none;
-}
-
-html.dark-mode .theme-toggle .moon-icon {
-    display: none;
-}
-
-html.dark-mode .theme-toggle .sun-icon {
-    display: block;
-}
-
 .stamps-toggle.active svg {
-    fill: #ff6600;
-}
-
-html.dark-mode .stamps-toggle.active svg {
     fill: #ff8800;
 }
 
 .stamps-tooltip {
     position: fixed;
     top: calc(2rem + 20px + 10px);
-    left: calc(100% - 4.5rem - 20px);
-    transform: translateX(-50%);
+    right: 0.5rem;
     white-space: nowrap;
+    color: #FF8800;
     opacity: 0;
     visibility: hidden;
     pointer-events: auto;
     font-size: 0.75rem;
-    color: #000;
-    background-color: #e5e5e5;
+    color: #e5e5e5;
+    background-color: #1a1a1a;
     padding: 4px 8px;
     border-radius: 4px;
     transition: opacity 0.3s ease, visibility 0.3s ease;
     z-index: 1001;
-}
-
-html.dark-mode .stamps-tooltip {
-    color: #e5e5e5;
-    background-color: #1a1a1a;
 }
 
 .stamps-toggle:hover .stamps-tooltip {
@@ -507,20 +380,12 @@ html.dark-mode .stamps-tooltip {
 }
 
 .stamps-tooltip a {
-    color: #ff6600;
+    color: #ff8800;
     text-decoration: underline;
     transition: color 0.3s ease;
 }
 
-html.dark-mode .stamps-tooltip a {
-    color: #ff8800;
-}
-
 .stamps-tooltip a:hover {
-    color: #ff5500;
-}
-
-html.dark-mode .stamps-tooltip a:hover {
     color: #ffaa00;
 }
 
@@ -589,11 +454,11 @@ html.dark-mode .stamps-tooltip a:hover {
         width: 100px;
         height: 120px;
     }
-    
+
     body {
         font-size: 0.9rem;
     }
-    
+
     h1 {
         font-size: 1.1rem;
     }
@@ -604,34 +469,574 @@ html.dark-mode .stamps-tooltip a:hover {
     body {
         font-size: 1.2rem;
     }
-    
+
     h1 {
         font-size: 1.5rem;
     }
-    
+
     .blog-post h2 {
         font-size: 1.5rem;
     }
-    
+
     .container {
         max-width: 1000px;
     }
 }
 
-/* Extra large screens */
+/* ============================================
+   Blog Page Layout
+   ============================================ */
+
+body.blog-page {
+    display: block;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: #1e1e1e !important;
+    color: #d4d4d4;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.85;
+    zoom: 0.9;
+}
+
+body.blog-page .container {
+    max-width: none;
+    width: 100%;
+    padding: 3rem 2rem 5rem 5.5rem;
+}
+
+body.blog-page .content {
+    max-width: 640px;
+    background: transparent;
+}
+
+body.blog-page .separator {
+    display: none;
+}
+
+/* Back link — top of page */
+body.blog-page .back-link {
+    margin-top: 0;
+    margin-bottom: 2.5rem;
+    padding-top: 0;
+    border-top: none;
+}
+
+body.blog-page .back-link a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    color: rgba(229, 229, 229, 0.4);
+    text-decoration: none;
+}
+
+body.blog-page .back-link a:hover {
+    color: #e5e5e5;
+    background-color: #FF8800;
+}
+
+/* Title */
+body.blog-page .blog-post h1 {
+    font-size: 0.93rem;
+    font-weight: bold;
+    color: #e5e5e5;
+    margin-bottom: 0.25rem;
+    line-height: 1.4;
+}
+
+/* Date */
+body.blog-page .blog-post .date {
+    font-size: 0.8rem;
+    color: rgba(229, 229, 229, 0.4);
+    margin: 0;
+}
+
+/* Body */
+body.blog-page .blog-content {
+    margin-top: 1.6rem;
+    color: #d4d4d4;
+}
+
+body.blog-page .blog-content p {
+    color: #d4d4d4;
+    margin: 1.2rem 0;
+}
+
+body.blog-page .blog-content h1,
+body.blog-page .blog-content h2,
+body.blog-page .blog-content h3,
+body.blog-page .blog-content h4 {
+    font-size: 0.93rem;
+    font-weight: bold;
+    color: #e5e5e5;
+    margin: 1.8rem 0 0.5rem;
+}
+
+body.blog-page .blog-content ul,
+body.blog-page .blog-content ol {
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+}
+
+body.blog-page .blog-content li {
+    color: #d4d4d4;
+    margin: 0.5rem 0;
+}
+
+/* Page name label (info page) */
+body.blog-page .page-name {
+    font-size: 0.8rem;
+    color: rgba(229, 229, 229, 0.4);
+    margin: 0 0 2.5rem 0;
+    line-height: 1;
+}
+
+/* Info page title */
+.info-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #e5e5e5;
+    margin: 0 0 2rem 0;
+    line-height: 1.3;
+}
+
+/* Info page photo (hidden, used as source for dither canvas) */
+.info-photo {
+    display: none;
+}
+
+.info-photo-dither {
+    width: 72px;
+    height: 72px;
+    margin-bottom: 2rem;
+}
+
+/* Info grid (projects, reading) */
+.info-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.4rem 1.5rem;
+    margin: 0.8rem 0 1.2rem 0;
+    align-items: baseline;
+}
+
+.grid-title {
+    display: block;
+    color: #FF8800;
+    text-decoration: underline;
+    white-space: nowrap;
+    transition: color 0.2s ease, background-color 0.2s ease;
+    padding: 1px 4px;
+}
+
+a.grid-title:hover,
+body.blog-page .blog-content a.grid-title:hover {
+    color: #e5e5e5;
+    background-color: #FF8800;
+    text-decoration: none;
+}
+
+body.blog-page .blog-content a.grid-title {
+    color: #FF8800;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+span.grid-title {
+    color: #e5e5e5;
+    text-decoration: none;
+}
+
+.grid-desc {
+    display: block;
+    color: #d4d4d4;
+}
+
+.grid-desc a {
+    color: #FF8800;
+    text-decoration: underline;
+    padding: 1px 4px;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.grid-desc a:hover {
+    color: #e5e5e5;
+    background-color: #FF8800;
+    text-decoration: none;
+}
+
+@media (max-width: 767px) {
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 0.2rem;
+    }
+
+    .grid-desc {
+        margin-bottom: 0.8rem;
+    }
+}
+
+/* Highlighted links on blog content (not pills, not socials) */
+body.blog-page .blog-content a {
+    color: #FF8800;
+    text-decoration: underline;
+    background-color: transparent;
+    padding: 1px 4px;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+body.blog-page .blog-content a:hover {
+    color: #e5e5e5;
+    background-color: #FF8800;
+    text-decoration: none;
+}
+
+/* Posts list */
+body.blog-page .post-list {
+    margin: 0 0 0.5rem 0;
+}
+
+body.blog-page .post-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.35rem 0;
+}
+
+body.blog-page .post-row-title {
+    font-size: 0.875rem;
+    color: #FF8800;
+    text-decoration: underline;
+    padding: 1px 4px;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+body.blog-page .post-row-title:hover {
+    color: #e5e5e5;
+    background-color: #FF8800;
+    text-decoration: none;
+}
+
+body.blog-page .post-row-date {
+    font-size: 0.8rem;
+    color: rgba(229, 229, 229, 0.4);
+    white-space: nowrap;
+    margin-left: 2rem;
+}
+
+/* Footer: separator + socials */
+body.blog-page .post-footer {
+    margin-top: 4rem;
+}
+
+body.blog-page .post-separator {
+    border: none;
+    border-top: 1px solid rgba(229, 229, 229, 0.18);
+    width: 180px;
+    margin: 0 0 1.5rem 0;
+}
+
+body.blog-page .post-socials {
+    font-size: 0.8rem;
+    color: rgba(229, 229, 229, 0.4);
+    margin: 0;
+    line-height: 2;
+}
+
+body.blog-page .post-socials a {
+    color: #FF8800;
+    text-decoration: underline;
+    padding: 1px 4px;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+body.blog-page .post-socials a:hover {
+    color: #e5e5e5;
+    background-color: #FF8800;
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    body.blog-page .container {
+        padding: 2.5rem 1.5rem 5rem 1.5rem;
+    }
+
+    body.blog-page .content {
+        max-width: 100%;
+    }
+
+    body.blog-page .back-link {
+        margin-bottom: 2rem;
+    }
+
+    body.blog-page .blog-post h1 {
+        font-size: 1rem;
+    }
+
+    body.blog-page .blog-content {
+        font-size: 0.875rem;
+        line-height: 1.8;
+    }
+
+    body.blog-page .post-footer {
+        margin-top: 3rem;
+    }
+
+    body.blog-page .post-separator {
+        width: 120px;
+    }
+}
+
+/* ============================================
+   Dither 3D Canvas
+   ============================================ */
+
+#dither-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+/* ============================================
+   Node Page Layout
+   — Always uses dark palette regardless of theme
+   ============================================ */
+
+body.node-page {
+    overflow: hidden;
+    background-color: #1a1a1a !important;
+    color: #e5e5e5;
+}
+
+#node-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* SVG lines layer */
+#lines-svg {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.node-line {
+    stroke: rgba(229, 229, 229, 0.22);
+    stroke-width: 1;
+}
+
+/* Root node */
+#root-node {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background-color: #FF8800;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    pointer-events: none;
+}
+
+#root-label {
+    position: absolute;
+    top: -26px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 0.65rem;
+    color: #1a1a1a;
+    background-color: #FF8800;
+    padding: 2px 6px;
+    letter-spacing: 0.04em;
+    font-family: 'PP Mondwest', sans-serif;
+    pointer-events: none;
+}
+
+/* Sibling nodes */
+.node-sibling {
+    position: fixed;
+    z-index: 10;
+    pointer-events: all;
+    text-decoration: none;
+    cursor: pointer;
+    transform: translate(-4px, -4px);
+}
+
+/* The small square anchor dot */
+.node-dot {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: #e5e5e5;
+    top: 0;
+    left: 0;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.node-sibling:hover .node-dot {
+    background-color: #FF8800;
+    transform: scale(1.3);
+}
+
+/* Label containers */
+.node-label {
+    position: absolute;
+    top: -2px;
+}
+
+.label-right {
+    left: 20px;
+    width: 240px;
+}
+
+.label-left {
+    right: 20px;
+    width: 240px;
+    text-align: right;
+}
+
+.node-title {
+    display: block;
+    font-family: 'PP Mondwest', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    color: #e5e5e5;
+    transition: color 0.2s ease;
+    line-height: 1.2;
+}
+
+.node-sibling:hover .node-title {
+    color: #FF8800;
+}
+
+.node-desc {
+    font-size: 0.7rem;
+    color: rgba(229, 229, 229, 0.45);
+    margin: 0;
+    margin-top: 5px;
+    line-height: 1.4;
+    font-family: 'PP Mondwest', sans-serif;
+}
+
+/* Card (latest post) */
+.node-card {
+    margin-top: 16px;
+    padding: 14px 16px;
+    width: 230px;
+    background: #212121;
+    border: 1px solid rgba(229, 229, 229, 0.1);
+    transition: border-color 0.2s ease;
+}
+
+.node-sibling:hover .node-card {
+    border-color: rgba(255, 136, 0, 0.35);
+}
+
+@media (max-width: 767px) {
+    .node-card {
+        display: none;
+    }
+}
+
+.card-headline {
+    font-family: 'PP Mondwest', sans-serif;
+    font-size: 0.78rem;
+    color: #e5e5e5;
+    margin: 0 0 8px 0;
+    line-height: 1.4;
+    transition: color 0.2s ease;
+}
+
+.node-sibling:hover .card-headline {
+    color: #FF8800;
+}
+
+.card-date {
+    font-size: 0.65rem;
+    color: rgba(229, 229, 229, 0.35);
+    margin: 0 0 12px 0;
+    font-family: 'PP Mondwest', sans-serif;
+}
+
+.card-cta {
+    font-size: 0.65rem;
+    color: rgba(255, 136, 0, 0.55);
+    letter-spacing: 0.1em;
+    margin: 0;
+    font-family: 'PP Mondwest', sans-serif;
+    transition: color 0.2s ease;
+}
+
+.node-sibling:hover .card-cta {
+    color: #FF8800;
+}
+
+/* ============================================
+   Info Pills
+   ============================================ */
+
+.info-pills {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    z-index: 20;
+}
+
+.info-pill {
+    display: inline-block;
+    background: rgba(229, 229, 229, 0.08);
+    padding: 6px 14px;
+    font-family: 'PP Mondwest', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(229, 229, 229, 0.5);
+    white-space: nowrap;
+    text-decoration: none;
+    border: 1px solid rgba(229, 229, 229, 0.15);
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+a.info-pill:hover {
+    color: #FF8800;
+    border-color: #FF8800;
+}
+
+@media (max-width: 767px) {
+    .info-pills {
+        left: 1.2rem;
+        right: 1.2rem;
+        bottom: 1.2rem;
+    }
+}
+
+/* ============================================
+   Extra large screens */
 @media (min-width: 1920px) {
     body {
         font-size: 1.4rem;
     }
-    
+
     h1 {
         font-size: 1.8rem;
     }
-    
+
     .blog-post h2 {
         font-size: 1.8rem;
     }
-    
+
     .container {
         max-width: 1200px;
     }

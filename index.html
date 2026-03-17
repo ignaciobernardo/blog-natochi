@@ -4,88 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>natochi (╬`益´)</title>
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="alternate icon" href="favicon.ico">
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://natochi.cv/">
     <meta property="og:title" content="natochi (╬`益´)">
     <meta property="og:description" content="blogcito de natochi">
     <meta property="og:image" content="https://natochi.cv/og-image.png">
-    
+
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://natochi.cv/">
     <meta property="twitter:title" content="natochi (╬`益´)">
     <meta property="twitter:description" content="blogcito de natochi">
     <meta property="twitter:image" content="https://natochi.cv/og-image.png">
-    
+
     <script>
-        (function() {
-            const savedTheme = localStorage.getItem('theme');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-                document.documentElement.classList.add('dark-mode');
-            }
-        })();
+        document.documentElement.classList.add('dark-mode');
     </script>
     <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
-        <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <polygon points="22 17 22 19 21 19 21 20 20 20 20 21 18 21 18 22 16 22 16 23 10 23 10 22 8 22 8 21 6 21 6 20 5 20 5 19 4 19 4 17 3 17 3 15 2 15 2 9 3 9 3 7 4 7 4 5 5 5 5 4 6 4 6 3 8 3 8 2 10 2 10 1 15 1 15 2 13 2 13 3 11 3 11 4 10 4 10 6 9 6 9 8 8 8 8 12 9 12 9 14 10 14 10 16 11 16 11 17 13 17 13 18 15 18 15 19 19 19 19 18 21 18 21 17 22 17"/>
-        </svg>
-        <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="5"/>
-            <line x1="12" y1="1" x2="12" y2="3"/>
-            <line x1="12" y1="21" x2="12" y2="23"/>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-            <line x1="1" y1="12" x2="3" y2="12"/>
-            <line x1="21" y1="12" x2="23" y2="12"/>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-        </svg>
-    </button>
-    <button class="stamps-toggle" id="stamps-toggle" aria-label="Toggle stamps">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <polygon points="18 5 18 11 17 11 17 12 15 12 15 13 14 13 14 15 9 15 9 12 10 12 10 11 11 11 11 10 13 10 13 9 14 9 14 7 13 7 13 6 11 6 11 7 10 7 10 8 9 8 9 9 8 9 8 8 7 8 7 7 6 7 6 6 5 6 5 5 6 5 6 4 7 4 7 3 9 3 9 2 15 2 15 3 16 3 16 4 17 4 17 5 18 5"/>
-            <polygon points="13 18 14 18 14 21 13 21 13 22 10 22 10 21 9 21 9 18 10 18 10 17 13 17 13 18"/>
-        </svg>
-        <span class="stamps-tooltip">with love from <a href="https://www.linkedin.com/in/trinidadmatta/" target="_blank" rel="noopener noreferrer">tonchi</a> !</span>
-    </button>
-    
-    <div class="container">
-        <div class="content">
-            <h1>natochi (╬`益´) </h1>
-            <div class="separator">-</div>
-            
-            <ul class="blog-list">
-                <li><a href="blog/3.html">3. seguir adelante.</a></li>
-                <li><a href="blog/2.html">2. ini</a></li>
-                <li><a href="blog/1.html">1. 2026, nacho de 23 a 24.</a></li>
-            </ul>
-            
-            <div class="more-link">
-                <a href="posts.html">v</a>
-            </div>
 
-            <div class="separator">-</div>
-            
-            <div class="info-link">
-                <a href="info.html">who am i?</a>
-            </div>
-            
-            <div class="info-link">
-                <a href="things.html">things i fancy</a>
-            </div>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+        }
+    }
+    </script>
+</head>
+<body class="node-page">
+<a class="cal-link" href="https://cal.com/natochi" target="_blank" rel="noopener">tienes una <span>duda</span>?<br>sacame 30min</a>
+
+    <!-- Dither 3D Canvas -->
+    <canvas id="dither-canvas"></canvas>
+
+    <!-- Node Canvas -->
+    <div id="node-canvas">
+
+        <!-- SVG Lines -->
+        <svg id="lines-svg" aria-hidden="true">
+            <line class="node-line" id="line-0"/>
+            <line class="node-line" id="line-1"/>
+            <line class="node-line" id="line-2"/>
+        </svg>
+
+        <!-- Root Node -->
+        <div id="root-node" aria-label="natochi">
+            <span id="root-label">natochi (╬`益´)</span>
         </div>
+
+        <!-- Node 1: BLOG -->
+        <a href="posts.html" class="node-sibling" id="node-blog">
+            <div class="node-dot"></div>
+            <div class="node-label label-right">
+                <span class="node-title">BLOG</span>
+                <p class="node-desc">writing things down</p>
+            </div>
+        </a>
+
+        <!-- Node 2: WHO AM I -->
+        <a href="info.html" class="node-sibling" id="node-about">
+            <div class="node-dot"></div>
+            <div class="node-label label-left">
+                <span class="node-title">WHO AM I</span>
+                <p class="node-desc">interests & whatnot</p>
+            </div>
+        </a>
+
+        <!-- Node 3: LATEST POST -->
+        <a href="blog/3.html" class="node-sibling" id="node-latest">
+            <div class="node-dot"></div>
+            <div class="node-label label-right">
+                <span class="node-title">LATEST</span>
+                <p class="node-desc">mental models for not knowing what the fuck your doing</p>
+            </div>
+        </a>
+
     </div>
-    
+
+    <!-- Info Pills -->
+    <div class="info-pills">
+        <span class="info-pill" id="spotify-pill">listening to: ...</span>
+        <a class="info-pill" href="https://hack.indies.la/" target="_blank" rel="noopener">hack@latam &#8599;</a>
+        <a class="info-pill" href="https://hack.platan.us/" target="_blank" rel="noopener">platanus_hack &#8599;</a>
+        <a class="info-pill" href="https://luma.com/rj9miydt" target="_blank" rel="noopener">laclase2 &#8599;</a>
+    </div>
+
     <footer class="stamps-footer">
         <div class="stamp" data-stamp="1" style="--rotation: -5deg;"><img src="stamps/stamp1.PNG" alt="Stamp 1"></div>
         <div class="stamp" data-stamp="2" style="--rotation: 8deg;"><img src="stamps/stamp2.PNG" alt="Stamp 2"></div>
@@ -106,7 +115,295 @@
         <div class="stamp" data-stamp="17" style="--rotation: -1deg;"><img src="stamps/stamp17.PNG" alt="Stamp 17"></div>
         <div class="stamp" data-stamp="18" style="--rotation: 6deg;"><img src="stamps/stamp18.PNG" alt="Stamp 18"></div>
     </footer>
-    
+
     <script src="script.js"></script>
+    <script>
+    (function () {
+        var CLIENT_ID     = '6f9d568369394e6b9b189d81107de3e1';
+        var CLIENT_SECRET = '87c3bae87a72489fbf167c9afba1f792';
+        var REFRESH_TOKEN = 'AQBAoCoqryu5F_gCXH2PeIc61ooJi9AUCEIj0UVdWLJqsAL8bjvzUGWThhVYAoMLjD6abu1qqJGoHQc-sI1wJ0WKkZdbBikhzo2WPd8euhQXu6jjQ7GMfsCLqemOYDCLWsQ';
+        var pill = document.getElementById('spotify-pill');
+        var cachedToken = null;
+        var tokenExpiry = 0;
+
+        function getToken() {
+            if (cachedToken && Date.now() < tokenExpiry) {
+                return Promise.resolve(cachedToken);
+            }
+            return fetch('https://accounts.spotify.com/api/token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': 'Basic ' + btoa(CLIENT_ID + ':' + CLIENT_SECRET),
+                },
+                body: 'grant_type=refresh_token&refresh_token=' + encodeURIComponent(REFRESH_TOKEN),
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                cachedToken = data.access_token;
+                tokenExpiry = Date.now() + (data.expires_in - 60) * 1000;
+                return cachedToken;
+            });
+        }
+
+        function updateTrack() {
+            getToken()
+            .then(function (token) {
+                return fetch('https://api.spotify.com/v1/me/player/recently-played?limit=1', {
+                    headers: { 'Authorization': 'Bearer ' + token },
+                });
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (data.items && data.items.length > 0) {
+                    var track = data.items[0].track;
+                    var name  = track.name;
+                    var artist = track.artists.map(function (a) { return a.name; }).join(', ');
+                    var url = track.external_urls.spotify;
+                    pill.innerHTML = 'listening to: ' + name + ' - ' + artist + ' &#8599;';
+                    pill.style.cursor = 'pointer';
+                    pill.onclick = function () { window.open(url, '_blank'); };
+                }
+            })
+            .catch(function () {
+                pill.textContent = 'listening to: offline';
+            });
+        }
+
+        updateTrack();
+        setInterval(updateTrack, 10000);
+    })();
+    </script>
+    <script>
+    (function () {
+        // ─── Config ───────────────────────────────────────────────────────────
+        const LERP_SPEED   = 0.055;
+
+        // Desktop: parallax offsets + factors
+        const DESKTOP_CONFIGS = [
+            { id: 'node-blog',   lineId: 'line-0', factor: 0.055, bx:  0.26, by: -0.22 },
+            { id: 'node-about',  lineId: 'line-1', factor: 0.040, bx: -0.30, by: -0.07 },
+            { id: 'node-latest', lineId: 'line-2', factor: 0.065, bx:  0.14, by:  0.24 },
+        ];
+
+        // Mobile: static positions, no parallax
+        const MOBILE_CONFIGS = [
+            { id: 'node-blog',   lineId: 'line-0', factor: 0, bx:  0.06, by: -0.30 },
+            { id: 'node-about',  lineId: 'line-1', factor: 0, bx:  0.22, by:  0.28 },
+            { id: 'node-latest', lineId: 'line-2', factor: 0, bx: -0.36, by:  0.20 },
+        ];
+
+        function isMobile() { return window.innerWidth < 768; }
+
+        // ─── State ────────────────────────────────────────────────────────────
+        let mouse = { x: 0, y: 0 };
+
+        const rootEl = document.getElementById('root-node');
+
+        function buildNodes() {
+            const cfgs = isMobile() ? MOBILE_CONFIGS : DESKTOP_CONFIGS;
+            return cfgs.map(cfg => ({
+                el:     document.getElementById(cfg.id),
+                lineEl: document.getElementById(cfg.lineId),
+                factor: cfg.factor,
+                bx: cfg.bx, by: cfg.by,
+                cx: 0, cy: 0,
+            }));
+        }
+
+        let nodes = buildNodes();
+
+        // ─── Helpers ──────────────────────────────────────────────────────────
+        function lerp(a, b, t) { return a + (b - a) * t; }
+
+        function getCenter() {
+            return { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+        }
+
+        function initPositions() {
+            const c = getCenter();
+            nodes.forEach(n => {
+                n.cx = c.x + n.bx * window.innerWidth;
+                n.cy = c.y + n.by * window.innerHeight;
+            });
+        }
+
+        // ─── Render loop ──────────────────────────────────────────────────────
+        function tick() {
+            const c  = getCenter();
+            const mx = mouse.x - c.x;
+            const my = mouse.y - c.y;
+
+            rootEl.style.left = c.x + 'px';
+            rootEl.style.top  = c.y + 'px';
+
+            const rx = c.x;
+            const ry = c.y;
+
+            nodes.forEach(n => {
+                const tx = c.x + n.bx * window.innerWidth  + mx * n.factor;
+                const ty = c.y + n.by * window.innerHeight + my * n.factor;
+
+                n.cx = lerp(n.cx, tx, LERP_SPEED);
+                n.cy = lerp(n.cy, ty, LERP_SPEED);
+
+                n.el.style.left = n.cx + 'px';
+                n.el.style.top  = n.cy + 'px';
+
+                n.lineEl.setAttribute('x1', rx);
+                n.lineEl.setAttribute('y1', ry);
+                n.lineEl.setAttribute('x2', n.cx);
+                n.lineEl.setAttribute('y2', n.cy);
+            });
+
+            rafId = requestAnimationFrame(tick);
+        }
+
+        // ─── Init ─────────────────────────────────────────────────────────────
+        document.addEventListener('mousemove', e => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        // Touch support
+        document.addEventListener('touchmove', e => {
+            mouse.x = e.touches[0].clientX;
+            mouse.y = e.touches[0].clientY;
+        }, { passive: true });
+
+        window.addEventListener('resize', () => {
+            nodes = buildNodes();
+            initPositions();
+        });
+
+        initPositions();
+        tick();
+    }());
+    </script>
+
+    <script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+    const canvas = document.getElementById('dither-canvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false });
+    renderer.setPixelRatio(1);
+    renderer.setClearColor(0x000000, 0);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const scene  = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 1000);
+    // ── KOSMAJ POSITION: adjust these to move where the model appears ──
+    // x: left(-) / right(+)   y: down(-) / up(+)   z: zoom (bigger number = further)
+    camera.position.set(0, -0.2, 6);
+    camera.lookAt(-0.09, -0.2, 0);
+
+    // ── Materials ───────────────────────────────────────────────────────────
+    const ditherMat = new THREE.ShaderMaterial({
+        uniforms: {},
+        vertexShader: [
+            'varying vec3 vNormal;',
+            'void main() {',
+            '  vNormal = normalize(normalMatrix * normal);',
+            '  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);',
+            '}'
+        ].join('\n'),
+        fragmentShader: [
+            'varying vec3 vNormal;',
+            '',
+            'float bayer(float x, float y) {',
+            '  if (y < 1.0) { if (x < 1.0) return 0.0;  if (x < 2.0) return 8.0;  if (x < 3.0) return 2.0;  return 10.0; }',
+            '  if (y < 2.0) { if (x < 1.0) return 12.0; if (x < 2.0) return 4.0;  if (x < 3.0) return 14.0; return 6.0;  }',
+            '  if (y < 3.0) { if (x < 1.0) return 3.0;  if (x < 2.0) return 11.0; if (x < 3.0) return 1.0;  return 9.0;  }',
+            '                 if (x < 1.0) return 15.0; if (x < 2.0) return 7.0;  if (x < 3.0) return 13.0; return 5.0;',
+            '}',
+            '',
+            'void main() {',
+            '  vec3  n     = normalize(vNormal);',
+            '  float diff  = max(dot(n, normalize(vec3(1.0, 2.0, 1.0))), 0.0);',
+            '  float intensity = 0.28 + diff * 0.72;',
+            '',
+            '  float grid  = 5.0;',
+            '  vec2  cell  = floor(gl_FragCoord.xy / grid);',
+            '  float thr   = bayer(mod(cell.x, 4.0), mod(cell.y, 4.0)) / 16.0;',
+            '  if (intensity < thr) discard;',
+            '',
+            '  vec2 p = mod(gl_FragCoord.xy, grid) - vec2(grid * 0.5);',
+            '  if (length(p) > grid * 0.4) discard;',
+            '',
+            '  gl_FragColor = vec4(1.0, 0.533, 0.0, 1.0);',
+            '}'
+        ].join('\n'),
+        side: THREE.DoubleSide,
+        transparent: true,
+    });
+
+    // ── Load GLB ────────────────────────────────────────────────────────────
+    const pivot = new THREE.Group();
+    scene.add(pivot);
+
+    new GLTFLoader().load(
+        'kosmaj.glb',
+        function (gltf) {
+            var model = gltf.scene;
+            model.traverse(function (child) {
+                if (child.isMesh) {
+                    child.material = ditherMat;
+                    if (!child.geometry.attributes.normal) {
+                        child.geometry.computeVertexNormals();
+                    }
+                }
+            });
+
+            // Bake all child transforms into geometry so we get true vertex positions
+            model.updateMatrixWorld(true);
+            model.traverse(function (child) {
+                if (child.isMesh) {
+                    child.geometry.applyMatrix4(child.matrixWorld);
+                    child.position.set(0, 0, 0);
+                    child.rotation.set(0, 0, 0);
+                    child.scale.set(1, 1, 1);
+                    child.updateMatrix();
+                }
+            });
+            // Reset parent transforms too
+            model.position.set(0, 0, 0);
+            model.rotation.set(0, 0, 0);
+            model.scale.set(1, 1, 1);
+
+            // Now compute true center from baked geometry and translate vertices
+            var box = new THREE.Box3().setFromObject(model);
+            var center = box.getCenter(new THREE.Vector3());
+            model.traverse(function (child) {
+                if (child.isMesh) {
+                    child.geometry.translate(-center.x, -center.y, -center.z);
+                }
+            });
+
+            // Scale to fit
+            box.setFromObject(model);
+            var size = box.getSize(new THREE.Vector3());
+            model.scale.setScalar(2.4 / Math.max(size.x, size.y, size.z));
+
+            pivot.add(model);
+        },
+        undefined,
+        function (err) { console.error('glb error:', err); }
+    );
+
+    // ── Resize ──────────────────────────────────────────────────────────────
+    window.addEventListener('resize', function () {
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+    });
+
+    // ── Animate ─────────────────────────────────────────────────────────────
+    (function tick() {
+        requestAnimationFrame(tick);
+        pivot.rotation.y += 0.008;
+        renderer.render(scene, camera);
+    })();
+    </script>
 </body>
 </html>

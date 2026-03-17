@@ -21,18 +21,8 @@ const musicFavorites = {
 const STAMP_CONFIG = {
     WIDTH: 150,
     HEIGHT: 180,
-    OVERLAP: 30
+    OVERLAP: 45
 };
-
-// ============================================
-// Theme Management
-// ============================================
-
-function toggleTheme() {
-    document.documentElement.classList.toggle('dark-mode');
-    const isDark = document.documentElement.classList.contains('dark-mode');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-}
 
 // ============================================
 // Stamps Visibility Management
@@ -119,10 +109,14 @@ function calculateInitialPositions() {
     const totalWidth = totalStamps * WIDTH - (totalStamps - 1) * OVERLAP;
     
     // Center the stamps horizontally
-    const startX = (window.innerWidth - totalWidth) / 2;
+    const viewportW = window.innerWidth / zoomLevel;
+    const startX = (viewportW - totalWidth) / 2;
     
-    // Position at middle of bottom edge (not completely at bottom)
-    const bottomY = window.innerHeight - HEIGHT / 2;
+    // Position so 70% visible, 30% below viewport
+    // Compensate for CSS zoom on blog pages
+    const zoomLevel = parseFloat(getComputedStyle(document.body).zoom) || 1;
+    const viewportH = window.innerHeight / zoomLevel;
+    const bottomY = viewportH - HEIGHT * 0.35;
     
     // Create positions for all stamps along the bottom edge
     const positions = [];
@@ -163,13 +157,14 @@ function createDragHandlers(stamp) {
     function dragStart(e) {
         e.preventDefault();
         e.stopPropagation();
-        
+
+        const zoomLevel = parseFloat(getComputedStyle(document.body).zoom) || 1;
         const rect = stamp.getBoundingClientRect();
-        const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
-        const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
-        
-        initialX = clientX - rect.left;
-        initialY = clientY - rect.top;
+        const clientX = (e.type === 'touchstart' ? e.touches[0].clientX : e.clientX) / zoomLevel;
+        const clientY = (e.type === 'touchstart' ? e.touches[0].clientY : e.clientY) / zoomLevel;
+
+        initialX = clientX - rect.left / zoomLevel;
+        initialY = clientY - rect.top / zoomLevel;
         
         isDragging = true;
         stamp.style.transition = 'none';
@@ -178,12 +173,13 @@ function createDragHandlers(stamp) {
     
     function drag(e) {
         if (!isDragging) return;
-        
+
         e.preventDefault();
-        
-        const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
-        const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
-        
+
+        const zoomLevel = parseFloat(getComputedStyle(document.body).zoom) || 1;
+        const clientX = (e.type === 'touchmove' ? e.touches[0].clientX : e.clientX) / zoomLevel;
+        const clientY = (e.type === 'touchmove' ? e.touches[0].clientY : e.clientY) / zoomLevel;
+
         currentX = clientX - initialX;
         currentY = clientY - initialY;
         
@@ -241,12 +237,6 @@ function loadStampPosition(stampId) {
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Theme toggle
-    const themeToggle = document.getElementById('theme-toggle');
-    if (themeToggle) {
-        themeToggle.addEventListener('click', toggleTheme);
-    }
-    
     // Stamps toggle
     const stampsToggle = document.getElementById('stamps-toggle');
     if (stampsToggle) {

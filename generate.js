@@ -61,99 +61,58 @@ function generatePostHTML(title, content, date, postNumber) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${postNumber}. ${title} - ${CONFIG.AUTHOR_NAME}</title>
-    
+    <title>${postNumber}. ${title} - natochi</title>
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="../favicon.svg">
     <link rel="alternate icon" href="../favicon.ico">
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
-    <meta property="og:url" content="https://natochi.com/blog/${postNumber}.html">
-    <meta property="og:title" content="${postNumber}. ${title} - ${CONFIG.AUTHOR_NAME}">
+    <meta property="og:url" content="https://natochi.cv/blog/${postNumber}.html">
+    <meta property="og:title" content="${postNumber}. ${title} - natochi">
     <meta property="og:description" content="${title}">
-    <meta property="og:image" content="https://natochi.com/og-image.png">
-    
+    <meta property="og:image" content="https://natochi.cv/og-image.png">
+
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://natochi.com/blog/${postNumber}.html">
-    <meta property="twitter:title" content="${postNumber}. ${title} - ${CONFIG.AUTHOR_NAME}">
+    <meta property="twitter:url" content="https://natochi.cv/blog/${postNumber}.html">
+    <meta property="twitter:title" content="${postNumber}. ${title} - natochi">
     <meta property="twitter:description" content="${title}">
-    <meta property="twitter:image" content="https://natochi.com/og-image.png">
-    
-    <script>
-        (function() {
-            const savedTheme = localStorage.getItem('theme');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-                document.documentElement.classList.add('dark-mode');
-            }
-        })();
-    </script>
+    <meta property="twitter:image" content="https://natochi.cv/og-image.png">
+
     <link rel="stylesheet" href="../style.css">
 </head>
-<body>
-    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
-        <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <polygon points="22 17 22 19 21 19 21 20 20 20 20 21 18 21 18 22 16 22 16 23 10 23 10 22 8 22 8 21 6 21 6 20 5 20 5 19 4 19 4 17 3 17 3 15 2 15 2 9 3 9 3 7 4 7 4 5 5 5 5 4 6 4 6 3 8 3 8 2 10 2 10 1 15 1 15 2 13 2 13 3 11 3 11 4 10 4 10 6 9 6 9 8 8 8 8 12 9 12 9 14 10 14 10 16 11 16 11 17 13 17 13 18 15 18 15 19 19 19 19 18 21 18 21 17 22 17"/>
-        </svg>
-        <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="5"/>
-            <line x1="12" y1="1" x2="12" y2="3"/>
-            <line x1="12" y1="21" x2="12" y2="23"/>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-            <line x1="1" y1="12" x2="3" y2="12"/>
-            <line x1="21" y1="12" x2="23" y2="12"/>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-        </svg>
-    </button>
-    <button class="stamps-toggle" id="stamps-toggle" aria-label="Toggle stamps">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <polygon points="18 5 18 11 17 11 17 12 15 12 15 13 14 13 14 15 9 15 9 12 10 12 10 11 11 11 11 10 13 10 13 9 14 9 14 7 13 7 13 6 11 6 11 7 10 7 10 8 9 8 9 9 8 9 8 8 7 8 7 7 6 7 6 6 5 6 5 5 6 5 6 4 7 4 7 3 9 3 9 2 15 2 15 3 16 3 16 4 17 4 17 5 18 5"/>
-            <polygon points="13 18 14 18 14 21 13 21 13 22 10 22 10 21 9 21 9 18 10 18 10 17 13 17 13 18"/>
-        </svg>
-        <span class="stamps-tooltip">with love from <a href="https://www.linkedin.com/in/trinidadmatta/" target="_blank" rel="noopener noreferrer">tonchi</a> !</span>
-    </button>
+<body class="blog-page">
+    <a class="cal-link" href="https://cal.com/natochi" target="_blank" rel="noopener">tienes una <span>duda</span>?<br>sacame 30min</a>
+
     <div class="container">
         <div class="content">
+            <div class="back-link">
+                <a href="../index.html">&#8592; Index</a>
+            </div>
+
             <div class="blog-post">
                 <h1>${title}</h1>
-                <div class="separator">-</div>
+                <p class="date">${date}</p>
                 <div class="blog-content">
 ${content}
                 </div>
-                <p class="date">${date}</p>
             </div>
-            
-            <div class="back-link">
-                <a href="../index.html">. . /</a>
-            </div>
+
+            <footer class="post-footer">
+                <hr class="post-separator">
+                <p class="post-socials">
+                    <span class="socials-label">[&#8599;]:</span>
+                    <a href="mailto:natochi@platan.us">Email</a>,
+                    <a href="https://www.linkedin.com/in/natochi/" target="_blank" rel="noopener">LinkedIn</a>,
+                    <a href="https://x.com/natochi_" target="_blank" rel="noopener">Twitter</a>,
+                    <a href="https://www.instagram.com/ignaciobernardo/" target="_blank" rel="noopener">Instagram</a>
+                </p>
+            </footer>
         </div>
     </div>
-    
-    <footer class="stamps-footer">
-        <div class="stamp" data-stamp="1" style="--rotation: -5deg;"><img src="../stamps/stamp1.PNG" alt="Stamp 1"></div>
-        <div class="stamp" data-stamp="2" style="--rotation: 8deg;"><img src="../stamps/stamp2.PNG" alt="Stamp 2"></div>
-        <div class="stamp" data-stamp="3" style="--rotation: -3deg;"><img src="../stamps/stamp3.PNG" alt="Stamp 3"></div>
-        <div class="stamp" data-stamp="4" style="--rotation: 6deg;"><img src="../stamps/stamp4.PNG" alt="Stamp 4"></div>
-        <div class="stamp" data-stamp="5" style="--rotation: -7deg;"><img src="../stamps/stamp5.PNG" alt="Stamp 5"></div>
-        <div class="stamp" data-stamp="6" style="--rotation: 4deg;"><img src="../stamps/stamp6.PNG" alt="Stamp 6"></div>
-        <div class="stamp" data-stamp="7" style="--rotation: -6deg;"><img src="../stamps/stamp7.PNG" alt="Stamp 7"></div>
-        <div class="stamp" data-stamp="8" style="--rotation: 9deg;"><img src="../stamps/stamp8.PNG" alt="Stamp 8"></div>
-        <div class="stamp" data-stamp="9" style="--rotation: -4deg;"><img src="../stamps/stamp9.PNG" alt="Stamp 9"></div>
-        <div class="stamp" data-stamp="10" style="--rotation: 7deg;"><img src="../stamps/stamp10.PNG" alt="Stamp 10"></div>
-        <div class="stamp" data-stamp="11" style="--rotation: -2deg;"><img src="../stamps/stamp11.PNG" alt="Stamp 11"></div>
-        <div class="stamp" data-stamp="12" style="--rotation: 5deg;"><img src="../stamps/stamp12.PNG" alt="Stamp 12"></div>
-        <div class="stamp" data-stamp="13" style="--rotation: -8deg;"><img src="../stamps/stamp13.PNG" alt="Stamp 13"></div>
-        <div class="stamp" data-stamp="14" style="--rotation: 3deg;"><img src="../stamps/stamp14.PNG" alt="Stamp 14"></div>
-        <div class="stamp" data-stamp="15" style="--rotation: -6deg;"><img src="../stamps/stamp15.PNG" alt="Stamp 15"></div>
-        <div class="stamp" data-stamp="16" style="--rotation: 10deg;"><img src="../stamps/stamp16.PNG" alt="Stamp 16"></div>
-        <div class="stamp" data-stamp="17" style="--rotation: -1deg;"><img src="../stamps/stamp17.PNG" alt="Stamp 17"></div>
-        <div class="stamp" data-stamp="18" style="--rotation: 6deg;"><img src="../stamps/stamp18.PNG" alt="Stamp 18"></div>
-    </footer>
-    
+
     <script src="../script.js"></script>
 </body>
 </html>`;
@@ -245,19 +204,22 @@ function updateScript(hiddenPosts) {
 function updatePostsPage(allPosts) {
     const postsPath = path.join(__dirname, 'posts.html');
     if (!fs.existsSync(postsPath)) return;
-    
+
     let postsContent = fs.readFileSync(postsPath, 'utf-8');
-    
+
     const postsList = allPosts
-        .map(post => `                <li><a href="blog/${post.filename}">${post.number}. ${post.title}</a></li>`)
+        .map(post => `                <div class="post-row">
+                    <a href="blog/${post.filename}" class="post-row-title">${post.title}</a>
+                    <span class="post-row-date">${post.date}</span>
+                </div>`)
         .join('\n');
-    
-    const listRegex = /<ul class="blog-list" id="all-posts-list">[\s\S]*?<\/ul>/;
-    const newList = `<ul class="blog-list" id="all-posts-list">\n${postsList}\n            </ul>`;
-    
+
+    const listRegex = /<div class="post-list">[\s\S]*?<\/div>\n\s*\n/;
+    const newList = `<div class="post-list">\n${postsList}\n            </div>\n\n`;
+
     postsContent = postsContent.replace(listRegex, newList);
     fs.writeFileSync(postsPath, postsContent);
-    
+
     console.log('✓ posts.html actualizado');
 }
 
@@ -265,22 +227,23 @@ function updatePostsPage(allPosts) {
  * Actualiza index.html con la lista de posts
  */
 function updateIndex(posts) {
+    if (posts.length === 0) return;
+
     let indexContent = fs.readFileSync(CONFIG.INDEX_PATH, 'utf-8');
-    
-    const visiblePosts = posts.slice(0, CONFIG.VISIBLE_POSTS);
-    const hiddenPosts = posts.slice(CONFIG.VISIBLE_POSTS);
-    
-    const postsList = visiblePosts
-        .map(post => `                <li><a href="blog/${post.filename}">${post.number}. ${post.title}</a></li>`)
-        .join('\n');
-    
-    const listRegex = /<ul class="blog-list">[\s\S]*?<\/ul>/;
-    const newList = `<ul class="blog-list">\n${postsList}\n            </ul>`;
-    
-    indexContent = indexContent.replace(listRegex, newList);
+    const latest = posts[0];
+
+    // Update the LATEST node link and description
+    indexContent = indexContent.replace(
+        /<a href="blog\/\d+\.html" class="node-sibling" id="node-latest">/,
+        `<a href="blog/${latest.filename}" class="node-sibling" id="node-latest">`
+    );
+    // Update the node-desc inside node-latest
+    indexContent = indexContent.replace(
+        /(<a[^>]*id="node-latest"[^>]*>[\s\S]*?<p class="node-desc">)(.*?)(<\/p>)/,
+        `$1${latest.title}$3`
+    );
+
     fs.writeFileSync(CONFIG.INDEX_PATH, indexContent);
-    
-    updateScript(hiddenPosts);
     console.log('✓ index.html actualizado');
 }
 
