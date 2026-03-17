@@ -64,8 +64,7 @@ function generatePostHTML(title, content, date, postNumber) {
     <title>${postNumber}. ${title} - natochi</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
-    <link rel="alternate icon" href="../favicon.ico">
+    <link rel="icon" type="image/png" href="../favicon.png">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
