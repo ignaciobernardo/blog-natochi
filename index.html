@@ -145,6 +145,8 @@
             });
         }
 
+        var pollInterval = 120000; // 2 minutes
+
         function updateTrack() {
             getToken()
             .then(function (token) {
@@ -152,8 +154,16 @@
                     headers: { 'Authorization': 'Bearer ' + token },
                 });
             })
-            .then(function (r) { return r.json(); })
+            .then(function (r) {
+                if (r.status === 429) {
+                    var retry = parseInt(r.headers.get('Retry-After') || '300', 10);
+                    setTimeout(updateTrack, retry * 1000);
+                    return null;
+                }
+                return r.json();
+            })
             .then(function (data) {
+                if (!data) return;
                 if (data.items && data.items.length > 0) {
                     var track = data.items[0].track;
                     var name  = track.name;
@@ -170,7 +180,7 @@
         }
 
         updateTrack();
-        setInterval(updateTrack, 10000);
+        setInterval(updateTrack, pollInterval);
     })();
     </script>
     <script>
