@@ -626,15 +626,15 @@ body.blog-page .page-name {
     width: calc(100% + 12rem);
 }
 
-.grid-tag {
+a.grid-highlight {
     background-color: #FCD34D;
     color: #1a1a1a;
-    font-size: 0.7rem;
-    padding: 1px 6px;
-    border-radius: 3px;
-    margin-left: 0.4rem;
     text-decoration: none;
-    display: inline-block;
+}
+
+a.grid-highlight:hover {
+    background-color: #FCD34D;
+    color: #1a1a1a;
 }
 
 .grid-amount {
