@@ -615,9 +615,10 @@ body.blog-page .page-name {
 .info-grid {
     display: grid;
     grid-template-columns: auto 1fr auto;
-    gap: 0.4rem 1.5rem;
+    gap: 0.4rem 2rem;
     margin: 0.8rem 0 1.2rem 0;
     align-items: baseline;
+    width: calc(100% + 12rem);
 }
 
 .grid-amount {
@@ -625,6 +626,7 @@ body.blog-page .page-name {
     color: #FF8800;
     white-space: nowrap;
     text-align: right;
+    font-size: 0.85rem;
 }
 
 .grid-title {
@@ -674,16 +676,17 @@ span.grid-title {
 
 @media (max-width: 767px) {
     .info-grid {
-        grid-template-columns: 1fr;
-        gap: 0.2rem;
+        width: 100%;
+        grid-template-columns: 1fr auto;
+        gap: 0.15rem 1rem;
     }
 
     .grid-desc {
-        margin-bottom: 0.2rem;
+        display: none;
     }
 
     .grid-amount {
-        margin-bottom: 0.8rem;
+        margin-bottom: 0;
     }
 }
 
