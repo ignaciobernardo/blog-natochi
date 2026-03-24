@@ -23,12 +23,52 @@
     <meta property="twitter:image" content="https://natochi.cv/og-image.png">
 
     <link rel="stylesheet" href="/style.css">
+    <style>
+        .spomenik-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        .spomenik-content {
+            width: 50%;
+            padding: 3rem 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .spomenik-image {
+            width: 50%;
+            position: fixed;
+            right: 0;
+            top: 0;
+            height: 100vh;
+        }
+        .spomenik-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        @media (max-width: 767px) {
+            .spomenik-layout {
+                flex-direction: column;
+            }
+            .spomenik-content {
+                width: 100%;
+                padding: 2rem 1.5rem;
+                order: 2;
+            }
+            .spomenik-image {
+                width: 100%;
+                position: relative;
+                height: 40vh;
+                order: 1;
+            }
+        }
+    </style>
 </head>
 <body class="blog-page">
-    <a class="cal-link" href="https://cal.com/natochi" target="_blank" rel="noopener">got a <span>question</span>?<br>book 30min</a>
 
-    <div class="container">
-        <div class="content">
+    <div class="spomenik-layout">
+        <div class="spomenik-content">
             <div class="back-link">
                 <a href="/">&#8592; Index</a>
             </div>
@@ -67,6 +107,10 @@
                     <a href="https://www.instagram.com/ignaciobernardo/" target="_blank" rel="noopener">Instagram</a>
                 </p>
             </footer>
+        </div>
+
+        <div class="spomenik-image">
+            <img src="/og-image.png" alt="spomenik grant">
         </div>
     </div>
 
