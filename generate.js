@@ -8,6 +8,7 @@ const CONFIG = {
     POSTS_DIR: path.join(__dirname, 'posts'),
     BLOG_DIR: path.join(__dirname, 'blog'),
     INDEX_PATH: path.join(__dirname, 'index.html'),
+    POSTS_PAGE_PATH: path.join(__dirname, 'posts', 'index.html'),
     SCRIPT_PATH: path.join(__dirname, 'script.js'),
     VISIBLE_POSTS: 3,
     AUTHOR_NAME: 'Nacho'
@@ -19,6 +20,19 @@ if (!fs.existsSync(CONFIG.BLOG_DIR)) {
 }
 
 /**
+ * Genera un slug URL-friendly a partir de un título
+ */
+function slugify(title) {
+    return title
+        .toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove accents
+        .replace(/[^a-z0-9\s-]/g, '')  // remove non-alphanumeric
+        .trim()
+        .replace(/\s+/g, '-')          // spaces to hyphens
+        .replace(/-+/g, '-');           // collapse multiple hyphens
+}
+
+/**
  * Convierte sintaxis de Obsidian (![[imagen.png]]) a markdown estándar
  */
 function convertObsidianSyntax(markdown) {
@@ -26,7 +40,7 @@ function convertObsidianSyntax(markdown) {
         /!\[\[([^\]]+)\]\]/g,
         (match, imageName) => {
             const cleanName = imageName.trim();
-            return `\n\n![${cleanName}](../posts/${encodeURIComponent(cleanName)})\n\n`;
+            return `\n\n![${cleanName}](/posts/${encodeURIComponent(cleanName)})\n\n`;
         }
     );
 }
@@ -48,14 +62,14 @@ function formatDate(date) {
     const dateStr = typeof date === 'string' && date.match(/^\d{4}-\d{2}-\d{2}$/)
         ? date
         : new Date(date).toISOString().split('T')[0];
-    
+
     return dateStr;
 }
 
 /**
  * Genera el HTML completo de un post
  */
-function generatePostHTML(title, content, date, postNumber) {
+function generatePostHTML(title, content, date, postNumber, slug) {
     return `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -64,23 +78,23 @@ function generatePostHTML(title, content, date, postNumber) {
     <title>${postNumber}. ${title} - natochi</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="../favicon.png">
+    <link rel="icon" type="image/png" href="/favicon.png">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
-    <meta property="og:url" content="https://natochi.cv/blog/${postNumber}.html">
+    <meta property="og:url" content="https://natochi.cv/blog/${slug}">
     <meta property="og:title" content="${postNumber}. ${title} - natochi">
     <meta property="og:description" content="${title}">
     <meta property="og:image" content="https://natochi.cv/og-image.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://natochi.cv/blog/${postNumber}.html">
+    <meta property="twitter:url" content="https://natochi.cv/blog/${slug}">
     <meta property="twitter:title" content="${postNumber}. ${title} - natochi">
     <meta property="twitter:description" content="${title}">
     <meta property="twitter:image" content="https://natochi.cv/og-image.png">
 
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body class="blog-page">
     <a class="cal-link" href="https://cal.com/natochi" target="_blank" rel="noopener">tienes una <span>duda</span>?<br>sacame 30min</a>
@@ -88,7 +102,7 @@ function generatePostHTML(title, content, date, postNumber) {
     <div class="container">
         <div class="content">
             <div class="back-link">
-                <a href="../index.html">&#8592; Index</a>
+                <a href="/">&#8592; Index</a>
             </div>
 
             <div class="blog-post">
@@ -112,7 +126,7 @@ ${content}
         </div>
     </div>
 
-    <script src="../script.js"></script>
+    <script src="/script.js"></script>
 </body>
 </html>`;
 }
@@ -124,30 +138,35 @@ function processPostFile(file, index, totalFiles) {
     const filePath = path.join(CONFIG.POSTS_DIR, file);
     const content = fs.readFileSync(filePath, 'utf-8');
     const { attributes, body } = frontMatter(content);
-    
+
     // Convertir sintaxis Obsidian y procesar markdown
     const markdownBody = convertObsidianSyntax(body);
     let html = marked.parse(markdownBody);
     html = processImages(html);
-    
+
     // Extraer metadatos
     const title = attributes.title || path.basename(file, '.md');
     const date = formatDate(attributes.date || new Date());
     const postNumber = totalFiles - index;
-    
-    // Generar y guardar HTML
-    const postHTML = generatePostHTML(title, html, date, postNumber);
-    const postFileName = `${postNumber}.html`;
-    const postFilePath = path.join(CONFIG.BLOG_DIR, postFileName);
-    
+    const slug = attributes.slug || slugify(title);
+
+    // Crear directorio para el post y guardar HTML
+    const postDir = path.join(CONFIG.BLOG_DIR, slug);
+    if (!fs.existsSync(postDir)) {
+        fs.mkdirSync(postDir, { recursive: true });
+    }
+
+    const postHTML = generatePostHTML(title, html, date, postNumber, slug);
+    const postFilePath = path.join(postDir, 'index.html');
+
     fs.writeFileSync(postFilePath, postHTML);
-    
-    console.log(`✓ Generado: ${postFileName} - ${title}`);
-    
+
+    console.log(`✓ Generado: blog/${slug}/index.html - ${title}`);
+
     return {
         number: postNumber,
         title,
-        filename: postFileName,
+        slug,
         date
     };
 }
@@ -170,7 +189,7 @@ function processPosts() {
             return statB.mtimeMs - statA.mtimeMs;
         });
 
-    const posts = files.map((file, index) => 
+    const posts = files.map((file, index) =>
         processPostFile(file, index, files.length)
     );
 
@@ -182,33 +201,32 @@ function processPosts() {
  */
 function updateScript(hiddenPosts) {
     let scriptContent = fs.readFileSync(CONFIG.SCRIPT_PATH, 'utf-8');
-    
+
     const moreEntries = hiddenPosts.map(post => ({
         num: post.number,
         title: post.title
     }));
-    
+
     const entriesArray = `const moreEntries = ${JSON.stringify(moreEntries, null, 4)};`;
     const entriesRegex = /const moreEntries = \[[\s\S]*?\];/;
-    
+
     scriptContent = scriptContent.replace(entriesRegex, entriesArray);
     fs.writeFileSync(CONFIG.SCRIPT_PATH, scriptContent);
-    
+
     console.log('✓ script.js actualizado');
 }
 
 /**
- * Actualiza posts.html con todos los posts
+ * Actualiza posts/index.html con todos los posts
  */
 function updatePostsPage(allPosts) {
-    const postsPath = path.join(__dirname, 'posts.html');
-    if (!fs.existsSync(postsPath)) return;
+    if (!fs.existsSync(CONFIG.POSTS_PAGE_PATH)) return;
 
-    let postsContent = fs.readFileSync(postsPath, 'utf-8');
+    let postsContent = fs.readFileSync(CONFIG.POSTS_PAGE_PATH, 'utf-8');
 
     const postsList = allPosts
         .map(post => `                <div class="post-row">
-                    <a href="blog/${post.filename}" class="post-row-title">${post.title}</a>
+                    <a href="/blog/${post.slug}" class="post-row-title">${post.title}</a>
                     <span class="post-row-date">${post.date}</span>
                 </div>`)
         .join('\n');
@@ -217,9 +235,9 @@ function updatePostsPage(allPosts) {
     const newList = `<div class="post-list">\n${postsList}\n            </div>\n\n`;
 
     postsContent = postsContent.replace(listRegex, newList);
-    fs.writeFileSync(postsPath, postsContent);
+    fs.writeFileSync(CONFIG.POSTS_PAGE_PATH, postsContent);
 
-    console.log('✓ posts.html actualizado');
+    console.log('✓ posts/index.html actualizado');
 }
 
 /**
@@ -233,8 +251,8 @@ function updateIndex(posts) {
 
     // Update the LATEST node link and description
     indexContent = indexContent.replace(
-        /<a href="blog\/\d+\.html" class="node-sibling" id="node-latest">/,
-        `<a href="blog/${latest.filename}" class="node-sibling" id="node-latest">`
+        /<a href="\/blog\/[^"]*" class="node-sibling" id="node-latest">/,
+        `<a href="/blog/${latest.slug}" class="node-sibling" id="node-latest">`
     );
     // Update the node-desc inside node-latest
     indexContent = indexContent.replace(
@@ -247,14 +265,30 @@ function updateIndex(posts) {
 }
 
 /**
+ * Limpia archivos .html viejos en blog/ (los de formato N.html)
+ */
+function cleanOldBlogFiles() {
+    const files = fs.readdirSync(CONFIG.BLOG_DIR);
+    for (const file of files) {
+        if (file.match(/^\d+\.html$/)) {
+            fs.unlinkSync(path.join(CONFIG.BLOG_DIR, file));
+            console.log(`✗ Eliminado viejo: blog/${file}`);
+        }
+    }
+}
+
+/**
  * Función principal
  */
 function main() {
     console.log('Generando posts...\n');
-    
+
+    // Limpiar archivos viejos de blog
+    cleanOldBlogFiles();
+
     const posts = processPosts();
     console.log(`\nTotal: ${posts.length} posts procesados\n`);
-    
+
     if (posts.length > 0) {
         updateIndex(posts);
         updatePostsPage(posts);
