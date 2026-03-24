@@ -614,10 +614,15 @@ body.blog-page .page-name {
 /* Info grid (projects, reading) */
 .info-grid {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto 1fr;
     gap: 0.4rem 2rem;
     margin: 0.8rem 0 1.2rem 0;
     align-items: baseline;
+}
+
+/* 3-column grid for opportunity index */
+body.blog-page .info-grid {
+    grid-template-columns: auto 1fr auto;
     width: calc(100% + 12rem);
 }
 
@@ -675,13 +680,13 @@ span.grid-title {
 }
 
 @media (max-width: 767px) {
-    .info-grid {
+    body.blog-page .info-grid {
         width: 100%;
         grid-template-columns: 1fr auto;
         gap: 0.15rem 1rem;
     }
 
-    .grid-desc {
+    body.blog-page .grid-desc {
         display: none;
     }
 
