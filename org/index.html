@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>org.indies.la</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Victor+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0a0a;
+      --bg-2: #111110;
+      --ui: rgb(40, 39, 38);
+      --ui-2: rgb(52, 51, 49);
+      --tx-3: rgb(87, 86, 83);
+      --tx-2: rgb(135, 133, 128);
+      --tx: rgb(206, 205, 195);
+      --og: oklch(0.66 0.18 45);
+      --green: #5af078;
+      --yellow: #e8d44d;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--tx);
+      font-family: 'Victor Mono', monospace;
+      font-size: 14px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    a { color: var(--og); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .terminal {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 24px 20px;
+    }
+
+    .title-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      background: var(--ui);
+      border-radius: 8px 8px 0 0;
+    }
+
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #febc2e; }
+    .dot-g { background: #28c840; }
+
+    .title-bar-text {
+      flex: 1;
+      text-align: center;
+      color: var(--tx-3);
+      font-size: 12px;
+    }
+
+    .screen {
+      background: var(--bg-2);
+      border: 1px solid var(--ui);
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      padding: 24px 20px;
+      overflow-x: auto;
+    }
+
+    .prompt { color: var(--green); }
+    .comment { color: var(--tx-3); }
+    .flag { color: var(--og); }
+    .val { color: var(--tx); }
+    .dim { color: var(--tx-3); }
+
+    .line { white-space: nowrap; }
+    .blank { height: 1.7em; }
+
+    /* project table */
+    .tbl {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 4px 0;
+      font-size: 13px;
+    }
+
+    .tbl th {
+      text-align: left;
+      color: var(--tx-3);
+      font-weight: 400;
+      padding: 2px 12px 2px 0;
+      border-bottom: 1px solid var(--ui);
+      white-space: nowrap;
+    }
+
+    .tbl td {
+      padding: 5px 12px 5px 0;
+      border-bottom: 1px solid var(--ui);
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+
+    .tbl tr:last-child td { border-bottom: none; }
+
+    .tbl .name-cell a,
+    .tbl .name-cell { color: var(--tx); }
+    .tbl .name-cell a:hover { color: var(--og); }
+
+    .lead-avatar {
+      width: 20px;
+      height: 20px;
+      border-radius: 3px;
+      image-rendering: pixelated;
+      vertical-align: middle;
+    }
+
+    .ascii-bar {
+      display: inline-block;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+    .ascii-bar .filled { color: var(--og); }
+    .ascii-bar .empty { color: var(--ui); }
+
+    .status-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+    .dot-active { background: var(--green); }
+    .dot-planning { background: var(--yellow); }
+    .dot-shelved { background: var(--tx-3); }
+
+    .btn-reclamar {
+      font-family: 'Victor Mono', monospace;
+      font-size: 12px;
+      background: transparent;
+      color: var(--og);
+      border: 1px solid var(--ui-2);
+      padding: 2px 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-reclamar:hover {
+      background: var(--og);
+      color: var(--bg);
+      border-color: var(--og);
+    }
+
+    .deadline-soon { color: var(--og); }
+
+    /* bar chart */
+    .chart-section {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--ui);
+    }
+
+    .chart-container {
+      position: relative;
+      height: 180px;
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      padding: 0 0 24px 0;
+    }
+
+    .chart-grid {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+
+    .grid-line {
+      border-top: 1px solid rgba(255,255,255,0.04);
+      width: 100%;
+    }
+
+    .chart-bar-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .chart-bar {
+      width: 100%;
+      max-width: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      flex: 1;
+    }
+
+    .bar-segment { width: 100%; min-height: 0; transition: height 0.3s; }
+    .bar-views { background: #c43e3e; border-radius: 2px 2px 0 0; }
+    .bar-uniques { background: #d97a2b; }
+    .bar-interactions { background: #e8c84d; border-radius: 0 0 2px 2px; }
+
+    .chart-label {
+      font-size: 10px;
+      color: var(--tx-3);
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    .chart-legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+      font-size: 11px;
+      color: var(--tx-3);
+    }
+
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+    .chart-bar-group:hover .bar-segment { opacity: 0.8; }
+    .chart-bar-group .tooltip {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--ui-2);
+      color: var(--tx);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      white-space: nowrap;
+      z-index: 10;
+    }
+    .chart-bar-group:hover .tooltip { display: block; }
+
+    /* discord heatmap */
+    .heatmap-header {
+      display: flex;
+      gap: 24px;
+      font-size: 12px;
+      margin-bottom: 12px;
+      color: var(--tx-3);
+    }
+    .heatmap-header .hval { color: var(--og); }
+
+    .heatmap-wrapper {
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .heatmap {
+      display: flex;
+      gap: 2px;
+      width: 100%;
+    }
+
+    .heatmap-col {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+    }
+
+    .heatmap-cell {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 2px;
+      background: var(--ui);
+    }
+
+    .h-1 { background: rgba(232, 101, 24, 0.15); }
+    .h-2 { background: rgba(232, 101, 24, 0.35); }
+    .h-3 { background: rgba(232, 101, 24, 0.55); }
+    .h-4 { background: rgba(232, 101, 24, 0.85); }
+
+    .heatmap-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+      font-size: 10px;
+      color: var(--tx-3);
+    }
+
+    /* discord members line chart */
+    .tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 12px;
+    }
+
+    .tab {
+      font-family: 'Victor Mono', monospace;
+      font-size: 12px;
+      background: transparent;
+      color: var(--tx-3);
+      border: 1px solid var(--ui);
+      padding: 4px 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .tab:first-child { border-radius: 4px 0 0 4px; }
+    .tab:last-child { border-radius: 0 4px 4px 0; border-left: none; }
+
+    .tab.active {
+      color: var(--og);
+      border-color: var(--og);
+      background: rgba(232, 101, 24, 0.08);
+    }
+    .tab.active + .tab { border-left-color: var(--og); }
+
+    .line-chart-container {
+      position: relative;
+      height: 140px;
+    }
+
+    .line-chart-container svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .line-chart-grid line {
+      stroke: rgba(255,255,255,0.04);
+      stroke-width: 1;
+    }
+
+    .chart-line {
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .chart-area {
+      opacity: 0.1;
+    }
+
+    .line-chart-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--tx-3);
+      margin-top: 4px;
+    }
+
+    @media (max-width: 700px) {
+      .terminal { padding: 12px 8px; }
+      .screen { padding: 16px 12px; }
+      .tbl { font-size: 11px; }
+      .tbl th, .tbl td { padding: 4px 6px 4px 0; }
+      .hide-mobile { display: none; }
+      .chart-container { height: 140px; }
+      .lead-avatar { width: 18px; height: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal">
+    <div class="title-bar">
+      <div class="dot dot-r"></div>
+      <div class="dot dot-y"></div>
+      <div class="dot dot-g"></div>
+      <span class="title-bar-text">org.indies.la</span>
+    </div>
+    <div class="screen">
+      <div class="line"><span class="prompt">$</span> <span class="val">cat</span> <span class="flag">proyectos_activos.csv</span></div>
+      <div class="blank"></div>
+
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th></th>
+            <th>proyecto</th>
+            <th>lead</th>
+            <th>progreso</th>
+            <th class="hide-mobile">deadline</th>
+            <th class="hide-mobile">url</th>
+          </tr>
+        </thead>
+        <tbody id="active-body"></tbody>
+      </table>
+
+      <div class="blank"></div>
+      <div class="line"><span class="prompt">$</span> <span class="val">cat</span> <span class="flag">en_pausa.csv</span> <span class="comment"># disponibles para reclamar</span></div>
+      <div class="blank"></div>
+
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th></th>
+            <th>proyecto</th>
+            <th>lead</th>
+            <th>progreso</th>
+            <th class="hide-mobile"></th>
+          </tr>
+        </thead>
+        <tbody id="shelved-body"></tbody>
+      </table>
+
+      <div class="blank"></div>
+      <div class="line"><span class="prompt">$</span> <span class="val">curl</span> <span class="flag">--silent</span> <span class="val">discord/activity/indies</span> <span class="comment"># por semana y quarter</span></div>
+      <div class="blank"></div>
+
+      <div class="chart-section">
+        <div class="heatmap-header">
+          <span>mensajes por dia</span>
+          <span>active: <span class="hval" id="hm-active">—</span></span>
+          <span>idle: <span class="hval" id="hm-idle">—</span></span>
+        </div>
+        <div class="heatmap-wrapper">
+          <div class="heatmap" id="heatmap"></div>
+        </div>
+        <div class="heatmap-labels" id="heatmap-labels"></div>
+      </div>
+
+      <div class="blank"></div>
+      <div class="line"><span class="prompt">$</span> <span class="val">curl</span> <span class="flag">--silent</span> <span class="val">discord/members/indies</span></div>
+      <div class="blank"></div>
+
+      <div class="chart-section">
+        <div class="tabs">
+          <button class="tab active" onclick="switchMemberTab('total')">total</button>
+          <button class="tab" onclick="switchMemberTab('semanal')">semanal</button>
+        </div>
+        <div class="line-chart-container">
+          <svg id="members-chart" viewBox="0 0 900 140" preserveAspectRatio="none"></svg>
+        </div>
+        <div class="line-chart-labels" id="members-labels"></div>
+      </div>
+
+      <div class="blank"></div>
+      <div class="line"><span class="prompt">$</span> <span class="val">curl</span> <span class="flag">--silent</span> <span class="val">cloudflare/analytics/indies.la</span> <span class="comment"># ultimos 30 dias</span></div>
+      <div class="blank"></div>
+
+      <div class="chart-section">
+        <div class="chart-container" id="chart"></div>
+        <div class="chart-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#c43e3e"></div> vistas</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#d97a2b"></div> unicas</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#e8c84d"></div> interacciones</div>
+        </div>
+      </div>
+
+      <div class="blank"></div>
+      <div class="line"><span class="prompt">$</span> <span class="dim">_</span></div>
+    </div>
+  </div>
+
+  <script>
+    const projects = [
+      {
+        name: "hack contra la corrupcion",
+        desc: "a hack to fight corruption in latam.",
+        url: "hack.indies.la/en",
+        slug: "hack",
+        lead: "reno",
+        avatar: "img/reno.png",
+        progress: 40,
+        deadline: "2026-06-01",
+        status: "active",
+      },
+      {
+        name: "la clase",
+        desc: "a yc/stanford-type class for 150 people irl.",
+        url: "natochi.cv/laclase/",
+        slug: "la-clase",
+        lead: "max",
+        avatar: "img/max.png",
+        progress: 60,
+        deadline: "2026-04-20",
+        status: "active",
+      },
+      {
+        name: "plata",
+        desc: "indie finance tools for latam.",
+        url: "indies.la/plata",
+        slug: "plata",
+        lead: "diego",
+        avatar: "img/diego.png",
+        progress: 20,
+        deadline: null,
+        status: "active",
+      },
+      {
+        name: "fireside chats",
+        desc: "a monthly fireside chat event with founders.",
+        url: "lu.ma/indies",
+        slug: "fireside-chats",
+        lead: "javi",
+        avatar: "img/javi.png",
+        progress: 50,
+        deadline: null,
+        status: "active",
+      },
+      {
+        name: "torneo de ajedrez",
+        desc: "a chess tournament for the community.",
+        url: null,
+        slug: "torneo-de-ajedrez",
+        lead: null,
+        avatar: null,
+        progress: 10,
+        deadline: null,
+        status: "planning",
+      },
+      {
+        name: "startupchela",
+        desc: "a series of events called startupchela.",
+        url: null,
+        slug: "startupchela",
+        lead: null,
+        avatar: null,
+        progress: 0,
+        deadline: null,
+        status: "shelved",
+      },
+      {
+        name: "spomenik — microgrants",
+        desc: "a microgrant project for latam.",
+        url: "natochi.cv/spomenik/",
+        slug: "spomenik",
+        lead: "natochi",
+        avatar: "img/natochi.png",
+        progress: 0,
+        deadline: null,
+        status: "shelved",
+      },
+      {
+        name: "3x10",
+        desc: "micro vc fund for latam.",
+        url: "www.3x10.lat/",
+        slug: "3x10",
+        lead: "natochi",
+        avatar: "img/natochi.png",
+        progress: 0,
+        deadline: null,
+        status: "shelved",
+      },
+      {
+        name: "tienda",
+        desc: "merch de la comunidad indies.",
+        url: "tienda.indies.la",
+        slug: "tienda",
+        lead: null,
+        avatar: null,
+        progress: 0,
+        deadline: null,
+        status: "shelved",
+      },
+      {
+        name: "benefits",
+        desc: "perks y beneficios para la comunidad.",
+        url: "indies.la/benefits",
+        slug: "benefits",
+        lead: null,
+        avatar: null,
+        progress: 0,
+        deadline: null,
+        status: "shelved",
+      },
+      {
+        name: "trabajos",
+        desc: "job board para la comunidad.",
+        url: "trabajos.indies.cl",
+        slug: "trabajos",
+        lead: null,
+        avatar: null,
+        progress: 0,
+        deadline: null,
+        status: "shelved",
+      },
+      {
+        name: "tech talks",
+        desc: "charlas tecnicas de la comunidad.",
+        url: null,
+        slug: "tech-talks",
+        lead: "benja",
+        avatar: "img/benja.png",
+        progress: 0,
+        deadline: null,
+        status: "shelved",
+      },
+    ];
+
+    function formatDate(dateStr) {
+      if (!dateStr) return "—";
+      const d = new Date(dateStr);
+      const months = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+      return `${d.getDate()} ${months[d.getMonth()]}`;
+    }
+
+    function isDeadlineSoon(dateStr) {
+      if (!dateStr) return false;
+      const diff = new Date(dateStr) - new Date();
+      return diff / 86400000 >= 0 && diff / 86400000 <= 30;
+    }
+
+    function asciiProgress(pct) {
+      const total = 12;
+      const filled = Math.round((pct / 100) * total);
+      return `<span class="ascii-bar">${'<span class="filled">█</span>'.repeat(filled)}${'<span class="empty">░</span>'.repeat(total - filled)}</span> <span class="dim">${pct}%</span>`;
+    }
+
+    function statusDot(status) {
+      const cls = status === "active" ? "dot-active" : status === "planning" ? "dot-planning" : "dot-shelved";
+      return `<span class="status-dot ${cls}"></span>`;
+    }
+
+    function leadCell(p) {
+      if (p.avatar) {
+        return `<img src="${p.avatar}" alt="${p.lead}" class="lead-avatar" title="${p.lead}">`;
+      }
+      return `<span class="dim">${p.lead || "—"}</span>`;
+    }
+
+    const activeBody = document.getElementById("active-body");
+    const shelvedBody = document.getElementById("shelved-body");
+
+    projects.forEach(p => {
+      if (p.status === "shelved") {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${statusDot(p.status)}</td>
+          <td class="name-cell"><a href="${p.slug}/">${p.name}</a></td>
+          <td>${leadCell(p)}</td>
+          <td>${asciiProgress(p.progress)}</td>
+          <td class="hide-mobile">${!p.lead ? `<button class="btn-reclamar" onclick="reclamar('${p.name}')">reclamar</button>` : ''}</td>
+        `;
+        shelvedBody.appendChild(tr);
+      } else {
+        const dlClass = isDeadlineSoon(p.deadline) ? "deadline-soon" : "dim";
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${statusDot(p.status)}</td>
+          <td class="name-cell"><a href="${p.slug}/">${p.name}</a></td>
+          <td>${leadCell(p)}</td>
+          <td>${asciiProgress(p.progress)}</td>
+          <td class="hide-mobile ${dlClass}">${formatDate(p.deadline)}</td>
+          <td class="hide-mobile">${p.url ? `<a href="https://${p.url}">${p.url}</a>` : '<span class="dim">—</span>'}</td>
+        `;
+        activeBody.appendChild(tr);
+      }
+    });
+
+    function reclamar(name) {
+      const email = "hola@indies.la";
+      const subject = encodeURIComponent(`quiero reclamar: ${name}`);
+      const body = encodeURIComponent(`hola, me interesa liderar el proyecto "${name}".\nmi nombre es: \nmi idea para avanzarlo: `);
+      window.open(`mailto:${email}?subject=${subject}&body=${body}`);
+    }
+
+    // mock analytics data (30 days)
+    const analyticsData = [];
+    for (let i = 1; i <= 30; i++) {
+      const base = Math.sin(i * 0.3) * 40 + 60 + Math.random() * 20;
+      const interactions = Math.floor(base * 0.3);
+      const uniques = Math.floor(base * 0.35);
+      const views = Math.floor(base * 0.35);
+      analyticsData.push({ day: i, views, uniques, interactions });
+    }
+
+    const maxTotal = Math.max(...analyticsData.map(d => d.views + d.uniques + d.interactions));
+    const chart = document.getElementById("chart");
+
+    const grid = document.createElement("div");
+    grid.className = "chart-grid";
+    for (let i = 0; i < 5; i++) {
+      const line = document.createElement("div");
+      line.className = "grid-line";
+      grid.appendChild(line);
+    }
+    chart.appendChild(grid);
+
+    analyticsData.forEach(d => {
+      const maxH = 150;
+      const vH = (d.views / maxTotal) * maxH;
+      const uH = (d.uniques / maxTotal) * maxH;
+      const iH = (d.interactions / maxTotal) * maxH;
+
+      const group = document.createElement("div");
+      group.className = "chart-bar-group";
+      group.innerHTML = `
+        <div class="tooltip">${d.day} mar — v:${d.views + d.uniques + d.interactions} u:${d.uniques + d.interactions} i:${d.interactions}</div>
+        <div class="chart-bar">
+          <div class="bar-segment bar-views" style="height:${vH}px"></div>
+          <div class="bar-segment bar-uniques" style="height:${uH}px"></div>
+          <div class="bar-segment bar-interactions" style="height:${iH}px"></div>
+        </div>
+        <div class="chart-label">${d.day}</div>
+      `;
+      chart.appendChild(group);
+    });
+    // === discord activity heatmap ===
+    const weeks = 52;
+    const daysPerWeek = 7;
+    const heatmap = document.getElementById("heatmap");
+    const hmLabels = document.getElementById("heatmap-labels");
+
+    // mock: generate 52 weeks of daily activity
+    const heatData = [];
+    for (let w = 0; w < weeks; w++) {
+      const week = [];
+      for (let d = 0; d < daysPerWeek; d++) {
+        const base = Math.sin(w * 0.15) * 0.3 + 0.4;
+        const weekend = (d >= 5) ? 0.3 : 0;
+        const val = Math.max(0, base + weekend + (Math.random() * 0.5 - 0.2));
+        week.push(Math.min(1, val));
+      }
+      heatData.push(week);
+    }
+
+    heatData.forEach(week => {
+      const col = document.createElement("div");
+      col.className = "heatmap-col";
+      week.forEach(val => {
+        const cell = document.createElement("div");
+        cell.className = "heatmap-cell";
+        if (val > 0.7) cell.classList.add("h-4");
+        else if (val > 0.45) cell.classList.add("h-3");
+        else if (val > 0.2) cell.classList.add("h-2");
+        else if (val > 0.05) cell.classList.add("h-1");
+        col.appendChild(cell);
+      });
+      heatmap.appendChild(col);
+    });
+
+    // quarter labels
+    const quarters = ["q3 2025", "q4 2025", "q1 2026"];
+    quarters.forEach(q => {
+      const span = document.createElement("span");
+      span.textContent = q;
+      hmLabels.appendChild(span);
+    });
+
+    // mock active/idle counts
+    document.getElementById("hm-active").textContent = "342";
+    document.getElementById("hm-idle").textContent = "128";
+
+    // === discord members line chart ===
+    const totalMembers = [];
+    const weeklyMembers = [];
+    let cumulative = 80;
+    for (let i = 0; i < 52; i++) {
+      const growth = Math.floor(Math.random() * 15 + 3 + Math.sin(i * 0.2) * 5);
+      cumulative += growth;
+      totalMembers.push(cumulative);
+      weeklyMembers.push(growth);
+    }
+
+    let currentTab = "total";
+
+    function drawMembersChart(data, color) {
+      const svg = document.getElementById("members-chart");
+      const w = 900, h = 140, pad = 2;
+      const max = Math.max(...data);
+      const min = Math.min(...data);
+      const range = max - min || 1;
+
+      const points = data.map((v, i) => {
+        const x = (i / (data.length - 1)) * w;
+        const y = h - pad - ((v - min) / range) * (h - pad * 2);
+        return { x, y };
+      });
+
+      const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x},${p.y}`).join(' ');
+      const areaD = pathD + ` L${w},${h} L0,${h} Z`;
+
+      // grid
+      let gridHtml = '';
+      for (let i = 0; i < 5; i++) {
+        const y = (i / 4) * h;
+        gridHtml += `<line x1="0" y1="${y}" x2="${w}" y2="${y}" class="line-chart-grid"/>`;
+      }
+
+      svg.innerHTML = `
+        <g class="line-chart-grid">${gridHtml}</g>
+        <path d="${areaD}" fill="${color}" class="chart-area"/>
+        <path d="${pathD}" stroke="${color}" class="chart-line"/>
+      `;
+
+      // labels
+      const labels = document.getElementById("members-labels");
+      labels.innerHTML = '';
+      const labelWeeks = [0, 12, 25, 38, 51];
+      labelWeeks.forEach(i => {
+        if (i < data.length) {
+          const span = document.createElement("span");
+          span.textContent = `w${i + 1}`;
+          labels.appendChild(span);
+        }
+      });
+    }
+
+    function switchMemberTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      if (tab === "total") {
+        document.querySelectorAll(".tab")[0].classList.add("active");
+        drawMembersChart(totalMembers, "#E86518");
+      } else {
+        document.querySelectorAll(".tab")[1].classList.add("active");
+        drawMembersChart(weeklyMembers, "#E86518");
+      }
+    }
+
+    // initial draw
+    drawMembersChart(totalMembers, "#E86518");
+  </script>
+</body>
+</html>
