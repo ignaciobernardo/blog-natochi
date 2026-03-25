@@ -279,12 +279,27 @@
       aspect-ratio: 1;
       border-radius: 2px;
       background: var(--ui);
+      position: relative;
+      cursor: default;
     }
 
     .h-1 { background: rgba(232, 101, 24, 0.15); }
     .h-2 { background: rgba(232, 101, 24, 0.35); }
     .h-3 { background: rgba(232, 101, 24, 0.55); }
     .h-4 { background: rgba(232, 101, 24, 0.85); }
+
+    .hm-tooltip {
+      display: none;
+      position: fixed;
+      background: var(--ui-2);
+      color: var(--tx);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      white-space: nowrap;
+      z-index: 100;
+      pointer-events: none;
+    }
 
     .heatmap-labels {
       display: flex;
@@ -430,6 +445,7 @@
         </div>
         <div class="heatmap-wrapper">
           <div class="heatmap" id="heatmap"></div>
+          <div class="hm-tooltip" id="hm-tooltip"></div>
         </div>
         <div class="heatmap-labels" id="heatmap-labels"></div>
       </div>
@@ -734,66 +750,97 @@
     }
 
     // === discord activity heatmap ===
+    const hmTooltip = document.getElementById("hm-tooltip");
+    const dayNames = ["lun","mar","mie","jue","vie","sab","dom"];
+    const monthNames = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+
+    function fmtDate(d) {
+      return `${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+    }
+
     function renderHeatmap(activityData) {
       const heatmap = document.getElementById("heatmap");
       const hmLabels = document.getElementById("heatmap-labels");
       heatmap.innerHTML = "";
       hmLabels.innerHTML = "";
 
-      // build 52 weeks of data from activity history or mock
-      const weeks = 52;
-      const daysPerWeek = 7;
-      const heatData = [];
-
+      // build a map of date -> messages from real data
+      const msgMap = {};
       if (activityData && activityData.length > 0) {
-        // map real data into day-level values, pad to 364 days
-        const maxMsg = Math.max(...activityData.map(d => d.messages), 1);
-        const padded = [];
-        for (let i = 0; i < 364; i++) {
-          if (i < activityData.length) {
-            padded.push(activityData[i].messages / maxMsg);
-          } else {
-            padded.push(0);
-          }
-        }
-        for (let w = 0; w < weeks; w++) {
-          const week = [];
-          for (let d = 0; d < daysPerWeek; d++) {
-            week.push(padded[w * 7 + d] || 0);
-          }
-          heatData.push(week);
-        }
-      } else {
-        // mock fallback
-        for (let w = 0; w < weeks; w++) {
-          const week = [];
-          for (let d = 0; d < daysPerWeek; d++) {
-            const base = Math.sin(w * 0.15) * 0.3 + 0.4;
-            const weekend = (d >= 5) ? 0.3 : 0;
-            const val = Math.max(0, base + weekend + (Math.random() * 0.5 - 0.2));
-            week.push(Math.min(1, val));
-          }
-          heatData.push(week);
-        }
+        activityData.forEach(d => { msgMap[d.date] = d.messages; });
       }
 
-      heatData.forEach(week => {
+      // generate 52 weeks ending today, each column = 1 week (mon-sun)
+      const today = new Date();
+      const todayDay = (today.getDay() + 6) % 7; // 0=mon
+      const endDate = new Date(today);
+      const startDate = new Date(today);
+      startDate.setDate(startDate.getDate() - (52 * 7) - todayDay);
+
+      // find max for color scaling
+      const allMsgs = Object.values(msgMap);
+      const maxMsg = allMsgs.length > 0 ? Math.max(...allMsgs, 1) : 1;
+
+      const labelDates = []; // for quarter labels
+      const cursor = new Date(startDate);
+
+      for (let w = 0; w < 52; w++) {
         const col = document.createElement("div");
         col.className = "heatmap-col";
-        week.forEach(val => {
+
+        if (w === 0) labelDates.push(new Date(cursor));
+        const colMonth = cursor.getMonth();
+
+        for (let d = 0; d < 7; d++) {
+          const dateStr = cursor.toISOString().slice(0, 10);
+          const msgs = msgMap[dateStr] || 0;
+          const val = msgs / maxMsg;
+          const dayOfWeek = dayNames[d];
+          const dateLabel = fmtDate(cursor);
+
           const cell = document.createElement("div");
           cell.className = "heatmap-cell";
-          if (val > 0.7) cell.classList.add("h-4");
-          else if (val > 0.45) cell.classList.add("h-3");
-          else if (val > 0.2) cell.classList.add("h-2");
-          else if (val > 0.05) cell.classList.add("h-1");
-          col.appendChild(cell);
-        });
-        heatmap.appendChild(col);
-      });
+          if (cursor <= today) {
+            if (val > 0.7) cell.classList.add("h-4");
+            else if (val > 0.4) cell.classList.add("h-3");
+            else if (val > 0.15) cell.classList.add("h-2");
+            else if (val > 0) cell.classList.add("h-1");
+          }
 
-      const quarters = ["q3 2025", "q4 2025", "q1 2026"];
-      quarters.forEach(q => {
+          cell.addEventListener("mouseenter", (e) => {
+            hmTooltip.textContent = `${dayOfWeek} ${dateLabel} — ${msgs} mensaje${msgs !== 1 ? 's' : ''}`;
+            hmTooltip.style.display = "block";
+          });
+          cell.addEventListener("mousemove", (e) => {
+            hmTooltip.style.left = e.clientX + 12 + "px";
+            hmTooltip.style.top = e.clientY - 30 + "px";
+          });
+          cell.addEventListener("mouseleave", () => {
+            hmTooltip.style.display = "none";
+          });
+
+          col.appendChild(cell);
+          cursor.setDate(cursor.getDate() + 1);
+        }
+
+        // track month changes for labels
+        if (cursor.getMonth() !== colMonth) {
+          labelDates.push(new Date(cursor));
+        }
+
+        heatmap.appendChild(col);
+      }
+
+      // quarter labels from actual date range
+      const qSet = new Set();
+      const qs = [];
+      let c = new Date(startDate);
+      while (c <= today) {
+        const q = `q${Math.floor(c.getMonth() / 3) + 1} ${c.getFullYear()}`;
+        if (!qSet.has(q)) { qSet.add(q); qs.push(q); }
+        c.setMonth(c.getMonth() + 3);
+      }
+      qs.forEach(q => {
         const span = document.createElement("span");
         span.textContent = q;
         hmLabels.appendChild(span);
