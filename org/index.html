@@ -424,9 +424,9 @@
 
       <div class="chart-section">
         <div class="heatmap-header">
-          <span>mensajes por dia</span>
-          <span>active: <span class="hval" id="hm-active">—</span></span>
-          <span>idle: <span class="hval" id="hm-idle">—</span></span>
+          <span>discord analytics</span>
+          <span>members: <span class="hval" id="hm-active">—</span></span>
+          <span>online: <span class="hval" id="hm-idle">—</span></span>
         </div>
         <div class="heatmap-wrapper">
           <div class="heatmap" id="heatmap"></div>
@@ -722,66 +722,90 @@
       `;
       chart.appendChild(group);
     });
-    // === discord activity heatmap ===
-    const weeks = 52;
-    const daysPerWeek = 7;
-    const heatmap = document.getElementById("heatmap");
-    const hmLabels = document.getElementById("heatmap-labels");
+    // === API config ===
+    const API_URL = "https://org-indies-api.ignacioramosbernardo.workers.dev";
+    const API_KEY = "148bf42cf8b547847ee85ceb7a7b324530510cefc653798c";
 
-    // mock: generate 52 weeks of daily activity
-    const heatData = [];
-    for (let w = 0; w < weeks; w++) {
-      const week = [];
-      for (let d = 0; d < daysPerWeek; d++) {
-        const base = Math.sin(w * 0.15) * 0.3 + 0.4;
-        const weekend = (d >= 5) ? 0.3 : 0;
-        const val = Math.max(0, base + weekend + (Math.random() * 0.5 - 0.2));
-        week.push(Math.min(1, val));
-      }
-      heatData.push(week);
+    async function apiFetch(path) {
+      const res = await fetch(`${API_URL}${path}`, {
+        headers: { "X-API-Key": API_KEY },
+      });
+      return res.json();
     }
 
-    heatData.forEach(week => {
-      const col = document.createElement("div");
-      col.className = "heatmap-col";
-      week.forEach(val => {
-        const cell = document.createElement("div");
-        cell.className = "heatmap-cell";
-        if (val > 0.7) cell.classList.add("h-4");
-        else if (val > 0.45) cell.classList.add("h-3");
-        else if (val > 0.2) cell.classList.add("h-2");
-        else if (val > 0.05) cell.classList.add("h-1");
-        col.appendChild(cell);
+    // === discord activity heatmap ===
+    function renderHeatmap(activityData) {
+      const heatmap = document.getElementById("heatmap");
+      const hmLabels = document.getElementById("heatmap-labels");
+      heatmap.innerHTML = "";
+      hmLabels.innerHTML = "";
+
+      // build 52 weeks of data from activity history or mock
+      const weeks = 52;
+      const daysPerWeek = 7;
+      const heatData = [];
+
+      if (activityData && activityData.length > 0) {
+        // map real data into day-level values, pad to 364 days
+        const maxMsg = Math.max(...activityData.map(d => d.messages), 1);
+        const padded = [];
+        for (let i = 0; i < 364; i++) {
+          if (i < activityData.length) {
+            padded.push(activityData[i].messages / maxMsg);
+          } else {
+            padded.push(0);
+          }
+        }
+        for (let w = 0; w < weeks; w++) {
+          const week = [];
+          for (let d = 0; d < daysPerWeek; d++) {
+            week.push(padded[w * 7 + d] || 0);
+          }
+          heatData.push(week);
+        }
+      } else {
+        // mock fallback
+        for (let w = 0; w < weeks; w++) {
+          const week = [];
+          for (let d = 0; d < daysPerWeek; d++) {
+            const base = Math.sin(w * 0.15) * 0.3 + 0.4;
+            const weekend = (d >= 5) ? 0.3 : 0;
+            const val = Math.max(0, base + weekend + (Math.random() * 0.5 - 0.2));
+            week.push(Math.min(1, val));
+          }
+          heatData.push(week);
+        }
+      }
+
+      heatData.forEach(week => {
+        const col = document.createElement("div");
+        col.className = "heatmap-col";
+        week.forEach(val => {
+          const cell = document.createElement("div");
+          cell.className = "heatmap-cell";
+          if (val > 0.7) cell.classList.add("h-4");
+          else if (val > 0.45) cell.classList.add("h-3");
+          else if (val > 0.2) cell.classList.add("h-2");
+          else if (val > 0.05) cell.classList.add("h-1");
+          col.appendChild(cell);
+        });
+        heatmap.appendChild(col);
       });
-      heatmap.appendChild(col);
-    });
 
-    // quarter labels
-    const quarters = ["q3 2025", "q4 2025", "q1 2026"];
-    quarters.forEach(q => {
-      const span = document.createElement("span");
-      span.textContent = q;
-      hmLabels.appendChild(span);
-    });
-
-    // mock active/idle counts
-    document.getElementById("hm-active").textContent = "342";
-    document.getElementById("hm-idle").textContent = "128";
+      const quarters = ["q3 2025", "q4 2025", "q1 2026"];
+      quarters.forEach(q => {
+        const span = document.createElement("span");
+        span.textContent = q;
+        hmLabels.appendChild(span);
+      });
+    }
 
     // === discord members line chart ===
-    const totalMembers = [];
-    const weeklyMembers = [];
-    let cumulative = 80;
-    for (let i = 0; i < 52; i++) {
-      const growth = Math.floor(Math.random() * 15 + 3 + Math.sin(i * 0.2) * 5);
-      cumulative += growth;
-      totalMembers.push(cumulative);
-      weeklyMembers.push(growth);
-    }
-
+    let memberData = { total: [], weekly: [] };
     let currentTab = "total";
 
     function drawMembersChart(data, color) {
+      if (!data || data.length === 0) return;
       const svg = document.getElementById("members-chart");
       const w = 900, h = 140, pad = 2;
       const max = Math.max(...data);
@@ -797,7 +821,6 @@
       const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x},${p.y}`).join(' ');
       const areaD = pathD + ` L${w},${h} L0,${h} Z`;
 
-      // grid
       let gridHtml = '';
       for (let i = 0; i < 5; i++) {
         const y = (i / 4) * h;
@@ -810,17 +833,14 @@
         <path d="${pathD}" stroke="${color}" class="chart-line"/>
       `;
 
-      // labels
       const labels = document.getElementById("members-labels");
       labels.innerHTML = '';
-      const labelWeeks = [0, 12, 25, 38, 51];
-      labelWeeks.forEach(i => {
-        if (i < data.length) {
-          const span = document.createElement("span");
-          span.textContent = `w${i + 1}`;
-          labels.appendChild(span);
-        }
-      });
+      const step = Math.max(1, Math.floor(data.length / 4));
+      for (let i = 0; i < data.length; i += step) {
+        const span = document.createElement("span");
+        span.textContent = `d${i + 1}`;
+        labels.appendChild(span);
+      }
     }
 
     function switchMemberTab(tab) {
@@ -828,15 +848,64 @@
       document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
       if (tab === "total") {
         document.querySelectorAll(".tab")[0].classList.add("active");
-        drawMembersChart(totalMembers, "#E86518");
+        drawMembersChart(memberData.total, "#E86518");
       } else {
         document.querySelectorAll(".tab")[1].classList.add("active");
-        drawMembersChart(weeklyMembers, "#E86518");
+        drawMembersChart(memberData.weekly, "#E86518");
       }
     }
 
-    // initial draw
-    drawMembersChart(totalMembers, "#E86518");
+    // === load real data ===
+    async function loadDiscordData() {
+      try {
+        const [stats, history, activity] = await Promise.all([
+          apiFetch("/stats"),
+          apiFetch("/members/history"),
+          apiFetch("/activity"),
+        ]);
+
+        // update header stats
+        document.getElementById("hm-active").textContent = stats.members?.toLocaleString() || "—";
+        document.getElementById("hm-idle").textContent = stats.online?.toLocaleString() || "—";
+
+        // heatmap
+        renderHeatmap(activity);
+
+        // members chart
+        if (history.length > 0) {
+          memberData.total = history.map(h => h.members);
+          memberData.weekly = history.map((h, i) =>
+            i === 0 ? 0 : h.members - history[i - 1].members
+          );
+        } else {
+          // mock fallback
+          let cum = 80;
+          for (let i = 0; i < 52; i++) {
+            const g = Math.floor(Math.random() * 15 + 3 + Math.sin(i * 0.2) * 5);
+            cum += g;
+            memberData.total.push(cum);
+            memberData.weekly.push(g);
+          }
+        }
+        drawMembersChart(memberData.total, "#E86518");
+      } catch (e) {
+        console.error("discord api error:", e);
+        // fallback to mock
+        document.getElementById("hm-active").textContent = "—";
+        document.getElementById("hm-idle").textContent = "—";
+        renderHeatmap(null);
+        let cum = 80;
+        for (let i = 0; i < 52; i++) {
+          const g = Math.floor(Math.random() * 15 + 3);
+          cum += g;
+          memberData.total.push(cum);
+          memberData.weekly.push(g);
+        }
+        drawMembersChart(memberData.total, "#E86518");
+      }
+    }
+
+    loadDiscordData();
   </script>
 </body>
 </html>
