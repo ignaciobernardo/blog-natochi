@@ -371,6 +371,36 @@
       margin-top: 4px;
     }
 
+    .members-tooltip {
+      display: none;
+      position: fixed;
+      background: var(--ui-2);
+      color: var(--tx);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      white-space: nowrap;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .chart-hover-line {
+      stroke: var(--tx-3);
+      stroke-width: 1;
+      stroke-dasharray: 3 3;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .chart-hover-dot {
+      fill: var(--og);
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .line-chart-container:hover .chart-hover-line,
+    .line-chart-container:hover .chart-hover-dot { opacity: 1; }
+
     @media (max-width: 700px) {
       .terminal { padding: 8px 4px; }
       .screen { padding: 12px 10px; overflow-x: hidden; }
@@ -459,8 +489,9 @@
           <button class="tab active" onclick="switchMemberTab('total')">total</button>
           <button class="tab" onclick="switchMemberTab('semanal')">semanal</button>
         </div>
-        <div class="line-chart-container">
+        <div class="line-chart-container" id="members-chart-container">
           <svg id="members-chart" viewBox="0 0 900 140" preserveAspectRatio="none"></svg>
+          <div class="members-tooltip" id="members-tooltip"></div>
         </div>
         <div class="line-chart-labels" id="members-labels"></div>
       </div>
@@ -645,7 +676,7 @@
         url: null,
         slug: "ai-amigos",
         lead: "nacho",
-        avatar: null,
+        avatar: "img/natochi.png",
         progress: 0,
         deadline: null,
         status: "planning",
@@ -806,7 +837,7 @@
       const labelDates = []; // for quarter labels
       const cursor = new Date(startDate);
 
-      for (let w = 0; w < 52; w++) {
+      for (let w = 0; w < 53; w++) {
         const col = document.createElement("div");
         col.className = "heatmap-col";
 
@@ -870,21 +901,24 @@
     }
 
     // === discord members line chart ===
-    let memberData = { total: [], weekly: [] };
+    let memberData = { total: [], weekly: [], dates: [] };
     let currentTab = "total";
 
     function drawMembersChart(data, color) {
       if (!data || data.length === 0) return;
       const svg = document.getElementById("members-chart");
+      const tooltip = document.getElementById("members-tooltip");
+      const container = document.getElementById("members-chart-container");
       const w = 900, h = 140, pad = 2;
       const max = Math.max(...data);
       const min = Math.min(...data);
       const range = max - min || 1;
+      const dates = memberData.dates;
 
       const points = data.map((v, i) => {
-        const x = (i / (data.length - 1)) * w;
+        const x = (i / Math.max(data.length - 1, 1)) * w;
         const y = h - pad - ((v - min) / range) * (h - pad * 2);
-        return { x, y };
+        return { x, y, val: v };
       });
 
       const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x},${p.y}`).join(' ');
@@ -900,15 +934,62 @@
         <g class="line-chart-grid">${gridHtml}</g>
         <path d="${areaD}" fill="${color}" class="chart-area"/>
         <path d="${pathD}" stroke="${color}" class="chart-line"/>
+        <line id="hover-line" class="chart-hover-line" x1="0" y1="0" x2="0" y2="${h}"/>
+        <circle id="hover-dot" class="chart-hover-dot" r="4" cx="0" cy="0"/>
       `;
 
+      // hover interaction
+      const hoverLine = svg.querySelector("#hover-line");
+      const hoverDot = svg.querySelector("#hover-dot");
+
+      container.addEventListener("mousemove", (e) => {
+        const rect = svg.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const ratio = mouseX / rect.width;
+        const idx = Math.round(ratio * (points.length - 1));
+        if (idx < 0 || idx >= points.length) return;
+
+        const p = points[idx];
+        hoverLine.setAttribute("x1", p.x);
+        hoverLine.setAttribute("x2", p.x);
+        hoverDot.setAttribute("cx", p.x);
+        hoverDot.setAttribute("cy", p.y);
+
+        const dateStr = dates[idx] || "";
+        const d = dateStr ? new Date(dateStr + "T12:00:00") : null;
+        const label = d ? `${d.getDate()} ${monthNames[d.getMonth()]}` : `d${idx+1}`;
+        const prefix = currentTab === "total" ? "" : (p.val >= 0 ? "+" : "");
+        tooltip.textContent = `${label} — ${prefix}${p.val.toLocaleString()}`;
+        tooltip.style.display = "block";
+        tooltip.style.left = e.clientX + 12 + "px";
+        tooltip.style.top = e.clientY - 30 + "px";
+      });
+
+      container.addEventListener("mouseleave", () => {
+        tooltip.style.display = "none";
+        hoverLine.style.opacity = "0";
+        hoverDot.style.opacity = "0";
+      });
+
+      container.addEventListener("mouseenter", () => {
+        hoverLine.style.opacity = "1";
+        hoverDot.style.opacity = "1";
+      });
+
+      // month labels on x-axis
       const labels = document.getElementById("members-labels");
       labels.innerHTML = '';
-      const step = Math.max(1, Math.floor(data.length / 4));
-      for (let i = 0; i < data.length; i += step) {
-        const span = document.createElement("span");
-        span.textContent = `d${i + 1}`;
-        labels.appendChild(span);
+      const seen = new Set();
+      for (let i = 0; i < dates.length; i++) {
+        if (!dates[i]) continue;
+        const d = new Date(dates[i] + "T12:00:00");
+        const key = `${d.getFullYear()}-${d.getMonth()}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          const span = document.createElement("span");
+          span.textContent = monthNames[d.getMonth()];
+          labels.appendChild(span);
+        }
       }
     }
 
@@ -942,6 +1023,7 @@
 
         // members chart
         if (history.length > 0) {
+          memberData.dates = history.map(h => h.date);
           memberData.total = history.map(h => h.members);
           memberData.weekly = history.map((h, i) =>
             i === 0 ? 0 : h.members - history[i - 1].members
@@ -949,7 +1031,12 @@
         } else {
           // mock fallback
           let cum = 80;
+          const mockStart = new Date();
+          mockStart.setDate(mockStart.getDate() - 52 * 7);
           for (let i = 0; i < 52; i++) {
+            const d = new Date(mockStart);
+            d.setDate(d.getDate() + i * 7);
+            memberData.dates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`);
             const g = Math.floor(Math.random() * 15 + 3 + Math.sin(i * 0.2) * 5);
             cum += g;
             memberData.total.push(cum);
@@ -964,7 +1051,12 @@
         document.getElementById("hm-idle").textContent = "—";
         renderHeatmap(null);
         let cum = 80;
+        const mockStart = new Date();
+        mockStart.setDate(mockStart.getDate() - 52 * 7);
         for (let i = 0; i < 52; i++) {
+          const d = new Date(mockStart);
+          d.setDate(d.getDate() + i * 7);
+          memberData.dates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`);
           const g = Math.floor(Math.random() * 15 + 3);
           cum += g;
           memberData.total.push(cum);
