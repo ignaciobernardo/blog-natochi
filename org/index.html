@@ -673,7 +673,7 @@
       {
         name: "ai + amigos",
         desc: "enseñar a usar ia a un broader public.",
-        url: null,
+        url: "luma.com/u1azetih",
         slug: "ai-amigos",
         lead: "nacho",
         avatar: "img/natochi.png",
@@ -823,18 +823,19 @@
         activityData.forEach(d => { msgMap[d.date] = d.messages; });
       }
 
-      // generate 52 weeks ending today, each column = 1 week (mon-sun)
+      // generate weeks ending today — no future days
       const today = new Date();
+      today.setHours(23, 59, 59, 999);
       const todayDay = (today.getDay() + 6) % 7; // 0=mon
-      const endDate = new Date(today);
       const startDate = new Date(today);
       startDate.setDate(startDate.getDate() - (52 * 7) - todayDay);
+      startDate.setHours(0, 0, 0, 0);
 
       // find max for color scaling
       const allMsgs = Object.values(msgMap);
       const maxMsg = allMsgs.length > 0 ? Math.max(...allMsgs, 1) : 1;
 
-      const labelDates = []; // for quarter labels
+      const labelDates = [];
       const cursor = new Date(startDate);
 
       for (let w = 0; w < 53; w++) {
@@ -845,6 +846,8 @@
         const colMonth = cursor.getMonth();
 
         for (let d = 0; d < 7; d++) {
+          if (cursor > today) break;
+
           const dateStr = `${cursor.getFullYear()}-${String(cursor.getMonth()+1).padStart(2,'0')}-${String(cursor.getDate()).padStart(2,'0')}`;
           const msgs = msgMap[dateStr] || 0;
           const val = msgs / maxMsg;
@@ -853,12 +856,10 @@
 
           const cell = document.createElement("div");
           cell.className = "heatmap-cell";
-          if (cursor <= today) {
-            if (val > 0.7) cell.classList.add("h-4");
-            else if (val > 0.4) cell.classList.add("h-3");
-            else if (val > 0.15) cell.classList.add("h-2");
-            else if (val > 0) cell.classList.add("h-1");
-          }
+          if (val > 0.7) cell.classList.add("h-4");
+          else if (val > 0.4) cell.classList.add("h-3");
+          else if (val > 0.15) cell.classList.add("h-2");
+          else if (val > 0) cell.classList.add("h-1");
 
           cell.addEventListener("mouseenter", (e) => {
             hmTooltip.textContent = `${dayOfWeek} ${dateLabel} — ${msgs} mensaje${msgs !== 1 ? 's' : ''}`;
@@ -881,7 +882,8 @@
           labelDates.push(new Date(cursor));
         }
 
-        heatmap.appendChild(col);
+        if (col.children.length > 0) heatmap.appendChild(col);
+        if (cursor > today) break;
       }
 
       // quarter labels from actual date range
