@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FounderPlot</title>
+<style>
+  @font-face {
+    font-family: 'Stolzl';
+    src: url('fonts/StolzlDisplay-Bold.woff2') format('woff2');
+    font-weight: 700;
+  }
+  @font-face {
+    font-family: 'Stolzl';
+    src: url('fonts/StolzlDisplay-Medium.woff2') format('woff2');
+    font-weight: 500;
+  }
+  @font-face {
+    font-family: 'Stolzl';
+    src: url('fonts/StolzlDisplay-Regular.woff2') format('woff2');
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: 'ModeratMono';
+    src: url('fonts/moderat-mono-regular.woff2') format('woff2');
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: 'ModeratMono';
+    src: url('fonts/moderat-mono-medium.woff2') format('woff2');
+    font-weight: 500;
+  }
+  @font-face {
+    font-family: 'ModeratMono';
+    src: url('fonts/moderat-mono-bold.woff2') format('woff2');
+    font-weight: 700;
+  }
+  @font-face {
+    font-family: 'ModeratMono';
+    src: url('fonts/moderat-mono-light.woff2') format('woff2');
+    font-weight: 300;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    background: #E1FF00;
+    color: #333;
+    font-family: 'ModeratMono', monospace;
+    display: flex;
+    flex-direction: column;
+  }
+
+  ::selection {
+    background: #333;
+    color: #E1FF00;
+  }
+
+  /* --- Banner --- */
+  .banner {
+    background: #333;
+    color: #E1FF00;
+    overflow: hidden;
+    white-space: nowrap;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .banner-track {
+    display: inline-flex;
+    animation: marquee 20s linear infinite;
+  }
+
+  .banner-content {
+    display: inline-flex;
+    align-items: center;
+    gap: 32px;
+    padding-right: 32px;
+    font-family: 'ModeratMono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .banner-content .flag {
+    display: inline-block;
+    width: 18px;
+    height: 12px;
+    border-radius: 1px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .banner-content .flag .stripe {
+    height: 33.33%;
+    width: 100%;
+  }
+
+  .banner-content .flag .stripe.top { background: #74ACDF; }
+  .banner-content .flag .stripe.mid { background: #fff; }
+  .banner-content .flag .stripe.bot { background: #74ACDF; }
+
+  .banner-content .dot-sep {
+    width: 4px;
+    height: 4px;
+    background: #E1FF00;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* --- Header --- */
+  header {
+    padding: 16px 24px 0;
+    flex-shrink: 0;
+  }
+
+  header h1 {
+    font-family: 'Stolzl', sans-serif;
+    font-weight: 700;
+    font-size: 26px;
+    color: #333;
+    letter-spacing: -0.5px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    display: inline-block;
+  }
+
+  header h1:hover {
+    opacity: 0.7;
+  }
+
+  header .subtitle {
+    font-family: 'ModeratMono', monospace;
+    font-size: 10px;
+    font-weight: 400;
+    color: #E1FF00;
+    background: #333;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    display: inline-block;
+    margin-top: 4px;
+    padding: 3px 8px;
+  }
+
+  /* --- Home page --- */
+  #home {
+    flex: 1;
+    padding: 20px 24px;
+    overflow-y: auto;
+  }
+
+  #home .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 12px;
+  }
+
+  #home .top-bar h2 {
+    font-family: 'Stolzl', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+  }
+
+  #home .top-bar button {
+    background: #333;
+    border: none;
+    color: #E1FF00;
+    padding: 7px 16px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: 'ModeratMono', monospace;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  #home .top-bar button:hover {
+    opacity: 0.85;
+  }
+
+  .plots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 14px;
+  }
+
+  .plot-card {
+    border: 1.5px solid #33333020;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .plot-card:hover {
+    border-color: #333;
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .plot-card .preview {
+    width: 100%;
+    aspect-ratio: 1;
+    background: rgba(51, 51, 51, 0.05);
+    position: relative;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+
+  .plot-card .preview .mini-axis {
+    position: absolute;
+    background: #33333030;
+  }
+
+  .plot-card .preview .mini-axis.h {
+    width: 100%;
+    height: 1px;
+    top: 50%;
+  }
+
+  .plot-card .preview .mini-axis.v {
+    width: 1px;
+    height: 100%;
+    left: 50%;
+  }
+
+  .plot-card .preview .mini-dot {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    background: #333;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .plot-card .name {
+    font-family: 'Stolzl', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .plot-card .meta {
+    font-size: 10px;
+    color: #33333080;
+    font-family: 'ModeratMono', monospace;
+  }
+
+  /* --- Chart page --- */
+  #chart-page {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    padding: 8px 24px 12px;
+    overflow: hidden;
+  }
+
+  #chart-page.visible {
+    display: flex;
+  }
+
+  .chart-title {
+    font-family: 'Stolzl', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+    flex-shrink: 0;
+    text-align: center;
+  }
+
+  .chart-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 0;
+    padding: 30px 60px;
+  }
+
+  .chart-wrapper {
+    position: relative;
+    aspect-ratio: 1;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: 100%;
+  }
+
+  /* Axes */
+  .axis-line {
+    position: absolute;
+    background: #333;
+  }
+
+  .axis-line.horizontal {
+    width: 100%;
+    height: 1px;
+    top: 50%;
+    left: 0;
+  }
+
+  .axis-line.vertical {
+    width: 1px;
+    height: 100%;
+    top: 0;
+    left: 50%;
+  }
+
+  /* Arrows */
+  .arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+
+  .arrow-right {
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 7px solid #333;
+  }
+
+  .arrow-left {
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-right: 7px solid #333;
+  }
+
+  .arrow-up {
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 7px solid #333;
+  }
+
+  .arrow-down {
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 7px solid #333;
+  }
+
+  /* Axis Labels */
+  .axis-label {
+    position: absolute;
+    font-family: 'Stolzl', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: #333;
+    white-space: nowrap;
+    user-select: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .axis-label.top {
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .axis-label.bottom {
+    bottom: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .axis-label.left {
+    left: -12px;
+    top: 50%;
+    transform: translate(-100%, -50%);
+  }
+
+  .axis-label.right {
+    right: -12px;
+    top: 50%;
+    transform: translate(100%, -50%);
+  }
+
+  /* Quadrant labels */
+  .quadrant-label {
+    position: absolute;
+    font-family: 'ModeratMono', monospace;
+    font-size: 10px;
+    color: #9FB212;
+    text-align: center;
+    pointer-events: none;
+    user-select: none;
+    line-height: 1.5;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: color 0.2s;
+  }
+
+  .quadrant-label.tl { top: 0; left: 0; width: 50%; height: 50%; display: flex; align-items: center; justify-content: center; }
+  .quadrant-label.tr { top: 0; right: 0; width: 50%; height: 50%; display: flex; align-items: center; justify-content: center; }
+  .quadrant-label.bl { bottom: 0; left: 0; width: 50%; height: 50%; display: flex; align-items: center; justify-content: center; }
+  .quadrant-label.br { bottom: 0; right: 0; width: 50%; height: 50%; display: flex; align-items: center; justify-content: center; }
+
+  .quadrant-label.highlight {
+    color: #6B7A0E;
+  }
+
+  /* Quadrant hover zones */
+  .quadrant-zone {
+    position: absolute;
+    z-index: 1;
+    transition: background 0.2s;
+  }
+
+  .quadrant-zone.tl { top: 0; left: 0; width: 50%; height: 50%; }
+  .quadrant-zone.tr { top: 0; right: 0; width: 50%; height: 50%; }
+  .quadrant-zone.bl { bottom: 0; left: 0; width: 50%; height: 50%; }
+  .quadrant-zone.br { bottom: 0; right: 0; width: 50%; height: 50%; }
+
+  .quadrant-zone:hover {
+    background: rgba(51, 51, 51, 0.08);
+  }
+
+  /* Founders on chart */
+  .founder-marker {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    cursor: grab;
+    text-align: center;
+    user-select: none;
+    z-index: 10;
+  }
+
+  .founder-marker:active {
+    cursor: grabbing;
+  }
+
+  .founder-marker .founder-name {
+    font-family: 'ModeratMono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 3px;
+    white-space: nowrap;
+  }
+
+  .founder-marker .founder-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Stolzl', sans-serif;
+    font-size: 14px;
+    color: #E1FF00;
+    font-weight: 700;
+    margin: 0 auto;
+    transition: transform 0.1s;
+    overflow: hidden;
+  }
+
+  .founder-marker .founder-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .founder-marker:hover .founder-avatar {
+    transform: scale(1.1);
+  }
+
+  /* Bottom bar */
+  .chart-bottom {
+    flex-shrink: 0;
+    text-align: center;
+    padding-top: 4px;
+  }
+
+  .chart-hint {
+    font-size: 10px;
+    color: #33333060;
+    font-style: italic;
+    font-family: 'ModeratMono', monospace;
+    margin-bottom: 8px;
+  }
+
+  .chart-hint.active {
+    color: #333;
+  }
+
+  .add-panel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .add-panel input[type="text"] {
+    background: transparent;
+    border: 1.5px solid #33333030;
+    color: #333;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-family: 'ModeratMono', monospace;
+    outline: none;
+    width: 200px;
+    transition: border-color 0.15s;
+  }
+
+  .add-panel input[type="text"]::placeholder {
+    color: #33333040;
+  }
+
+  .add-panel input[type="text"]:focus {
+    border-color: #333;
+  }
+
+  .add-panel .photo-upload-btn {
+    background: transparent;
+    border: 1.5px solid #33333030;
+    color: #333;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .add-panel .photo-upload-btn:hover {
+    border-color: #333;
+  }
+
+  .add-panel .photo-upload-btn.has-photo {
+    border-color: #333;
+    overflow: hidden;
+  }
+
+  .add-panel .photo-upload-btn.has-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .add-panel .photo-upload-btn svg {
+    width: 14px;
+    height: 14px;
+    opacity: 0.5;
+  }
+
+  .add-panel .photo-upload-btn input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .add-panel button {
+    background: #333;
+    border: none;
+    color: #E1FF00;
+    padding: 6px 16px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: 'ModeratMono', monospace;
+    font-weight: 500;
+    transition: opacity 0.15s;
+    height: 32px;
+  }
+
+  .add-panel button:hover {
+    opacity: 0.85;
+  }
+
+  /* --- Delete button --- */
+  .founder-marker .delete-btn {
+    display: none;
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 16px;
+    height: 16px;
+    background: #333;
+    color: #E1FF00;
+    border: none;
+    border-radius: 50%;
+    font-size: 10px;
+    line-height: 16px;
+    text-align: center;
+    cursor: pointer;
+    padding: 0;
+    font-family: 'ModeratMono', monospace;
+  }
+
+  .founder-marker:hover .delete-btn {
+    display: block;
+  }
+
+  /* --- Modal --- */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(51, 51, 51, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-overlay.active {
+    display: flex;
+  }
+
+  .modal {
+    background: #E1FF00;
+    border: 1.5px solid #333;
+    padding: 28px;
+    width: 340px;
+    max-width: 90vw;
+  }
+
+  .modal h3 {
+    font-family: 'Stolzl', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #333;
+  }
+
+  .modal label {
+    font-size: 10px;
+    font-family: 'ModeratMono', monospace;
+    color: #33333080;
+    display: block;
+    margin-bottom: 4px;
+    margin-top: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .modal label:first-of-type {
+    margin-top: 0;
+  }
+
+  .modal input {
+    width: 100%;
+    background: transparent;
+    border: 1.5px solid #33333030;
+    color: #333;
+    padding: 7px 10px;
+    font-size: 12px;
+    font-family: 'ModeratMono', monospace;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .modal input::placeholder {
+    color: #33333040;
+  }
+
+  .modal input:focus {
+    border-color: #333;
+  }
+
+  .modal .modal-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+
+  .modal .modal-actions button {
+    background: transparent;
+    border: 1.5px solid #33333040;
+    color: #333;
+    padding: 7px 18px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: 'ModeratMono', monospace;
+    font-weight: 500;
+    transition: all 0.15s;
+  }
+
+  .modal .modal-actions button:hover {
+    border-color: #333;
+  }
+
+  .modal .modal-actions button.primary {
+    background: #333;
+    border-color: #333;
+    color: #E1FF00;
+  }
+
+  .modal .modal-actions button.primary:hover {
+    opacity: 0.85;
+  }
+</style>
+</head>
+<body>
+
+<div class="banner">
+  <div class="banner-track">
+    <div class="banner-content">
+      <span class="dot-sep"></span>
+      <span>platanus hack [26]</span>
+      <span class="dot-sep"></span>
+      <span>buenos aires</span>
+      <div class="flag"><div class="stripe top"></div><div class="stripe mid"></div><div class="stripe bot"></div></div>
+      <span>8-10 may 2026</span>
+      <span class="dot-sep"></span>
+      <span>platanus hack [26]</span>
+      <span class="dot-sep"></span>
+      <span>buenos aires</span>
+      <div class="flag"><div class="stripe top"></div><div class="stripe mid"></div><div class="stripe bot"></div></div>
+      <span>8-10 may 2026</span>
+      <span class="dot-sep"></span>
+      <span>platanus hack [26]</span>
+      <span class="dot-sep"></span>
+      <span>buenos aires</span>
+      <div class="flag"><div class="stripe top"></div><div class="stripe mid"></div><div class="stripe bot"></div></div>
+      <span>8-10 may 2026</span>
+      <span class="dot-sep"></span>
+      <span>platanus hack [26]</span>
+      <span class="dot-sep"></span>
+      <span>buenos aires</span>
+      <div class="flag"><div class="stripe top"></div><div class="stripe mid"></div><div class="stripe bot"></div></div>
+      <span>8-10 may 2026</span>
+    </div>
+    <div class="banner-content">
+      <span class="dot-sep"></span>
+      <span>platanus hack [26]</span>
+      <span class="dot-sep"></span>
+      <span>buenos aires</span>
+      <div class="flag"><div class="stripe top"></div><div class="stripe mid"></div><div class="stripe bot"></div></div>
+      <span>8-10 may 2026</span>
+      <span class="dot-sep"></span>
+      <span>platanus hack [26]</span>
+      <span class="dot-sep"></span>
+      <span>buenos aires</span>
+      <div class="flag"><div class="stripe top"></div><div class="stripe mid"></div><div class="stripe bot"></div></div>
+      <span>8-10 may 2026</span>
+      <span class="dot-sep"></span>
+      <span>platanus hack [26]</span>
+      <span class="dot-sep"></span>
+      <span>buenos aires</span>
+      <div class="flag"><div class="stripe top"></div><div class="stripe mid"></div><div class="stripe bot"></div></div>
+      <span>8-10 may 2026</span>
+      <span class="dot-sep"></span>
+      <span>platanus hack [26]</span>
+      <span class="dot-sep"></span>
+      <span>buenos aires</span>
+      <div class="flag"><div class="stripe top"></div><div class="stripe mid"></div><div class="stripe bot"></div></div>
+      <span>8-10 may 2026</span>
+    </div>
+  </div>
+</div>
+
+<header>
+  <h1 onclick="showHome()">founderplot</h1>
+  <span class="subtitle">quien es mas manija?</span>
+</header>
+
+<!-- HOME -->
+<div id="home">
+  <div class="top-bar">
+    <h2>Plots</h2>
+    <button onclick="openNewPlotModal()">+ new plot</button>
+  </div>
+  <div class="plots-grid" id="plots-grid"></div>
+</div>
+
+<!-- CHART -->
+<div id="chart-page">
+  <div class="chart-title" id="chart-title"></div>
+
+  <div class="chart-container">
+    <div class="chart-wrapper" id="chart">
+      <div class="axis-line horizontal"></div>
+      <div class="axis-line vertical"></div>
+      <div class="arrow arrow-right"></div>
+      <div class="arrow arrow-left"></div>
+      <div class="arrow arrow-up"></div>
+      <div class="arrow arrow-down"></div>
+
+      <div class="quadrant-zone tl"></div>
+      <div class="quadrant-zone tr"></div>
+      <div class="quadrant-zone bl"></div>
+      <div class="quadrant-zone br"></div>
+
+      <div class="axis-label top" id="label-top"></div>
+      <div class="axis-label bottom" id="label-bottom"></div>
+      <div class="axis-label left" id="label-left"></div>
+      <div class="axis-label right" id="label-right"></div>
+
+      <div class="quadrant-label tl" id="ql-tl"></div>
+      <div class="quadrant-label tr" id="ql-tr"></div>
+      <div class="quadrant-label bl" id="ql-bl"></div>
+      <div class="quadrant-label br" id="ql-br"></div>
+    </div>
+  </div>
+
+  <div class="chart-bottom">
+    <div class="chart-hint">click en el grafico para posicionar, arrastra para mover</div>
+    <div class="add-panel">
+      <div class="photo-upload-btn" id="photo-upload-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        <input type="file" id="photo-input" accept="image/*" onchange="handlePhotoSelect(this)">
+      </div>
+      <input type="text" id="founder-input" placeholder="nombre del founder..." onkeydown="if(event.key==='Enter')addFounder()">
+      <button onclick="addFounder()">agregar</button>
+    </div>
+  </div>
+</div>
+
+<!-- NEW PLOT MODAL -->
+<div class="modal-overlay" id="new-plot-modal">
+  <div class="modal">
+    <h3>nuevo plot</h3>
+    <label>nombre del plot</label>
+    <input type="text" id="plot-name-input" placeholder="ej: energia de founders">
+    <label>eje x - izquierda</label>
+    <input type="text" id="x-left-input" placeholder="ej: manija">
+    <label>eje x - derecha</label>
+    <input type="text" id="x-right-input" placeholder="ej: aburrido">
+    <label>eje y - arriba</label>
+    <input type="text" id="y-top-input" placeholder="ej: 30 red bulls">
+    <label>eje y - abajo</label>
+    <input type="text" id="y-bottom-input" placeholder="ej: un cafecito">
+    <div class="modal-actions">
+      <button onclick="closeNewPlotModal()">cancelar</button>
+      <button class="primary" onclick="createPlot()">crear</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let plots = [];
+let currentPlotId = null;
+let pendingFounder = null;
+let pendingPhoto = null;
+let dragging = null;
+let dragOffset = { x: 0, y: 0 };
+
+function loadState() {
+  const saved = localStorage.getItem('founderplot_data_v4');
+  if (saved) {
+    plots = JSON.parse(saved);
+  } else {
+    plots = [{
+      id: 'default',
+      name: 'Energia de Founders',
+      xLeft: 'Manija',
+      xRight: 'Aburrido',
+      yTop: '30 Red Bulls',
+      yBottom: 'Un cafecito',
+      founders: [
+        { name: 'Guillermo Rauch', x: 0.18, y: 0.15, photo: 'img/guillermo-rauch.png' },
+        { name: 'Marcos Galperin', x: 0.75, y: 0.3, photo: 'img/marcos-galperin.png' },
+        { name: 'Martin Migoya', x: 0.6, y: 0.65, photo: 'img/martin-migoya.png' },
+      ]
+    }];
+    saveState();
+  }
+}
+
+function saveState() {
+  localStorage.setItem('founderplot_data_v4', JSON.stringify(plots));
+}
+
+function getCurrentPlot() {
+  return plots.find(p => p.id === currentPlotId);
+}
+
+function renderHome() {
+  const grid = document.getElementById('plots-grid');
+  grid.innerHTML = '';
+
+  plots.forEach(plot => {
+    const card = document.createElement('div');
+    card.className = 'plot-card';
+    card.onclick = () => openPlot(plot.id);
+
+    let dotsHtml = '';
+    plot.founders.forEach(f => {
+      dotsHtml += `<div class="mini-dot" style="left:${f.x*100}%;top:${f.y*100}%"></div>`;
+    });
+
+    card.innerHTML = `
+      <div class="preview">
+        <div class="mini-axis h"></div>
+        <div class="mini-axis v"></div>
+        ${dotsHtml}
+      </div>
+      <div class="name">${plot.name}</div>
+      <div class="meta">${plot.founders.length} founder${plot.founders.length !== 1 ? 's' : ''}</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function showHome() {
+  document.getElementById('home').style.display = 'block';
+  document.getElementById('chart-page').classList.remove('visible');
+  currentPlotId = null;
+  renderHome();
+}
+
+function openPlot(id) {
+  currentPlotId = id;
+  document.getElementById('home').style.display = 'none';
+  document.getElementById('chart-page').classList.add('visible');
+  renderChart();
+}
+
+function renderChart() {
+  const plot = getCurrentPlot();
+  if (!plot) return;
+
+  document.getElementById('chart-title').textContent = plot.name;
+  document.getElementById('label-top').textContent = plot.yTop;
+  document.getElementById('label-bottom').textContent = plot.yBottom;
+  document.getElementById('label-left').textContent = plot.xLeft;
+  document.getElementById('label-right').textContent = plot.xRight;
+
+  document.getElementById('ql-tl').innerHTML = `${plot.yTop},<br>${plot.xLeft}`;
+  document.getElementById('ql-tr').innerHTML = `${plot.yTop},<br>${plot.xRight}`;
+  document.getElementById('ql-bl').innerHTML = `${plot.yBottom},<br>${plot.xLeft}`;
+  document.getElementById('ql-br').innerHTML = `${plot.yBottom},<br>${plot.xRight}`;
+
+  document.querySelectorAll('.founder-marker').forEach(el => el.remove());
+  const chart = document.getElementById('chart');
+
+  plot.founders.forEach((f, i) => {
+    const marker = document.createElement('div');
+    marker.className = 'founder-marker';
+    marker.style.left = (f.x * 100) + '%';
+    marker.style.top = (f.y * 100) + '%';
+
+    const initials = f.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+    const avatarContent = f.photo ? `<img src="${f.photo}" alt="${f.name}">` : initials;
+
+    marker.innerHTML = `
+      <div class="founder-name">${f.name}</div>
+      <div class="founder-avatar">${avatarContent}</div>
+      <button class="delete-btn" onclick="deleteFounder(${i}, event)">x</button>
+    `;
+
+    marker.addEventListener('mousedown', (e) => {
+      if (e.target.classList.contains('delete-btn')) return;
+      e.preventDefault();
+      e.stopPropagation();
+      dragging = { index: i, marker };
+      marker.style.zIndex = 20;
+      const rect = chart.getBoundingClientRect();
+      dragOffset.x = e.clientX - (f.x * rect.width + rect.left);
+      dragOffset.y = e.clientY - (f.y * rect.height + rect.top);
+    });
+
+    marker.addEventListener('touchstart', (e) => {
+      if (e.target.classList.contains('delete-btn')) return;
+      e.stopPropagation();
+      const touch = e.touches[0];
+      dragging = { index: i, marker };
+      marker.style.zIndex = 20;
+      const rect = chart.getBoundingClientRect();
+      dragOffset.x = touch.clientX - (f.x * rect.width + rect.left);
+      dragOffset.y = touch.clientY - (f.y * rect.height + rect.top);
+    }, { passive: true });
+
+    chart.appendChild(marker);
+  });
+}
+
+function deleteFounder(index, e) {
+  e.stopPropagation();
+  const plot = getCurrentPlot();
+  plot.founders.splice(index, 1);
+  saveState();
+  renderChart();
+}
+
+document.addEventListener('mousemove', (e) => {
+  if (!dragging) return;
+  const chart = document.getElementById('chart');
+  const rect = chart.getBoundingClientRect();
+  let x = (e.clientX - dragOffset.x - rect.left) / rect.width;
+  let y = (e.clientY - dragOffset.y - rect.top) / rect.height;
+  x = Math.max(0.02, Math.min(0.98, x));
+  y = Math.max(0.02, Math.min(0.98, y));
+  dragging.marker.style.left = (x * 100) + '%';
+  dragging.marker.style.top = (y * 100) + '%';
+  const plot = getCurrentPlot();
+  plot.founders[dragging.index].x = x;
+  plot.founders[dragging.index].y = y;
+});
+
+document.addEventListener('mouseup', () => {
+  if (dragging) {
+    dragging.marker.style.zIndex = 10;
+    dragging = null;
+    saveState();
+  }
+});
+
+document.addEventListener('touchmove', (e) => {
+  if (!dragging) return;
+  const touch = e.touches[0];
+  const chart = document.getElementById('chart');
+  const rect = chart.getBoundingClientRect();
+  let x = (touch.clientX - dragOffset.x - rect.left) / rect.width;
+  let y = (touch.clientY - dragOffset.y - rect.top) / rect.height;
+  x = Math.max(0.02, Math.min(0.98, x));
+  y = Math.max(0.02, Math.min(0.98, y));
+  dragging.marker.style.left = (x * 100) + '%';
+  dragging.marker.style.top = (y * 100) + '%';
+  const plot = getCurrentPlot();
+  plot.founders[dragging.index].x = x;
+  plot.founders[dragging.index].y = y;
+}, { passive: true });
+
+document.addEventListener('touchend', () => {
+  if (dragging) {
+    dragging.marker.style.zIndex = 10;
+    dragging = null;
+    saveState();
+  }
+});
+
+document.getElementById('chart').addEventListener('click', (e) => {
+  if (dragging) return;
+  if (!pendingFounder) return;
+  const chart = document.getElementById('chart');
+  const rect = chart.getBoundingClientRect();
+  const x = Math.max(0.02, Math.min(0.98, (e.clientX - rect.left) / rect.width));
+  const y = Math.max(0.02, Math.min(0.98, (e.clientY - rect.top) / rect.height));
+
+  const plot = getCurrentPlot();
+  const founderData = { name: pendingFounder, x, y };
+  if (pendingPhoto) founderData.photo = pendingPhoto;
+  plot.founders.push(founderData);
+  pendingFounder = null;
+  pendingPhoto = null;
+  resetPhotoBtn();
+  saveState();
+  renderChart();
+
+  const hint = document.querySelector('.chart-hint');
+  hint.textContent = 'click en el grafico para posicionar, arrastra para mover';
+  hint.classList.remove('active');
+});
+
+function handlePhotoSelect(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const size = 120;
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      const min = Math.min(img.width, img.height);
+      ctx.drawImage(img, (img.width - min) / 2, (img.height - min) / 2, min, min, 0, 0, size, size);
+      pendingPhoto = canvas.toDataURL('image/jpeg', 0.7);
+      const btn = document.getElementById('photo-upload-btn');
+      btn.classList.add('has-photo');
+      btn.innerHTML = `<img src="${pendingPhoto}" alt="preview"><input type="file" id="photo-input" accept="image/*" onchange="handlePhotoSelect(this)">`;
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function resetPhotoBtn() {
+  pendingPhoto = null;
+  const btn = document.getElementById('photo-upload-btn');
+  btn.classList.remove('has-photo');
+  btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><input type="file" id="photo-input" accept="image/*" onchange="handlePhotoSelect(this)">`;
+}
+
+function addFounder() {
+  const input = document.getElementById('founder-input');
+  const name = input.value.trim();
+  if (!name) return;
+  pendingFounder = name;
+  input.value = '';
+  const hint = document.querySelector('.chart-hint');
+  hint.textContent = `click en el grafico para posicionar a ${name}`;
+  hint.classList.add('active');
+}
+
+function openNewPlotModal() {
+  document.getElementById('new-plot-modal').classList.add('active');
+  document.getElementById('plot-name-input').value = '';
+  document.getElementById('x-left-input').value = '';
+  document.getElementById('x-right-input').value = '';
+  document.getElementById('y-top-input').value = '';
+  document.getElementById('y-bottom-input').value = '';
+  setTimeout(() => document.getElementById('plot-name-input').focus(), 50);
+}
+
+function closeNewPlotModal() {
+  document.getElementById('new-plot-modal').classList.remove('active');
+}
+
+document.getElementById('new-plot-modal').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeNewPlotModal();
+});
+
+function createPlot() {
+  const name = document.getElementById('plot-name-input').value.trim() || 'sin nombre';
+  const xLeft = document.getElementById('x-left-input').value.trim() || 'izquierda';
+  const xRight = document.getElementById('x-right-input').value.trim() || 'derecha';
+  const yTop = document.getElementById('y-top-input').value.trim() || 'arriba';
+  const yBottom = document.getElementById('y-bottom-input').value.trim() || 'abajo';
+
+  const id = 'plot_' + Date.now();
+  plots.push({ id, name, xLeft, xRight, yTop, yBottom, founders: [] });
+  saveState();
+  closeNewPlotModal();
+  openPlot(id);
+}
+
+document.querySelectorAll('.quadrant-zone').forEach(zone => {
+  const pos = ['tl','tr','bl','br'].find(c => zone.classList.contains(c));
+  zone.addEventListener('mouseenter', () => document.getElementById('ql-' + pos).classList.add('highlight'));
+  zone.addEventListener('mouseleave', () => document.getElementById('ql-' + pos).classList.remove('highlight'));
+});
+
+loadState();
+renderHome();
+</script>
+
+</body>
+</html>
