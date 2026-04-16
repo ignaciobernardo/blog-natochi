@@ -14,7 +14,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   :root {
-    --bg: #0044FF;
+    --bg: #465A40;
     --ink: #FFFFFF;
     --muted: rgba(255,255,255,0.7);
     --faint: rgba(255,255,255,0.4);
@@ -22,6 +22,8 @@
     --tile: rgba(255,255,255,0.12);
   }
   html, body { background: var(--bg); color: var(--ink); }
+  ::selection { background: #FF9500; color: var(--bg); }
+  ::-moz-selection { background: #FF9500; color: var(--bg); }
   body {
     font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -40,17 +42,17 @@
     user-select: none;
   }
   .rounded-tile { border-radius: 20px; }
-  .crosshair-h { position: fixed; z-index: 40; pointer-events: none; border-top: 1px solid #FF9500; display: none; }
-  .crosshair-v { position: fixed; z-index: 40; pointer-events: none; border-left: 1px solid #FF9500; display: none; }
+  .crosshair-h { position: fixed; z-index: 40; pointer-events: none; border-top: 1px solid #FFFFFF; display: none; }
+  .crosshair-v { position: fixed; z-index: 40; pointer-events: none; border-left: 1px solid #FFFFFF; display: none; }
   .crosshair-dot {
     position: fixed; z-index: 50; pointer-events: none; display: none;
     width: 15px; height: 15px; border-radius: 50%;
-    border: 1px solid #FF9500; background: transparent;
+    border: 1px solid #FFFFFF; background: transparent;
   }
   .crosshair-coords {
     position: fixed; z-index: 50; pointer-events: none; display: none;
     font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 10px; mix-blend-mode: difference; color: white;
+    font-size: 10px; color: #FFFFFF;
   }
   @media (min-width: 768px) {
     .crosshair-h, .crosshair-v, .crosshair-dot, .crosshair-coords { display: block; }
@@ -76,9 +78,9 @@
     text-decoration: none; cursor: pointer;
     transition: opacity 150ms ease;
   }
-  .mini-btn:hover { color: #FFBB00 !important; }
+  .mini-btn:hover { color: #FF9500 !important; }
   a { transition: color 150ms ease; }
-  a:hover, a:hover * { color: #FFBB00 !important; }
+  a:hover, a:hover * { color: #FF9500 !important; }
 </style>
 </head>
 <body>
