@@ -142,6 +142,11 @@
         <textarea class="field" id="f-why" name="why" placeholder="El dominio, la primera versión, un fin de semana sin trabajar — cualquier cosa cuenta."></textarea>
       </div>
 
+      <div>
+        <label class="label" for="f-video">Mandanos un video corto sobre un tema que te apasiona</label>
+        <input class="field" type="url" id="f-video" name="video" placeholder="https:// (YouTube, Loom, Vimeo, lo que sea)" />
+      </div>
+
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="label" for="f-amount">¿Cuánto necesitás?</label>
@@ -227,7 +232,8 @@
       `Monto: ${data.amount || '-'}\n` +
       `Referral: ${data.referral || '-'}\n\n` +
       `Qué construye:\n${data.project}\n\n` +
-      `Por qué ahora:\n${data.why || '-'}\n`
+      `Por qué ahora:\n${data.why || '-'}\n\n` +
+      `Video (tema que le apasiona): ${data.video || '-'}\n`
     );
     window.location.href = `mailto:hola@amigos.sh?subject=${subject}&body=${body}`;
     feedback.textContent = 'Abriendo tu cliente de email...';

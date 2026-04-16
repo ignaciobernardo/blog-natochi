@@ -81,6 +81,12 @@
   .mini-btn:hover { color: #FF9500 !important; }
   a { transition: color 150ms ease; }
   a:hover, a:hover * { color: #FF9500 !important; }
+
+  details.faq-item summary::-webkit-details-marker { display: none; }
+  details.faq-item[open] .faq-icon::before { content: '[−]'; }
+  details.faq-item:not([open]) .faq-icon::before { content: '[+]'; }
+  details.faq-item .faq-icon { font-size: 0; }
+  details.faq-item .faq-icon::before { font-size: 12px; }
 </style>
 </head>
 <body>
@@ -125,52 +131,22 @@
           </thead>
           <tbody class="align-top">
             <tr class="border-b border-neutral-100">
-              <td class="py-2 px-1"><a href="#" target="_blank" rel="noopener" class="text-neutral-800 underline">Amigo 01</a></td>
+              <td class="py-2 px-1"><a href="#" target="_blank" rel="noopener" class="text-neutral-800 underline">Grantee 01</a></td>
               <td class="py-2 px-1 text-neutral-500">qué está construyendo</td>
-              <td class="py-2 px-1 text-neutral-500">22</td>
+              <td class="py-2 px-1 text-neutral-500">—</td>
               <td class="py-2 px-1 text-neutral-300 text-right">2026</td>
             </tr>
             <tr class="border-b border-neutral-100">
-              <td class="py-2 px-1"><a href="#" target="_blank" rel="noopener" class="text-neutral-800 underline">Amigo 02</a></td>
+              <td class="py-2 px-1"><a href="#" target="_blank" rel="noopener" class="text-neutral-800 underline">Grantee 02</a></td>
               <td class="py-2 px-1 text-neutral-500">qué está construyendo</td>
-              <td class="py-2 px-1 text-neutral-500">19</td>
+              <td class="py-2 px-1 text-neutral-500">—</td>
               <td class="py-2 px-1 text-neutral-300 text-right">2026</td>
-            </tr>
-            <tr class="border-b border-neutral-100">
-              <td class="py-2 px-1"><a href="#" target="_blank" rel="noopener" class="text-neutral-800 underline">Amigo 03</a></td>
-              <td class="py-2 px-1 text-neutral-500">qué está construyendo</td>
-              <td class="py-2 px-1 text-neutral-500">24</td>
-              <td class="py-2 px-1 text-neutral-300 text-right">2026</td>
-            </tr>
-            <tr class="border-b border-neutral-100">
-              <td class="py-2 px-1"><a href="#" target="_blank" rel="noopener" class="text-neutral-800 underline">Amigo 04</a></td>
-              <td class="py-2 px-1 text-neutral-500">qué está construyendo</td>
-              <td class="py-2 px-1 text-neutral-500">21</td>
-              <td class="py-2 px-1 text-neutral-300 text-right">2025</td>
-            </tr>
-            <tr class="border-b border-neutral-100">
-              <td class="py-2 px-1"><a href="#" target="_blank" rel="noopener" class="text-neutral-800 underline">Amigo 05</a></td>
-              <td class="py-2 px-1 text-neutral-500">qué está construyendo</td>
-              <td class="py-2 px-1 text-neutral-500">18</td>
-              <td class="py-2 px-1 text-neutral-300 text-right">2025</td>
-            </tr>
-            <tr class="border-b border-neutral-100">
-              <td class="py-2 px-1"><a href="#" target="_blank" rel="noopener" class="text-neutral-800 underline">Amigo 06</a></td>
-              <td class="py-2 px-1 text-neutral-500">qué está construyendo</td>
-              <td class="py-2 px-1 text-neutral-500">26</td>
-              <td class="py-2 px-1 text-neutral-300 text-right">2025</td>
-            </tr>
-            <tr class="border-b border-neutral-100">
-              <td class="py-2 px-1"><a href="#" target="_blank" rel="noopener" class="text-neutral-800 underline">Amigo 07</a></td>
-              <td class="py-2 px-1 text-neutral-500">qué está construyendo</td>
-              <td class="py-2 px-1 text-neutral-500">20</td>
-              <td class="py-2 px-1 text-neutral-300 text-right">2025</td>
             </tr>
             <tr>
-              <td class="py-2 px-1"><a href="#" target="_blank" rel="noopener" class="text-neutral-800 underline">Amigo 08</a></td>
+              <td class="py-2 px-1"><a href="#" target="_blank" rel="noopener" class="text-neutral-800 underline">Grantee 03</a></td>
               <td class="py-2 px-1 text-neutral-500">qué está construyendo</td>
-              <td class="py-2 px-1 text-neutral-500">23</td>
-              <td class="py-2 px-1 text-neutral-300 text-right">2025</td>
+              <td class="py-2 px-1 text-neutral-500">—</td>
+              <td class="py-2 px-1 text-neutral-300 text-right">2026</td>
             </tr>
           </tbody>
         </table>
@@ -190,47 +166,155 @@
             <thead>
               <tr class="text-left text-neutral-400 border-b border-neutral-200">
                 <th class="font-normal py-2 px-1">Nombre</th>
-                <th class="font-normal py-2 px-1">Ocupación</th>
-                <th class="font-normal py-2 px-1 w-10">Edad</th>
+                <th class="font-normal py-2 px-1">Mensaje</th>
                 <th class="font-normal py-2 px-1 w-14 text-right">Año</th>
               </tr>
             </thead>
             <tbody class="align-top">
               <tr class="border-b border-neutral-100">
-                <td class="py-2 px-1"><a href="#" target="_blank" rel="noopener" class="text-neutral-800 underline">Amigo 01</a></td>
-                <td class="py-2 px-1 text-neutral-500">qué hace</td>
-                <td class="py-2 px-1 text-neutral-500">32</td>
+                <td class="py-2 px-1"><a href="https://www.linkedin.com/in/natochi/" target="_blank" rel="noopener" class="text-neutral-800 underline">natochi</a></td>
+                <td class="py-2 px-1 text-neutral-500">maximizar serendipia</td>
                 <td class="py-2 px-1 text-neutral-300 text-right">2026</td>
-              </tr>
-              <tr class="border-b border-neutral-100">
-                <td class="py-2 px-1"><a href="#" target="_blank" rel="noopener" class="text-neutral-800 underline">Amigo 02</a></td>
-                <td class="py-2 px-1 text-neutral-500">qué hace</td>
-                <td class="py-2 px-1 text-neutral-500">29</td>
-                <td class="py-2 px-1 text-neutral-300 text-right">2026</td>
-              </tr>
-              <tr class="border-b border-neutral-100">
-                <td class="py-2 px-1"><a href="#" target="_blank" rel="noopener" class="text-neutral-800 underline">Amigo 03</a></td>
-                <td class="py-2 px-1 text-neutral-500">qué hace</td>
-                <td class="py-2 px-1 text-neutral-500">35</td>
-                <td class="py-2 px-1 text-neutral-300 text-right">2026</td>
-              </tr>
-              <tr class="border-b border-neutral-100">
-                <td class="py-2 px-1"><a href="#" target="_blank" rel="noopener" class="text-neutral-800 underline">Amigo 04</a></td>
-                <td class="py-2 px-1 text-neutral-500">qué hace</td>
-                <td class="py-2 px-1 text-neutral-500">31</td>
-                <td class="py-2 px-1 text-neutral-300 text-right">2025</td>
-              </tr>
-              <tr class="border-b border-neutral-100">
-                <td class="py-2 px-1"><a href="#" target="_blank" rel="noopener" class="text-neutral-800 underline">Amigo 05</a></td>
-                <td class="py-2 px-1 text-neutral-500">qué hace</td>
-                <td class="py-2 px-1 text-neutral-500">28</td>
-                <td class="py-2 px-1 text-neutral-300 text-right">2025</td>
               </tr>
               <tr>
-                <td class="py-2 px-1" colspan="4"><a href="mailto:hola@amigos.sh" class="text-neutral-800 underline">Sumarse</a></td>
+                <td class="py-2 px-1"><a href="https://www.linkedin.com/in/pup/" target="_blank" rel="noopener" class="text-neutral-800 underline">reno</a></td>
+                <td class="py-2 px-1 text-neutral-500">algo algo</td>
+                <td class="py-2 px-1 text-neutral-300 text-right">2026</td>
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sumate -->
+    <div class="pb-24">
+      <div class="mx-auto max-w-[500px] px-6">
+        <h3 class="text-sm font-medium">Sumate</h3>
+        <p class="mt-4 text-sm text-neutral-500">
+          Tres formas de hacer crecer esto: referir a un grantee, referir a un amigo, o volverte amigo vos mismo.
+        </p>
+
+        <div class="mt-8 -mx-1">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-neutral-400 border-b border-neutral-200">
+                <th class="font-normal py-2 px-1">Cómo ayudar</th>
+                <th class="font-normal py-2 px-1">Detalle</th>
+                <th class="font-normal py-2 px-1 w-10 text-right"></th>
+              </tr>
+            </thead>
+            <tbody class="align-top">
+              <tr class="border-b border-neutral-100">
+                <td class="py-2 px-1"><a href="mailto:hola@amigos.sh?subject=Refiero%20un%20grantee&body=Te%20presento%20a..." class="text-neutral-800 underline">Referir grantee</a></td>
+                <td class="py-2 px-1 text-neutral-500">conocés a alguien construyendo algo</td>
+                <td class="py-2 px-1 text-neutral-300 text-right font-mono-ui">[↗]</td>
+              </tr>
+              <tr class="border-b border-neutral-100">
+                <td class="py-2 px-1"><a href="mailto:hola@amigos.sh?subject=Refiero%20un%20amigo&body=Te%20presento%20a..." class="text-neutral-800 underline">Referir amigo</a></td>
+                <td class="py-2 px-1 text-neutral-500">conocés a alguien que quiera donar</td>
+                <td class="py-2 px-1 text-neutral-300 text-right font-mono-ui">[↗]</td>
+              </tr>
+              <tr class="border-b border-neutral-100">
+                <td class="py-2 px-1"><a href="mailto:hola@amigos.sh?subject=Donaci%C3%B3n%20recurrente%20USD%2010%2Fmes" class="text-neutral-800 underline">Volverte amigo</a></td>
+                <td class="py-2 px-1 text-neutral-500">USD 10 / mes</td>
+                <td class="py-2 px-1 text-neutral-300 text-right font-mono-ui">[↗]</td>
+              </tr>
+              <tr class="border-b border-neutral-100">
+                <td class="py-2 px-1"><a href="mailto:hola@amigos.sh?subject=Donaci%C3%B3n%20recurrente%20USD%2025%2Fmes" class="text-neutral-800 underline">Volverte amigo</a></td>
+                <td class="py-2 px-1 text-neutral-500">USD 25 / mes</td>
+                <td class="py-2 px-1 text-neutral-300 text-right font-mono-ui">[↗]</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-1"><a href="mailto:hola@amigos.sh?subject=Donaci%C3%B3n%20recurrente%20USD%2050%2Fmes" class="text-neutral-800 underline">Volverte amigo</a></td>
+                <td class="py-2 px-1 text-neutral-500">USD 50 / mes</td>
+                <td class="py-2 px-1 text-neutral-300 text-right font-mono-ui">[↗]</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="mt-6 text-xs text-neutral-500">
+          100% va a grantees. Sin comisiones, sin overhead.
+        </p>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="pb-32">
+      <div class="mx-auto max-w-[500px] px-6">
+        <h3 class="text-sm font-medium">FAQ</h3>
+
+        <div class="mt-8 -mx-1">
+          <details class="faq-item border-b border-neutral-200">
+            <summary class="flex items-center justify-between py-3 cursor-pointer text-sm text-neutral-800 list-none">
+              <span>¿Qué es amigos?</span>
+              <span class="font-mono-ui text-xs text-neutral-300 faq-icon"></span>
+            </summary>
+            <p class="pb-4 text-sm text-neutral-500">
+              Un micro grant fund hecho por amigos, para otros amigos. Pequeños cheques (USD 100 a 1.000) para que tu próxima idea deje de vivir en una pestaña abierta.
+            </p>
+          </details>
+
+          <details class="faq-item border-b border-neutral-200">
+            <summary class="flex items-center justify-between py-3 cursor-pointer text-sm text-neutral-800 list-none">
+              <span>¿A quién apoyan?</span>
+              <span class="font-mono-ui text-xs text-neutral-300 faq-icon"></span>
+            </summary>
+            <p class="pb-4 text-sm text-neutral-500">
+              Gente joven construyendo algo: una idea, un prototipo, un producto. No importa si recién empezás o si ya tenés algo en marcha — lo que cuenta es que estés haciendo.
+            </p>
+          </details>
+
+          <details class="faq-item border-b border-neutral-200">
+            <summary class="flex items-center justify-between py-3 cursor-pointer text-sm text-neutral-800 list-none">
+              <span>¿Hay equity, deuda, dilución?</span>
+              <span class="font-mono-ui text-xs text-neutral-300 faq-icon"></span>
+            </summary>
+            <p class="pb-4 text-sm text-neutral-500">
+              No. Es un grant. No tenés que devolver nada, no firmás un SAFE, no nos debés equity. La única condición: contanos cómo te fue.
+            </p>
+          </details>
+
+          <details class="faq-item border-b border-neutral-200">
+            <summary class="flex items-center justify-between py-3 cursor-pointer text-sm text-neutral-800 list-none">
+              <span>¿Cuánto tardan en responder?</span>
+              <span class="font-mono-ui text-xs text-neutral-300 faq-icon"></span>
+            </summary>
+            <p class="pb-4 text-sm text-neutral-500">
+              Menos de 7 días. Si pasamos, te lo decimos rápido. Si te aprobamos, recibís la plata en cuestión de días.
+            </p>
+          </details>
+
+          <details class="faq-item border-b border-neutral-200">
+            <summary class="flex items-center justify-between py-3 cursor-pointer text-sm text-neutral-800 list-none">
+              <span>¿De dónde sale la plata?</span>
+              <span class="font-mono-ui text-xs text-neutral-300 faq-icon"></span>
+            </summary>
+            <p class="pb-4 text-sm text-neutral-500">
+              De los amigos del fondo — gente que en algún momento recibió una mano y elige devolverle algo a la próxima generación. Si querés sumarte como donante, ver más arriba.
+            </p>
+          </details>
+
+          <details class="faq-item border-b border-neutral-200">
+            <summary class="flex items-center justify-between py-3 cursor-pointer text-sm text-neutral-800 list-none">
+              <span>¿Puedo postular si no estoy en LATAM?</span>
+              <span class="font-mono-ui text-xs text-neutral-300 faq-icon"></span>
+            </summary>
+            <p class="pb-4 text-sm text-neutral-500">
+              Sí. Empezamos cerca pero no nos limita la geografía — si estás construyendo algo, postulá.
+            </p>
+          </details>
+
+          <details class="faq-item">
+            <summary class="flex items-center justify-between py-3 cursor-pointer text-sm text-neutral-800 list-none">
+              <span>¿Cómo postulo?</span>
+              <span class="font-mono-ui text-xs text-neutral-300 faq-icon"></span>
+            </summary>
+            <p class="pb-4 text-sm text-neutral-500">
+              Llená el form en <a href="form/" class="text-neutral-800 underline">amigos.sh/form</a>. Tarda menos de 5 minutos.
+            </p>
+          </details>
         </div>
       </div>
     </div>
