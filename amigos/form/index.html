@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>amigos — postular</title>
+<meta name="description" content="Postulá al micro grant fund de amigos." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root {
+    --bg: #0044FF;
+    --ink: #FFFFFF;
+    --muted: rgba(255,255,255,0.7);
+    --faint: rgba(255,255,255,0.4);
+    --border: rgba(255,255,255,0.25);
+    --tile: rgba(255,255,255,0.08);
+  }
+  html, body { background: var(--bg); color: var(--ink); }
+  body {
+    font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .font-mono-ui { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+  .text-neutral-500 { color: var(--muted) !important; }
+  .text-neutral-400 { color: var(--faint) !important; }
+  .text-neutral-300 { color: var(--faint) !important; }
+  .text-neutral-800 { color: var(--ink) !important; }
+  .border-neutral-200 { border-color: var(--border) !important; }
+
+  .field {
+    width: 100%;
+    background: transparent;
+    color: var(--ink);
+    border: none;
+    border-bottom: 1px solid var(--border);
+    padding: 10px 0;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 150ms ease;
+  }
+  .field::placeholder { color: var(--faint); }
+  .field:focus { border-bottom-color: var(--ink); }
+  textarea.field { resize: vertical; min-height: 96px; line-height: 1.5; }
+  select.field {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='none' stroke='white' stroke-width='1.5' d='M1 1.5l5 5 5-5'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 0 center;
+    padding-right: 20px;
+  }
+  select.field option { color: #0F0E0C; background: #FFFFFF; }
+
+  .label {
+    display: block;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .submit-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em;
+    border: 1px solid var(--ink);
+    color: var(--ink); background: transparent;
+    padding: 10px 18px; border-radius: 999px;
+    cursor: pointer; line-height: 1;
+    transition: background 150ms ease, color 150ms ease;
+  }
+
+  .mini-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.02em;
+    color: var(--ink); background: transparent;
+    border: none; padding: 0; line-height: 1;
+    text-decoration: none; cursor: pointer;
+    transition: opacity 150ms ease;
+  }
+  .mini-btn:hover { color: #FFBB00 !important; }
+  a { transition: color 150ms ease; }
+  a:hover, a:hover * { color: #FFBB00 !important; }
+  .submit-btn:hover { background: #FFBB00; color: var(--bg); border-color: #FFBB00; }
+
+  .crosshair-coords {
+    position: fixed; z-index: 50; pointer-events: none; display: none;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 10px; color: var(--ink);
+  }
+  @media (min-width: 768px) {
+    .crosshair-coords { display: block; }
+  }
+</style>
+</head>
+<body>
+
+<main class="min-h-screen pt-16 pb-32">
+  <!-- Header con mini logo -->
+  <div class="mx-auto max-w-[500px] px-6">
+    <a href="../" aria-label="Volver a amigos" class="inline-block">
+      <svg viewBox="-6 -6 156 62" class="h-10 w-auto" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="color: var(--ink);">
+        <path fill="currentColor" d="m136.5 22.3-2.5-1.1c-2.5-1.1-3.8-1.7-4-2.9-0.3-1.2 0.7-2.5 2.6-2.4 2.1 0.2 3.9 1.5 5.3 2.8 1.3 1.2 1.7 2 2.7 1.8 0.9-0.2 1.2-1.2 1.1-2.2-0.2-2.3-2.1-7.2-4.5-7.2-0.8 0-1.3 0.5-2.3 0.5s-2.1-0.4-3.6-0.4c-4.8-0.1-8.1 3.1-8.2 7.6-1.8-3.9-5.5-7.7-11.7-7.7s-11.1 4-13.5 10c0-1-0.1-2.1-0.5-3.2-0.3-0.7 1.5-1.5 2.4-2.7 1-1 1.7-2.6 0.5-3.9-1.1-1.2-2.2 0.2-3.7 0.8-0.9 0.3-1.9 0.6-3.2 0.2-2-0.5-4-1-6.2-1-6.2-0.1-11.9 3.9-11.9 10.3 0 2.7 0.7 4.9 1.9 6.5 0.5 0.6 0.2 0.8-0.2 1.2-1.1 1-2.3 2.5-2.3 4.4-0.6-0.6-0.8-1.3-0.8-4.4v-16.1c0-1.2-0.6-2-1.7-1.8-1.5 0.2-5.2 1.8-7.1 2.7-1.3 0.6-2.7 1.8-1.6 3.5 0.8 1.1 2.7 0.8 2.8 3 0.1 0.9 0 11.4 0 11.4 0 2.6-1.7 3.2-2.7 1.5-0.3-0.6-0.4-1.6-0.4-4.2v-8.3c-0.2-6-3.3-9.8-7.8-9.7-3 0-5 1.1-6.8 2.3-1.1 0.6-1.5 0.4-2.2-0.2-1.3-1.1-2.8-2.1-5.5-2.1-2.2 0-3.8 0.5-5.5 1.4-0.9 0.5-1.3 0.4-1.5-0.2-0.3-0.8-0.9-1.3-1.7-1.1-1.6 0.2-5.6 1.9-7.5 2.8-1.2 0.6-2.1 1.4-1.9 2.6-1.3-3.7-4.3-5.6-9.3-5.6-5.8-0.1-10.5 3.7-10.6 7 0 2.4 2.3 3.7 4.4 1.8 2.1-1.7 3.7-3.5 5.8-3.5 2.4-0.1 3.1 2.2 2.8 6.2-1.3-0.4-2.8-0.6-4.6-0.5-4.5 0-9.8 2.7-9.8 8.2v1.2c0.1 4.2 3.1 7.4 7.7 7.6 2.9 0.1 5.2-1 6.7-2 0.8-0.5 0.9-0.9 1.6-0.3 0.9 1 2.1 1.9 3.3 1.9 1.3 0.1 2.6-0.5 3.1-1 0.4 0.3 0.8 0.6 1.8 0.7 2.1 0.2 5.4 0.1 8 0 1.7 0 3.2-0.5 3.2-2 0-2.4-2.6-2-2.7-4.3-0.1-1.6 0-10.6 0-10.6 0-2.5 1.8-3.7 3.8-3.6s2.8 1.5 2.9 3.1v10.8c0 2.8-3.1 2.4-3.1 4.6 0 2 1.7 2.1 4.4 2.1 2.2 0 4.2 0 6.1-0.1 1.8 0 3.2-0.6 3.2-2-0.1-2.2-2.7-2-2.8-4.6 0-1.3 0-10.2 0.1-11.1 0.2-2.1 1.9-2.9 3.5-2.9 1.7 0 3.2 1 3.3 3.5 0.1 1.7 0 8.9 0 10.3 0 3.2-2.9 2.5-2.9 4.7 0 1.4 1 2 2.3 2.1 2.3 0.1 7.2 0.1 10.1-0.1 1.3 0.3 2.8 0.3 4.9 0.3 2.5 0 5.2-0.1 5.9-0.5l0.1-0.2 0.3 0.3c-0.7 0.7-2 1.6-2 3.8 0 2.3 1.6 5.5 6 6.4 4.4 1 9.2 1.1 13.1-0.1 4.1-1.3 6.9-3.9 6.9-8 0-3.5-2.4-6.7-7.4-6.7-3.2 0-5.7 0.2-8.3 0.2-2.5 0-3.9-0.5-3.9-1.7 0-0.6 0.5-1.4 1.4-1.1 1.1 0.3 2 0.5 3.5 0.5 5 0 10-1.9 11.8-7v1c0 5.8 3.5 13.5 12.8 13.6 5.5 0 9.6-2.4 12.2-6.9 0.3 2.1 2 6.5 4.1 6.5 0.9 0 1.3-0.3 2.1-0.3 1 0 2.4 0.6 5.4 0.6 4.9 0 8.8-2.6 8.8-7.9 0.2-5-2.9-7.2-6.3-8.9zm-120.6 9.2c-0.4 1.4-1.9 2.4-3.5 2.2-2-0.2-3.7-1-3.7-3.5 0-2.4 2-3.8 4.2-3.7 1.4 0 2.6 0.6 3 1.5 0.1 1.2 0.1 2.6 0 3.5zm10.1 1.1c-1.1-0.7-2.6-0.1-2.8-2 0-0.9 0-8.5 0.1-10.3 0-0.8-0.1-1.7-0.2-2.7 0.8 1.4 2.8 1 3 2.7 0.2 1.2 0.1 10.3 0.1 10.8 0 0.6 0 1.1-0.2 1.5zm58.6 7.3c2 0 3.9-0.2 6-0.2 2.8-0.1 3.1 1.7 2.2 2.7s-3.1 1.6-5.6 1.6c-4 0-6.7-1.1-6.8-3 0-1.9 2-1 4.2-1.1zm2.4-12.9c-2.7 0-4.4-2.7-4.4-6 0-2.5 1-4.8 3.8-4.8 2.1 0.1 4.2 2 4.2 5.5 0 2.8-1.2 5.2-3.6 5.3zm25.6 6.9c-3.3-0.2-5.4-4.8-6.6-8.4-1.1-3.8-1.1-8.8 2.9-9.1 3.8-0.2 6.2 4.8 7.2 8.8 1.3 5-0.4 8.7-3.5 8.7zm20.9 1c-1.8 0.1-3.9-0.5-5.3-1.6-2.1-1.5-3.6-4.4-4.6-4.3h-0.1c0.4-1.3 0.6-3.4 0.5-5.3 1.2 1.9 3.2 3.2 5.4 4.1l2.3 1.1c2.2 1 4.5 2 4.5 3.8 0 1-1 2-2.7 2.2z"/>
+        <path fill="currentColor" d="m69.9 8c2.3 0.1 4.1-1.6 4.1-3.6v-0.5c-0.1-1.9-1.6-3.9-4.1-3.9-2.3 0-4.2 1.6-4.2 3.6v0.4c0 2.1 1.7 3.9 4.2 4z"/>
+      </svg>
+    </a>
+
+    <h1 class="mt-12 text-3xl font-medium tracking-tight">Postulá al fondo</h1>
+    <p class="mt-4 text-sm text-neutral-500">
+      Pequeños cheques, sin formularios largos. Contanos qué estás construyendo y por qué este empujón te cambia el próximo mes. Te respondemos en menos de 7 días.
+    </p>
+
+    <!-- Form -->
+    <form id="apply-form" class="mt-12 flex flex-col gap-6" novalidate>
+      <div>
+        <label class="label" for="f-name">Nombre</label>
+        <input class="field" type="text" id="f-name" name="name" required placeholder="Cómo te llamás" />
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="label" for="f-age">Edad</label>
+          <input class="field" type="number" id="f-age" name="age" min="13" max="99" required placeholder="00" />
+        </div>
+        <div>
+          <label class="label" for="f-location">Dónde vivís</label>
+          <input class="field" type="text" id="f-location" name="location" placeholder="Ciudad, país" />
+        </div>
+      </div>
+
+      <div>
+        <label class="label" for="f-email">Email</label>
+        <input class="field" type="email" id="f-email" name="email" required placeholder="vos@email.com" />
+      </div>
+
+      <div>
+        <label class="label" for="f-link">Link a vos (LinkedIn, X, sitio)</label>
+        <input class="field" type="url" id="f-link" name="link" placeholder="https://" />
+      </div>
+
+      <div>
+        <label class="label" for="f-project">¿Qué estás construyendo?</label>
+        <textarea class="field" id="f-project" name="project" required placeholder="Una idea, un prototipo, un producto. Lo que sea — contanos en pocas palabras."></textarea>
+      </div>
+
+      <div>
+        <label class="label" for="f-why">¿Por qué ahora? ¿Qué destrabás con este grant?</label>
+        <textarea class="field" id="f-why" name="why" placeholder="El dominio, la primera versión, un fin de semana sin trabajar — cualquier cosa cuenta."></textarea>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="label" for="f-amount">¿Cuánto necesitás?</label>
+          <select class="field" id="f-amount" name="amount" required>
+            <option value="" disabled selected>Elegí un monto</option>
+            <option value="100">USD 100</option>
+            <option value="250">USD 250</option>
+            <option value="500">USD 500</option>
+            <option value="1000">USD 1.000</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+        <div>
+          <label class="label" for="f-referral">¿Cómo nos conociste?</label>
+          <input class="field" type="text" id="f-referral" name="referral" placeholder="Un amigo, Twitter, un link..." />
+        </div>
+      </div>
+
+      <div class="mt-4 flex items-center justify-between gap-4">
+        <a href="../" class="text-sm underline text-neutral-500">← Volver</a>
+        <button type="submit" class="submit-btn">Enviar postulación →</button>
+      </div>
+
+      <p id="form-feedback" class="text-sm text-neutral-400 hidden"></p>
+    </form>
+  </div>
+</main>
+
+<!-- Cursor coords -->
+<span id="ch-coords" class="crosshair-coords"><span id="ch-x"></span><span id="ch-y" class="block"></span></span>
+
+<!-- Footer -->
+<footer class="fixed bottom-0 z-[70] flex w-full items-center justify-between px-6 py-4 font-mono-ui" style="background: var(--bg);">
+  <a href="../" class="mini-btn"><span aria-hidden="true">[←]</span> Inicio</a>
+  <div class="hidden gap-6 md:flex">
+    <a href="mailto:hola@amigos.sh" class="text-xs uppercase underline">Contacto</a>
+    <a href="https://x.com/" target="_blank" rel="noopener noreferrer" class="text-xs uppercase underline">Twitter</a>
+  </div>
+  <span id="time-scl" class="text-xs uppercase">SCL --:--:--</span>
+</footer>
+
+<script>
+  function fmt(date, tz) {
+    const opts = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true, timeZone: tz };
+    return new Intl.DateTimeFormat('en-US', opts).format(date).replace(/\s/g, ' ');
+  }
+  function tick() {
+    document.getElementById('time-scl').textContent = 'SCL ' + fmt(new Date(), 'America/Santiago');
+  }
+  tick(); setInterval(tick, 1000);
+
+  // Cursor coords
+  const coords = document.getElementById('ch-coords');
+  const cx = document.getElementById('ch-x');
+  const cy = document.getElementById('ch-y');
+  const pad = (n, len) => String(n).padStart(len, '0');
+  window.addEventListener('mousemove', (e) => {
+    const x = e.clientX, y = e.clientY;
+    coords.style.left = (x + 16) + 'px';
+    coords.style.top = (y + 16) + 'px';
+    cx.textContent = 'X:' + pad(x, 4);
+    cy.textContent = 'Y:' + pad(y, 4);
+  });
+
+  // Form: build mailto on submit (placeholder backend)
+  const form = document.getElementById('apply-form');
+  const feedback = document.getElementById('form-feedback');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(form).entries());
+    if (!data.name || !data.email || !data.project) {
+      feedback.textContent = 'Completá nombre, email y qué estás construyendo.';
+      feedback.classList.remove('hidden');
+      return;
+    }
+    const subject = encodeURIComponent(`postulación — ${data.name}`);
+    const body = encodeURIComponent(
+      `Nombre: ${data.name}\n` +
+      `Edad: ${data.age || '-'}\n` +
+      `Ubicación: ${data.location || '-'}\n` +
+      `Email: ${data.email}\n` +
+      `Link: ${data.link || '-'}\n` +
+      `Monto: ${data.amount || '-'}\n` +
+      `Referral: ${data.referral || '-'}\n\n` +
+      `Qué construye:\n${data.project}\n\n` +
+      `Por qué ahora:\n${data.why || '-'}\n`
+    );
+    window.location.href = `mailto:hola@amigos.sh?subject=${subject}&body=${body}`;
+    feedback.textContent = 'Abriendo tu cliente de email...';
+    feedback.classList.remove('hidden');
+  });
+</script>
+
+</body>
+</html>
