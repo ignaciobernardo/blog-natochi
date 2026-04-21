@@ -41,12 +41,12 @@ function slugify(title) {
 /**
  * Convierte sintaxis de Obsidian (![[imagen.png]]) a markdown estándar
  */
-function convertObsidianSyntax(markdown) {
+function convertObsidianSyntax(markdown, baseDir = 'posts') {
     return markdown.replace(
         /!\[\[([^\]]+)\]\]/g,
         (match, imageName) => {
             const cleanName = imageName.trim();
-            return `\n\n![${cleanName}](/posts/${encodeURIComponent(cleanName)})\n\n`;
+            return `\n\n![${cleanName}](/${baseDir}/${encodeURIComponent(cleanName)})\n\n`;
         }
     );
 }
@@ -352,7 +352,7 @@ function processNewsletterFile(file, index, totalFiles) {
     const content = fs.readFileSync(filePath, 'utf-8');
     const { attributes, body } = frontMatter(content);
 
-    const markdownBody = convertObsidianSyntax(body);
+    const markdownBody = convertObsidianSyntax(body, 'newsletter');
     let html = marked.parse(markdownBody);
     html = processImages(html);
 
