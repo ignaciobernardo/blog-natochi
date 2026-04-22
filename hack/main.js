@@ -433,8 +433,8 @@ function updateLabels() {
 }
 requestAnimationFrame(updateLabels);
 
-// ─── Countdown to late-applications deadline (UTC-4) ──────────────────────
-const COUNTDOWN_TARGET = new Date("2026-05-12T23:59:00-04:00").getTime();
+// ─── Countdown to when the hack ends ──────────────────────────────────────
+const COUNTDOWN_TARGET = new Date("2026-04-22T22:15:20Z").getTime();
 const cd = {
   d: document.getElementById("cd-d"),
   h: document.getElementById("cd-h"),
