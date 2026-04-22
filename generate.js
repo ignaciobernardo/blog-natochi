@@ -315,7 +315,7 @@ function generateNewsletterHTML(title, content, date, slug) {
     <div class="container">
         <div class="content">
             <div class="back-link">
-                <a href="/newsletter">&#8592; Newsletter</a>
+                <a href="/newsletter">&#8592; natochi updates</a>
             </div>
 
             <div class="blog-post">
