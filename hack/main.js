@@ -468,37 +468,27 @@ mountAllHalftones();
 // and commands typed into the `hack@latam-sim$` prompt all resolve through
 // the same table. Unknown typed commands do nothing.
 const TERMINAL_TARGETS = {
-  map:        () => window.scrollTo({ top: 0, behavior: "smooth" }),
   tldr:       () => scrollToSection("tldr"),
   perks:      () => scrollToSection("perks"),
   tracks:     () => scrollToSection("tracks"),
   donde:      () => scrollToSection("donde"),
   where:      () => scrollToSection("donde"),
+  map:        () => scrollToSection("donde"),      // [m] → where the cities live
   faq:        () => scrollToSection("faq"),
+  help:       () => scrollToSection("faq"),        // [h] help → FAQ
   comunidades:() => scrollToSection("comunidades"),
   sponsors:   () => scrollToSection("sponsors"),
-  quit:       () => window.scrollTo({ top: 0, behavior: "smooth" }),
-  help:       () => {
-    // Briefly highlight all shortcuts as a visual hint
-    document.querySelectorAll(".shortcut").forEach((b) => {
-      b.animate(
-        [{ color: "#fff" }, { color: getComputedStyle(b).color }],
-        { duration: 800 },
-      );
-    });
-  },
+  top:        () => window.scrollTo({ top: 0, behavior: "smooth" }),
 };
 
 const KEY_TO_ACTION = {
-  h: "help",
-  m: "map",
+  h: "faq",           // help   → FAQ
+  m: "donde",         // map    → DÓNDE
   t: "tracks",
   p: "perks",
-  d: "donde",
-  f: "faq",
   c: "comunidades",
   s: "sponsors",
-  q: "quit",
+  f: "faq",
 };
 
 function scrollToSection(id) {
