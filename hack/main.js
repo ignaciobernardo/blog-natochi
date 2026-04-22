@@ -482,13 +482,12 @@ const TERMINAL_TARGETS = {
 };
 
 const KEY_TO_ACTION = {
-  h: "faq",           // help   → FAQ
-  m: "donde",         // map    → DÓNDE
+  f: "faq",
+  d: "donde",
   t: "tracks",
   p: "perks",
   c: "comunidades",
   s: "sponsors",
-  f: "faq",
 };
 
 function scrollToSection(id) {
