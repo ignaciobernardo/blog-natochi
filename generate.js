@@ -11,7 +11,7 @@ const CONFIG = {
     UPDATES_DIR: path.join(__dirname, 'updates'),
     INDEX_PATH: path.join(__dirname, 'index.html'),
     POSTS_PAGE_PATH: path.join(__dirname, 'posts', 'index.html'),
-    NEWSLETTER_PAGE_PATH: path.join(__dirname, 'newsletter', 'index.html'),
+    NEWSLETTER_PAGE_PATH: path.join(__dirname, 'updates', 'index.html'),
     SCRIPT_PATH: path.join(__dirname, 'script.js'),
     VISIBLE_POSTS: 3,
     AUTHOR_NAME: 'Nacho'
@@ -315,7 +315,7 @@ function generateNewsletterHTML(title, content, date, slug) {
     <div class="container">
         <div class="content">
             <div class="back-link">
-                <a href="/newsletter">&#8592; natochi updates</a>
+                <a href="/updates">&#8592; natochi updates</a>
             </div>
 
             <div class="blog-post">
@@ -414,7 +414,7 @@ function updateNewsletterPage(allEntries) {
     pageContent = pageContent.replace(listRegex, newList);
     fs.writeFileSync(CONFIG.NEWSLETTER_PAGE_PATH, pageContent);
 
-    console.log('✓ newsletter/index.html actualizado');
+    console.log('✓ updates/index.html actualizado');
 }
 
 /**
