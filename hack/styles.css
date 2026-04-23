@@ -300,6 +300,14 @@ body {
   background: rgba(245, 166, 35, 0.16);
   color: #fff;
 }
+.cd-cta--disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.cd-cta--disabled:hover {
+  background: rgba(245, 166, 35, 0.04);
+  color: var(--amber-bright);
+}
 
 .panel__footer {
   width: 100%;
@@ -1089,6 +1097,33 @@ a.event-card:hover .event-card__name { color: #fff; }
 .sponsor[data-logo="utec"]          { --logo: url("./assets/logos/utec.png"); }
 .sponsor[data-logo="logos"]         { --logo: url("./assets/logos/logos.png"); }
 .sponsor[data-logo="animo"]         { --logo: url("./assets/logos/animo.png"); }
+
+/* Exceptions — logos whose PNG is a solid block (white-on-opaque or filled
+   silhouette). The mask approach collapses them into a featureless amber
+   rectangle, so for these we render the image itself and tint it amber via
+   filter. Same dotted overlay applies on top, so the halftone feel is kept. */
+.sponsor[data-logo="gptchain"]   .sponsor__logo,
+.sponsor[data-logo="residency"]  .sponsor__logo,
+.sponsor[data-logo="monologue"]  .sponsor__logo,
+.sponsor[data-logo="miguelpaz"]  .sponsor__logo {
+  background: var(--logo, none) center / 42% auto no-repeat;
+  -webkit-mask: none;
+          mask: none;
+  mix-blend-mode: screen;
+  filter: grayscale(1)
+          sepia(1)
+          saturate(7)
+          hue-rotate(-18deg)
+          brightness(0.6)
+          contrast(1.1);
+}
+/* Hover reveal for exceptions — dimmer than the default opacity:1 */
+.sponsor[data-logo="gptchain"]:hover   .sponsor__logo,
+.sponsor[data-logo="residency"]:hover  .sponsor__logo,
+.sponsor[data-logo="monologue"]:hover  .sponsor__logo,
+.sponsor[data-logo="miguelpaz"]:hover  .sponsor__logo {
+  opacity: 0.5;
+}
 
 /* Universal hover reveal — fires for any card that has a --logo set. */
 .sponsor[data-logo]:hover .sponsor__logo,

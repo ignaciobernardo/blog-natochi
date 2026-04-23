@@ -445,7 +445,7 @@ function updateLabels() {
 requestAnimationFrame(updateLabels);
 
 // ─── Countdown to when the hack ends ──────────────────────────────────────
-const COUNTDOWN_TARGET = new Date("2026-04-22T22:15:20Z").getTime();
+const COUNTDOWN_TARGET = new Date("2026-05-15T22:00:00Z").getTime(); // May 15, 6pm UTC-4
 const cd = {
   d: document.getElementById("cd-d"),
   h: document.getElementById("cd-h"),
@@ -479,7 +479,6 @@ mountAllHalftones();
 // and commands typed into the `hack@latam-sim$` prompt all resolve through
 // the same table. Unknown typed commands do nothing.
 const TERMINAL_TARGETS = {
-  apply:      () => window.open("https://hack.indies.la/apply/", "_blank", "noopener"),
   tldr:       () => scrollToSection("tldr"),
   perks:      () => scrollToSection("perks"),
   tracks:     () => scrollToSection("tracks"),
@@ -496,7 +495,6 @@ const TERMINAL_TARGETS = {
 };
 
 const KEY_TO_ACTION = {
-  a: "apply",
   f: "faq",
   d: "donde",
   t: "tracks",
