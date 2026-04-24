@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "c94ef2613e14279e",
+        "id": "f80a8a870f0e689d",
         "type": "tabs",
         "children": [
           {
-            "id": "16c8ce74e1311458",
+            "id": "df60fc8b46316477",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "3..md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "3."
+              "title": "Nueva pestaña"
             }
           }
         ]
@@ -183,17 +179,19 @@
       "bases:Crear nueva base": false
     }
   },
-  "active": "16c8ce74e1311458",
+  "active": "df60fc8b46316477",
   "lastOpenFiles": [
-    "index.html",
+    "4..md",
+    "Mecenas Platanus.md",
+    "hacer un video explicando lo bacan que es la hack..md",
+    "3..md",
     "2..md",
     "1..md",
-    "5..md",
-    "Captura de pantalla 2026-03-18 a la(s) 9.27.28 p.m..png",
-    "Pasted image 20260318212719.png",
+    "3P5A0130.jpg",
     "Pasted image 20260318212635.png",
-    "3..md",
-    "4..md",
+    "Pasted image 20260318212719.png",
+    "Captura de pantalla 2026-03-18 a la(s) 9.27.28 p.m..png",
+    "index.html",
     "3x10.lat.md",
     "og_image.png",
     "2.md",
@@ -202,7 +200,6 @@
     "10..md",
     "8..md",
     "7..md",
-    "6..md",
     "agents-bg-img.png",
     "agents-bg-img 1.png",
     "Constraints.md",

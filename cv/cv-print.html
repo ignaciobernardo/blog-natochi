@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+@page {
+    size: A4;
+    margin: 0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+    background-color: #1a1a1a;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+::selection { background: #ff8800; color: #1a1a1a; }
+
+body {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #e5e5e5;
+    font-size: 11.5px;
+    line-height: 1.65;
+    padding: 1.5cm 1.8cm;
+}
+
+.name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #e5e5e5;
+    margin-bottom: 5px;
+}
+
+.name a {
+    color: #e5e5e5;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(229,229,229,0.3);
+}
+
+.name-sub {
+    font-size: 10px;
+    color: rgba(229,229,229,0.35);
+    margin-bottom: 22px;
+}
+
+.name-sub a {
+    color: #FF8800;
+    text-decoration: underline;
+}
+
+.section-label {
+    font-size: 9px;
+    font-weight: 400;
+    color: rgba(229,229,229,0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(229,229,229,0.1);
+    margin-bottom: 11px;
+    margin-top: 20px;
+}
+
+.entry {
+    margin-bottom: 13px;
+    display: grid;
+    grid-template-columns: 175px 1fr;
+    gap: 0 16px;
+}
+
+.entry-left {}
+
+.company {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #FF8800;
+    text-decoration: none;
+    display: block;
+    line-height: 1.4;
+}
+
+.role {
+    font-size: 10.5px;
+    color: #e5e5e5;
+    display: block;
+    line-height: 1.4;
+}
+
+.meta {
+    font-size: 10px;
+    color: rgba(229,229,229,0.35);
+    display: block;
+    line-height: 1.5;
+    margin-top: 1px;
+}
+
+.bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.bullets li {
+    font-size: 11px;
+    color: #d4d4d4;
+    line-height: 1.65;
+    padding-left: 12px;
+    position: relative;
+    margin-bottom: 2px;
+}
+
+.bullets li::before {
+    content: '-';
+    position: absolute;
+    left: 0;
+    color: rgba(229,229,229,0.25);
+}
+
+.bullets li a {
+    color: #FF8800;
+    text-decoration: underline;
+}
+
+.other-item {
+    font-size: 11px;
+    color: #d4d4d4;
+    line-height: 1.65;
+    padding-left: 12px;
+    position: relative;
+    margin-bottom: 4px;
+}
+
+.other-item::before {
+    content: '-';
+    position: absolute;
+    left: 0;
+    color: rgba(229,229,229,0.25);
+}
+
+.other-item a {
+    color: #FF8800;
+    text-decoration: underline;
+}
+
+.footer {
+    margin-top: 22px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(229,229,229,0.1);
+    font-size: 10px;
+    color: rgba(229,229,229,0.3);
+}
+
+.footer a {
+    color: #FF8800;
+    text-decoration: underline;
+}
+</style>
+</head>
+<body>
+
+<p class="name"><a href="https://www.linkedin.com/in/natochi/">Ernesto Ignacio Bernardo</a></p>
+<p class="name-sub">natochi.cv &nbsp;·&nbsp; <a href="mailto:ernesto@indies.cl">ernesto@indies.cl</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/natochi/">linkedin</a> &nbsp;·&nbsp; <a href="https://x.com/natochi_">twitter</a></p>
+
+<!-- Experience -->
+<p class="section-label">Experience</p>
+
+<div class="entry">
+    <div class="entry-left">
+        <a href="https://amigos.sh/" class="company">Amigos Fund</a>
+        <span class="role">Founder</span>
+        <span class="meta">LatAm · 4/2026 - Present</span>
+    </div>
+    <ul class="bullets">
+        <li>Micro-grant fund for young people building scrappy solutions to important problems.</li>
+        <li>1 week in and we already have 3k USD in committed grant funds.</li>
+    </ul>
+</div>
+
+<div class="entry">
+    <div class="entry-left">
+        <a href="https://www.zavu.dev/" class="company">Zavu (Backed by 500)</a>
+        <span class="role">Advisor</span>
+        <span class="meta">San Francisco, US · 2/2026 - Present</span>
+    </div>
+    <ul class="bullets">
+        <li>Helping with founding team hiring and dev community strategy.</li>
+    </ul>
+</div>
+
+<div class="entry">
+    <div class="entry-left">
+        <a href="https://platan.us/" class="company">Platanus</a>
+        <span class="role">Generalist</span>
+        <span class="meta">LatAm · 2/2026 - Present</span>
+    </div>
+    <ul class="bullets">
+        <li>Leading the <a href="https://hack.platan.us/">biggest hackathon in LatAm</a>: in two months, secured 100k+ USD in sponsorships + 70k in credits from Anthropic, Supabase, Vercel, etc.</li>
+        <li>Created an <a href="https://kernel.platan.us/">Angel Co-Investing program</a> from scratch. In just 6 days: 42k USD in committed funds from first cohort applicants.</li>
+        <li>Already scouted my first investment 1 month in (we normally do 10 to 15 investments a year).</li>
+    </ul>
+</div>
+
+<div class="entry">
+    <div class="entry-left">
+        <a href="https://www.indies.cl/" class="company">Indies.cl</a>
+        <span class="role">Co-founder</span>
+        <span class="meta">Santiago, CL · 07/2025 - Present</span>
+    </div>
+    <ul class="bullets">
+        <li>LatAm's largest builder community (2.5k+ members).</li>
+        <li>Building the <a href="https://hack.indies.la/">biggest hackathon for social impact</a>. 1.2k+ applicants. 10k USD raised &amp; 45k in credits. Events in 5 countries simultaneously.</li>
+    </ul>
+</div>
+
+<div class="entry">
+    <div class="entry-left">
+        <a href="https://3x10.lat/" class="company">3x10</a>
+        <span class="role">Co-founder</span>
+        <span class="meta">LatAm · 10/2025 - 3/2026</span>
+    </div>
+    <ul class="bullets">
+        <li>Gave $4k in grants. Partnerships with <a href="https://platan.us/">Platanus</a>, <a href="https://makers.ngo/">Makers</a>, <a href="https://www.livetheresidency.com/">The Residency</a>, <a href="https://www.1517fund.com/">1517 Fund</a>. <a href="https://www.df.cl/df-mas/punto-de-partida/indies-los-veinteaneros-que-quieren-financiar-ideas-locas">Regional media coverage</a>.</li>
+        <li>~1k participants in hackathons and events.</li>
+    </ul>
+</div>
+
+<div class="entry">
+    <div class="entry-left">
+        <a href="https://www.asimov.cl/" class="company">Asimov Consultores</a>
+        <span class="role">Generalist</span>
+        <span class="meta">Santiago, CL · 02/2024 - 11/2025</span>
+    </div>
+    <ul class="bullets">
+        <li>Closed contracts worth over $3M USD including public institutions and international companies. Opened 6 new countries.</li>
+        <li>First-ever recipient of the company's full-ride university scholarship program.</li>
+    </ul>
+</div>
+
+<div class="entry">
+    <div class="entry-left">
+        <span class="company" style="color:#e5e5e5;">First big business :D</span>
+        <span class="meta">Santiago, CL · 01/2020 - 01/2023</span>
+    </div>
+    <ul class="bullets">
+        <li>At 17, built and scaled a D2C dropshipping business from scratch to over 250k in sales with 2 part-time employees.</li>
+    </ul>
+</div>
+
+<!-- Education -->
+<p class="section-label">Education</p>
+
+<div class="entry">
+    <div class="entry-left">
+        <span class="company" style="color:#e5e5e5;">Bachelor's in Psychology (Dropout)</span>
+        <span class="meta">Viña del Mar, CL · 04/2020 - 10/2022</span>
+    </div>
+    <ul class="bullets">
+        <li>Organized the first cognitive neuroscience and coding extracurricular on campus.</li>
+    </ul>
+</div>
+
+<!-- Other things -->
+<p class="section-label">Other things</p>
+
+<p class="other-item">2nd out of 52 teams @ <a href="https://hack.platan.us/">Platanus hack</a> (200+ participants, 1k applicants). Won 10k in AWS credits and ~$1k cash. Check <a href="https://themis.lat/">the project</a>. (12/2025).</p>
+<p class="other-item">1st place: inter-school robotics competition — low-cost vending machine in C++ and Arduino. (06/2019).</p>
+
+<div class="footer">
+    <a href="mailto:ernesto@indies.cl">ernesto@indies.cl</a> &nbsp;·&nbsp;
+    <a href="https://www.linkedin.com/in/natochi/">linkedin.com/in/natochi</a> &nbsp;·&nbsp;
+    <a href="https://x.com/natochi_">x.com/natochi_</a> &nbsp;·&nbsp;
+    <a href="https://natochi.cv">natochi.cv</a>
+</div>
+
+</body>
+</html>
