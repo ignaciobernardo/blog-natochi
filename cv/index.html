@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cv - ernesto bernardo</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://natochi.cv/cv">
+    <meta property="og:title" content="ernesto ignacio bernardo — cv">
+    <meta property="og:description" content="dropout, builder, fund manager.">
+    <meta property="og:image" content="https://natochi.cv/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://natochi.cv/cv">
+    <meta property="twitter:title" content="ernesto ignacio bernardo — cv">
+    <meta property="twitter:description" content="dropout, builder, fund manager.">
+    <meta property="twitter:image" content="https://natochi.cv/og-image.png">
+
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        .cv-name {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #e5e5e5;
+            margin: 0 0 2.5rem 0;
+            line-height: 1.3;
+        }
+
+        .cv-name a {
+            color: #e5e5e5;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(229,229,229,0.25);
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .cv-name a:hover {
+            color: #FF8800;
+            border-color: #FF8800;
+        }
+
+        .cv-section {
+            margin: 2.2rem 0 1rem 0;
+        }
+
+        .cv-section-label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: rgba(229,229,229,0.35);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin: 0 0 1.2rem 0;
+            padding-bottom: 0.4rem;
+            border-bottom: 1px solid rgba(229,229,229,0.1);
+        }
+
+        .cv-entry {
+            margin-bottom: 1.6rem;
+        }
+
+        .cv-entry-header {
+            margin-bottom: 0.35rem;
+        }
+
+        .cv-company {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #FF8800;
+            text-decoration: underline;
+            padding: 1px 4px;
+            transition: color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .cv-company:hover {
+            color: #e5e5e5;
+            background-color: #FF8800;
+            text-decoration: none;
+        }
+
+        .cv-role {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.82rem;
+            color: #e5e5e5;
+            margin: 0.2rem 0 0 0;
+        }
+
+        .cv-meta {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            color: rgba(229,229,229,0.35);
+            margin: 0.15rem 0 0.6rem 0;
+        }
+
+        .cv-bullets {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .cv-bullets li {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.82rem;
+            color: #d4d4d4;
+            line-height: 1.75;
+            padding-left: 1.1rem;
+            position: relative;
+            margin: 0.2rem 0;
+        }
+
+        .cv-bullets li::before {
+            content: '-';
+            position: absolute;
+            left: 0;
+            color: rgba(229,229,229,0.3);
+        }
+
+        .cv-bullets li a {
+            color: #FF8800;
+            text-decoration: underline;
+            padding: 1px 4px;
+            transition: color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .cv-bullets li a:hover {
+            color: #e5e5e5;
+            background-color: #FF8800;
+            text-decoration: none;
+        }
+
+        .cv-other-item {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.82rem;
+            color: #d4d4d4;
+            line-height: 1.75;
+            padding-left: 1.1rem;
+            position: relative;
+            margin: 0.3rem 0;
+        }
+
+        .cv-other-item::before {
+            content: '-';
+            position: absolute;
+            left: 0;
+            color: rgba(229,229,229,0.3);
+        }
+
+        .cv-other-item a {
+            color: #FF8800;
+            text-decoration: underline;
+            padding: 1px 4px;
+            transition: color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .cv-other-item a:hover {
+            color: #e5e5e5;
+            background-color: #FF8800;
+            text-decoration: none;
+        }
+
+        @media print {
+            body {
+                background-color: #fff !important;
+                color: #111 !important;
+            }
+            .cal-link,
+            .stamps-footer,
+            .back-link {
+                display: none !important;
+            }
+            .cv-company,
+            .cv-bullets li a,
+            .cv-other-item a {
+                color: #111 !important;
+                background-color: transparent !important;
+            }
+            .cv-section-label {
+                color: #666 !important;
+            }
+            .cv-meta {
+                color: #666 !important;
+            }
+            .cv-bullets li,
+            .cv-other-item {
+                color: #111 !important;
+            }
+        }
+    </style>
+</head>
+<body class="blog-page">
+    <a class="cal-link" href="https://cal.com/natochi" target="_blank" rel="noopener">got a <span>question</span>?<br>book 30min</a>
+
+    <div class="container">
+        <div class="content">
+            <div class="back-link">
+                <a href="/">&#8592; Index</a>
+            </div>
+
+            <p class="cv-name">
+                <a href="https://www.linkedin.com/in/natochi/" target="_blank" rel="noopener">Ernesto Ignacio Bernardo</a>
+            </p>
+
+            <!-- Experience -->
+            <div class="cv-section">
+                <p class="cv-section-label">Experience</p>
+
+                <div class="cv-entry">
+                    <div class="cv-entry-header">
+                        <a href="https://amigos.sh/" target="_blank" rel="noopener" class="cv-company">Amigos Fund</a>
+                    </div>
+                    <p class="cv-role">Founder</p>
+                    <p class="cv-meta">LatAm &nbsp;|&nbsp; 4/2026 - Present</p>
+                    <ul class="cv-bullets">
+                        <li>Micro-grant fund for young people building scrappy solutions to important problems.</li>
+                        <li>1 week in and we already have 3k USD in committed grant funds.</li>
+                    </ul>
+                </div>
+
+                <div class="cv-entry">
+                    <div class="cv-entry-header">
+                        <a href="https://www.zavu.dev/" target="_blank" rel="noopener" class="cv-company">Zavu (Backed by 500)</a>
+                    </div>
+                    <p class="cv-role">Advisor</p>
+                    <p class="cv-meta">San Francisco, US &nbsp;|&nbsp; 2/2026 - Present</p>
+                    <ul class="cv-bullets">
+                        <li>Helping with founding team hiring and dev community strategy.</li>
+                    </ul>
+                </div>
+
+                <div class="cv-entry">
+                    <div class="cv-entry-header">
+                        <a href="https://platan.us/" target="_blank" rel="noopener" class="cv-company">Platanus</a>
+                    </div>
+                    <p class="cv-role">Generalist</p>
+                    <p class="cv-meta">LatAm &nbsp;|&nbsp; 2/2026 - Present</p>
+                    <ul class="cv-bullets">
+                        <li>Leading the <a href="https://hack.platan.us/" target="_blank" rel="noopener">biggest hackathon in LatAm</a>: in two months, already secured 100k+ USD in sponsorships for the hackathon + events &amp; 70k in credits from Anthropic, Supabase, Vercel, etc.</li>
+                        <li>Created an <a href="https://kernel.platan.us/" target="_blank" rel="noopener">Angel Co-Investing program</a> from scratch. In just 6 days we have 42k USD in committed funds from applicants in the first cohort.</li>
+                        <li>Already scouted my first investment 1 month in (we normally do 10 to 15 investments a year).</li>
+                    </ul>
+                </div>
+
+                <div class="cv-entry">
+                    <div class="cv-entry-header">
+                        <a href="https://www.indies.cl/" target="_blank" rel="noopener" class="cv-company">Indies.cl</a>
+                    </div>
+                    <p class="cv-role">Co-founder</p>
+                    <p class="cv-meta">Santiago, CL &nbsp;|&nbsp; 07/2025 - Present</p>
+                    <ul class="cv-bullets">
+                        <li>LatAm's largest builder community (2.5k+ members).</li>
+                        <li>Building the <a href="https://hack.indies.la/" target="_blank" rel="noopener">biggest hackathon for social impact</a>. 1.2k+ applicants. 10k USD raised &amp; 45k in credits for participants and winners. With events and LAN parties in 5 countries simultaneously.</li>
+                    </ul>
+                </div>
+
+                <div class="cv-entry">
+                    <div class="cv-entry-header">
+                        <a href="https://3x10.lat/" target="_blank" rel="noopener" class="cv-company">3x10</a>
+                    </div>
+                    <p class="cv-role">Co-founder</p>
+                    <p class="cv-meta">LatAm &nbsp;|&nbsp; 10/2025 - 3/2026</p>
+                    <ul class="cv-bullets">
+                        <li>Gave $4k in grants and secured partnerships with <a href="https://platan.us/" target="_blank" rel="noopener">Platanus</a>, <a href="https://makers.ngo/" target="_blank" rel="noopener">Makers</a>, <a href="https://www.livetheresidency.com/" target="_blank" rel="noopener">The Residency</a>, <a href="https://www.1517fund.com/" target="_blank" rel="noopener">1517 Fund</a>, and got <a href="https://www.df.cl/df-mas/punto-de-partida/indies-los-veinteaneros-que-quieren-financiar-ideas-locas" target="_blank" rel="noopener">regional media coverage</a>.</li>
+                        <li>~1k participants in our hackathons and events.</li>
+                    </ul>
+                </div>
+
+                <div class="cv-entry">
+                    <div class="cv-entry-header">
+                        <a href="https://www.asimov.cl/" target="_blank" rel="noopener" class="cv-company">Asimov Consultores</a>
+                    </div>
+                    <p class="cv-role">Generalist (Project Management, Growth, Sales, Strategy, etc.)</p>
+                    <p class="cv-meta">Santiago, CL &nbsp;|&nbsp; 02/2024 - 11/2025</p>
+                    <ul class="cv-bullets">
+                        <li>Closed contracts worth over $3M USD in total including public institutions and international companies. Opened 6 new countries for the company.</li>
+                        <li>First-ever recipient of the company's full-ride university scholarship program.</li>
+                    </ul>
+                </div>
+
+                <div class="cv-entry">
+                    <div class="cv-entry-header">
+                        <span class="cv-company" style="cursor:default; text-decoration:none; background:none; color:#e5e5e5; padding:0;">First big business :D</span>
+                    </div>
+                    <p class="cv-meta">Santiago, CL &nbsp;|&nbsp; 01/2020 - 01/2023</p>
+                    <ul class="cv-bullets">
+                        <li>At 17, built and scaled a D2C dropshipping business from scratch to over 250k in sales.</li>
+                        <li>Handled every aspect of it with 2 part-time employees.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Education -->
+            <div class="cv-section">
+                <p class="cv-section-label">Education</p>
+
+                <div class="cv-entry">
+                    <div class="cv-entry-header">
+                        <span class="cv-company" style="cursor:default; text-decoration:none; background:none; color:#e5e5e5; padding:0;">Bachelor's in Psychology (Dropout)</span>
+                    </div>
+                    <p class="cv-meta">Viña del Mar, CL &nbsp;|&nbsp; 04/2020 - 10/2022</p>
+                    <ul class="cv-bullets">
+                        <li>Organized the first cognitive neuroscience and coding extracurricular on campus.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Other things -->
+            <div class="cv-section">
+                <p class="cv-section-label">Other things</p>
+
+                <p class="cv-other-item">2nd out of 52 teams @ <a href="https://hack.platan.us/" target="_blank" rel="noopener">Platanus hack</a>. Hackathon of 200+ participants out of 1k applicants. Won 10k in AWS credits and ~$1k cash. Check <a href="https://themis.lat/" target="_blank" rel="noopener">the project</a> out. (12/2025).</p>
+                <p class="cv-other-item">1st place: inter-school robotics competition (made a low-cost vending machine using C++ and an Arduino). (06/2019).</p>
+            </div>
+
+            <footer class="post-footer">
+                <hr class="post-separator">
+                <p class="post-socials">
+                    <span class="socials-label">[&#8599;]:</span>
+                    <a href="mailto:ernesto@indies.cl">Email</a>,
+                    <a href="https://www.linkedin.com/in/natochi/" target="_blank" rel="noopener">LinkedIn</a>,
+                    <a href="https://x.com/natochi_" target="_blank" rel="noopener">Twitter</a>,
+                    <a href="https://www.instagram.com/ignaciobernardo/" target="_blank" rel="noopener">Instagram</a>
+                </p>
+            </footer>
+        </div>
+    </div>
+
+    <footer class="stamps-footer">
+        <div class="stamp" data-stamp="1" style="--rotation: -5deg;"><img src="/stamps/stamp1.PNG" alt="Stamp 1"></div>
+        <div class="stamp" data-stamp="2" style="--rotation: 8deg;"><img src="/stamps/stamp2.PNG" alt="Stamp 2"></div>
+        <div class="stamp" data-stamp="3" style="--rotation: -3deg;"><img src="/stamps/stamp3.PNG" alt="Stamp 3"></div>
+        <div class="stamp" data-stamp="4" style="--rotation: 6deg;"><img src="/stamps/stamp4.PNG" alt="Stamp 4"></div>
+        <div class="stamp" data-stamp="5" style="--rotation: -7deg;"><img src="/stamps/stamp5.PNG" alt="Stamp 5"></div>
+        <div class="stamp" data-stamp="6" style="--rotation: 4deg;"><img src="/stamps/stamp6.PNG" alt="Stamp 6"></div>
+        <div class="stamp" data-stamp="7" style="--rotation: -6deg;"><img src="/stamps/stamp7.PNG" alt="Stamp 7"></div>
+        <div class="stamp" data-stamp="8" style="--rotation: 9deg;"><img src="/stamps/stamp8.PNG" alt="Stamp 8"></div>
+        <div class="stamp" data-stamp="9" style="--rotation: -4deg;"><img src="/stamps/stamp9.PNG" alt="Stamp 9"></div>
+        <div class="stamp" data-stamp="10" style="--rotation: 7deg;"><img src="/stamps/stamp10.PNG" alt="Stamp 10"></div>
+        <div class="stamp" data-stamp="11" style="--rotation: -2deg;"><img src="/stamps/stamp11.PNG" alt="Stamp 11"></div>
+        <div class="stamp" data-stamp="12" style="--rotation: 5deg;"><img src="/stamps/stamp12.PNG" alt="Stamp 12"></div>
+        <div class="stamp" data-stamp="13" style="--rotation: -8deg;"><img src="/stamps/stamp13.PNG" alt="Stamp 13"></div>
+        <div class="stamp" data-stamp="14" style="--rotation: 3deg;"><img src="/stamps/stamp14.PNG" alt="Stamp 14"></div>
+        <div class="stamp" data-stamp="15" style="--rotation: -6deg;"><img src="/stamps/stamp15.PNG" alt="Stamp 15"></div>
+        <div class="stamp" data-stamp="16" style="--rotation: 10deg;"><img src="/stamps/stamp16.PNG" alt="Stamp 16"></div>
+        <div class="stamp" data-stamp="17" style="--rotation: -1deg;"><img src="/stamps/stamp17.PNG" alt="Stamp 17"></div>
+        <div class="stamp" data-stamp="18" style="--rotation: 6deg;"><img src="/stamps/stamp18.PNG" alt="Stamp 18"></div>
+    </footer>
+
+    <script src="/script.js"></script>
+</body>
+</html>
