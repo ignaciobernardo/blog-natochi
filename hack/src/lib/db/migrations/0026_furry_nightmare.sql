@@ -1,0 +1,1 @@
+ALTER TABLE "OutboundEmails" ADD COLUMN "reply_to" varchar(255);

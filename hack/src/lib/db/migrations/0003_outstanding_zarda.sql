@@ -1,0 +1,1 @@
+ALTER TABLE "team_notes" DROP COLUMN IF EXISTS "tags";

@@ -1,0 +1,1 @@
+ALTER TABLE "events" ALTER COLUMN "domain" SET DEFAULT 'https://hack.platan.us';

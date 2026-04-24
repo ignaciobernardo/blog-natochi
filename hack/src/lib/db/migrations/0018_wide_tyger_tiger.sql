@@ -1,0 +1,1 @@
+-- Migration 0018 has been fully applied, this file is now empty to prevent re-running

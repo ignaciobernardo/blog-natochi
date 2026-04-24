@@ -1,0 +1,137 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: hack-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: hack_prod
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups:/backups
+    ports:
+      - 127.0.0.1:${POSTGRES_BUILD_PORT:-15432}:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - internal
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      network: host
+      args:
+        - SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN:-}
+        - SENTRY_ORG=${SENTRY_ORG:-}
+        - SENTRY_PROJECT=${SENTRY_PROJECT:-}
+        - NEXT_PUBLIC_SENTRY_DSN=${NEXT_PUBLIC_SENTRY_DSN:-}
+        - NEXT_PUBLIC_POSTHOG_KEY=${NEXT_PUBLIC_POSTHOG_KEY:-}
+        - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+        - NEXT_PUBLIC_ARCADE_EMBED_DOMAIN=${NEXT_PUBLIC_ARCADE_EMBED_DOMAIN:-}
+        - GOOGLE_PHOTOS_ALBUM_URL=${GOOGLE_PHOTOS_ALBUM_URL:-}
+        - POSTGRES_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@127.0.0.1:${POSTGRES_BUILD_PORT:-15432}/hack_prod
+        - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:-}
+        - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
+        - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
+        - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID:-}
+        - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET:-}
+        - SLACK_BOT_TOKEN=${SLACK_BOT_TOKEN:-}
+        - GOOGLE_DRIVE_BASE_FOLDER_ID=${GOOGLE_DRIVE_BASE_FOLDER_ID:-}
+        - TEAM_UPLOAD_TRACKING_EXCEL=${TEAM_UPLOAD_TRACKING_EXCEL:-}
+    image: hack-25:latest
+    container_name: hack-app
+    restart: unless-stopped
+    env_file:
+      - path: ./.env
+        required: false
+      - path: ./.env.local
+        required: false
+      - path: /opt/hack/.env
+        required: false
+    environment:
+      - NODE_ENV=production
+      - HOSTNAME=0.0.0.0
+      - POSTGRES_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/hack_prod
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - internal
+      - npm
+
+  cron-ticker:
+    image: curlimages/curl:8.13.0
+    container_name: hack-cron-ticker
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    command:
+      - sh
+      - -ec
+      - |
+        while true; do
+          if ! curl --silent --show-error --fail http://app:3000/api/cron/tick > /dev/null; then
+            echo "[cron-ticker] Failed to call /api/cron/tick"
+          fi
+          sleep 3
+        done
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - internal
+
+  migrator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrator
+    image: hack-25-migrator:latest
+    restart: "no"
+    env_file:
+      - path: ./.env
+        required: false
+      - path: ./.env.local
+        required: false
+      - path: /opt/hack/.env
+        required: false
+    environment:
+      - NODE_ENV=production
+      - POSTGRES_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/hack_prod
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - internal
+
+volumes:
+  postgres_data:
+
+networks:
+  internal:
+  npm:
+    external: true
+    name: npm

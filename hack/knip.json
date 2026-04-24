@@ -1,0 +1,18 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "ignore": [
+    "src/lib/dev/**",
+    "src/lib/db/scripts/**",
+    "src/lib/db/migrate.ts",
+    "next-intl.config.ts",
+    "**/*knip-test*"
+  ],
+  "ignoreDependencies": [
+    "posthog-node",
+    "tailwindcss",
+    "@tailwindcss/typography",
+    "tw-animate-css",
+    "@react-email/preview-server"
+  ],
+  "ignoreBinaries": ["pkill", "dotenv-cli"]
+}

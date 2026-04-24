@@ -1,0 +1,1 @@
+ALTER TABLE "teams" ADD COLUMN "country" text NOT NULL DEFAULT 'Unknown';

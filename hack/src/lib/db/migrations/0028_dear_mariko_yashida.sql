@@ -1,0 +1,1 @@
+ALTER TYPE "submission_status" ADD VALUE 'asking_self_finance_trip';

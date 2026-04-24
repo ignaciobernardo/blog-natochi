@@ -1,0 +1,1 @@
+ALTER TABLE "OutboundEmails" ALTER COLUMN "sent_by_admin_id" DROP NOT NULL;

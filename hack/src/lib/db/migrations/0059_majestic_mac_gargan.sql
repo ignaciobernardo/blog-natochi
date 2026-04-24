@@ -1,0 +1,1 @@
+ALTER TABLE "arcade_games" DROP COLUMN IF EXISTS "arcade_code";

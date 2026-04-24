@@ -1,0 +1,1 @@
+ALTER TABLE "team_members" DROP CONSTRAINT "unique_hacker_per_event";

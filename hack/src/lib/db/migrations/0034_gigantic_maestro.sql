@@ -1,0 +1,1 @@
+ALTER TABLE "cronjobs" ADD COLUMN "schedule" text;

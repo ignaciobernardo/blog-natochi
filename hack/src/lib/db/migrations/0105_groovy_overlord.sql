@@ -1,0 +1,2 @@
+ALTER TABLE "arcade_game_versions" ADD COLUMN "code_hash" text;--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "arcade_game_versions_code_hash_idx" ON "arcade_game_versions" USING btree ("code_hash");

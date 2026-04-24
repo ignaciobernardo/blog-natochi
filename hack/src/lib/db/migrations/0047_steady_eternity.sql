@@ -1,0 +1,1 @@
+ALTER TABLE "time_slots" ALTER COLUMN "color" SET DEFAULT '#e1ff00';

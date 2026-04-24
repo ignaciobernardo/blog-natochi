@@ -1,0 +1,1 @@
+ALTER TABLE "arcade_games" DROP COLUMN IF EXISTS "cover_base64";

@@ -1,0 +1,1 @@
+ALTER TABLE "arcade_games" ADD COLUMN "cover_url" text;

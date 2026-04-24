@@ -1,0 +1,1 @@
+ALTER TABLE "hacker_feedback" ADD COLUMN "mentor_rating" integer;

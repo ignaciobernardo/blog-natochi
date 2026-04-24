@@ -1,0 +1,1 @@
+ALTER TABLE "external_people" ADD COLUMN "redirect_url" text;

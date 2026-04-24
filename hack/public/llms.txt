@@ -1,0 +1,22 @@
+# Platanus Hack 26 — LATAM Tour
+
+> The best hackathon in Latin America. From zero to product in 36 hours with the top hackers in the region. 2026 edition is a LATAM-wide tour with stops in Argentina, México, Colombia, Venezuela, and Chile. Organized by Platanus, a LATAM startup accelerator.
+
+## Pages
+
+- [Tour overview (home)](https://hack.platan.us/index.md): All five tour stops, dates, sponsors, history.
+- [Buenos Aires stop](https://hack.platan.us/26-ar.md): First stop of the 2026 tour. 100 hackers, 36 hours, 8–10 May 2026. Prizes, format, deadlines, how to apply.
+
+## Tour stops
+
+- Buenos Aires, Argentina — 8–10 May 2026 — applications open
+- Ciudad de México, México — 19–21 June 2026
+- Bogotá, Colombia — 11–13 September 2026
+- Caracas, Venezuela — 23–25 October 2026
+- Santiago, Chile — 20–22 November 2026
+
+## Optional
+
+- [Apply to Buenos Aires](https://hack.platan.us/26-ar/apply)
+- [Become a sponsor](https://hack.platan.us/tour/sponsor)
+- [Platanus (the accelerator)](https://platan.us)

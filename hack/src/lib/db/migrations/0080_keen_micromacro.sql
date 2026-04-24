@@ -1,0 +1,1 @@
+ALTER TABLE "projects" ADD COLUMN "oneliner_short" text;

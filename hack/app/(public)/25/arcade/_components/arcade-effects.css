@@ -1,0 +1,93 @@
+/* CRT Screen effect */
+@keyframes flicker {
+  0% { opacity: 0.97; }
+  5% { opacity: 0.95; }
+  10% { opacity: 0.98; }
+  15% { opacity: 0.96; }
+  20% { opacity: 0.99; }
+  100% { opacity: 0.97; }
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.crt-screen {
+  position: relative;
+  background: #000;
+  transform: perspective(1000px) rotateX(0deg);
+  transform-origin: center center;
+  border-radius: 20px;
+}
+
+.crt-screen > * {
+  transform: scale(1.05, 0.98);
+  transform-origin: center center;
+}
+
+/* Scanline overlay */
+.crt-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    transparent 100%
+  );
+  background-size: 100% 3px;
+  pointer-events: none;
+  z-index: 30;
+  animation: scanline 8s linear infinite;
+}
+
+/* Screen curvature and vignette */
+.crt-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle,
+    transparent 60%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  pointer-events: none;
+  z-index: 25;
+}
+
+/* Flicker effect */
+.crt-flicker {
+  animation: flicker 0.15s infinite;
+}
+
+/* Phosphor glow */
+.crt-glow {
+  text-shadow:
+    0 0 1px currentColor,
+    0 0 3px currentColor;
+}
+
+/* RGB chromatic aberration */
+.crt-text {
+  position: relative;
+}
+
+.crt-text::before {
+  content: attr(data-text);
+  position: absolute;
+  left: -2px;
+  text-shadow: 2px 0 red;
+  opacity: 0.5;
+  z-index: -1;
+}
+
+.crt-text::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 2px;
+  text-shadow: -2px 0 cyan;
+  opacity: 0.5;
+  z-index: -1;
+}

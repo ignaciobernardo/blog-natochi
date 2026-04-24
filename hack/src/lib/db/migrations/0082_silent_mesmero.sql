@@ -1,0 +1,1 @@
+ALTER TABLE "events" ADD COLUMN "domain" text DEFAULT 'hack.platan.us' NOT NULL;

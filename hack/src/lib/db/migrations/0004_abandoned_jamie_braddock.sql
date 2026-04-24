@@ -1,0 +1,1 @@
+ALTER TABLE "user" ADD COLUMN "admin_role" "admin_role";

@@ -1,0 +1,1 @@
+ALTER TABLE "events" ADD COLUMN "spotify_refresh_token" text;

@@ -1,0 +1,67 @@
+.hack24-root {
+  --background: 240 10% 3.92%;
+  --foreground: 0 0% 100%;
+  --primary: 53 100% 63%;
+  --secondary: 44 95% 52%;
+  --selection-bg: #ffec40;
+  --selection-fg: #000000;
+  --color-primary: #ffec40;
+  --color-background: #000000;
+
+  background-color: #09090b;
+  color: #ffffff;
+  font-family: var(--font-jetbrains-mono), monospace;
+}
+
+.hack24-root,
+.hack24-root * {
+  --selection-bg: #ffec40;
+  --selection-fg: #000000;
+  --color-primary: #ffec40;
+  --color-background: #000000;
+}
+
+.hack24-root .font-jetbrains-mono {
+  font-family: var(--font-jetbrains-mono), monospace;
+}
+
+.hack24-root .font-oxanium {
+  font-family: var(--font-oxanium), sans-serif;
+}
+
+.hack24-root .text-primary {
+  color: #ffec40 !important;
+}
+
+.hack24-root .bg-primary {
+  background-color: #ffec40 !important;
+}
+
+.hack24-root .border-primary {
+  border-color: #ffec40 !important;
+}
+
+.hack24-root .hover\:bg-secondary:hover {
+  background-color: #f9bc12 !important;
+}
+
+.hack24-root .hover\:text-primary:hover {
+  color: #ffec40 !important;
+}
+
+.hack24-root .hover\:border-primary:hover {
+  border-color: #ffec40 !important;
+}
+
+.hack24-root ::selection,
+.hack24-root *::selection {
+  background: #ffec40 !important;
+  color: #000000 !important;
+}
+
+.hack24-root .leaflet-layer,
+.hack24-root .leaflet-control-zoom-in,
+.hack24-root .leaflet-control-zoom-out,
+.hack24-root .leaflet-control-attribution {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}

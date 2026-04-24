@@ -1,0 +1,353 @@
+{
+  "sponsorDeck": {
+    "title": "Platanus Hack '25",
+    "subtitle": "Sponsors",
+    "navigation": {
+      "platanus": "🍌 Platanus",
+      "evento": "🧑‍💻 El evento",
+      "coordenadas": "📍 Coordenadas",
+      "asistentes": "👥 Asistentes",
+      "2024": "2024",
+      "fotos": "📸 Fotos",
+      "impacto": "💥 Impacto",
+      "linkedin": "LinkedIn",
+      "instagramYoutube": "Instagram y Youtube",
+      "blogposts": "Blogposts",
+      "diario": "Diario",
+      "paquetes": "📦 Paquetes para sponsors",
+      "basic": "🫶 Basic",
+      "partner": "🚀 Partner",
+      "exclusive": "👑 Exclusive partner",
+      "deadlines": "⏰ Fechas límite",
+      "contacto": "💬 Contacto"
+    },
+    "platanus": {
+      "description1": "En Platanus aceleramos startups tecnológicas en etapa temprana.",
+      "description2": "Seleccionamos a los mejores fundadores de latinoamérica (tasa de selección menor al 1%) y les damos inversión.",
+      "description3": "Luego, durante tres meses los ayudamos a crecer en conjunto con mentores de startups tecnológicas como Fintual, Cornershop, Buk y Runway.",
+      "moreInfo": "Más información de lo que hacemos en nuestra página."
+    },
+    "evento": {
+      "description1": "La segunda versión de Platanus Hack reúne a 200 de lo mejores ingenieros de software / techies del país para construir soluciones con impacto. De 0 a producto en 36 horas.",
+      "description2Part1": "El evento está inspirado en las ",
+      "description2LinkText": "mejores hackatones del mundo",
+      "description2Part2": " y tiene un formato único en latam: 36 horas sin parar. Los hackers se quedan a alojar durante dos noches en la oficina, y terminan presentando una solución.",
+      "description3": "Los hackers tienen como mentores a fundadores de nuestra comunidad y finalizan presentando su proyecto ante los jurados y ante el mundo, en una transmisión en vivo.",
+      "launchInfoPart1": "El Viernes 26 de agosto lanzamos la ",
+      "launchInfoLinkText": "página de lista de espera",
+      "launchInfoPart2": ".",
+      "waitlistCount": "personas en lista de espera",
+      "eventDatesPart1": "El evento empezará el ",
+      "eventDatesStart": "viernes 21 de noviembre, 18:30",
+      "eventDatesPart2": " y terminará el ",
+      "eventDatesEnd": "domingo 23, 15:00",
+      "eventDatesPart3": "."
+    },
+    "coordenadas": {
+      "title": "Coordenadas",
+      "location": "Oficinas de Buk",
+      "address": "MUT Tobalaba, Santiago",
+      "startDate": "viernes 21 de noviembre, 18:30",
+      "endDate": "domingo 23, 15:00",
+      "duration": "36 horas"
+    },
+    "asistentes": {
+      "description": "Jóvenes con alto potencial de entre 20 a 35 años. Ingenieros de software, inventores y fundadores técnicos. Buscamos crear comunidad tecnológica y detectar fundadores con potencial que pueden ser parte de nuestro portafolio en el futuro."
+    },
+    "2024": {
+      "description1LinkText": "La edición del 2024",
+      "description1Part2": " fue un gran éxito. 367 hackers postularon y aceptamos a 122, agrupados en 26 equipos. Recibimos hackers de Chile 🇨🇱, Argentina 🇦🇷 y Singapur 🇸🇬.",
+      "description2": "Fintual, AWS y Buk fueron los sponsors principales. La sede del evento fue el palacio Droguett y recibimos a los hackers la noche del viernes 24 de noviembre, terminando el domingo a las 3pm.",
+      "description3": "Los equipos eligieron entre 4 temáticas principales: Finanzas, Salud, Eduación y Tech. Desarrollaron durante todo el fin de semana y finalizaron presentando el producto que construyeron.",
+      "description4Part1": "El resultado fueron 25 soluciones que luego tuvieron una votación pública ",
+      "description4LinkText": "en nuestra plataforma",
+      "description4Part2": ".",
+      "description5Part1": "Finalizado el evento, cada equipo difundió su proyecto por las redes sociales, donde se recibieron un total de ",
+      "description5Part2": "2.200 votos",
+      "description5Part3": ".",
+      "photosLinkPart1": "Puedes ver el album completo ",
+      "photosLinkText": "aquí",
+      "photosLinkPart2": "."
+    },
+    "impacto": {
+      "description": "El evento generó un gran impacto en las redes sociales. Varios hackers contaron su experiencia en distintos formatos.",
+      "linkedinDescription": "Decenas de hackers compartieron su experiencia en LinkedIn. Aquí algunos ejemplos.",
+      "linkedinMorePart1": "Puedes ver más posts ",
+      "linkedinMoreLinkText": "aquí",
+      "linkedinMorePart2": ".",
+      "youtubeDescriptionPart1": "Puedes ver los videos de youtube completos ",
+      "youtubeDescriptionLinkText": "aquí",
+      "youtubeDescriptionPart2": ".",
+      "blogpostsDescriptionPart1": "Matías y Husam ",
+      "blogpostsDescriptionPart2": "contaron su experiencia por iniciativa propia.",
+      "diarioDescription": "El DF Mas cubrió nuestro evento con una nota.",
+      "diarioLinkPart1": "Puedes ver la versión digital ",
+      "diarioLinkText": "aquí.",
+      "diarioLinkPart2": ""
+    },
+    "packages": {
+      "basic": {
+        "item1": "Logo de la empresa en la landing page del evento",
+        "item2": "Logo de la empresa en el merchandising oficial del evento, tamaño pequeño",
+        "item3": "Mención de la empresa en el evento de apertura y cierre",
+        "confirmedSponsors": "Sponsors confirmados:"
+      },
+      "partner": {
+        "item1": "Todo lo del plan 🫶 Basic",
+        "item2": "Mención de la empresa en las publicaciones de LinkedIn del evento",
+        "item3": "Logo de la empresa en el merchandising oficial del evento, tamaño grande",
+        "item4": "Posibilidad de traer 3 representantes de la empresa al evento.",
+        "item5": "Acceso a la información de contacto de los participantes, junto con sus proyectos"
+      },
+      "exclusive": {
+        "item1": "Todo el plan partner 🙌",
+        "item2": "Posicionamiento protagónico en el merchandising, junto a Platanus.",
+        "item3": "2 spot de 3 minutos durante el evento (inicio y cierre).",
+        "confirmedSponsor": "Sponsor confirmado:"
+      },
+      "disclaimer": "* El plan partner y exclusive partner se pueden ajustar según las necesidades específicas de cada empresa.",
+      "vatDisclaimer": "* A todos los precios se les agregará IVA."
+    },
+    "deadlines": {
+      "title": "Fechas Límite Importantes",
+      "first": {
+        "title": "Primera Fecha Límite",
+        "date": "17 de octubre, 2025",
+        "benefits": [
+          "Logo en poleras, pendones y merchandising asegurado",
+          "Mención de sponsor en publicaciones tempranas de difusión del evento",
+          "Máxima visibilidad"
+        ]
+      },
+      "second": {
+        "title": "Última Llamada",
+        "date": "31 de octubre, 2025",
+        "description": "Fecha final para cerrar sponsorship. Presencia del logo en todo el merchandising no asegurada."
+      },
+      "upcoming": "Próxima",
+      "passed": "Pasada",
+      "lastCall": "Última llamada",
+      "timeLeft": "Tiempo restante"
+    },
+    "contacto": {
+      "descriptionPart1": "Si les interesa ser sponsors, contactar a ",
+      "email": "rafael@platan.us"
+    }
+  },
+  "tourSponsor": {
+    "hero": {
+      "title": "platanus hack",
+      "year": "[26]",
+      "subtitle": "LATAM Tour",
+      "countries": "Argentina, México, Colombia, Venezuela, Chile",
+      "watchVideo": "ver video"
+    },
+    "cities": {
+      "buenosAires": {
+        "name": "Buenos Aires",
+        "country": "Argentina",
+        "dates": "8-10 may 2026"
+      },
+      "cdmx": {
+        "name": "Ciudad de México",
+        "country": "México",
+        "dates": "19-21 jun 2026"
+      },
+      "bogota": {
+        "name": "Bogotá",
+        "shortName": "Bogotá",
+        "country": "Colombia",
+        "dates": "11-13 sep 2026"
+      },
+      "caracas": {
+        "name": "Caracas",
+        "country": "Venezuela",
+        "dates": "23-25 oct 2026"
+      },
+      "santiago": {
+        "name": "Santiago",
+        "country": "Chile",
+        "dates": "20-22 nov 2026"
+      }
+    },
+    "discounts": {
+      "off10": "10% off",
+      "off15": "15% off",
+      "off20": "20% off",
+      "off25": "25% off",
+      "bundleSave6k": "Bundle -$6k",
+      "bundleSave1500": "Bundle -$1.5k"
+    },
+    "platanus": {
+      "description1": "En Platanus aceleramos startups tecnológicas en etapa temprana.",
+      "description2": "Somos uno de los inversionistas más activos de Latam, con 110+ inversiones.",
+      "description3": "Seleccionamos a los mejores fundadores de latinoamérica (tasa de selección menor al 1%) y les damos inversión.",
+      "description4": "Luego, durante tres meses los ayudamos a crecer en conjunto con mentores de startups tecnológicas como Fintual, Cornershop, Buk y Runway.",
+      "moreInfoPart1": "Más información de lo que hacemos en",
+      "moreInfoLink": "nuestra página"
+    },
+    "platanusHack": {
+      "title": "Platanus Hack",
+      "description1Part1": "Platanus Hack reúne los",
+      "description1Bold1": "mejores ingenieros de software / techies",
+      "description1Part2": "del país para construir soluciones con impacto.",
+      "description1Bold2": "El objetivo es ir de 0 a producto en 36 horas.",
+      "description2Part1": "El evento está inspirado en las mejores hackatones del mundo y tiene un formato",
+      "description2Bold": "único en latam: 36 horas sin parar",
+      "description2Part2": ". Los hackers se quedan a alojar durante dos noches en la oficina, y terminan presentando una solución.",
+      "description3Part1": "Los hackers tienen como",
+      "description3Bold1": "mentores a fundadores",
+      "description3Part2": "de nuestra comunidad y finalizan presentando su proyecto ante los jurados y ante el mundo, en una",
+      "description3Bold2": "transmisión en vivo",
+      "description4Part1": "El evento empieza un",
+      "description4Bold1": "viernes a las 18:30",
+      "description4Part2": "y termina un",
+      "description4Bold2": "domingo a las 15:00"
+    },
+    "hack24": {
+      "title": "platanus hack",
+      "year": "[24]",
+      "description1Part1": "La edición del 2024 fue un gran éxito.",
+      "description1Bold1": "367",
+      "description1Part2": "hackers postularon y aceptamos a",
+      "description1Bold2": "122",
+      "description1Part3": ", agrupados en",
+      "description1Bold3": "26 equipos",
+      "description1Part4": ". Recibimos hackers de Chile 🇨🇱, Argentina 🇦🇷 y Singapur 🇸🇬.",
+      "description2": "La sede del evento fue el palacio Droguett, oficina de Fintual.",
+      "description3Part1": "Los equipos eligieron entre 4 temáticas principales:",
+      "description3Bold1": "Finanzas",
+      "description3Bold2": "Salud",
+      "description3Bold3": "Educación",
+      "description3Bold4": "Tech",
+      "description3Part2": ". Desarrollaron durante todo el fin de semana y finalizaron presentando el producto que construyeron.",
+      "description4Part1": "El resultado fueron 25 soluciones que luego tuvieron una votación pública. Finalizado el evento, cada equipo difundió su proyecto por las redes sociales, donde se recibieron un total de",
+      "description4Bold": "2.200 votos",
+      "viewPhotos": "Ver fotos",
+      "viewProjects": "Ver proyectos",
+      "sponsors": "Sponsors",
+      "showcaseDate": "nov - 2024",
+      "showcaseLocation": "Oficina de Fintual"
+    },
+    "hack25": {
+      "title": "platanus hack",
+      "year": "[25]",
+      "description1Part1": "Reunimos a",
+      "description1Bold1": "200 hackers",
+      "description1Part2": ", seleccionados de entre",
+      "description1Bold2": "casi 900 postulantes",
+      "description1Part3": ". Incluso pagamos pasajes para hackers de",
+      "description1Bold3": "México 🇲🇽",
+      "description1Bold4": "Colombia 🇨🇴",
+      "description1Bold5": "Argentina 🇦🇷",
+      "description1Bold6": "Perú 🇵🇪",
+      "description2Part1": "El evento fue del",
+      "description2Bold1": "21 al 23 de noviembre",
+      "description2Part2": "en las oficinas de nuestro host y exclusive partner,",
+      "description2Bold2": "Buk",
+      "description3Part1": "Tuvimos presencia de sponsors tech de talla mundial, como",
+      "description3Bold1": "ElevenLabs",
+      "description3Bold2": "Runway",
+      "description3Bold3": "Anthropic",
+      "description3Part2": ", donde fuimos su",
+      "description3Bold4": "primer sponsorship en Latam",
+      "description4Part1": "Los hackers crearon productos desde cero dentro de las categorías:",
+      "description4Bold1": "Fintech + Digital Security",
+      "description4Bold2": "Consumer AI",
+      "description4Bold3": "Human Enhancement",
+      "description4Bold4": "Legacy",
+      "description5": "El resultado nos sorprendió. Entre los proyectos vimos una versión moderna de Google Glass, una agencia de marketing con GenAI y hasta un detector en tiempo real de estafas telefónicas. Se notó mucho la influencia de GenAI.",
+      "description6Part1": "Cerramos con una votación pública de los proyectos, donde recibimos",
+      "description6Bold": "2500+ votos",
+      "viewPhotos": "Ver fotos",
+      "viewProjects": "Ver proyectos",
+      "sponsors": "Sponsors",
+      "showcaseDate": "nov - 2025",
+      "showcaseLocation": "Oficina de Buk"
+    },
+    "globeSection": {
+      "title": "platanus hack",
+      "year": "[26]",
+      "subtitle": "latam tour",
+      "hackers": "hackers"
+    },
+    "packages": {
+      "title": "Paquetes de Sponsor",
+      "host": {
+        "title": "Host",
+        "price": "",
+        "item1": "Tu oficina será la sede oficial de Platanus Hack",
+        "item2": "Logo de la empresa en landing page del evento",
+        "item3": "Logo de la empresa en merchandising oficial, tamaño mediano",
+        "item4": "Spot de 1 minuto de bienvenida y cierre del evento"
+      },
+      "sponsor": {
+        "title": "Sponsor",
+        "price": "",
+        "item1": "Logo de la empresa en la landing page del evento",
+        "item2": "Logo de la empresa en el merchandising oficial del evento, tamaño pequeño",
+        "item3": "Mención de la empresa en el evento de apertura y cierre"
+      },
+      "partner": {
+        "title": "Partner",
+        "price": "",
+        "item1": "Todo lo del plan 🫶 Sponsor",
+        "item2": "Mención de la empresa en las publicaciones de LinkedIn del evento",
+        "item3": "Logo de la empresa en el merchandising oficial del evento, tamaño grande",
+        "item4": "Posibilidad de traer 3 representantes de la empresa al evento",
+        "item5": "Acceso a la información de contacto de los participantes, junto con sus proyectos"
+      },
+      "exclusive": {
+        "title": "Exclusive Partner",
+        "price": "",
+        "item1": "Todo el plan Partner 🚀",
+        "item2": "El evento llevará el nombre de tu empresa: Platanus Hack ft. X",
+        "item3": "Posicionamiento protagónico en el merchandising, junto a Platanus",
+        "item4": "2 spots de 3 minutos durante el evento (inicio y cierre)"
+      },
+      "bundle": {
+        "description": "Combina lo mejor de ambos paquetes",
+        "savings": "Ahorra $6,000 USD"
+      },
+      "confirmed": "Confirmado:",
+      "disclaimer": "* El plan Partner y Exclusive Partner se pueden ajustar según las necesidades específicas de cada empresa. A todos los precios se les agregará IVA."
+    },
+    "citySelection": {
+      "title": "Selecciona tus ciudades"
+    },
+    "form": {
+      "title": "Contacto",
+      "selectedPackages": "Paquetes seleccionados:",
+      "discountApplied": "¡Descuento de {percent}% aplicado!",
+      "companyName": "Nombre de la empresa",
+      "companyPlaceholder": "OpenAI",
+      "emails": "Email(s) de contacto",
+      "emailPlaceholder": "contacto@empresa.com",
+      "message": "Mensaje (opcional)",
+      "messagePlaceholder": "Cuéntanos más sobre tu interés...",
+      "submit": "Enviar",
+      "submitting": "Enviando..."
+    },
+    "toast": {
+      "success": "Petición de sponsor enviada",
+      "error": "Error al enviar el formulario"
+    },
+    "tierNames": {
+      "host": "Host",
+      "exclusive": "Exclusive Partner",
+      "partner": "Partner",
+      "sponsor": "Sponsor"
+    },
+    "linkedin": {
+      "title": "Lo que dicen los hackers",
+      "showMore": "Ver más",
+      "showLess": "Ver menos",
+      "viewOriginal": "Ver original"
+    },
+    "media": {
+      "title": "Lo que dicen los medios",
+      "hack24Caption": "DF Mas: Platanus Hack 24",
+      "hack25Caption": "El Mercurio: Platanus Hack 25"
+    }
+  }
+}

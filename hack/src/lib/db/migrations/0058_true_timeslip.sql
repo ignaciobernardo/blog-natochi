@@ -1,0 +1,1 @@
+ALTER TABLE "arcade_games" ADD COLUMN "arcade_mapping" json;

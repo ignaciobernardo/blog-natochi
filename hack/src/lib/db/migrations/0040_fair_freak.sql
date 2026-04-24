@@ -1,0 +1,1 @@
+ALTER TABLE "hacker_profiles" ALTER COLUMN "shoe_size" SET DATA TYPE integer USING shoe_size::integer;

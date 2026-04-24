@@ -1,0 +1,1 @@
+ALTER TABLE "hacker_profiles" ADD COLUMN "anthropic_info_sent_at" timestamp with time zone;
