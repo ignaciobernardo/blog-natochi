@@ -1,7 +1,12 @@
-Genera los HTMLs del blog desde los archivos markdown de Obsidian y pushea a GitHub.
+Publica posts del blog o updates de newsletter.
 
-Pasos:
-1. Corre `./generar.sh` en /Users/natochi/Documents/blog-natochi para regenerar todos los blog posts
-2. Hace git add de los archivos generados (blog/, posts.html, index.html) y cualquier post nuevo en posts/
-3. Crea un commit con mensaje descriptivo de los posts publicados
-4. Pushea a origin main
+Usa `./publish.sh` con el subcomando correcto:
+
+- `./publish.sh blog`    — build + push solo posts del blog
+- `./publish.sh update`  — build + push solo newsletter updates
+- `./publish.sh both`    — build + push ambos
+- `./publish.sh project mini/amigos` — push un proyecto puntual
+
+El script hace git add solo de los archivos relevantes, nunca toca los proyectos en mini/ ni hack/ salvo que se llame explícitamente con `project`.
+
+Si el usuario pide publicar un post o update, correr el subcomando correspondiente.
