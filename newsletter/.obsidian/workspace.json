@@ -4,19 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "38b6287eebd05211",
+        "id": "89302abcbf618728",
         "type": "tabs",
         "children": [
           {
-            "id": "1c3b0c22bbbd6f25",
+            "id": "1b5dd24bc7fed2c8",
             "type": "leaf",
             "state": {
-              "type": "image",
+              "type": "markdown",
               "state": {
-                "file": "martin tito gira.png"
+                "file": "2026-06-13.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-image",
-              "title": "martin tito gira"
+              "icon": "lucide-file",
+              "title": "2026-06-13"
             }
           }
         ]
@@ -181,24 +183,24 @@
       "bases:Crear nueva base": false
     }
   },
-  "active": "1c3b0c22bbbd6f25",
+  "active": "1b5dd24bc7fed2c8",
   "lastOpenFiles": [
-    "Pasted image 20260517044318.png",
-    "DEBA7706-76E8-4DF4-92F2-FB1322E16D7D_1_105_c.jpeg",
-    "D5547498-A02B-4FB4-9AF4-B428AAE1508A_1_201_a.jpeg",
-    "9C213F45-4C99-48B2-BA61-7CF8F3559A4F_1_105_c.jpeg",
-    "9B23145B-67B0-402B-B7D6-60CF298CD5D4_1_102_o.jpeg",
-    "8C2F89EF-3C48-4946-BE2F-4B7418B08305_1_102_o.jpeg",
-    "45C7E99B-3ACF-48F3-942F-AE87FD5D2121_1_105_c.jpeg",
-    "3191EF82-A40A-4F44-8AB7-C530874F4C38_1_105_c.jpeg",
+    "2026-06-13.md",
     "2026-05-10.md",
+    "IMG_6213.jpg",
+    "Pasted image 20260613141339.png",
+    "Pasted image 20260613141329.png",
+    "2026-04-21.md",
+    "evento sid.png",
+    "Pasted image 20260613141141.png",
+    "fqs 2026-05-28 0245131EFDE10FF02E.jpg",
+    "Pasted image 20260613140344.png",
+    "Pasted image 20260613140309.png",
+    "Pasted image 20260613140216.png",
+    "Pasted image 20260613140207.png",
     "2026-04-28.md",
-    "Pasted image 20260424130941.png",
-    "Pasted image 20260423015008.png",
-    "Pasted image 20260423014922.png",
     "2026-04-23.md",
     "2026-04-20.md",
-    "2026-04-21.md",
     "2026-04-22.md"
   ]
 }
