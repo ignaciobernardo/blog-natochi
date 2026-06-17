@@ -891,21 +891,65 @@ button:focus-visible {
     min-height: 22vh;
   }
 
-  .people-portrait {
-    position: relative;
-    top: auto;
-    width: min(72vw, 340px);
-    margin: 0 auto 8vh;
+  /* people on mobile: the screen is locked to the viewport; only the list scrolls */
+  body.page-people {
+    overflow: hidden;
   }
 
+  .people-page {
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+    padding-top: 9vh;
+    padding-bottom: 0;
+    overflow: hidden;
+  }
+
+  .people-intro {
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 0 0 6px;
+    font-size: clamp(24px, 6vw, 34px);
+    text-align: left;
+  }
+
+  .people-layout {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    margin-top: 8px;
+  }
+
+  .people-portrait {
+    flex: 0 0 auto;
+    width: 100%;
+    margin: 0 0 6px;
+  }
+
+  .people-portrait .dither-card {
+    width: min(56vw, 260px);
+    margin: 0 auto;
+  }
+
+  .people-active-caption {
+    text-align: center;
+  }
+
+  /* the list is the only scrollable region */
   .people-list {
-    font-size: 12px;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    font-size: 13px;
+    -webkit-overflow-scrolling: touch;
   }
 
   .people-list-header,
   .person-row {
     grid-template-columns: 1fr 1fr 0.7fr;
     gap: 6px;
+    padding: 5px 4px;
   }
 
   .site-footer {

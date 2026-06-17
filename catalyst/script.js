@@ -54,6 +54,35 @@ function initPeopleHover() {
       if (url) window.open(url, "_blank", "noopener");
     });
   });
+
+  // --- mobile: the page is locked; scrolling the list updates the active person ---
+  const list = document.querySelector(".people-list");
+  const rowList = Array.from(rows);
+  const isMobile = () => window.matchMedia("(max-width: 900px)").matches;
+
+  function selectByScroll() {
+    if (!isMobile() || !list) return;
+    const refY = list.getBoundingClientRect().top + 6; // top of the list viewport
+    let chosen = rowList[0];
+    for (const row of rowList) {
+      if (row.getBoundingClientRect().top <= refY + 2) chosen = row;
+      else break;
+    }
+    if (chosen) selectRow(chosen);
+  }
+
+  let ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      selectByScroll();
+      ticking = false;
+    });
+  }
+
+  if (list) list.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", selectByScroll);
 }
 
 function renderStaticAscii() {
@@ -113,7 +142,9 @@ function initVideoAscii() {
     const dW = canvas.width * zoom;
     const dH = canvas.height * zoom;
     const dx = (canvas.width - dW) / 2;
-    const dy = canvas.height / 2 - 0.30 * dH;   // 0.30 ≈ vertical center of the figure in the frame
+    // 0.245 ≈ the figure's vertical centroid in the frame, so it lands at canvas center.
+    // Fixed value (not per-frame) → output height is constant → no jitter/shaking.
+    const dy = canvas.height / 2 - 0.245 * dH;
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.drawImage(video, dx, dy, dW, dH);
     let data;
@@ -125,11 +156,10 @@ function initVideoAscii() {
       renderStaticAscii();
       return;
     }
-    const lines = [];
+    let output = "";
     let inkCount = 0;
 
     for (let y = 0; y < canvas.height; y += 1) {
-      let line = "";
       for (let x = 0; x < canvas.width; x += 1) {
         const index = (y * canvas.width + x) * 4;
         const alpha = data[index + 3] / 255;
@@ -142,26 +172,20 @@ function initVideoAscii() {
         const distanceFromBlue = Math.hypot(red - 30, green - 65, blue - 180);
 
         if (distanceFromBlue < 38 || brightness < 78) {
-          line += " ";
+          output += " ";
           continue;
         }
 
         inkCount += 1;
         const normalized = Math.max(brightness / 255, distanceFromBlue / 260);
         const charIndex = Math.floor(normalized * (chars.length - 1));
-        line += chars[Math.max(0, Math.min(chars.length - 1, charIndex))];
+        output += chars[Math.max(0, Math.min(chars.length - 1, charIndex))];
       }
-      lines.push(line);
+      output += "\n";
     }
 
-    // trim blank rows top/bottom so flex-centering puts the figure in the middle
-    let top = 0;
-    let bottom = lines.length - 1;
-    while (top < bottom && lines[top].trim() === "") top += 1;
-    while (bottom > top && lines[bottom].trim() === "") bottom -= 1;
-
     // skip near-empty frames (e.g. the black first frame) so we keep the static art
-    if (inkCount > 40) ascii.textContent = lines.slice(top, bottom + 1).join("\n");
+    if (inkCount > 40) ascii.textContent = output;
   };
 
   const start = () => {
