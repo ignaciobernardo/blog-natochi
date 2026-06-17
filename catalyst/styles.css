@@ -1,0 +1,930 @@
+@font-face {
+  font-family: Bugrino;
+  src: url("https://cdn.prod.website-files.com/6915dc055cdc24f198ca9061/692c485307fbc15ab082acbc_Bugrino-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Neue Montreal Book;
+  src: url("https://cdn.prod.website-files.com/6915dc055cdc24f198ca9061/6916118994cb3be1a3d1403a_PPNeueMontreal-Book.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Neue Montreal Mono Book;
+  src: url("https://cdn.prod.website-files.com/6915dc055cdc24f198ca9061/692c48f9484ef0eaf9fed84b_PPNeueMontrealMono-Book.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Neue Montreal Mono;
+  src: url("https://cdn.prod.website-files.com/6915dc055cdc24f198ca9061/692c49030a6a05d986bb8e45_PPNeueMontrealMono-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --black: #000;
+  --white: #fff;
+  --paper: #EEE9D6;
+  --ink: #1E41B4;
+  --hover-ink: #1E41B4;
+  --micro-line: rgba(30, 65, 180, 0.08);
+  --major-line: rgba(30, 65, 180, 0.28);
+  --ascii: rgba(30, 65, 180, 0.28);
+  --pad-x: 10px;
+  --pad-y: 15px;
+}
+
+:root[data-theme="red"] {
+  --paper: #B33B38;
+  --ink: #EEE9D6;
+  --micro-line: rgba(238, 233, 214, 0.08);
+  --major-line: rgba(238, 233, 214, 0.3);
+  --ascii: rgba(238, 233, 214, 0.3);
+}
+
+:root[data-theme="blue-fill"] {
+  --paper: #1E41B4;
+  --ink: #EEE9D6;
+  --micro-line: rgba(238, 233, 214, 0.08);
+  --major-line: rgba(238, 233, 214, 0.28);
+  --ascii: rgba(238, 233, 214, 0.32);
+}
+
+:root[data-theme="red-ink"] {
+  --paper: #EEE9D6;
+  --ink: #B33B38;
+  --micro-line: rgba(179, 59, 56, 0.08);
+  --major-line: rgba(179, 59, 56, 0.28);
+  --ascii: rgba(179, 59, 56, 0.28);
+}
+
+:root[data-theme="split"] {
+  --paper: #EEE9D6;
+  --ink: #1E41B4;
+  --micro-line: rgba(30, 65, 180, 0.08);
+  --major-line: rgba(30, 65, 180, 0.28);
+  --ascii: rgba(179, 59, 56, 0.3);
+}
+
+:root[data-theme="mono"] {
+  --paper: #fbfbfa;
+  --ink: #000;
+  --micro-line: rgba(0, 0, 0, 0.055);
+  --major-line: rgba(0, 0, 0, 0.24);
+  --ascii: rgba(0, 0, 0, 0.26);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  text-transform: lowercase;
+  font-family: "Neue Montreal Book", Arial, sans-serif;
+}
+
+body::before {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  opacity: 0.42;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.22) 0 1px, transparent 1px 7px),
+    radial-gradient(circle at 72% 24%, rgba(0, 0, 0, 0.09) 0 1px, transparent 1px 9px),
+    radial-gradient(circle at 42% 82%, rgba(255, 255, 255, 0.16) 0 1px, transparent 1px 8px),
+    repeating-radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.045) 0 1px, transparent 1px 4px);
+  background-size: 140px 140px, 180px 180px, 120px 120px, 6px 6px;
+  mix-blend-mode: multiply;
+}
+
+body.variant-split::after,
+body.variant-band::after,
+body.variant-poster::after {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  z-index: 1;
+  inset: 0;
+}
+
+body.variant-split::after {
+  background: linear-gradient(90deg, transparent 0 50%, rgba(179, 59, 56, 0.96) 50% 100%);
+  mix-blend-mode: multiply;
+}
+
+body.variant-band::after {
+  top: auto;
+  height: 38vh;
+  background: #B33B38;
+  opacity: 0.95;
+  mix-blend-mode: multiply;
+}
+
+body.variant-poster::after {
+  inset: 9vh 8vw;
+  border: 1px solid currentColor;
+  border-radius: 6px;
+  opacity: 0.38;
+}
+
+.page-home {
+  overflow: hidden;
+}
+
+.page-scroll {
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+::selection {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover,
+a:focus-visible,
+button:hover,
+button:focus-visible {
+  color: var(--hover-ink);
+  background: rgba(255, 255, 255, 0.94);
+  outline: 0;
+}
+
+.site-header a:hover,
+.site-header a:focus-visible,
+.site-header button:hover,
+.site-header button:focus-visible {
+  color: inherit;
+  background: transparent;
+}
+
+.paper-grid,
+.major-grid,
+.ascii-field {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+}
+
+.paper-grid {
+  z-index: 0;
+  opacity: 0.55;
+  background-image:
+    linear-gradient(to right, var(--micro-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--micro-line) 1px, transparent 1px);
+  background-size: 10px 10px;
+}
+
+.major-grid {
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 5px;
+}
+
+.major-grid span {
+  width: 1px;
+  min-height: 120vh;
+  background: var(--major-line);
+  transform: scaleX(0.5);
+  transform-origin: left center;
+}
+
+.ascii-field {
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  color: var(--ascii);
+  background: transparent;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 12px;
+  line-height: 12px;
+  letter-spacing: -1px;
+  white-space: pre;
+  user-select: none;
+}
+
+.site-header {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  width: 100vw;
+}
+
+.nav-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 10px;
+  align-items: start;
+  width: 100%;
+  padding: var(--pad-y) var(--pad-x);
+  color: var(--ink);
+  font-family: "Neue Montreal Mono", "Courier New", Courier, monospace;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  width: max-content;
+  max-width: 100%;
+  gap: 10px;
+  white-space: nowrap;
+  position: relative;
+}
+
+.nav-item::before {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 10px;
+  flex: 0 0 auto;
+  background: currentColor;
+  opacity: 0;
+}
+
+.nav-item.is-active::before,
+.nav-item:hover::before {
+  opacity: 1;
+  animation: nav-blink 0.85s ease-in-out infinite;
+}
+
+@keyframes nav-blink {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.nav-item.is-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.nav-item.is-disabled::before {
+  display: none;
+}
+
+.nav-brand {
+  grid-column: 1 / span 3;
+}
+
+.nav-brand::before {
+  display: none;
+}
+
+.nav-photos,
+.nav-events {
+  grid-column: 5 / span 2;
+}
+
+.nav-fellowship {
+  grid-column: 7 / span 2;
+}
+
+.nav-guests,
+.nav-people {
+  grid-column: 9 / span 2;
+}
+
+.nav-about {
+  grid-column: 11 / span 2;
+}
+
+.brand-square {
+  display: block;
+  width: 10px;
+  height: 10px;
+  flex: 0 0 auto;
+  background: currentColor;
+}
+
+.hero {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: flex-end;
+  width: 100vw;
+  height: 100svh;
+  padding: 15px 10px 2.05vw;
+}
+
+.hero h1 {
+  width: 100%;
+  flex: 0 0 100%;
+  max-width: calc(100vw - 20px);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  text-indent: 25%;
+  font-family: Bugrino, Arial, sans-serif;
+  font-size: 10vh;
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+  visibility: hidden; /* revealed by JS once Bugrino is loaded + sized */
+}
+
+.variant-split .hero h1 {
+  max-width: 100vw;
+  color: #EEE9D6;
+  mix-blend-mode: difference;
+}
+
+.variant-band .hero h1 {
+  color: #EEE9D6;
+}
+
+.variant-poster .hero {
+  align-items: center;
+  padding: 10vh 8vw;
+}
+
+.variant-poster .hero h1 {
+  text-indent: 0;
+  max-width: 72vw;
+}
+
+.variant-poster .ascii-field {
+  transform: translate3d(0, -7vh, 0) scale(0.9);
+}
+
+.about-page,
+.photos-page,
+.events-page,
+.people-page {
+  position: relative;
+  z-index: 5;
+  min-height: 100vh;
+  padding: 0 10px;
+  overflow-x: hidden;
+}
+
+.about-intro,
+.photos-intro,
+.events-intro,
+.people-intro {
+  margin: 0;
+  font-family: Bugrino, Arial, sans-serif;
+  font-size: clamp(44px, 4.5vw, 88px);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: 0;
+}
+
+.about-intro {
+  padding-top: 25vh;
+  max-width: 100vw;
+  text-align: left;
+}
+
+.image-stack {
+  position: fixed;
+  z-index: 8;
+  top: 22px;
+  right: 28px;
+  width: 135px;
+  height: 135px;
+  pointer-events: none;
+}
+
+.image-stack img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.82;
+}
+
+.image-stack img:nth-child(1) {
+  transform: rotate(-7deg) translate(-8px, 3px);
+}
+
+.image-stack img:nth-child(2) {
+  transform: rotate(6deg) translate(7px, -4px);
+}
+
+.image-stack img:nth-child(3) {
+  transform: rotate(1deg);
+}
+
+.about-row {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 10px;
+  margin-top: 28vh;
+  font-family: "Neue Montreal Book", Arial, sans-serif;
+  font-size: clamp(18px, 1.05vw, 24px);
+  line-height: 1.18;
+}
+
+.about-row h2,
+.about-row p {
+  margin: 0;
+  font: inherit;
+}
+
+.about-row h2 {
+  grid-column: 4 / span 2;
+}
+
+.about-row p {
+  grid-column: 7 / span 4;
+}
+
+.contact-row {
+  padding-bottom: 26vh;
+}
+
+.photos-page,
+.events-page,
+.people-page {
+  padding-top: 16vh;
+  padding-bottom: 25vh;
+}
+
+.photos-intro,
+.events-intro,
+.people-intro {
+  width: 100%;
+  max-width: 100%;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.events-list {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 13vh;
+  font-family: "Neue Montreal Mono Book", "Courier New", Courier, monospace;
+}
+
+.events-table {
+  grid-column: 4 / span 8;
+  font-size: clamp(16px, 1.25vw, 24px);
+  line-height: 1.08;
+}
+
+.events-table-header,
+.event-row {
+  display: grid;
+  grid-template-columns: 0.85fr 0.8fr 1.7fr 0.9fr;
+  gap: 10px;
+  min-width: 0;
+  padding: 3px 4px;
+}
+
+.events-table-header {
+  font-family: "Neue Montreal Mono", "Courier New", Courier, monospace;
+  border-bottom: 1px solid currentColor;
+}
+
+.event-row {
+  min-height: 15vh;
+  align-items: start;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 34%, transparent);
+}
+
+.event-row:hover,
+.event-row:focus-visible {
+  color: var(--hover-ink);
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.events-table-header span,
+.event-row span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* checklist events */
+.events-check {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 13vh;
+  font-family: "Neue Montreal Mono Book", "Courier New", Courier, monospace;
+}
+
+.ec-meta,
+.ec-list,
+.ec-cta {
+  grid-column: 4 / span 8;
+}
+
+.ec-meta {
+  font-family: "Neue Montreal Mono", "Courier New", Courier, monospace;
+  font-size: clamp(14px, 1.1vw, 18px);
+  line-height: 1.9;
+  margin: 0 0 6vh;
+}
+
+.ec-ic {
+  display: inline-block;
+  width: 4ch;
+}
+
+.ec-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ec-list li {
+  border-bottom: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+}
+
+.ec-row {
+  display: grid;
+  grid-template-columns: 7ch 4ch 1fr;
+  grid-template-areas:
+    "tag box name"
+    ".   .   line";
+  align-items: baseline;
+  column-gap: 10px;
+  padding: 14px 4px;
+  color: inherit;
+}
+
+.ec-tag {
+  grid-area: tag;
+  align-self: center;
+  font-size: clamp(11px, 0.85vw, 13px);
+  opacity: 0.7;
+}
+
+.ec-box {
+  grid-area: box;
+  font-size: clamp(18px, 1.8vw, 28px);
+  white-space: pre;
+}
+
+.ec-name {
+  grid-area: name;
+  width: max-content;
+  max-width: 100%;
+  font-size: clamp(22px, 2.4vw, 38px);
+  line-height: 1.04;
+}
+
+.ec-line {
+  grid-area: line;
+  margin-top: 4px;
+  font-size: clamp(11px, 0.9vw, 14px);
+  opacity: 0.55;
+}
+
+.ec-row:hover .ec-name,
+.ec-row:focus-visible .ec-name {
+  color: var(--hover-ink);
+  background: rgba(255, 255, 255, 0.94);
+  outline: 0;
+}
+
+.ec-row.is-past .ec-name,
+.ec-row.is-past .ec-line {
+  opacity: 0.45;
+}
+
+.ec-row.is-past:hover .ec-name {
+  opacity: 1;
+}
+
+.ec-cta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 5vh 0 0;
+  font-size: clamp(22px, 2.4vw, 38px);
+}
+
+.ec-cta a:hover {
+  color: var(--hover-ink);
+  background: rgba(255, 255, 255, 0.94);
+}
+
+@media (max-width: 900px) {
+  .ec-meta,
+  .ec-list,
+  .ec-cta {
+    grid-column: 1 / -1;
+  }
+
+  .ec-row {
+    grid-template-columns: 5ch 3.5ch 1fr;
+  }
+}
+
+.people-layout {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 10vh;
+}
+
+.people-portrait {
+  position: sticky;
+  top: 86px;
+  grid-column: 2 / span 3;
+  align-self: start;
+}
+
+.dither-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid currentColor;
+  background: var(--ink);
+}
+
+.people-active-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.people-active-caption {
+  margin-top: 8px;
+  font-family: "Neue Montreal Mono", "Courier New", Courier, monospace;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.people-list {
+  grid-column: 6 / span 6;
+  font-family: "Neue Montreal Mono Book", "Courier New", Courier, monospace;
+  font-size: clamp(13px, 1vw, 17px);
+  line-height: 1.05;
+}
+
+.people-list-header,
+.person-row {
+  display: grid;
+  grid-template-columns: 1.1fr 1.1fr 0.75fr;
+  gap: 10px;
+  padding: 1px 4px;
+  min-width: 0;
+}
+
+.people-list-header {
+  font-family: "Neue Montreal Mono", "Courier New", Courier, monospace;
+  border-bottom: 1px solid currentColor;
+}
+
+.person-row {
+  border: 0;
+  width: 100%;
+  color: inherit;
+  background: transparent;
+  text-align: left;
+  font: inherit;
+  cursor: default;
+}
+
+.person-row[data-linkedin]:not([data-linkedin=""]) {
+  cursor: pointer;
+}
+
+.people-list-header span,
+.person-row span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.person-row:hover,
+.person-row:focus-visible,
+.person-row.is-selected {
+  color: var(--hover-ink);
+  background: rgba(255, 255, 255, 0.94);
+  outline: 0;
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  align-items: start;
+  gap: 36px 10px;
+  margin-top: 13vh;
+}
+
+.photo-grid figure {
+  margin: 0;
+}
+
+.photo-grid img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  background: #eee;
+}
+
+.photo-grid figure:nth-child(4n + 2) img {
+  aspect-ratio: 1.18 / 1;
+}
+
+.photo-grid figure:nth-child(5n + 3) img {
+  aspect-ratio: 0.82 / 1;
+}
+
+.photo-grid figcaption {
+  margin-top: 4px;
+  font-family: "Neue Montreal Mono Book", "Courier New", Courier, monospace;
+  font-size: 10px;
+  line-height: 1;
+}
+
+.site-footer {
+  position: relative;
+  z-index: 6;
+  display: flex;
+  justify-content: flex-end;
+  padding: 14vh 10px 15px;
+  font-family: "Neue Montreal Mono", "Courier New", Courier, monospace;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+@media (max-width: 900px) {
+  .nav-grid {
+    display: block;
+    position: relative;
+    height: 22px;
+  }
+
+  .nav-brand,
+  .nav-photos,
+  .nav-events,
+  .nav-fellowship,
+  .nav-guests,
+  .nav-people,
+  .nav-about {
+    position: fixed;
+    top: var(--pad-y);
+    grid-column: auto;
+    transform: none;
+  }
+
+  .nav-item {
+    gap: 5px;
+  }
+
+  .nav-brand {
+    left: var(--pad-x);
+  }
+
+  .nav-photos,
+  .nav-events {
+    left: 30vw;
+  }
+
+  .nav-fellowship {
+    left: 50vw;
+  }
+
+  .nav-guests,
+  .nav-people {
+    left: 72vw;
+  }
+
+  .nav-about {
+    right: var(--pad-x);
+  }
+
+  .hero h1 {
+    text-indent: 0;
+    max-width: calc(100vw - 20px);
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .about-intro,
+  .photos-intro,
+  .events-intro,
+  .people-intro {
+    max-width: calc(100vw - 20px);
+    padding-top: 17vh;
+    font-size: clamp(27px, 7vw, 40px);
+    text-align: left;
+  }
+
+  .image-stack {
+    display: none;
+  }
+
+  .about-row {
+    display: block;
+    margin-top: 20vh;
+    font-size: 18px;
+  }
+
+  .about-row h2 {
+    margin-bottom: 18px;
+  }
+
+  .photo-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 26px 10px;
+    margin-top: 10vh;
+  }
+
+  .events-list,
+  .people-layout {
+    display: block;
+    margin-top: 10vh;
+  }
+
+  .events-table {
+    font-size: 14px;
+    margin-top: 0;
+  }
+
+  .events-table-header,
+  .event-row {
+    grid-template-columns: 0.85fr 0.75fr 1.35fr 0.9fr;
+    gap: 6px;
+  }
+
+  .event-row {
+    min-height: 22vh;
+  }
+
+  .people-portrait {
+    position: relative;
+    top: auto;
+    width: min(72vw, 340px);
+    margin: 0 auto 8vh;
+  }
+
+  .people-list {
+    font-size: 12px;
+  }
+
+  .people-list-header,
+  .person-row {
+    grid-template-columns: 1fr 1fr 0.7fr;
+    gap: 6px;
+  }
+
+  .site-footer {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 520px) {
+  :root {
+    --pad-y: 12px;
+  }
+
+  .nav-grid {
+    font-size: 12px;
+  }
+
+  .ascii-field {
+    font-size: 16px;
+    line-height: 16px;
+    letter-spacing: -1px;
+  }
+}
