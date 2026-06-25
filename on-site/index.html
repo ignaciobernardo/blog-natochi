@@ -1,0 +1,1751 @@
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Platanus On-Site, San Francisco.">
+  <title>Platanus On-Site</title>
+  <style>
+    @font-face {
+      font-family: mono;
+      src: url("fonts/DGuULq6Q.woff2") format("woff2"),
+           url("fonts/DaHF6EGU.woff") format("woff");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: abc;
+      src: url("fonts/1wkj7SUF.woff2") format("woff2"),
+           url("fonts/D2Vkx7Xo.woff") format("woff");
+      font-weight: 100 800;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --bg: #181818;
+      --fg: #D6D4D0;
+      --muted: #777;
+      --line: 18px;
+      --char: 10px;
+      --pad-x: 16px;
+      --pad-y: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: abc, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      font-variation-settings: "wght" 300;
+      line-height: var(--line);
+      letter-spacing: 0;
+      text-transform: uppercase;
+      overflow-x: hidden;
+    }
+
+    a,
+    button {
+      color: inherit;
+      font: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    button {
+      background: transparent;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    ::selection {
+      background: var(--fg);
+      color: var(--bg);
+    }
+
+    .nav {
+      position: fixed;
+      z-index: 50;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      padding: 20px var(--pad-x) 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--pad-x);
+      align-items: start;
+      font-family: mono, "SFMono-Regular", "Menlo", "Consolas", monospace;
+      font-weight: 400;
+      font-variation-settings: normal;
+    }
+
+    .nav__group {
+      display: flex;
+      gap: 22px;
+      white-space: nowrap;
+    }
+
+    .nav__group:last-child {
+      position: absolute;
+      top: 20px;
+      right: var(--pad-x);
+      justify-content: flex-end;
+    }
+
+    .nav__date {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      justify-content: center;
+    }
+
+    .nav a,
+    .view-tabs a,
+    .effect-footer a,
+    .rsvp-submit {
+      display: inline-flex;
+      align-items: center;
+      flex: 0 0 auto;
+      width: var(--hit-w, auto);
+      min-height: var(--hit-h, var(--line));
+      padding: 0 6px;
+      margin: 0 -6px;
+      white-space: pre;
+      overflow: hidden;
+      transition: background-color .08s linear, color .08s linear;
+    }
+
+    .nav a:hover,
+    .view-tabs a:hover,
+    .effect-footer a:hover,
+    .rsvp-submit:hover,
+    .nav a:focus-visible,
+    .view-tabs a:focus-visible,
+    .effect-footer a:focus-visible,
+    .rsvp-submit:focus-visible {
+      background: #F5F5F0;
+      color: var(--bg);
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 104px var(--pad-x) 32px;
+    }
+
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--pad-x);
+      margin-bottom: 18px;
+    }
+
+    .view-tabs {
+      display: flex;
+      gap: 22px;
+    }
+
+    .view-tabs a {
+      color: var(--muted);
+    }
+
+    .view-tabs a.active {
+      color: var(--fg);
+    }
+
+    .view-tabs a.active:hover,
+    .view-tabs a.active:focus-visible {
+      color: var(--bg);
+    }
+
+    .grid-view {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 84px 18px;
+      align-items: start;
+    }
+
+    .tile {
+      position: relative;
+      opacity: 0;
+      transition: opacity .35s linear;
+    }
+
+    .tile.in {
+      opacity: .9;
+    }
+
+    .tile.in:hover {
+      opacity: 1;
+    }
+
+    .ascii-frame {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      color: #F5F5F5;
+      cursor: crosshair;
+      user-select: text;
+    }
+
+    .ascii-frame::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0;
+      background:
+        radial-gradient(circle, rgba(214, 212, 208, .96) 0 1px, transparent 1.15px) 0 0 / 4px 4px,
+        radial-gradient(circle, rgba(24, 24, 24, .96) 0 1px, transparent 1.15px) 2px 2px / 4px 4px;
+      mix-blend-mode: overlay;
+      transition: opacity .75s linear;
+    }
+
+    .tile.photo-visible .ascii-frame::after {
+      opacity: 0;
+    }
+
+    .tile.photo-visible:hover .ascii-frame::after {
+      opacity: 0;
+    }
+
+    .speaker-photo {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      filter: grayscale(1) contrast(2.45) brightness(.92);
+      transition: opacity .75s linear, filter .75s linear;
+    }
+
+    .tile.photo-visible .speaker-photo {
+      opacity: 0;
+      filter: grayscale(1) contrast(2.45) brightness(.92);
+    }
+
+    .tile.photo-visible:hover .speaker-photo {
+      opacity: .14;
+    }
+
+    .ascii-art {
+      position: relative;
+      z-index: 1;
+      display: block;
+      white-space: pre;
+      margin: 0;
+      font-family: mono, "SFMono-Regular", "Menlo", "Consolas", monospace;
+      font-weight: 400;
+      font-variation-settings: normal;
+      text-transform: none;
+      font-size: 8px;
+      line-height: 8px;
+      -webkit-text-stroke: 0.15px var(--bg);
+      transition: opacity .75s linear;
+    }
+
+    .tile.photo-visible .ascii-art {
+      opacity: 1;
+    }
+
+    .tile.photo-visible:hover .ascii-art {
+      opacity: 1;
+    }
+
+    .tile.is-obfuscated .ascii-frame {
+      opacity: .46;
+      filter: blur(1.2px);
+    }
+
+    .tile.is-obfuscated:hover .ascii-frame {
+      opacity: .58;
+      filter: blur(.8px);
+    }
+
+    .tile.is-obfuscated .speaker-photo,
+    .tile.is-obfuscated:hover .speaker-photo {
+      opacity: 0;
+    }
+
+    .tile-card {
+      position: absolute;
+      left: 0;
+      top: 100%;
+      margin-top: 6px;
+      width: 100%;
+      color: #7B7B7B;
+      opacity: 0;
+      text-align: left;
+      transition: opacity .12s linear;
+      pointer-events: none;
+    }
+
+    .tile:hover .tile-card {
+      opacity: 1;
+    }
+
+    .tile-card span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .tile.is-obfuscated .tile-card span {
+      filter: blur(.65px);
+      opacity: .72;
+    }
+
+    .list-view {
+      display: none;
+    }
+
+    .list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      transform: translateY(-1px);
+    }
+
+    .list-row {
+      width: 100vw;
+      margin-left: calc(var(--pad-x) * -1);
+      padding: 0 var(--pad-x);
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--pad-x);
+      min-height: var(--line);
+      color: var(--fg);
+      opacity: 0;
+      transition: opacity .25s linear, background-color .08s linear, color .08s linear;
+    }
+
+    .list-row.in {
+      opacity: 1;
+    }
+
+    .list-row .wide {
+      grid-column: span 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .list-row .year {
+      justify-self: end;
+      white-space: nowrap;
+    }
+
+    .list-row.dim {
+      color: var(--muted);
+    }
+
+    .list-row.is-obfuscated span:not(:first-child) {
+      filter: blur(.65px);
+      opacity: .62;
+    }
+
+    .list-row:hover {
+      background: #F5F5F0;
+      color: var(--bg);
+    }
+
+    .intro-stage {
+      position: fixed;
+      inset: 0;
+      z-index: 12;
+      background: var(--bg);
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .intro-stage canvas {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    #intro-canvas {
+      z-index: 1;
+      opacity: .28;
+      transition: opacity .5s linear;
+    }
+
+    #logo-canvas {
+      z-index: 2;
+    }
+
+    .intro-stage.site-live {
+      pointer-events: none;
+      background: transparent;
+      cursor: default;
+    }
+
+    .intro-stage.site-live #intro-canvas {
+      opacity: 0;                 /* aino background disappears */
+    }
+
+    .intro-stage.site-live #logo-canvas {
+      opacity: 1;                 /* the Platanus logo remains stay visible */
+    }
+
+    .intro-stage.logo-only {
+      z-index: 40;
+      background: var(--bg);
+      cursor: default;
+    }
+
+    .intro-stage.logo-only #intro-canvas {
+      display: none;
+    }
+
+    .intro-stage.logo-only #logo-canvas {
+      opacity: 1;
+    }
+
+    body.effect-only {
+      overflow: hidden;
+    }
+
+    body.effect-only .page {
+      display: none;
+    }
+
+    body.effect-only .nav {
+      z-index: 50;
+      pointer-events: auto;
+    }
+
+    .effect-footer {
+      display: none;
+    }
+
+    body.effect-only .effect-footer {
+      display: flex;
+      position: fixed;
+      z-index: 50;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 0 var(--pad-x) 20px;
+      justify-content: flex-start;
+      font-family: mono, "SFMono-Regular", "Menlo", "Consolas", monospace;
+      font-weight: 400;
+      font-variation-settings: normal;
+      pointer-events: auto;
+    }
+
+    .effect-footer a {
+      color: var(--fg);
+    }
+
+    body.intro-active .page {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    body.intro-active .nav {
+      pointer-events: none;
+    }
+
+    .nav.preload {
+      opacity: 0;
+    }
+
+    .loadbar {
+      position: fixed;
+      top: 52px;
+      left: var(--pad-x);
+      right: var(--pad-x);
+      z-index: 30;
+      color: var(--fg);
+      font-family: mono, "SFMono-Regular", "Menlo", "Consolas", monospace;
+      font-size: 13px;
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      transition: opacity .35s linear;
+    }
+
+    body[data-view="list"] .grid-view {
+      display: none;
+    }
+
+    body[data-view="list"] .list-view {
+      display: block;
+    }
+
+    body[data-view="rsvp"] .menu,
+    body[data-view="rsvp"] .grid-view,
+    body[data-view="rsvp"] .list-view {
+      display: none;
+    }
+
+    body[data-view="rsvp"] .rsvp-view {
+      display: grid;
+    }
+
+    .rsvp-view {
+      display: none;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--pad-x);
+    }
+
+    .rsvp-form {
+      grid-column: 2 / span 2;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      max-width: 720px;
+    }
+
+    .rsvp-title {
+      margin: 0 0 18px;
+      font: inherit;
+      color: var(--fg);
+    }
+
+    .field {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+
+    .field label,
+    .choice-label {
+      color: var(--muted);
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      min-height: 36px;
+      padding: 8px 0;
+      border: 0;
+      border-bottom: 1px solid var(--muted);
+      border-radius: 0;
+      background: transparent;
+      color: var(--fg);
+      font: inherit;
+      font-variation-settings: inherit;
+      letter-spacing: inherit;
+      text-transform: none;
+      outline: none;
+    }
+
+    .field textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    .field input::placeholder,
+    .field textarea::placeholder {
+      color: var(--muted);
+      opacity: .65;
+      text-transform: none;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-bottom-color: var(--fg);
+    }
+
+    .choice-group {
+      display: flex;
+      gap: 22px;
+      align-items: center;
+      min-height: 36px;
+    }
+
+    .choice {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      color: var(--fg);
+      cursor: pointer;
+    }
+
+    .choice input {
+      appearance: none;
+      width: 10px;
+      height: 10px;
+      min-height: 0;
+      margin: 0;
+      padding: 0;
+      border: 1px solid var(--fg);
+      border-radius: 50%;
+      background: transparent;
+    }
+
+    .choice input:checked {
+      background: var(--fg);
+    }
+
+    .lodging-dates {
+      display: none;
+    }
+
+    .rsvp-form[data-lodging="yes"] .lodging-dates {
+      display: grid;
+    }
+
+    .rsvp-actions {
+      display: flex;
+      gap: 22px;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .rsvp-submit {
+      color: var(--fg);
+      font-family: mono, "SFMono-Regular", "Menlo", "Consolas", monospace;
+    }
+
+    .rsvp-status {
+      min-height: var(--line);
+      color: var(--muted);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 960px) {
+      body {
+        font-size: 13px;
+        --line: 18px;
+      }
+
+      .nav {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .nav__group:nth-child(2),
+      .nav__date {
+        display: none;
+      }
+
+      .page {
+        padding-top: 96px;
+      }
+
+      .menu {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .grid-view {
+        grid-template-columns: 1fr;
+        gap: 34px;
+      }
+
+      .ascii-frame {
+        aspect-ratio: 1.18;
+      }
+
+      .list-row {
+        grid-template-columns: 52px 1fr 58px;
+      }
+
+      .list-row .wide {
+        grid-column: span 1;
+      }
+
+      .rsvp-view {
+        grid-template-columns: 1fr;
+      }
+
+      .rsvp-form {
+        grid-column: 1;
+      }
+
+    }
+  </style>
+</head>
+<body class="intro-active" data-view="grid">
+  <header>
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="nav__group"><a href="?view=effect">Platanus On-Site</a></div>
+      <div class="nav__group"></div>
+      <div class="nav__group nav__date"><a href="?view=grid">11.09.26</a></div>
+      <div class="nav__group"><a class="nav__rsvp" href="?view=rsvp">RSVP</a></div>
+    </nav>
+  </header>
+
+  <div class="loadbar" id="loadbar"></div>
+
+  <div class="intro-stage" aria-label="Platanus On-Site ASCII intro">
+    <canvas id="intro-canvas"></canvas>
+    <canvas id="logo-canvas"></canvas>
+  </div>
+
+  <footer class="effect-footer" aria-label="Effect navigation">
+    <a href="?view=grid">Speakers</a>
+  </footer>
+
+  <main class="page">
+    <section class="menu" aria-label="View controls">
+      <div>Speakers</div>
+      <div class="view-tabs" role="tablist" aria-label="Project view">
+        <a class="active" href="?view=grid" data-view-button="grid" role="tab" aria-selected="true">Grid</a>
+        <a href="?view=list" data-view-button="list" role="tab" aria-selected="false">List</a>
+      </div>
+    </section>
+
+    <section id="people" class="grid-view" aria-label="Founder gallery"></section>
+    <section class="list-view" aria-label="Founder list">
+      <ul class="list" id="founder-list"></ul>
+    </section>
+
+    <section class="rsvp-view" id="rsvp" aria-label="RSVP form">
+      <form class="rsvp-form" id="rsvp-form" data-lodging="no">
+        <h1 class="rsvp-title">RSVP</h1>
+
+        <div class="field">
+          <label for="full-name">Nombre completo</label>
+          <input id="full-name" name="fullName" type="text" autocomplete="name" placeholder="Nombre Apellido" required>
+        </div>
+
+        <div class="field">
+          <label for="email">Mail</label>
+          <input id="email" name="email" type="email" autocomplete="email" placeholder="nombre@empresa.com" required>
+        </div>
+
+        <div class="field">
+          <label for="phone">Telefono</label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+56 9 1234 5678" pattern="^\+[0-9 ()-]{7,}$" required>
+        </div>
+
+        <div class="field">
+          <label for="company">Empresa</label>
+          <input id="company" name="company" type="text" autocomplete="organization" required>
+        </div>
+
+        <div class="field">
+          <label for="food">Preferencia o restriccion alimenticia</label>
+          <textarea id="food" name="foodPreference" placeholder="Vegetariano, alergias, sin restricciones, etc."></textarea>
+        </div>
+
+        <div class="field">
+          <div class="choice-label">Tenemos a alguien que ofrece alojamientos mas baratos que Airbnb, necesitas alojamiento?</div>
+          <div class="choice-group" role="radiogroup" aria-label="Necesitas alojamiento">
+            <label class="choice"><input type="radio" name="needsLodging" value="no" checked> No</label>
+            <label class="choice"><input type="radio" name="needsLodging" value="yes"> Si</label>
+          </div>
+        </div>
+
+        <div class="field lodging-dates">
+          <label for="lodging-dates">Fechas tentativas</label>
+          <input id="lodging-dates" name="lodgingDates" type="text" placeholder="Ej: 9 al 13 de septiembre. Pueden cambiarse despues.">
+        </div>
+
+        <div class="rsvp-actions">
+          <button class="rsvp-submit" type="submit">Enviar RSVP</button>
+          <span class="rsvp-status" id="rsvp-status" role="status" aria-live="polite"></span>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const stage = document.querySelector(".intro-stage");
+      const canvas = document.getElementById("intro-canvas");
+      const logoCanvas = document.getElementById("logo-canvas");
+      const viewParam = new URLSearchParams(window.location.search).get("view");
+      const effectOnly = viewParam === "effect";
+      const skipIntro = viewParam && !effectOnly;   // grid / list: no intro, but keep bottom water
+
+      // one-time ASCII loading bar (aino style: a row of "=" that fills) — full intro only
+      const loadbar = document.getElementById("loadbar");
+      if (loadbar && !viewParam) {
+        const cw = parseFloat(getComputedStyle(loadbar).fontSize) * 0.6;
+        const total = Math.ceil((window.innerWidth - 32) / cw) + 4;
+        const DURATION = 760;
+        const t0 = performance.now();
+        (function fill() {
+          const p = Math.min(1, (performance.now() - t0) / DURATION);
+          loadbar.textContent = "=".repeat(Math.max(1, Math.round(total * p)));
+          if (p < 1) { requestAnimationFrame(fill); }
+          else {
+            window.setTimeout(() => {
+              loadbar.style.opacity = "0";
+              window.setTimeout(() => loadbar.remove(), 400);
+            }, 220);
+          }
+        })();
+      }
+
+      const ctx = canvas.getContext("2d", { alpha: true });
+      const logoCtx = logoCanvas.getContext("2d", { alpha: true });
+      const fg = "#F5F5F5";
+      const gridColor = "#202020";
+      const logoChars = ".:+*#%@0369RFT";
+      const lightChars = ".,'`/|:-. .";   // sparse glyphs the settled "water" drifts toward
+      const logoImg = new Image();
+      let logoReady = false, pendingSettle = false;
+      logoImg.onload = () => {
+        logoReady = true;
+        sampleLogo();
+        if (pendingSettle) { startSettledWater(); pendingSettle = false; }
+      };
+      logoImg.src = "platanus-logo.png";
+      let anim = null, ROWS = 56, COLS = 178, FPS = 30;
+      let w = 0, h = 0, dpr = 1, charW = 8, lineH = 16, fontPx = 15;
+      let seg = null, phase = "load", segStart = 0, raf = 0;
+      let logoCells = [], logoRaf = 0;
+      let logoCell = 10;
+      let logoCols = 0, logoRows = 0;
+      let logoPhase = "hidden", zoomScale = 1, phaseStart = 0, logoFloor = [];
+      const GRAVITY = 0.05;         // weight (cell units / frame^2)
+      const RESTITUTION = 0.45;     // bounciness on the floor
+      const MAX_ZOOM = 1.5;
+      let mouse = { col: -999, row: -999, active: false };
+      let idleTimer = 0;
+      const NBSP = " ";
+
+      function metrics() {
+        charW = w / COLS;
+        lineH = h / ROWS;
+        fontPx = lineH * 1.02;
+        ctx.font = `${fontPx}px mono, "SF Mono", Menlo, Consolas, monospace`;
+        ctx.textBaseline = "top";
+      }
+
+      function resize() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        w = window.innerWidth; h = window.innerHeight;
+        canvas.width = Math.floor(w * dpr);
+        canvas.height = Math.floor(h * dpr);
+        logoCanvas.width = Math.floor(w * dpr);
+        logoCanvas.height = Math.floor(h * dpr);
+        canvas.style.width = w + "px";
+        canvas.style.height = h + "px";
+        logoCanvas.style.width = w + "px";
+        logoCanvas.style.height = h + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        logoCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        metrics();
+        sampleLogo();
+      }
+
+      function drawFrame(txt) {
+        if (!txt) return;
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = fg;
+        const rowsArr = txt.split("\n");
+        for (let y = 0; y < rowsArr.length; y += 1) {
+          const line = rowsArr[y];
+          const yy = y * lineH;
+          for (let x = 0; x < line.length; x += 1) {
+            const ch = line[x];
+            if (ch !== " " && ch !== NBSP) ctx.fillText(ch, x * charW, yy);
+          }
+        }
+      }
+
+      function step(now) {
+        if (seg && seg.length) {
+          const elapsed = Math.max(0, now - segStart);
+          const raw = Math.floor(elapsed / (1000 / FPS));
+          const span = Math.max(1, seg.length * 2 - 2);
+          const cycle = raw % span;
+          const i = cycle < seg.length ? cycle : span - cycle;
+          drawFrame(seg[i]);
+        }
+        raf = requestAnimationFrame(step);
+      }
+
+      function setPhase(name) {
+        phase = name;
+        seg = anim[name === "load" ? "cloud" : name];
+        segStart = performance.now();
+      }
+
+      function sampleLogo() {
+        if (!w || !h || (logoPhase !== "hidden" && logoPhase !== "idle")) return;
+        logoCell = window.innerWidth < 768 ? 4 : 6;
+        const cols = Math.floor(w / logoCell);
+        const rows = Math.floor(h / logoCell);
+        logoCols = cols; logoRows = rows;
+        const off = document.createElement("canvas");
+        off.width = cols;
+        off.height = rows;
+        const offCtx = off.getContext("2d", { willReadFrequently: true });
+        offCtx.fillStyle = "#000";
+        offCtx.fillRect(0, 0, cols, rows);
+
+        if (logoReady) {
+          // contain-fit the Platanus logo, centered on both axes
+          const maxW = cols * 0.66, maxH = rows * 0.58;
+          const ar = logoImg.naturalWidth / logoImg.naturalHeight;
+          let dw = maxW, dh = dw / ar;
+          if (dh > maxH) { dh = maxH; dw = dh * ar; }
+          const dx = (cols - dw) / 2;
+          const dy = (rows - dh) / 2;
+          offCtx.drawImage(logoImg, dx, dy, dw, dh);
+        }
+
+        const data = offCtx.getImageData(0, 0, cols, rows).data;
+        logoCells = [];
+        for (let row = 0; row < rows; row += 1) {
+          for (let col = 0; col < cols; col += 1) {
+            const idx = (row * cols + col) * 4;
+            const brightness = (data[idx] * .299 + data[idx + 1] * .587 + data[idx + 2] * .114) / 255;
+            logoCells.push({
+              col, row,
+              lit: brightness > .3,
+              char: logoChars[Math.min(logoChars.length - 1, Math.floor(brightness * logoChars.length))] || " ",
+              ox: 0, oy: 0, vx: 0, vy: 0
+            });
+          }
+        }
+      }
+
+      function drawLogo() {
+        if (logoPhase === "hidden") { logoCtx.clearRect(0, 0, w, h); return; }
+        logoCtx.clearRect(0, 0, w, h);
+        const live = stage.classList.contains("site-live");
+        if (!live) {
+          // faint dot grid only during the intro (not over the speakers page)
+          logoCtx.fillStyle = gridColor;
+          for (const cell of logoCells) {
+            logoCtx.fillRect(cell.col * logoCell, cell.row * logoCell, Math.max(1, logoCell - 2), Math.max(1, logoCell - 2));
+          }
+        }
+        logoCtx.fillStyle = fg;
+        logoCtx.font = `${logoCell + 3}px mono, "SF Mono", Menlo, Consolas, monospace`;
+        logoCtx.textBaseline = "top";
+        logoCtx.textAlign = "center";
+        for (const cell of logoCells) {
+          if (!cell.lit) continue;
+          const x = (cell.col + cell.ox) * logoCell + logoCell / 2;
+          const y = (cell.row + cell.oy) * logoCell;
+          logoCtx.fillText(cell.char, x, y);
+        }
+      }
+
+      function startAssemble() {
+        logoPhase = "assemble";
+        phaseStart = performance.now();
+        zoomScale = 1;
+        for (const cell of logoCells) {
+          if (!cell.lit) continue;
+          // start scattered across the screen (letters from the first animation)
+          cell.ox = Math.random() * logoCols - cell.col;
+          cell.oy = Math.random() * logoRows - cell.row;
+          cell.vx = 0; cell.vy = 0; cell.rest = false;
+        }
+      }
+
+      function startBreak() {
+        logoPhase = "break";
+        phaseStart = performance.now();
+        logoFloor = new Array(logoCols + 2).fill(logoRows - 1);
+        for (const cell of logoCells) {
+          if (!cell.lit) continue;
+          cell.targetCol = Math.random() * (logoCols - 1);  // spread across the FULL width
+          cell.vx = 0;
+          cell.vy = Math.random() * 0.4;          // just start falling
+          cell.rest = false;
+        }
+      }
+
+      // place the remains already settled across the full width (for grid/list loads)
+      function startSettledWater() {
+        logoPhase = "break";
+        logoFloor = new Array(logoCols + 2).fill(logoRows - 1);
+        for (const cell of logoCells) {
+          if (!cell.lit) continue;
+          const tc = Math.random() * (logoCols - 1);
+          const c = Math.max(0, Math.min(logoFloor.length - 1, Math.round(tc)));
+          const fr = logoFloor[c];
+          cell.ox = tc - cell.col;
+          cell.oy = fr - cell.row;
+          cell.baseOx = cell.ox; cell.baseOy = cell.oy;
+          cell.vx = 0; cell.vy = 0; cell.rest = true;
+          cell.char = lightChars[Math.floor(Math.random() * lightChars.length)];
+          logoFloor[c] = fr - 1;
+        }
+      }
+
+      function updateLogoPhysics() {
+        const cx = logoCols / 2, cy = logoRows / 2;
+
+        if (logoPhase === "idle") {                 // effect view: static logo + mouse repel
+          for (const cell of logoCells) {
+            if (!cell.lit) continue;
+            if (mouse.active) {
+              const dx = cell.col + cell.ox - mouse.col;
+              const dy = cell.row + cell.oy - mouse.row;
+              const dist = Math.hypot(dx, dy);
+              if (dist > 0 && dist < 9) {
+                const force = (1 - dist / 9) ** 2 * 1.6;
+                cell.vx += (dx / dist) * force;
+                cell.vy += (dy / dist) * force;
+              }
+            }
+            cell.vx += -cell.ox * 0.04; cell.vy += -cell.oy * 0.04;
+            cell.vx *= 0.72; cell.vy *= 0.72;
+            cell.ox += cell.vx; cell.oy += cell.vy;
+          }
+          return;
+        }
+
+        if (logoPhase === "assemble") {
+          let moving = 0;
+          for (const cell of logoCells) {
+            if (!cell.lit) continue;
+            cell.ox += (0 - cell.ox) * 0.12;
+            cell.oy += (0 - cell.oy) * 0.12;
+            if (Math.abs(cell.ox) + Math.abs(cell.oy) > 0.4) moving += 1;
+          }
+          if (moving === 0 || performance.now() - phaseStart > 1300) {
+            logoPhase = "zoom"; phaseStart = performance.now();
+          }
+        } else if (logoPhase === "zoom") {
+          zoomScale += (MAX_ZOOM - zoomScale) * 0.05;
+          for (const cell of logoCells) {
+            if (!cell.lit) continue;
+            const tox = (cell.col - cx) * (zoomScale - 1);
+            const toy = (cell.row - cy) * (zoomScale - 1);
+            cell.ox += (tox - cell.ox) * 0.16;
+            cell.oy += (toy - cell.oy) * 0.16;
+          }
+        } else if (logoPhase === "break") {
+          const wt = performance.now() / 1000;
+          for (const cell of logoCells) {
+            if (!cell.lit) continue;
+            if (cell.rest) {                      // settled -> flow like water (traveling waves)
+              cell.oy = cell.baseOy + Math.sin(cell.col * 0.45 - wt * 2.0) * 0.7 + Math.sin(cell.col * 0.13 + wt * 0.9) * 0.4;
+              cell.ox = cell.baseOx + Math.sin(cell.col * 0.30 + wt * 1.3) * 0.25;
+              continue;
+            }
+            cell.vy += GRAVITY;                 // weight pulls it down
+            cell.ox += (cell.targetCol - (cell.col + cell.ox)) * 0.06;  // drift to fill the width
+            cell.oy += cell.vy;
+            const c = Math.max(0, Math.min(logoFloor.length - 1, Math.round(cell.col + cell.ox)));
+            const floorRow = logoFloor[c];
+            if (cell.row + cell.oy >= floorRow) {
+              cell.oy = floorRow - cell.row;
+              if (cell.vy > 0.9) {               // still enough energy -> bounce
+                cell.vy = -cell.vy * RESTITUTION;
+                cell.vx *= 0.6;
+              } else {                            // settled -> joins the water
+                cell.rest = true; cell.vx = 0; cell.vy = 0;
+                cell.baseOx = cell.ox; cell.baseOy = cell.oy;
+                logoFloor[c] = floorRow - 1;
+              }
+            }
+          }
+        }
+      }
+
+      function logoLoop() {
+        updateLogoPhysics();
+        drawLogo();
+        logoRaf = requestAnimationFrame(logoLoop);
+      }
+
+      setInterval(() => {
+        for (const cell of logoCells) {
+          if (!cell.lit) continue;
+          if (cell.rest) {                         // water surface: drift toward sparse glyphs
+            if (Math.random() < 0.4) cell.char = lightChars[Math.floor(Math.random() * lightChars.length)];
+          } else if (logoPhase !== "hidden") {
+            cell.char = logoChars[Math.floor(Math.random() * logoChars.length)];
+          }
+        }
+      }, 90);
+
+      function advance() {
+        if (logoPhase === "hidden") {                      // click 1: assemble logo + auto zoom
+          startAssemble();
+        } else if (logoPhase === "assemble" || logoPhase === "zoom") {  // click 2: explode + enter, seamless
+          startBreak();                                    // Platanus logo letters fall + bounce (the remains)
+          document.body.classList.remove("intro-active");  // speakers page appears
+          document.dispatchEvent(new Event("intro:done"));
+          stage.classList.add("site-live");                // aino orb fades out, logo remains stay
+          stage.style.pointerEvents = "none";
+          cancelAnimationFrame(raf);                       // stop the aino background animation
+          ctx.clearRect(0, 0, w, h);
+          // logoRaf keeps running -> the broken-logo remains keep moving/settling at the bottom
+        }
+      }
+
+      window.addEventListener("resize", resize);
+      if (document.fonts?.ready) {
+        document.fonts.ready.then(() => {
+          sampleLogo();
+          drawLogo();
+        });
+      }
+      stage.addEventListener("mousemove", event => {
+        mouse.col = event.clientX / logoCell;
+        mouse.row = event.clientY / logoCell;
+        mouse.active = true;
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(() => { mouse.active = false; }, 60);
+      });
+      stage.addEventListener("mouseleave", () => {
+        mouse.col = mouse.row = -999;
+        mouse.active = false;
+      });
+
+      if (effectOnly) {
+        document.body.classList.add("effect-only");
+        document.body.classList.remove("intro-active");
+        stage.classList.add("logo-only");
+        logoPhase = "idle";
+        resize();
+        logoRaf = requestAnimationFrame(logoLoop);
+        return;
+      }
+
+      if (skipIntro) {                       // grid / list: no intro, just the persistent bottom water
+        document.body.classList.remove("intro-active");
+        stage.classList.add("site-live");
+        stage.style.pointerEvents = "none";
+        resize();
+        if (logoReady) startSettledWater(); else pendingSettle = true;
+        logoRaf = requestAnimationFrame(logoLoop);
+        return;
+      }
+
+      stage.addEventListener("click", advance);
+
+      fetch("aino_anim.json")
+        .then(r => r.json())
+        .then(data => {
+          anim = data; ROWS = data.rows; COLS = data.cols; FPS = data.fps || 30;
+          resize();
+          setPhase("load");
+          raf = requestAnimationFrame(step);
+          logoRaf = requestAnimationFrame(logoLoop);
+        })
+        .catch(() => {
+          stage.remove();
+          document.body.classList.remove("intro-active");
+          document.dispatchEvent(new Event("intro:done"));
+        });
+    })();
+  </script>
+
+  <script>
+    const glyphs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+=<>?!:/-. ";
+    const patterns = [
+      [
+        "====+++++?O9I48?=><<<<",
+        "===+++++8OOA6O5+==><>>",
+        "=====8.....OO0A+=> >>>",
+        "===+++>++0002!8+==>>>>",
+        "===+++++5689O!0=?333=>",
+        "A64=++=+=0A245==>>2?/9",
+        "956=!==!=0O56O>><!?3/!",
+        "<!?O68A35OO83I959666/6",
+        "222I32!/A080I6/:/:.?+<",
+        "++////:/00OO4!--------",
+        "--------00OO02--..----",
+        ">>==>=+0OOOO00:::::::",
+        "::::::::::::://+=<3I24"
+      ],
+      [
+        "NNNNNNNNNNNNNNNNNNNNNN",
+        "NNNNN          NNNNNNN",
+        "NNNNNOO00AAAOOAONNNNNN",
+        "NNNNAAOO584!>><<NNNNNN",
+        "NNNNNOOO148924942NNNNN",
+        "NNNNNOOO5<>95355INNNNN",
+        "NNNNNOOO4O.....35NNNNN",
+        "NNNNNAO!>48.....NNNNNN",
+        "NNNNNO8O88A.....NNNNNN",
+        "NNNNNOOA89A..=?45NNNNN",
+        "NNNNNO5O>+82:::9NNNNNN",
+        "NNNNN8   /<2//96NNNNNN",
+        "NNNNNNNNNNNNNNNNNNNNNN"
+      ],
+      [
+        "....!48AOOOO2>---.....",
+        "../?9OOOOOOOOOO8?:--..",
+        "..9..A.....A.3 OO<+...",
+        "------O.....O-   AO3!.",
+        "./8.+++A9.       3?:..",
+        ".////           <+....",
+        "::IA9OOOOOO90    =-...",
+        "<5=:O:OI!O9:8    .....",
+        "..+              .....",
+        "../8  5  8  9 6.AI6...",
+        "--I 6-- =  6 AAA:/....",
+        "---------+3AO9!:-------",
+        "-------->IAA2=:--------"
+      ],
+      [
+        "O+=NNNNNNNNNNNNNN++ONN",
+        "+++NNNNNNNNNNONNN++?NN",
+        "+O+NNN++ONN8AONNNN+NNN",
+        "++<NN+++++NNNNNNN+O?N+",
+        "+!!NN+++++N8ANNNN<!2N+",
+        "+N=NN+++++NAANNNNNN2N+",
+        "+N>NN+++++NNNNNNNON?N+",
+        "OO>NN++++!NNNNNNNNN?N+",
+        "+9+NNN!+ONNNNNNNN?9?0N",
+        "=++NN+++++NNNNNNN++?N+",
+        "O>+NN6+++ON8NNNNNN+NNN",
+        "+N+NN++++OANNNNNN+N0N+",
+        "+ONNN++++OO9NNNNNO+NN+"
+      ],
+      [
+        "446008888A886888000000",
+        "89224000AAAA8A8AAAA000",
+        "548OA49000054A00AAAAA0",
+        "80OOOOOOA0OA0092O0000A",
+        "0:::::::380OO5I268OOO0",
+        "42240O0<0595==608655O0",
+        "A00OOOOO0O09A900OO0908",
+        "00OOOOO0OOO8A80A000088",
+        "4:!:::::0OO0009000OOO8",
+        "496868O00000800O080O0A",
+        "800AA0OOOOO!3?225A0000",
+        "8:A/::::OO2I?O29IA00A8",
+        "O0869525A88000OO08A88A"
+      ],
+      [
+        "AAAAAAAAAAAAAAAAAAAAAA",
+        "AAAA...:>408435...AAAA",
+        "AAAA..O4=-:=0000..AAAA",
+        "AAAA...5A8O8A20...AAAA",
+        "AAAA...0AOO8AA4-..AAAA",
+        "AAAA..N0AO0AAA00..AAAA",
+        "AAAA              AAAA",
+        "AAAA              AAAA",
+        "AAAA-::-/-  >525  AAAA",
+        "AAAA              AAAA",
+        "AAAA       +     =AAAA",
+        "AAAA              AAAA",
+        "AAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      [
+        "-----AOOOO!>===<-----",
+        "----<>>>>><2<-------",
+        "----=++++I>>---------",
+        "---!<>............---",
+        "--?<>:::::::::::-----",
+        "-2!<<:::!>>::/:-----",
+        "?!<<:::/I>>>:/::----",
+        "??!!:::/I>>::/:-----",
+        "??!??/:/??>::/:-----",
+        "333></://I++///:-----",
+        "II?!!<<99///<<>>-----",
+        "I3?33III?!4I<<>>-----",
+        "??!?!I3<>?43<>>=-----"
+      ],
+      [
+        "0000000000000000000+++",
+        "0000000000000000000+//",
+        "000000000000000000///",
+        "00000000000A00000////",
+        "00.................///",
+        "00....../:.........//",
+        "00.................//",
+        "00.->::::++>>55<<<//",
+        "00..+==:::+?!8822?///",
+        "0000000003934===+++///",
+        "000000002850>==+++///",
+        "0000000000004==+++///",
+        "000000000000===+++++/"
+      ]
+    ];
+
+    const founders = [
+      ["001", "Pablo Palafox", "CEO @ HappyRobot (YC S23)", "2026", "speakers/pablo-palafox.png"],
+      ["002", "SPEAKER TBA", "DATA <SCRAMBLE> 03F9/A1", "2026", "", true],
+      ["003", "SPEAKER TBA", "DATA <SCRAMBLE> 7R20/QX", "2026", "", true],
+      ["004", "SPEAKER TBA", "DATA <SCRAMBLE> B6E4/19", "2026", "", true]
+    ];
+
+    const grid = document.querySelector(".grid-view");
+    const list = document.querySelector("#founder-list");
+    const params = new URLSearchParams(window.location.search);
+    const requestedView = params.get("view");
+    const initialView = requestedView === "list" || requestedView === "rsvp" ? requestedView : "grid";
+    document.body.dataset.view = initialView;
+
+    document.querySelectorAll("[data-view-button]").forEach(item => {
+      const active = item.dataset.viewButton === initialView;
+      item.classList.toggle("active", active);
+      item.setAttribute("aria-selected", String(active));
+    });
+
+    function randomGlyph() {
+      return glyphs[Math.floor(Math.random() * glyphs.length)];
+    }
+
+    function makeMatrix(pattern, width = 22, height = 13) {
+      return Array.from({ length: height }, (_, y) => {
+        const source = pattern[y % pattern.length] || "";
+        return Array.from({ length: width }, (_, x) => source[x % source.length] || ".");
+      });
+    }
+
+    function makeScrambleMatrix(width, height, seed = 0) {
+      const ramps = [
+        "MWNQB8R96G0AEP542S3I?!<>=+/:-,.",
+        "00110111001010110100101110010110",
+        ".,:/<>=+?!I3S"
+      ];
+      return Array.from({ length: height }, (_, y) => {
+        const row = [];
+        for (let x = 0; x < width; x += 1) {
+          const wave = Math.sin((x + seed * 7) * .19) + Math.cos((y - seed * 3) * .37) + Math.sin((x + y) * .11);
+          const band = Math.abs(y / Math.max(1, height - 1) - .52) < .18 ? .35 : 0;
+          const noise = ((x * 37 + y * 91 + seed * 53) % 29) / 29;
+          const density = clamp(.52 + wave * .16 + band - noise * .24);
+          if (density < .2) row.push(" ");
+          else {
+            const ramp = ramps[(x + y + seed) % ramps.length];
+            row.push(ramp[Math.floor(clamp(density) * (ramp.length - 1))]);
+          }
+        }
+        return row;
+      });
+    }
+
+    function renderMatrix(matrix) {
+      return matrix.map(row => row.join("")).join("\n");
+    }
+
+    function matrixSizeForFrame(frame) {
+      const cell = cellSize();
+      const w = frame.clientWidth || 160;
+      return {
+        cols: Math.max(16, Math.round(w / cell.w)),
+        rows: Math.max(12, Math.round(w / cell.h))
+      };
+    }
+
+    // --- aino's ASCII engine (extracted from Dc28V7Bw.js) ---
+    // luminance (Rec.709 weights) + image-normalized tone and edge ramps
+    const TONE_RAMP = "MWNQB8R96G0AEP542S3I?!<>=+/:-,.        ";
+    const DETAIL_RAMP = ".,:/<>=+?!I3S";
+    const EDGE_RAMP = ["|", "/", "-", "\\"];
+    const lum = (r, g, b) => 0.21 * r + 0.72 * g + 0.07 * b;
+    const clamp = (value, min = 0, max = 1) => Math.max(min, Math.min(max, value));
+    const percentile = (values, p) => {
+      const sorted = values.slice().sort((a, b) => a - b);
+      return sorted[Math.max(0, Math.min(sorted.length - 1, Math.floor((sorted.length - 1) * p)))];
+    };
+    const toneChar = value => TONE_RAMP[Math.floor((TONE_RAMP.length - 1) * clamp(value))];
+    const detailChar = value => DETAIL_RAMP[Math.floor((DETAIL_RAMP.length - 1) * clamp(value))];
+    function edgeChar(gx, gy) {
+      const angle = Math.abs(Math.atan2(gy, gx));
+      if (angle < Math.PI * .18) return EDGE_RAMP[0];
+      if (angle < Math.PI * .38) return EDGE_RAMP[1];
+      if (angle < Math.PI * .62) return EDGE_RAMP[2];
+      return EDGE_RAMP[3];
+    }
+
+    const IMAGES = founders.map(founder => founder[4]);
+
+    // measure the rendered size of one character cell (cached)
+    let _cell = null;
+    function cellSize() {
+      if (_cell) return _cell;
+      const p = document.createElement("pre");
+      p.className = "ascii-art";
+      p.style.cssText = "position:absolute;visibility:hidden;left:-9999px;top:0;white-space:pre;";
+      p.textContent = "M".repeat(100);
+      grid.appendChild(p);
+      const w = p.getBoundingClientRect().width / 100;
+      p.textContent = "M\nM\nM\nM\nM";
+      const h = p.getBoundingClientRect().height / 5;
+      p.remove();
+      _cell = { w: w || 10.2, h: h || 17 };
+      return _cell;
+    }
+
+    // turn a loaded image into a char matrix the size of the tile's cell grid
+    const _cv = document.createElement("canvas");
+    const _cx = _cv.getContext("2d", { willReadFrequently: true });
+    function imageToMatrix(img, cols, rows) {
+      const cell = cellSize();
+      const displayAspect = (cols * cell.w) / (rows * cell.h);
+      const iw = img.naturalWidth || img.width;
+      const ih = img.naturalHeight || img.height;
+      // cover crop the source to the display aspect (no distortion)
+      let sw = iw, sh = ih, sx = 0, sy = 0;
+      if (iw / ih > displayAspect) { sw = ih * displayAspect; sx = (iw - sw) / 2; }
+      else { sh = iw / displayAspect; sy = (ih - sh) / 2; }
+      const sampleScale = 3;
+      const sampleCols = cols * sampleScale;
+      const sampleRows = rows * sampleScale;
+      _cv.width = sampleCols; _cv.height = sampleRows;
+      _cx.drawImage(img, sx, sy, sw, sh, 0, 0, sampleCols, sampleRows);
+      const d = _cx.getImageData(0, 0, sampleCols, sampleRows).data; // throws if canvas tainted (file://)
+      const gray = [];
+      const texture = [];
+      for (let y = 0; y < rows; y += 1) {
+        for (let x = 0; x < cols; x += 1) {
+          let sum = 0;
+          let sumSq = 0;
+          for (let yy = 0; yy < sampleScale; yy += 1) {
+            for (let xx = 0; xx < sampleScale; xx += 1) {
+              const sampleX = x * sampleScale + xx;
+              const sampleY = y * sampleScale + yy;
+              const i = (sampleY * sampleCols + sampleX) * 4;
+              const value = lum(d[i], d[i + 1], d[i + 2]);
+              sum += value;
+              sumSq += value * value;
+            }
+          }
+          const count = sampleScale * sampleScale;
+          const avg = sum / count;
+          gray.push(avg);
+          texture.push(Math.sqrt(Math.max(0, sumSq / count - avg * avg)) / 255);
+        }
+      }
+      const black = percentile(gray, .04);
+      const white = percentile(gray, .96);
+      const range = Math.max(1, white - black);
+      const normalized = gray.map(value => clamp((value - black) / range));
+      const m = [];
+      for (let y = 0; y < rows; y += 1) {
+        const row = [];
+        for (let x = 0; x < cols; x += 1) {
+          const idx = y * cols + x;
+          const at = (xx, yy) => normalized[Math.max(0, Math.min(rows - 1, yy)) * cols + Math.max(0, Math.min(cols - 1, xx))];
+          const gx =
+            -at(x - 1, y - 1) - 2 * at(x - 1, y) - at(x - 1, y + 1) +
+             at(x + 1, y - 1) + 2 * at(x + 1, y) + at(x + 1, y + 1);
+          const gy =
+            -at(x - 1, y - 1) - 2 * at(x, y - 1) - at(x + 1, y - 1) +
+             at(x - 1, y + 1) + 2 * at(x, y + 1) + at(x + 1, y + 1);
+          const edge = Math.hypot(gx, gy);
+          const detail = edge + texture[idx] * 1.35;
+          const value = clamp(Math.pow(normalized[idx], .62) + (((x * 17 + y * 31) % 9) - 4) * .01);
+
+          if (value > .92) row.push(" ");
+          else if (edge > .5 && value > .14 && value < .86) row.push(edgeChar(gx, gy));
+          else if (detail > .24 && value > .36 && value < .9) row.push(detailChar((1 - value) * .44 + detail * .56));
+          else row.push(toneChar(value));
+        }
+        m.push(row);
+      }
+      return m;
+    }
+
+    function loadTileImage(frame, src) {
+      const photo = frame.querySelector(".speaker-photo");
+      if (photo) photo.src = src;
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const { cols, rows } = matrixSizeForFrame(frame);
+          frame._matrix = imageToMatrix(img, cols, rows);
+          if (!frame._revealed) frame.querySelector(".ascii-art").textContent = renderMatrix(frame._matrix);
+        } catch (e) {
+          // canvas tainted (opened via file://) -> keep the pattern fallback
+          if (!frame._warned) { frame._warned = true; console.warn("ASCII desde imagen requiere servir por http:// (file:// taints el canvas)"); }
+        }
+      };
+      img.src = src;
+    }
+
+    founders.forEach((founder, index) => {
+      const tile = document.createElement("article");
+      tile.className = `tile${founder[5] ? " is-obfuscated" : ""}`;
+      tile.innerHTML = `
+        <div class="ascii-frame" data-ascii>
+          <img class="speaker-photo" alt="${founder[5] ? "Unconfirmed speaker placeholder" : founder[1]}" loading="eager">
+          <pre class="ascii-art" aria-hidden="true"></pre>
+        </div>
+        <div class="tile-card">
+          <span>${founder[1]}</span>
+          <span>${founder[2]}</span>
+        </div>
+        <h2 class="sr-only">${founder[5] ? "Unconfirmed speaker placeholder" : `${founder[1]}, ${founder[2]}`}</h2>
+      `;
+      const frame = tile.querySelector("[data-ascii]");
+      const pre = tile.querySelector(".ascii-art");
+      frame._hover = null;
+      frame._tile = tile;
+      frame._row = Math.floor(index / 4);
+      frame._revealed = false;
+      frame._scrambled = Boolean(founder[5]);
+      frame._scrambleSeed = index + 1;
+      grid.appendChild(tile);
+      const { cols, rows } = matrixSizeForFrame(frame);
+      frame._matrix = frame._scrambled
+        ? makeScrambleMatrix(cols, rows, frame._scrambleSeed)
+        : makeMatrix(patterns[index % patterns.length], cols, rows);
+      pre.textContent = renderMatrix(frame._matrix);
+      if (frame._scrambled) {
+        frame.querySelector(".speaker-photo").removeAttribute("src");
+      } else {
+        loadTileImage(frame, founder[4] || IMAGES[index % IMAGES.length]);
+      }
+    });
+
+    founders.forEach((founder, index) => {
+      const item = document.createElement("li");
+      item.innerHTML = `
+        <a class="list-row ${index > 10 && index % 3 === 0 ? "dim" : ""}${founder[5] ? " is-obfuscated" : ""}" href="?view=rsvp">
+          <span>${founder[0]}</span>
+          <span class="wide">${founder[1]} / ${founder[2]}</span>
+          <span class="year">${founder[3]}</span>
+        </a>
+      `;
+      list.appendChild(item);
+    });
+
+    document.querySelectorAll("[data-ascii]").forEach(frame => {
+      frame.addEventListener("mousemove", event => {
+        const rect = frame.getBoundingClientRect();
+        const cell = cellSize();
+        const x = Math.max(0, Math.floor((event.clientX - rect.left) / cell.w));
+        const y = Math.max(0, Math.floor((event.clientY - rect.top) / cell.h));
+        frame._hover = { x, y };
+      });
+      frame.addEventListener("mouseleave", () => {
+        frame._hover = null;
+      });
+    });
+
+    function attachTextHoverScramble(selector) {
+      document.querySelectorAll(selector).forEach(el => {
+        if (el.closest(".ascii-frame") || el.closest(".intro-stage")) return;
+        const original = el.textContent;
+        if (!original.trim()) return;
+        el.dataset.originalText = original;
+        if (el.matches("a, button")) {
+          const rect = el.getBoundingClientRect();
+          el.style.setProperty("--hit-w", `${Math.ceil(rect.width + 14)}px`);
+          el.style.setProperty("--hit-h", `${Math.ceil(Math.max(rect.height, 18))}px`);
+        }
+
+        el.addEventListener("mousemove", event => {
+          const text = el.dataset.originalText;
+          const rect = el.getBoundingClientRect();
+          if (!rect.width) return;
+          const index = Math.floor(((event.clientX - rect.left) / rect.width) * text.length);
+          const chars = text.split("");
+
+          for (let offset = -1; offset <= 1; offset += 1) {
+            const i = index + offset;
+            if (i >= 0 && i < chars.length && chars[i] !== " ") chars[i] = randomGlyph();
+          }
+
+          el.textContent = chars.join("");
+        });
+
+        el.addEventListener("mouseleave", () => {
+          el.textContent = el.dataset.originalText;
+        });
+      });
+    }
+
+    attachTextHoverScramble([
+      ".nav a",
+      ".menu > div:first-child",
+      ".view-tabs a",
+      ".tile-card span",
+      ".list-row span",
+      ".rsvp-title",
+      ".rsvp-submit"
+    ].join(","));
+
+    const rsvpForm = document.getElementById("rsvp-form");
+    const lodgingDates = document.getElementById("lodging-dates");
+    const rsvpStatus = document.getElementById("rsvp-status");
+    if (rsvpForm) {
+      rsvpForm.querySelectorAll('input[name="needsLodging"]').forEach(input => {
+        input.addEventListener("change", () => {
+          const needsLodging = input.value === "yes" && input.checked;
+          rsvpForm.dataset.lodging = needsLodging ? "yes" : "no";
+          if (lodgingDates) {
+            lodgingDates.required = needsLodging;
+            if (!needsLodging) lodgingDates.value = "";
+          }
+        });
+      });
+
+      rsvpForm.addEventListener("submit", event => {
+        event.preventDefault();
+        if (!rsvpForm.reportValidity()) return;
+        const submit = rsvpForm.querySelector(".rsvp-submit");
+        if (submit) submit.disabled = true;
+        if (rsvpStatus) rsvpStatus.textContent = "Guardando...";
+
+        const formData = new FormData(rsvpForm);
+        fetch("/api/rsvp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(Object.fromEntries(formData.entries()))
+        })
+          .then(async response => {
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok || !data.ok) throw new Error(data.error || "No se pudo guardar.");
+            rsvpForm.reset();
+            rsvpForm.dataset.lodging = "no";
+            if (lodgingDates) lodgingDates.required = false;
+            if (rsvpStatus) rsvpStatus.textContent = "RSVP recibido.";
+          })
+          .catch(error => {
+            if (rsvpStatus) rsvpStatus.textContent = error.message;
+          })
+          .finally(() => {
+            if (submit) submit.disabled = false;
+          });
+      });
+    }
+
+    // --- Load scramble: reveal everything top -> bottom ---
+    let loadStart = Date.now();
+    let mainAnimationsStarted = false;
+    const ROW_STAGGER = 110;   // ms between grid rows
+    const GRID_START = 380;    // ms before the first grid row settles
+    const BURST = 480;         // ms of heavy scramble as a tile appears
+
+    function scrambleText(el, delay, duration) {
+      const final = el.textContent;
+      const start = loadStart + delay;
+      function frame() {
+        const t = (Date.now() - start) / duration;
+        if (t >= 1) { el.textContent = final; return; }
+        let out = "";
+        for (let i = 0; i < final.length; i += 1) {
+          const ch = final[i];
+          if (ch === " ") { out += " "; continue; }
+          out += (t > 0 && i / final.length < t) ? ch : randomGlyph();
+        }
+        el.textContent = out;
+        window.requestAnimationFrame(frame);
+      }
+      frame();
+    }
+
+    function startMainAnimations() {
+      if (mainAnimationsStarted) return;
+      mainAnimationsStarted = true;
+      loadStart = Date.now();
+
+      document.querySelectorAll(
+        ".menu > div:first-child, .view-tabs a"
+      ).forEach((el, i) => {
+        if (el.textContent.trim()) scrambleText(el, i * 55, 460);
+      });
+
+      if (initialView === "list") {
+        document.querySelectorAll("#founder-list .list-row").forEach((row, r) => {
+          window.setTimeout(() => row.classList.add("in"), GRID_START + r * 26);
+          row.querySelectorAll("span").forEach((span, c) => {
+            scrambleText(span, GRID_START + r * 38 + c * 16, 420);
+          });
+        });
+      }
+
+      tick();
+    }
+
+    function tick() {
+      const elapsed = Date.now() - loadStart;
+
+      document.querySelectorAll("[data-ascii]").forEach(frame => {
+        const due = GRID_START + frame._row * ROW_STAGGER;
+        const since = elapsed - due;
+
+        if (since < 0) return;            // not this row's turn yet
+
+        if (!frame._revealed) {
+          frame._revealed = true;
+          frame._tile.classList.add("in");
+        }
+
+        if (!frame._photoVisible && since > BURST + 620) {
+          frame._photoVisible = true;
+          frame._tile.classList.add("photo-visible");
+        }
+
+        if (frame._scrambled && elapsed % 540 < 90) {
+          frame._scrambleSeed += 1;
+          frame._matrix = makeScrambleMatrix(frame._matrix[0].length, frame._matrix.length, frame._scrambleSeed);
+        }
+
+        const matrix = frame._matrix;
+        const output = matrix.map(row => row.slice());
+        const bursting = since < BURST;
+
+        if (bursting) {
+          const intensity = 1 - since / BURST;   // full noise -> calm
+          for (let y = 0; y < output.length; y += 1) {
+            for (let x = 0; x < output[y].length; x += 1) {
+              if (Math.random() < intensity) output[y][x] = randomGlyph();
+            }
+          }
+        } else {
+          const sparks = frame._scrambled ? 52 : 18;
+          for (let i = 0; i < sparks; i += 1) {
+            const y = Math.floor(Math.random() * output.length);
+            const x = Math.floor(Math.random() * output[y].length);
+            if (Math.random() > .62) output[y][x] = randomGlyph();
+          }
+        }
+
+        if (frame._hover) {
+          const { x, y } = frame._hover;
+          for (let dx = -1; dx <= 1; dx += 1) {
+            const row = output[y];
+            if (row && row[x + dx] !== undefined) row[x + dx] = randomGlyph();
+          }
+        }
+
+        frame.querySelector(".ascii-art").textContent = renderMatrix(output);
+      });
+
+      window.setTimeout(tick, 90);
+    }
+
+    if (document.body.classList.contains("intro-active")) {
+      document.addEventListener("intro:done", startMainAnimations, { once: true });
+    } else {
+      startMainAnimations();
+    }
+  </script>
+</body>
+</html>
