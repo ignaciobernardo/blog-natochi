@@ -1,0 +1,17 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>laclase.cl</title><link rel="stylesheet" href="/laclase2/_astro/community.CYeTPPSP.css"></head> <body class="index-page">  <ul class="episodes"> <li class="row"> <a class="episode-link" href="/laclase2/community"> <div class="container"> <div class="episodeNumber fx">EP 01</div> <div class="wrp"> <div class="headline"> <div class="series fx">On What Happends Before Shool</div> <div class="title glow" data-label="Part 1. Create Community: Selling vs Being Loved."><span class="g">Part 1. Create Community: Selling vs Being Loved.</span></div> </div> </div> <div class="episodeLength fx">21 mins</div> </div> </a> </li> <li class="row row--soon"> <div class="container"> <div class="episodeNumber fx">EP 02</div> <div class="wrp"> <div class="headline"> <div class="title glow" data-label="New Episode, New People, Coming Soon"><span class="g">New Episode, New People, Coming Soon</span></div> </div> </div> </div> </li> <li class="row row--soon"> <div class="container"> <div class="episodeNumber fx">EP 03</div> <div class="wrp"> <div class="headline"> <div class="title glow" data-label="New Episode, New People, Coming Soon"><span class="g">New Episode, New People, Coming Soon</span></div> </div> </div> </div> </li> </ul> <div class="footer"> <a class="glow" data-label="Back to home" href="/laclase2/"><span class="g">Back to home</span></a> </div> <script>
+    const noiseSVG =
+      `<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'>
+         <filter id='n'>
+           <feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/>
+           <feColorMatrix type='saturate' values='0'/>
+           <feComponentTransfer>
+             <feFuncR type='linear' slope='1.9' intercept='-0.45'/>
+             <feFuncG type='linear' slope='1.9' intercept='-0.45'/>
+             <feFuncB type='linear' slope='1.9' intercept='-0.45'/>
+           </feComponentTransfer>
+         </filter>
+         <rect width='100%' height='100%' filter='url(#n)'/></svg>`;
+    document.body.style.setProperty('--noise',
+      `url("data:image/svg+xml;utf8,${encodeURIComponent(noiseSVG)}")`);
+
+  </script>  </body></html>
