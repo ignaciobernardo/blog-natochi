@@ -1,0 +1,27 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Lectures — laclase.cl</title><link rel="stylesheet" href="/laclase2/_astro/_ep_.BIk6KsUn.css">
+<style>.index-top[data-astro-cid-j7pbfwtb]{display:flex;justify-content:center;padding:clamp(24px,5vh,56px) 20px}.index-main[data-astro-cid-j7pbfwtb]{min-height:100vh;display:flex;flex-direction:column;justify-content:space-between}.index-main[data-astro-cid-j7pbfwtb] .footer[data-astro-cid-j7pbfwtb]{padding:clamp(24px,4vh,48px) 0}body.index-page{display:block;min-height:auto}
+</style></head> <body class="index-page">  <header class="index-top" data-astro-cid-j7pbfwtb> <nav class="team site-nav"> <a class="member is-active" data-label="Lectures" href="/laclase2/lectures/"><span class="g">Lectures</span></a> <a class="member" data-label="About" href="/laclase2/about"><span class="g">About</span></a> <a class="member" data-label="Sponsors" href="/laclase2/sponsors"><span class="g">Sponsors</span></a> <button class="member is-blurred" data-label="TBA, TBA"><span class="g">TBA, TBA</span></button> <button class="member is-blurred" data-label="TBA, TBA"><span class="g">TBA, TBA</span></button> </nav> </header> <main class="index-main" data-astro-cid-j7pbfwtb> <ul class="episodes" data-astro-cid-j7pbfwtb> <li class="row" data-astro-cid-j7pbfwtb> <a class="episode-link" href="/laclase2/01" data-astro-cid-j7pbfwtb> <div class="container" data-astro-cid-j7pbfwtb> <div class="episodeNumber fx" data-astro-cid-j7pbfwtb>EP 01</div> <div class="wrp" data-astro-cid-j7pbfwtb> <div class="headline" data-astro-cid-j7pbfwtb> <div class="series fx" data-astro-cid-j7pbfwtb>On What Happens Before The Big One</div> <div class="title glow" data-label="Part 1. What i have to Build?!" data-astro-cid-j7pbfwtb><span class="g" data-astro-cid-j7pbfwtb>Part 1. What i have to Build?!</span></div> </div> </div> <div class="episodeLength fx" data-astro-cid-j7pbfwtb>21 mins</div> </div> </a> </li><li class="row" data-astro-cid-j7pbfwtb> <a class="episode-link" href="/laclase2/02" data-astro-cid-j7pbfwtb> <div class="container" data-astro-cid-j7pbfwtb> <div class="episodeNumber fx" data-astro-cid-j7pbfwtb>EP 01</div> <div class="wrp" data-astro-cid-j7pbfwtb> <div class="headline" data-astro-cid-j7pbfwtb> <div class="series fx" data-astro-cid-j7pbfwtb>On What Happens Before The Big One</div> <div class="title glow" data-label="Part 2. Selling vs Being Loved" data-astro-cid-j7pbfwtb><span class="g" data-astro-cid-j7pbfwtb>Part 2. Selling vs Being Loved</span></div> </div> </div> <div class="episodeLength fx" data-astro-cid-j7pbfwtb>21 mins</div> </div> </a> </li> <li class="row row--soon" data-astro-cid-j7pbfwtb> <div class="container" data-astro-cid-j7pbfwtb> <div class="episodeNumber fx" data-astro-cid-j7pbfwtb>EP 02</div> <div class="wrp" data-astro-cid-j7pbfwtb><div class="headline" data-astro-cid-j7pbfwtb> <div class="title glow" data-label="New Episode, New People, Coming Soon" data-astro-cid-j7pbfwtb><span class="g" data-astro-cid-j7pbfwtb>New Episode, New People, Coming Soon</span></div> </div></div> </div> </li> <li class="row row--soon" data-astro-cid-j7pbfwtb> <div class="container" data-astro-cid-j7pbfwtb> <div class="episodeNumber fx" data-astro-cid-j7pbfwtb>EP 03</div> <div class="wrp" data-astro-cid-j7pbfwtb><div class="headline" data-astro-cid-j7pbfwtb> <div class="title glow" data-label="New Episode, New People, Coming Soon" data-astro-cid-j7pbfwtb><span class="g" data-astro-cid-j7pbfwtb>New Episode, New People, Coming Soon</span></div> </div></div> </div> </li> </ul> <div class="footer" data-astro-cid-j7pbfwtb> <a class="glow" data-label="Back to home" href="/laclase2/" data-astro-cid-j7pbfwtb><span class="g" data-astro-cid-j7pbfwtb>Back to home</span></a> </div> </main>   <script>
+    const noiseSVG =
+      `<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'>
+         <filter id='n'>
+           <feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/>
+           <feColorMatrix type='saturate' values='0'/>
+           <feComponentTransfer>
+             <feFuncR type='linear' slope='1.9' intercept='-0.45'/>
+             <feFuncG type='linear' slope='1.9' intercept='-0.45'/>
+             <feFuncB type='linear' slope='1.9' intercept='-0.45'/>
+           </feComponentTransfer>
+         </filter>
+         <rect width='100%' height='100%' filter='url(#n)'/></svg>`;
+    document.body.style.setProperty('--noise',
+      `url("data:image/svg+xml;utf8,${encodeURIComponent(noiseSVG)}")`);
+
+    // cargar con la lista arriba (header oculto arriba); scroll up lo revela
+    history.scrollRestoration = 'manual';
+    function snapToList(){
+      const main = document.querySelector('.index-main');
+      if (main) window.scrollTo(0, main.offsetTop);
+    }
+    snapToList();
+    window.addEventListener('load', snapToList);
+  </script>  </body></html>
