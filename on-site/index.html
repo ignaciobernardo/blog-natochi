@@ -120,13 +120,16 @@
       justify-content: center;
     }
 
-    /* San Francisco sits in the 3rd grid column (~75%), where Speakers used to be */
     .nav__location {
-      grid-column: 3;
-      justify-content: flex-end;
+      display: none;
+    }
+
+    .nav__date-mobile {
+      display: none;
     }
 
     .nav a,
+    .nav__theme-toggle,
     .view-tabs a,
     .effect-footer a,
     .rsvp-submit {
@@ -142,13 +145,22 @@
     }
 
     .nav a:hover,
+    .nav__theme-toggle:hover,
     .view-tabs a:hover,
     .effect-footer a:hover,
     .rsvp-submit:hover,
     .nav a:focus-visible,
+    .nav__theme-toggle:focus-visible,
     .view-tabs a:focus-visible,
     .effect-footer a:focus-visible,
     .rsvp-submit:focus-visible {
+      background: #F5F5F0;
+      color: var(--bg);
+    }
+
+    .nav a.active,
+    .nav a.active:hover,
+    .nav a.active:focus-visible {
       background: #F5F5F0;
       color: var(--bg);
     }
@@ -580,26 +592,31 @@
     .sponsors-view .rule { border: 0; border-top: 1px dashed #3a3a3a; margin: 22px 0; }
     .sponsors-view h1 { margin: 0; font: inherit; color: var(--fg); }
     .sponsors-view .info p { margin: 0; color: var(--fg); }
-    .sponsors-view .label { color: var(--muted); }
+    .sponsors-view .label { color: var(--fg); }
     .sponsors-view a.link { color: var(--fg); border-bottom: 1px solid transparent; }
     .sponsors-view a.link:hover { border-bottom-color: var(--fg); }
     .sponsors-view .list { display: grid; gap: 2px; margin-top: 4px; }
-    .sponsors-view .tba { color: var(--muted); }
+    .sponsors-view .tba { color: var(--fg); }
 
     .pos-field {
+      display: none;
       margin: 0;
       min-width: 0;
       align-self: stretch;
+      background: var(--bg);
       color: var(--fg);
       font-family: mono, "SFMono-Regular", "Menlo", "Consolas", monospace;
-      font-size: 1.5em;
+      font-size: 1em;
       line-height: 1em;
       font-weight: 300;
       text-transform: none;
       white-space: pre;
       overflow: hidden;
       user-select: none;
-      pointer-events: none;
+      pointer-events: auto;
+      cursor: crosshair;
+      position: relative;
+      z-index: 1;
     }
 
     .rsvp-form {
@@ -624,7 +641,7 @@
 
     .field label,
     .choice-label {
-      color: var(--muted);
+      color: var(--fg);
     }
 
     .field input,
@@ -716,7 +733,7 @@
 
     .rsvp-status {
       min-height: var(--line);
-      color: var(--muted);
+      color: var(--fg);
     }
 
     .sr-only {
@@ -758,13 +775,6 @@
         justify-content: flex-start;
       }
 
-      /* row 1: Sponsors · RSVP ;  row 2: San Francisco under RSVP (mirrors the date under the brand) */
-      .nav__group:nth-child(2) {           /* Sponsors */
-        grid-column: 2;
-        grid-row: 1;
-        justify-content: flex-end;
-      }
-
       .nav__group:last-child {             /* RSVP */
         position: static;
         grid-column: 3;
@@ -773,9 +783,18 @@
       }
 
       .nav__location {                     /* San Francisco, below RSVP */
+        display: flex;
         grid-column: 3;
         grid-row: 2;
         justify-content: flex-end;
+      }
+
+      .nav__date-desktop {
+        display: none;
+      }
+
+      .nav__date-mobile {
+        display: inline;
       }
 
       .page {
@@ -829,7 +848,7 @@
         gap: 40px;
       }
 
-      .pos-field { font-size: 1.15em; }
+      .pos-field { font-size: .77em; }
 
     }
   </style>
@@ -837,11 +856,10 @@
 <body class="intro-active" data-view="list">
   <header>
     <nav class="nav" aria-label="Primary navigation">
-      <div class="nav__group"><a href="?view=effect">Platanus On-Site</a></div>
-      <div class="nav__group"><a href="?view=sponsors">Sponsors</a></div>
-      <div class="nav__group nav__date"><span>11.09.26</span></div>
+      <div class="nav__group"><a href="?view=effect" data-nav-view="effect">Platanus On-Site</a></div>
+      <div class="nav__group nav__date"><button class="nav__theme-toggle" type="button" data-theme-target="work-yellow.html" aria-label="Switch to yellow mode"><span class="nav__date-desktop">SEPTEMBER 9, 2026. SAN FRANCISCO.</span><span class="nav__date-mobile">SEPTEMBER 9, 2026</span></button></div>
       <div class="nav__group nav__location"><span>San Francisco</span></div>
-      <div class="nav__group"><a class="nav__rsvp" href="?view=rsvp">RSVP</a></div>
+      <div class="nav__group"><a class="nav__rsvp" href="?view=rsvp" data-nav-view="rsvp">RSVP</a></div>
     </nav>
   </header>
 
@@ -924,7 +942,7 @@
         <h1 data-scr>Sponsors</h1>
 
         <hr class="rule">
-        <p data-scr>Platanus On-Site. San Francisco &middot; 11.09.26.</p>
+        <p data-scr>Platanus On-Site. San Francisco &middot; September 9, 2026.</p>
 
         <hr class="rule">
         <p data-scr>Un encuentro de los mejores founders de Latinoamerica en San Francisco. Charlas, demos y conexiones con la comunidad.</p>
@@ -1087,12 +1105,14 @@
       const canvas = document.getElementById("intro-canvas");
       const logoCanvas = document.getElementById("logo-canvas");
       const viewParam = new URLSearchParams(window.location.search).get("view");
-      const effectOnly = viewParam === "effect";
-      const skipIntro = viewParam && !effectOnly;   // grid / list: no intro, but keep bottom water
+      const pathView = window.location.pathname.replace(/^\/+|\/+$/g, "");
+      const routeView = viewParam || (["grid", "list", "rsvp", "sponsors", "effect"].includes(pathView) ? pathView : "") || (new URLSearchParams(window.location.search).has("effect") ? "sponsors" : "effect");
+      const effectOnly = routeView === "effect";
+      const skipIntro = routeView && !effectOnly;   // grid / list: no intro, but keep bottom water
 
       // one-time ASCII loading bar (aino style: a row of "=" that fills) — full intro only
       const loadbar = document.getElementById("loadbar");
-      if (loadbar && !viewParam) {
+      if (loadbar && !routeView) {
         const cw = parseFloat(getComputedStyle(loadbar).fontSize) * 0.6;
         const total = Math.ceil((window.innerWidth - 32) / cw) + 4;
         const DURATION = 760;
@@ -1634,9 +1654,25 @@
     const grid = document.querySelector(".grid-view");
     const list = document.querySelector("#founder-list");
     const params = new URLSearchParams(window.location.search);
-    const requestedView = params.get("view");
+    const pathView = window.location.pathname.replace(/^\/+|\/+$/g, "");
+    const requestedView = params.get("view") || (["grid", "list", "rsvp", "sponsors"].includes(pathView) ? pathView : "") || (params.has("effect") ? "sponsors" : "effect");
     const initialView = ["grid", "list", "rsvp", "sponsors"].includes(requestedView) ? requestedView : "list";
     document.body.dataset.view = initialView;
+
+    document.querySelectorAll("[data-nav-view]").forEach(item => {
+      item.classList.toggle("active", item.dataset.navView === requestedView);
+    });
+
+    document.querySelectorAll("[data-theme-target]").forEach(item => {
+      item.addEventListener("click", () => {
+        const next = new URL(item.dataset.themeTarget, window.location.href);
+        const nextParams = new URLSearchParams(window.location.search);
+        if (!nextParams.has("view")) nextParams.set("view", requestedView || "effect");
+        next.search = nextParams.toString();
+        next.hash = window.location.hash;
+        window.location.href = next.toString();
+      });
+    });
 
     document.querySelectorAll("[data-view-button]").forEach(item => {
       const active = item.dataset.viewButton === initialView;
@@ -1912,6 +1948,7 @@
 
     attachTextHoverScramble([
       ".nav a",
+      ".nav__theme-toggle span",
       ".menu > div:first-child",
       ".view-tabs a",
       ".tile-card span",
@@ -1996,7 +2033,7 @@
       loadStart = Date.now();
 
       document.querySelectorAll(
-        ".menu > div:first-child, .view-tabs a"
+        ".nav a, .nav span, .menu > div:first-child, .view-tabs a"
       ).forEach((el, i) => {
         if (el.textContent.trim()) scrambleText(el, i * 55, 460);
       });
@@ -2088,57 +2125,143 @@
     }
   </script>
 
-  <script>
-    /* "Name game" (after ertdfgcvb) — a per-cell field spelling POS, on the Sponsors view */
+  <script type="text/plain" data-archived="sponsors-ascii-effects">
+    /* Sponsors ASCII field. Try /sponsors?effect=1 through /sponsors?effect=5. */
     (() => {
       "use strict";
-      if (new URLSearchParams(location.search).get("view") !== "sponsors") return;
+      const params = new URLSearchParams(location.search);
+      const pathView = location.pathname.replace(/^\/+|\/+$/g, "");
+      const view = params.get("view") || (["grid", "list", "rsvp", "sponsors"].includes(pathView) ? pathView : "") || (params.has("effect") ? "sponsors" : "");
+      if (view !== "sponsors") return;
       const field = document.getElementById("pos-field");
       if (!field) return;
-      const NAME = "POS";
+
       const TAU = Math.PI * 2;
+      const effect = params.get("effect") || "pos";
       const measure = document.createElement("canvas").getContext("2d");
-      let cols = 0, rows = 0, lineH = 39, frame = 0, last = 0;
+      const cursor = { x: 0, y: 0 };
+      let cols = 0, rows = 0, lineH = 16, charW = 8, frame = 0, last = 0, fps = effect === "2" ? 60 : 30;
+
+      const clampIndex = (value, length) => Math.max(0, Math.min(length - 1, Math.floor(value)));
+      const sdCircle = (p, radius) => Math.hypot(p.x, p.y) - radius;
+      const smoothUnion = (d1, d2, k) => {
+        const h = Math.max(0, Math.min(1, .5 + .5 * (d2 - d1) / k));
+        return d2 * (1 - h) + d1 * h - k * h * (1 - h);
+      };
 
       function fit() {
         const cs = getComputedStyle(field);
-        const fontPx = parseFloat(cs.fontSize) || 39;
+        const fontPx = parseFloat(cs.fontSize) || 16;
         lineH = parseFloat(cs.lineHeight) || fontPx;
         measure.font = `${cs.fontWeight} ${fontPx}px ${cs.fontFamily}`;
-        const charW = measure.measureText("M").width || fontPx * 0.6;
+        charW = measure.measureText("M").width || fontPx * 0.6;
         const top = field.getBoundingClientRect().top;
         const w = field.clientWidth || 400;
         const h = Math.max(lineH * 6, window.innerHeight - top - 32);
         cols = Math.max(1, Math.floor(w / charW));
         rows = Math.max(1, Math.floor(h / lineH));
+        cursor.x = cols / 2;
+        cursor.y = rows / 2;
       }
 
-      function render() {
+      function posEffect(x, y) {
+        const name = "POS";
         const a = frame * 0.05;
         const f = Math.floor((1 - Math.cos(a)) * 10) + 1;
         const g = Math.floor(a / TAU) % 10 + 1;
+        const i = (y * cols + x) % (y * g + 1) % (f % cols);
+        return name[i] || " ";
+      }
+
+      function effectOne(x, y) {
+        const density = "#WX?*:÷×+=-· ";
+        const m = Math.min(cols, rows);
+        const aspect = charW / lineH;
+        const st = { x: 2 * (x - cols / 2) / m * aspect, y: 2 * (y - rows / 2) / m };
+        const pointer = { x: 2 * (cursor.x - cols / 2) / m * aspect, y: 2 * (cursor.y - rows / 2) / m };
+        const d1 = sdCircle(st, .2);
+        const d2 = sdCircle({ x: st.x - pointer.x, y: st.y - pointer.y }, .2);
+        const d = smoothUnion(d1, d2, .7);
+        const c = 1 - Math.exp(-5 * Math.abs(d));
+        return density[clampIndex(c * density.length, density.length)];
+      }
+
+      function effectTwo(x, y, time) {
+        const density = "/\\MXYZabc!?=-. ";
+        const t = time * 0.002;
+        const m = Math.min(cols, rows);
+        const aspect = charW / lineH;
+        const st = { x: 2 * (x - cols / 2) / m * aspect, y: 2 * (y - rows / 2) / m };
+        const radius = Math.cos(t) * .4 + .5;
+        const c = 1 - Math.exp(-5 * Math.abs(sdCircle(st, radius)));
+        return x % 2 ? "│" : density[clampIndex(c * density.length, density.length)];
+      }
+
+      function effectThree(x, y) {
+        const z = Math.floor(y - rows / 2);
+        if (z === 0) return " ";
+        const val = (x - cols / 2) / z;
+        const code = (Math.floor(val + cols / 2 + frame * .3) % 94 + 94) % 94 + 32;
+        return String.fromCharCode(code);
+      }
+
+      function effectFour(x, y, time) {
+        const pattern = "ABCxyz01═|+:. ";
+        const t = time * 0.0001;
+        const o = Math.sin(y * Math.sin(t) * .2 + x * .04 + t) * 20;
+        return pattern[Math.round(Math.abs(x + y + o)) % pattern.length];
+      }
+
+      function effectFive(x, y, time) {
+        const pattern = [" _000111_ ", ".+abc+.      "];
+        const t = time * 0.001;
+        const xx = x - cols / 2;
+        const yy = y - rows / 2;
+        const o = Math.sin(xx * yy * .0017 + yy * .0033 + t) * 40;
+        const c = (Math.floor(x * .09) + Math.floor(y * .09)) % 2;
+        return pattern[c][Math.floor(Math.abs(xx + yy + o)) % pattern[c].length];
+      }
+
+      function charAt(x, y, time) {
+        if (effect === "1") return effectOne(x, y);
+        if (effect === "2") return effectTwo(x, y, time);
+        if (effect === "3") return effectThree(x, y);
+        if (effect === "4") return effectFour(x, y, time);
+        if (effect === "5") return effectFive(x, y, time);
+        return posEffect(x, y);
+      }
+
+      function render(time) {
         let out = "";
         for (let y = 0; y < rows; y++) {
-          for (let x = 0; x < cols; x++) {
-            const index = y * cols + x;
-            const i = index % (y * g + 1) % (f % cols);
-            const ch = NAME[i];                    // undefined -> space (out of bounds)
-            out += ch === undefined ? " " : ch;
-          }
+          for (let x = 0; x < cols; x++) out += charAt(x, y, time);
           out += "\n";
         }
         field.textContent = out;
       }
 
       function loop(now) {
-        if (now - last >= 1000 / 30) { last = now; render(); frame++; }
+        if (now - last >= 1000 / fps) {
+          last = now;
+          render(now);
+          frame++;
+        }
         requestAnimationFrame(loop);
       }
 
+      window.addEventListener("mousemove", event => {
+        const rect = field.getBoundingClientRect();
+        cursor.x = Math.max(0, Math.min(cols - 1, Math.floor((event.clientX - rect.left) / charW)));
+        cursor.y = Math.max(0, Math.min(rows - 1, Math.floor((event.clientY - rect.top) / lineH)));
+      });
+
       fit();
       requestAnimationFrame(loop);
-      let t;
-      window.addEventListener("resize", () => { clearTimeout(t); t = setTimeout(fit, 150); });
+      let resizeTimer;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(fit, 150);
+      });
     })();
   </script>
 </body>
