@@ -462,6 +462,11 @@
     }
 
     .intro-stage.logo-only #logo-canvas {
+      opacity: 0;                 /* the logo slowly fades in once it's sampled */
+      transition: opacity 1.4s ease;
+    }
+
+    .intro-stage.logo-only.logo-in #logo-canvas {
       opacity: 1;
     }
 
@@ -1460,6 +1465,9 @@
         resize();
         logoRaf = requestAnimationFrame(logoLoop);
         if (window.__flame) { stage.classList.add("flame-on"); window.__flame.start(); }  // doom flame at the bottom
+        // fade the logo in once its cells are ready (avoids a blank pop while the image loads)
+        const revealLogo = () => requestAnimationFrame(() => stage.classList.add("logo-in"));
+        if (logoReady) revealLogo(); else logoImg.addEventListener("load", revealLogo, { once: true });
         return;
       }
 
