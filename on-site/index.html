@@ -4,6 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Platanus On-Site, San Francisco.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Platanus On-Site">
+  <meta property="og:description" content="September 9, 2026. San Francisco.">
+  <meta property="og:url" content="https://on-site.platan.us/">
+  <meta property="og:image" content="https://on-site.platan.us/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Platanus On-Site. September 9, 2026. San Francisco. RSVP.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Platanus On-Site">
+  <meta name="twitter:description" content="September 9, 2026. San Francisco.">
+  <meta name="twitter:image" content="https://on-site.platan.us/og-image.png">
   <title>Platanus On-Site</title>
   <style>
     @font-face {
@@ -456,7 +468,7 @@
     }
 
     .intro-stage.site-live #intro-canvas {
-      opacity: 0;                 /* aino background disappears */
+      opacity: 0;                 /* orb background disappears */
     }
 
     .intro-stage.site-live #logo-canvas {
@@ -971,7 +983,7 @@
   </main>
 
   <script>
-    /* Doom Flame — oldschool ASCII fire (after ertdfgcvb). Rises from the floor,
+    /* Doom Flame — oldschool ASCII fire. Rises from the floor,
        propagates up with randomness, rendered in the on-site mono palette. */
     (() => {
       "use strict";
@@ -1110,7 +1122,7 @@
       const effectOnly = routeView === "effect";
       const skipIntro = routeView && !effectOnly;   // grid / list: no intro, but keep bottom water
 
-      // one-time ASCII loading bar (aino style: a row of "=" that fills) — full intro only
+      // one-time ASCII loading bar (a row of "=" that fills) — full intro only
       const loadbar = document.getElementById("loadbar");
       if (loadbar && !routeView) {
         const cw = parseFloat(getComputedStyle(loadbar).fontSize) * 0.6;
@@ -1446,9 +1458,9 @@
           startBreak();                                    // Platanus logo letters explode + fall
           document.body.classList.add("effect-only");      // hide the speakers page; show effect footer + nav
           document.body.classList.remove("intro-active");
-          stage.classList.add("site-live");                // aino orb fades out
+          stage.classList.add("site-live");                // orb fades out
           stage.style.pointerEvents = "none";
-          cancelAnimationFrame(raf);                       // stop the aino background animation
+          cancelAnimationFrame(raf);                       // stop the orb background animation
           ctx.clearRect(0, 0, w, h);
           history.replaceState(null, "", "?view=effect");  // reflect the effect view in the URL (no reload)
           if (window.__flame) { stage.classList.add("flame-on"); window.__flame.start(); }
@@ -1502,7 +1514,7 @@
 
       stage.addEventListener("click", advance);
 
-      fetch("aino_anim.json")
+      fetch("intro-orb.json")
         .then(r => r.json())
         .then(data => {
           anim = data; ROWS = data.rows; COLS = data.cols; FPS = data.fps || 30;
@@ -1727,7 +1739,7 @@
       };
     }
 
-    // --- aino's ASCII engine (extracted from Dc28V7Bw.js) ---
+    // --- ASCII engine (luminance + edge ramps) ---
     // luminance (Rec.709 weights) + image-normalized tone and edge ramps
     const TONE_RAMP = "MWNQB8R96G0AEP542S3I?!<>=+/:-,.        ";
     const DETAIL_RAMP = ".,:/<>=+?!I3S";
