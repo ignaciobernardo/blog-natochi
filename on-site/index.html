@@ -96,6 +96,7 @@
       font-family: mono, "SFMono-Regular", "Menlo", "Consolas", monospace;
       font-weight: 400;
       font-variation-settings: normal;
+      pointer-events: none;      /* container never blocks the effect; only its links are clickable */
     }
 
     .nav__group {
@@ -119,6 +120,12 @@
       justify-content: center;
     }
 
+    /* San Francisco sits in the 3rd grid column (~75%), where Speakers used to be */
+    .nav__location {
+      grid-column: 3;
+      justify-content: flex-end;
+    }
+
     .nav a,
     .view-tabs a,
     .effect-footer a,
@@ -126,12 +133,11 @@
       display: inline-flex;
       align-items: center;
       flex: 0 0 auto;
-      width: var(--hit-w, auto);
-      min-height: var(--hit-h, var(--line));
-      padding: 0 6px;
-      margin: 0 -6px;
+      min-height: var(--line);
       white-space: pre;
       overflow: hidden;
+      pointer-events: auto;      /* links stay clickable even over the effect canvas */
+      cursor: pointer;
       transition: background-color .08s linear, color .08s linear;
     }
 
@@ -148,6 +154,8 @@
     }
 
     .page {
+      position: relative;
+      z-index: 20;               /* content sits above the flame canvas (stage z-index 12) */
       min-height: 100vh;
       padding: 104px var(--pad-x) 32px;
     }
@@ -175,6 +183,20 @@
     .view-tabs a.active:hover,
     .view-tabs a.active:focus-visible {
       color: var(--bg);
+    }
+
+    .view-tabs a.is-disabled,
+    .view-tabs a.is-disabled:hover,
+    .view-tabs a.is-disabled:focus-visible,
+    .effect-footer a.is-disabled,
+    .effect-footer a.is-disabled:hover,
+    .effect-footer a.is-disabled:focus-visible,
+    .nav a.is-disabled,
+    .nav a.is-disabled:hover,
+    .nav a.is-disabled:focus-visible {
+      color: #4a4a4a;
+      background: transparent;
+      cursor: not-allowed;
     }
 
     .grid-view {
@@ -395,6 +417,22 @@
       transition: opacity .5s linear;
     }
 
+    #flame-canvas {
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .6s linear;
+    }
+
+    .intro-stage.flame-on #flame-canvas {
+      opacity: 1;
+    }
+
+    /* after the first click the background dims so the Platanus letters read better */
+    .intro-stage.dim-bg #intro-canvas {
+      opacity: .1;
+    }
+
     #logo-canvas {
       z-index: 2;
     }
@@ -437,7 +475,6 @@
 
     body.effect-only .nav {
       z-index: 50;
-      pointer-events: auto;
     }
 
     .effect-footer {
@@ -456,7 +493,7 @@
       font-family: mono, "SFMono-Regular", "Menlo", "Consolas", monospace;
       font-weight: 400;
       font-variation-settings: normal;
-      pointer-events: auto;
+      pointer-events: none;      /* container passes clicks through; links stay clickable */
     }
 
     .effect-footer a {
@@ -513,6 +550,51 @@
       display: none;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: var(--pad-x);
+    }
+
+    /* Sponsors view */
+    body[data-view="sponsors"] .menu,
+    body[data-view="sponsors"] .grid-view,
+    body[data-view="sponsors"] .list-view,
+    body[data-view="sponsors"] .rsvp-view {
+      display: none;
+    }
+
+    body[data-view="sponsors"] .sponsors-view {
+      display: grid;
+    }
+
+    .sponsors-view {
+      display: none;
+      grid-template-columns: minmax(280px, 380px) 1fr;
+      gap: clamp(24px, 6vw, 96px);
+      align-items: start;
+    }
+
+    .sponsors-view .info { max-width: 380px; min-width: 0; }
+    .sponsors-view .rule { border: 0; border-top: 1px dashed #3a3a3a; margin: 22px 0; }
+    .sponsors-view h1 { margin: 0; font: inherit; color: var(--fg); }
+    .sponsors-view .info p { margin: 0; color: var(--fg); }
+    .sponsors-view .label { color: var(--muted); }
+    .sponsors-view a.link { color: var(--fg); border-bottom: 1px solid transparent; }
+    .sponsors-view a.link:hover { border-bottom-color: var(--fg); }
+    .sponsors-view .list { display: grid; gap: 2px; margin-top: 4px; }
+    .sponsors-view .tba { color: var(--muted); }
+
+    .pos-field {
+      margin: 0;
+      min-width: 0;
+      align-self: stretch;
+      color: var(--fg);
+      font-family: mono, "SFMono-Regular", "Menlo", "Consolas", monospace;
+      font-size: 1.5em;
+      line-height: 1em;
+      font-weight: 300;
+      text-transform: none;
+      white-space: pre;
+      overflow: hidden;
+      user-select: none;
+      pointer-events: none;
     }
 
     .rsvp-form {
@@ -651,17 +733,48 @@
       }
 
       .nav {
-        display: flex;
-        justify-content: space-between;
+        height: auto;
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        column-gap: 12px;
+        row-gap: 2px;
+        align-items: start;
       }
 
-      .nav__group:nth-child(2),
+      /* brand top-left, date stacked right below it */
+      .nav__group:nth-child(1) { grid-column: 1; grid-row: 1; }
+
       .nav__date {
-        display: none;
+        position: static;
+        transform: none;
+        display: flex;
+        grid-column: 1;
+        grid-row: 2;
+        justify-content: flex-start;
+      }
+
+      /* row 1: Sponsors · RSVP ;  row 2: San Francisco under RSVP (mirrors the date under the brand) */
+      .nav__group:nth-child(2) {           /* Sponsors */
+        grid-column: 2;
+        grid-row: 1;
+        justify-content: flex-end;
+      }
+
+      .nav__group:last-child {             /* RSVP */
+        position: static;
+        grid-column: 3;
+        grid-row: 1;
+        justify-content: flex-end;
+      }
+
+      .nav__location {                     /* San Francisco, below RSVP */
+        grid-column: 3;
+        grid-row: 2;
+        justify-content: flex-end;
       }
 
       .page {
-        padding-top: 96px;
+        padding-top: 108px;
       }
 
       .menu {
@@ -676,6 +789,18 @@
 
       .ascii-frame {
         aspect-ratio: 1.18;
+      }
+
+      .tile-card {
+        position: static;
+        margin-top: 8px;
+        opacity: 1;
+      }
+
+      .tile-card span {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
       }
 
       .list-row {
@@ -694,15 +819,23 @@
         grid-column: 1;
       }
 
+      .sponsors-view {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .pos-field { font-size: 1.15em; }
+
     }
   </style>
 </head>
-<body class="intro-active" data-view="grid">
+<body class="intro-active" data-view="list">
   <header>
     <nav class="nav" aria-label="Primary navigation">
       <div class="nav__group"><a href="?view=effect">Platanus On-Site</a></div>
-      <div class="nav__group"></div>
-      <div class="nav__group nav__date"><a href="?view=grid">11.09.26</a></div>
+      <div class="nav__group"><a href="?view=sponsors">Sponsors</a></div>
+      <div class="nav__group nav__date"><span>11.09.26</span></div>
+      <div class="nav__group nav__location"><span>San Francisco</span></div>
       <div class="nav__group"><a class="nav__rsvp" href="?view=rsvp">RSVP</a></div>
     </nav>
   </header>
@@ -711,19 +844,18 @@
 
   <div class="intro-stage" aria-label="Platanus On-Site ASCII intro">
     <canvas id="intro-canvas"></canvas>
+    <canvas id="flame-canvas"></canvas>
     <canvas id="logo-canvas"></canvas>
   </div>
 
-  <footer class="effect-footer" aria-label="Effect navigation">
-    <a href="?view=grid">Speakers</a>
-  </footer>
+  <footer class="effect-footer" aria-label="Effect navigation"></footer>
 
   <main class="page">
     <section class="menu" aria-label="View controls">
       <div>Speakers</div>
       <div class="view-tabs" role="tablist" aria-label="Project view">
-        <a class="active" href="?view=grid" data-view-button="grid" role="tab" aria-selected="true">Grid</a>
-        <a href="?view=list" data-view-button="list" role="tab" aria-selected="false">List</a>
+        <a href="?view=grid" data-view-button="grid" role="tab" aria-selected="false">Grid</a>
+        <a href="?view=list" data-view-button="list" role="tab" aria-selected="true">List</a>
       </div>
     </section>
 
@@ -780,7 +912,167 @@
         </div>
       </form>
     </section>
+
+    <section class="sponsors-view" id="sponsors" aria-label="Sponsors">
+      <div class="info">
+        <hr class="rule" style="margin-top:0">
+        <h1 data-scr>Sponsors</h1>
+
+        <hr class="rule">
+        <p data-scr>Platanus On-Site. San Francisco &middot; 11.09.26.</p>
+
+        <hr class="rule">
+        <p data-scr>Un encuentro de los mejores founders de Latinoamerica en San Francisco. Charlas, demos y conexiones con la comunidad.</p>
+
+        <hr class="rule">
+        <p class="label" data-scr>Partners</p>
+        <div class="list">
+          <span class="tba" data-scr>[ TBA ]</span>
+          <span class="tba" data-scr>[ TBA ]</span>
+          <span class="tba" data-scr>[ TBA ]</span>
+        </div>
+
+        <hr class="rule">
+        <p class="label" data-scr>Quieres ser sponsor?</p>
+        <div class="list"><a class="link" href="mailto:joaquin@platan.us" data-scr>joaquin@platan.us</a></div>
+
+        <hr class="rule">
+        <p class="label" data-scr>More:</p>
+        <div class="list">
+          <a class="link" href="?view=rsvp" data-scr>RSVP</a>
+        </div>
+      </div>
+
+      <pre class="pos-field" id="pos-field" aria-hidden="true"></pre>
+    </section>
   </main>
+
+  <script>
+    /* Doom Flame — oldschool ASCII fire (after ertdfgcvb). Rises from the floor,
+       propagates up with randomness, rendered in the on-site mono palette. */
+    (() => {
+      "use strict";
+      const canvas = document.getElementById("flame-canvas");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d", { alpha: true });
+      const FLAME = "...::/\\/\\/\\+=*abcdef01XYZ#";
+      const FONT = 'mono, "SF Mono", Menlo, Consolas, monospace';
+      const FPS = 30, FRAME = 1000 / FPS;
+      let cols = 0, rows = 0, w = 0, h = 0, dpr = 1;
+      let charW = 9, lineH = 13, fontPx = 14;
+      let data = [];
+      let raf = 0, running = false, lastT = 0;
+      let SEED_MAX = 18;                 // floor heat -> taller/shorter flame
+      const pointer = { col: -1, row: -1, down: false };
+
+      const mix = (a, b, t) => a + (b - a) * t;
+      const smoothstep = (lo, hi, v) => { const x = Math.max(0, Math.min(1, (v - lo) / (hi - lo))); return x * x * (3 - 2 * x); };
+      const rndi = (a, b = 0) => { if (a > b) [a, b] = [b, a]; return Math.floor(a + Math.random() * (b - a + 1)); };
+      const noise = valueNoise();
+
+      function metrics() {
+        fontPx = 12; lineH = 12;
+        ctx.font = `${fontPx}px ${FONT}`;
+        charW = ctx.measureText("M").width || fontPx * 0.6;
+      }
+      function resize() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        w = window.innerWidth; h = window.innerHeight;
+        canvas.width = Math.floor(w * dpr); canvas.height = Math.floor(h * dpr);
+        canvas.style.width = w + "px"; canvas.style.height = h + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.textBaseline = "top";
+        metrics();
+        const nc = Math.ceil(w / charW), nr = Math.ceil(h / lineH);
+        cols = nc; rows = nr; data = new Array(cols * rows).fill(0);
+      }
+
+      function pre(now) {
+        if (!pointer.down) {
+          // seed the floor (full width) with a low value -> a short flame that hugs the bottom
+          const t = now * 0.0015;
+          const last = cols * (rows - 1);
+          for (let i = 0; i < cols; i++) {
+            const val = Math.floor(mix(4, SEED_MAX, noise(i * 0.05, t)));
+            data[last + i] = Math.min(val, data[last + i] + 2);
+          }
+        } else {
+          // click / drag stops feeding the floor -> the fire dies out, leaving only the cursor cell
+          const cx = Math.max(0, Math.min(cols - 1, pointer.col));
+          const cy = Math.max(0, Math.min(rows - 1, pointer.row));
+          data[cx + cy * cols] = rndi(5, 50);
+        }
+        for (let i = 0; i < data.length; i++) {
+          const row = Math.floor(i / cols), col = i % cols;
+          const dest = row * cols + Math.max(0, Math.min(cols - 1, col + rndi(-1, 1)));
+          const src = Math.min(rows - 1, row + 1) * cols + col;
+          data[dest] = Math.max(0, data[src] - rndi(0, 2));
+        }
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+        // light pass
+        ctx.font = `300 ${fontPx}px ${FONT}`;
+        for (let i = 0; i < data.length; i++) {
+          const u = data[i]; if (u === 0 || u > 20) continue;
+          const col = i % cols, row = (i - col) / cols;
+          ctx.fillStyle = `rgba(245,245,240,${Math.min(1, 0.22 + u / 30)})`;
+          ctx.fillText(FLAME[Math.min(FLAME.length - 1, u)], col * charW, row * lineH);
+        }
+        // hot/bold pass
+        ctx.font = `700 ${fontPx}px ${FONT}`;
+        for (let i = 0; i < data.length; i++) {
+          const u = data[i]; if (u <= 20) continue;
+          const col = i % cols, row = (i - col) / cols;
+          ctx.fillStyle = `rgba(245,245,240,${Math.min(1, 0.22 + u / 30)})`;
+          ctx.fillText(FLAME[Math.min(FLAME.length - 1, u)], col * charW, row * lineH);
+        }
+      }
+
+      function loop(now) {
+        if (!running) return;
+        if (now - lastT >= FRAME) { lastT = now; pre(now); draw(); }
+        raf = requestAnimationFrame(loop);
+      }
+
+      function start(opts) { if (running) return; if (opts && opts.maxSeed) SEED_MAX = opts.maxSeed; resize(); running = true; lastT = 0; raf = requestAnimationFrame(loop); }
+      function stop() { running = false; cancelAnimationFrame(raf); if (ctx) ctx.clearRect(0, 0, w, h); }
+
+      window.addEventListener("resize", () => { if (running) resize(); });
+
+      // click / drag to stoke more fire (no effect on plain hover)
+      const setPtr = e => { pointer.col = Math.floor(e.clientX / charW); pointer.row = Math.floor(e.clientY / lineH); };
+      window.addEventListener("pointerdown", e => { if (!running) return; pointer.down = true; setPtr(e); });
+      window.addEventListener("pointermove", e => { if (running && pointer.down) setPtr(e); });
+      window.addEventListener("pointerup", () => { pointer.down = false; });
+      window.addEventListener("pointercancel", () => { pointer.down = false; });
+
+      window.__flame = { start, stop };
+
+      function valueNoise() {
+        const size = 256;
+        const r = new Array(size);
+        const perm = new Array(size * 2);
+        for (let k = 0; k < size; k++) { r[k] = Math.random(); perm[k] = k; }
+        for (let k = 0; k < size; k++) {
+          const i = Math.floor(Math.random() * size);
+          [perm[k], perm[i]] = [perm[i], perm[k]];
+          perm[k + size] = perm[k];
+        }
+        return (px, py) => {
+          const xi = Math.floor(px), yi = Math.floor(py);
+          const tx = px - xi, ty = py - yi;
+          const rx0 = ((xi % size) + size) % size, rx1 = (rx0 + 1) % size;
+          const ry0 = ((yi % size) + size) % size, ry1 = (ry0 + 1) % size;
+          const c00 = r[perm[perm[rx0] + ry0]], c10 = r[perm[perm[rx1] + ry0]];
+          const c01 = r[perm[perm[rx0] + ry1]], c11 = r[perm[perm[rx1] + ry1]];
+          const sx = smoothstep(0, 1, tx), sy = smoothstep(0, 1, ty);
+          return mix(mix(c00, c10, sx), mix(c01, c11, sx), sy);
+        };
+      }
+    })();
+  </script>
 
   <script>
     (() => {
@@ -815,6 +1107,8 @@
 
       const ctx = canvas.getContext("2d", { alpha: true });
       const logoCtx = logoCanvas.getContext("2d", { alpha: true });
+      const gridLayer = document.createElement("canvas");      // static dot grid, drawn once
+      const gridLayerCtx = gridLayer.getContext("2d");
       const fg = "#F5F5F5";
       const gridColor = "#202020";
       const logoChars = ".:+*#%@0369RFT";
@@ -913,14 +1207,20 @@
         offCtx.fillRect(0, 0, cols, rows);
 
         if (logoReady) {
-          // contain-fit the Platanus logo, centered on both axes
-          const maxW = cols * 0.66, maxH = rows * 0.58;
-          const ar = logoImg.naturalWidth / logoImg.naturalHeight;
+          // on mobile use only the isotipo (banana, left ~22% of the logo);
+          // on desktop the full wordmark
+          const mobile = window.innerWidth < 768;
+          const sx = 0;
+          const sw = mobile ? Math.round(logoImg.naturalWidth * 0.22) : logoImg.naturalWidth;
+          const sh = logoImg.naturalHeight;
+          // contain-fit, centered on both axes
+          const maxW = cols * (mobile ? 0.82 : 0.66), maxH = rows * (mobile ? 0.72 : 0.58);
+          const ar = sw / sh;
           let dw = maxW, dh = dw / ar;
           if (dh > maxH) { dh = maxH; dw = dh * ar; }
           const dx = (cols - dw) / 2;
           const dy = (rows - dh) / 2;
-          offCtx.drawImage(logoImg, dx, dy, dw, dh);
+          offCtx.drawImage(logoImg, sx, 0, sw, sh, dx, dy, dw, dh);
         }
 
         const data = offCtx.getImageData(0, 0, cols, rows).data;
@@ -937,18 +1237,36 @@
             });
           }
         }
+        buildGridLayer();
+      }
+
+      // pre-render the faint dot grid once (it never moves) instead of ~50k fillRect/frame
+      function buildGridLayer() {
+        if (!w || !h) return;
+        gridLayer.width = Math.floor(w * dpr);
+        gridLayer.height = Math.floor(h * dpr);
+        gridLayerCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        gridLayerCtx.clearRect(0, 0, w, h);
+        gridLayerCtx.fillStyle = gridColor;
+        const s = Math.max(1, logoCell - 2);
+        for (let row = 0; row < logoRows; row += 1) {
+          for (let col = 0; col < logoCols; col += 1) {
+            gridLayerCtx.fillRect(col * logoCell, row * logoCell, s, s);
+          }
+        }
       }
 
       function drawLogo() {
         if (logoPhase === "hidden") { logoCtx.clearRect(0, 0, w, h); return; }
         logoCtx.clearRect(0, 0, w, h);
         const live = stage.classList.contains("site-live");
-        if (!live) {
-          // faint dot grid only during the intro (not over the speakers page)
-          logoCtx.fillStyle = gridColor;
-          for (const cell of logoCells) {
-            logoCtx.fillRect(cell.col * logoCell, cell.row * logoCell, Math.max(1, logoCell - 2), Math.max(1, logoCell - 2));
-          }
+        const effectView = stage.classList.contains("logo-only");
+        if (!live && !effectView) {
+          // faint dot grid only during the intro (not over the speakers page / effect view) — blit the prebuilt layer
+          logoCtx.save();
+          logoCtx.setTransform(1, 0, 0, 1, 0, 0);
+          logoCtx.drawImage(gridLayer, 0, 0);
+          logoCtx.restore();
         }
         logoCtx.fillStyle = fg;
         logoCtx.font = `${logoCell + 3}px mono, "SF Mono", Menlo, Consolas, monospace`;
@@ -1098,15 +1416,20 @@
       function advance() {
         if (logoPhase === "hidden") {                      // click 1: assemble logo + auto zoom
           startAssemble();
-        } else if (logoPhase === "assemble" || logoPhase === "zoom") {  // click 2: explode + enter, seamless
-          startBreak();                                    // Platanus logo letters fall + bounce (the remains)
-          document.body.classList.remove("intro-active");  // speakers page appears
-          document.dispatchEvent(new Event("intro:done"));
-          stage.classList.add("site-live");                // aino orb fades out, logo remains stay
+          stage.classList.add("dim-bg");                   // darken background so letters read better
+        } else if (logoPhase === "assemble" || logoPhase === "zoom") {  // click 2: logo explodes, then the doom flame rises
+          startBreak();                                    // Platanus logo letters explode + fall
+          document.body.classList.add("effect-only");      // hide the speakers page; show effect footer + nav
+          document.body.classList.remove("intro-active");
+          stage.classList.add("site-live");                // aino orb fades out
           stage.style.pointerEvents = "none";
           cancelAnimationFrame(raf);                       // stop the aino background animation
           ctx.clearRect(0, 0, w, h);
-          // logoRaf keeps running -> the broken-logo remains keep moving/settling at the bottom
+          history.replaceState(null, "", "?view=effect");  // reflect the effect view in the URL (no reload)
+          if (window.__flame) { stage.classList.add("flame-on"); window.__flame.start(); }
+          // fade the exploded letters out so only the doom flame remains
+          logoCanvas.style.transition = "opacity 1s linear";
+          setTimeout(() => { logoCanvas.style.opacity = "0"; cancelAnimationFrame(logoRaf); }, 1500);
         }
       }
 
@@ -1132,20 +1455,20 @@
       if (effectOnly) {
         document.body.classList.add("effect-only");
         document.body.classList.remove("intro-active");
-        stage.classList.add("logo-only");
+        stage.classList.add("logo-only");                // centered idle Platanus logo (no dot grid)
         logoPhase = "idle";
         resize();
         logoRaf = requestAnimationFrame(logoLoop);
+        if (window.__flame) { stage.classList.add("flame-on"); window.__flame.start(); }  // doom flame at the bottom
         return;
       }
 
-      if (skipIntro) {                       // grid / list: no intro, just the persistent bottom water
+      if (skipIntro) {                       // grid / list / rsvp / sponsors: thin flame band at the very bottom
         document.body.classList.remove("intro-active");
         stage.classList.add("site-live");
         stage.style.pointerEvents = "none";
         resize();
-        if (logoReady) startSettledWater(); else pendingSettle = true;
-        logoRaf = requestAnimationFrame(logoLoop);
+        if (window.__flame) { stage.classList.add("flame-on"); window.__flame.start({ maxSeed: 6 }); }
         return;
       }
 
@@ -1294,7 +1617,7 @@
     ];
 
     const founders = [
-      ["001", "Pablo Palafox", "CEO @ HappyRobot (YC S23)", "2026", "speakers/pablo-palafox.png"],
+      ["001", "Pablo Palafox", "CEO @ HappyRobot (YC S23)", "2026", "speakers/pablo-palafox.png", false, "https://www.linkedin.com/in/pablorpalafox/"],
       ["002", "SPEAKER TBA", "DATA <SCRAMBLE> 03F9/A1", "2026", "", true],
       ["003", "SPEAKER TBA", "DATA <SCRAMBLE> 7R20/QX", "2026", "", true],
       ["004", "SPEAKER TBA", "DATA <SCRAMBLE> B6E4/19", "2026", "", true]
@@ -1304,7 +1627,7 @@
     const list = document.querySelector("#founder-list");
     const params = new URLSearchParams(window.location.search);
     const requestedView = params.get("view");
-    const initialView = requestedView === "list" || requestedView === "rsvp" ? requestedView : "grid";
+    const initialView = ["grid", "list", "rsvp", "sponsors"].includes(requestedView) ? requestedView : "list";
     document.body.dataset.view = initialView;
 
     document.querySelectorAll("[data-view-button]").forEach(item => {
@@ -1524,8 +1847,11 @@
 
     founders.forEach((founder, index) => {
       const item = document.createElement("li");
+      const link = founder[6];
+      const href = link || "?view=rsvp";
+      const attrs = link ? ` target="_blank" rel="noopener"` : "";
       item.innerHTML = `
-        <a class="list-row ${index > 10 && index % 3 === 0 ? "dim" : ""}${founder[5] ? " is-obfuscated" : ""}" href="?view=rsvp">
+        <a class="list-row ${index > 10 && index % 3 === 0 ? "dim" : ""}${founder[5] ? " is-obfuscated" : ""}" href="${href}"${attrs}>
           <span>${founder[0]}</span>
           <span class="wide">${founder[1]} / ${founder[2]}</span>
           <span class="year">${founder[3]}</span>
@@ -1550,14 +1876,10 @@
     function attachTextHoverScramble(selector) {
       document.querySelectorAll(selector).forEach(el => {
         if (el.closest(".ascii-frame") || el.closest(".intro-stage")) return;
+        if (el.classList.contains("is-disabled")) return;
         const original = el.textContent;
         if (!original.trim()) return;
         el.dataset.originalText = original;
-        if (el.matches("a, button")) {
-          const rect = el.getBoundingClientRect();
-          el.style.setProperty("--hit-w", `${Math.ceil(rect.width + 14)}px`);
-          el.style.setProperty("--hit-h", `${Math.ceil(Math.max(rect.height, 18))}px`);
-        }
 
         el.addEventListener("mousemove", event => {
           const text = el.dataset.originalText;
@@ -1680,6 +2002,16 @@
         });
       }
 
+      if (initialView === "rsvp") {
+        document.querySelectorAll(".rsvp-title, .rsvp-view .field > label, .rsvp-view .choice-label, .rsvp-submit")
+          .forEach((el, i) => { if (el.textContent.trim()) scrambleText(el, i * 45, 440); });
+      }
+
+      if (initialView === "sponsors") {
+        document.querySelectorAll(".sponsors-view [data-scr]")
+          .forEach((el, i) => { if (el.textContent.trim()) scrambleText(el, i * 40, 440); });
+      }
+
       tick();
     }
 
@@ -1746,6 +2078,60 @@
     } else {
       startMainAnimations();
     }
+  </script>
+
+  <script>
+    /* "Name game" (after ertdfgcvb) — a per-cell field spelling POS, on the Sponsors view */
+    (() => {
+      "use strict";
+      if (new URLSearchParams(location.search).get("view") !== "sponsors") return;
+      const field = document.getElementById("pos-field");
+      if (!field) return;
+      const NAME = "POS";
+      const TAU = Math.PI * 2;
+      const measure = document.createElement("canvas").getContext("2d");
+      let cols = 0, rows = 0, lineH = 39, frame = 0, last = 0;
+
+      function fit() {
+        const cs = getComputedStyle(field);
+        const fontPx = parseFloat(cs.fontSize) || 39;
+        lineH = parseFloat(cs.lineHeight) || fontPx;
+        measure.font = `${cs.fontWeight} ${fontPx}px ${cs.fontFamily}`;
+        const charW = measure.measureText("M").width || fontPx * 0.6;
+        const top = field.getBoundingClientRect().top;
+        const w = field.clientWidth || 400;
+        const h = Math.max(lineH * 6, window.innerHeight - top - 32);
+        cols = Math.max(1, Math.floor(w / charW));
+        rows = Math.max(1, Math.floor(h / lineH));
+      }
+
+      function render() {
+        const a = frame * 0.05;
+        const f = Math.floor((1 - Math.cos(a)) * 10) + 1;
+        const g = Math.floor(a / TAU) % 10 + 1;
+        let out = "";
+        for (let y = 0; y < rows; y++) {
+          for (let x = 0; x < cols; x++) {
+            const index = y * cols + x;
+            const i = index % (y * g + 1) % (f % cols);
+            const ch = NAME[i];                    // undefined -> space (out of bounds)
+            out += ch === undefined ? " " : ch;
+          }
+          out += "\n";
+        }
+        field.textContent = out;
+      }
+
+      function loop(now) {
+        if (now - last >= 1000 / 30) { last = now; render(); frame++; }
+        requestAnimationFrame(loop);
+      }
+
+      fit();
+      requestAnimationFrame(loop);
+      let t;
+      window.addEventListener("resize", () => { clearTimeout(t); t = setTimeout(fit, 150); });
+    })();
   </script>
 </body>
 </html>
