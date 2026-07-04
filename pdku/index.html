@@ -87,6 +87,8 @@
   .who .avatar-fallback { width: 26px; height: 26px; border-radius: 50%; background: var(--series-soft); color: var(--ink); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex: none; }
   .who a { color: var(--ink); text-decoration: none; font-weight: 550; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .who a:hover { text-decoration: underline; }
+  .vlink { color: var(--ink); text-decoration: none; display: inline-block; max-width: 340px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom; }
+  .vlink:hover { text-decoration: underline; }
   .chips { display: flex; gap: 4px; flex-wrap: wrap; }
   .chip { border: 1px solid var(--border); color: var(--ink-2); border-radius: 5px; font-size: 10.5px; padding: 1px 5px; white-space: nowrap; }
   td.barcell { width: 40%; }
@@ -132,6 +134,7 @@
           <button id="btn-momentum" aria-pressed="false">Last 24h</button>
           <button id="btn-ratio" aria-pressed="false">Per follower</button>
           <button id="btn-strong" aria-pressed="false">Strongest</button>
+          <button id="btn-videos" aria-pressed="false">Top videos</button>
         </div>
         <select id="platform-filter" class="filter-select" aria-label="Platform">
           <option value="all">All platforms</option>
@@ -143,13 +146,7 @@
         </select>
       </div>
       <table>
-        <thead>
-          <tr>
-            <th></th><th>Person</th><th>Platforms</th>
-            <th class="barcell" id="th-views">Views</th>
-            <th class="num">Followers</th><th class="num">Tracked</th>
-          </tr>
-        </thead>
+        <thead><tr id="head-row"></tr></thead>
         <tbody id="rows"></tbody>
       </table>
     </div>
@@ -287,13 +284,132 @@ function renderPlatforms(totals) {
   }
 }
 
-function renderTable() {
+function avatarFor(p) {
+  if (p.image) {
+    const img = document.createElement("img");
+    img.src = p.image;
+    img.alt = "";
+    img.loading = "lazy";
+    img.referrerPolicy = "no-referrer";
+    return img;
+  }
+  const fb = document.createElement("div");
+  fb.className = "avatar-fallback";
+  fb.textContent = (p.name || "?").slice(0, 1).toUpperCase();
+  return fb;
+}
+
+function personLink(p) {
+  const a = document.createElement("a");
+  a.href = `https://portal.plzdontkillus.com/spring-26/${encodeURIComponent(p.slug)}`;
+  a.target = "_blank";
+  a.rel = "noopener";
+  a.textContent = p.name;
+  return a;
+}
+
+function setHeaders(cols) {
+  const row = $("head-row");
+  row.replaceChildren();
+  for (const c of cols) {
+    const th = document.createElement("th");
+    if (c.cls) th.className = c.cls;
+    th.textContent = c.label || "";
+    row.appendChild(th);
+  }
+}
+
+function renderVideoTable() {
   const rows = $("rows");
-  $("th-views").textContent =
+  setHeaders([
+    {}, { label: "Person" }, { label: "Video" },
+    { label: "Platform" }, { label: "Views", cls: "barcell" },
+  ]);
+  const vids = [];
+  for (const p of DATA.people) {
+    for (const post of p.posts) {
+      if (post.videoViews == null || !post.url) continue;
+      if (platformFilter !== "all" && post.platform !== platformFilter) continue;
+      vids.push({ p, post });
+    }
+  }
+  vids.sort((a, b) => b.post.videoViews - a.post.videoViews);
+  const top = vids.slice(0, 50);
+  const max = Math.max(1, ...top.map((v) => v.post.videoViews));
+  rows.replaceChildren();
+  if (!top.length) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 5;
+    td.className = "dim";
+    td.style.padding = "16px 8px";
+    td.textContent = "no tracked videos for this platform";
+    tr.append(td);
+    rows.append(tr);
+    return;
+  }
+  top.forEach(({ p, post }, i) => {
+    const tr = document.createElement("tr");
+
+    const rank = document.createElement("td");
+    rank.className = "rank";
+    rank.textContent = String(i + 1);
+    tr.append(rank);
+
+    const who = document.createElement("td");
+    const wrap = document.createElement("div");
+    wrap.className = "who";
+    wrap.append(avatarFor(p), personLink(p));
+    who.append(wrap);
+    tr.append(who);
+
+    const vid = document.createElement("td");
+    const va = document.createElement("a");
+    va.href = post.url;
+    va.target = "_blank";
+    va.rel = "noopener";
+    va.className = "vlink";
+    va.textContent = post.hidden ? "(hidden post)" : (post.title || "Untitled");
+    vid.append(va);
+    tr.append(vid);
+
+    const plat = document.createElement("td");
+    plat.className = "dim";
+    plat.textContent = PLATFORM_NAMES[post.platform] || post.platform;
+    tr.append(plat);
+
+    const bc = document.createElement("td");
+    bc.className = "barcell";
+    const barrow = document.createElement("div");
+    barrow.className = "barrow";
+    const bar = document.createElement("div");
+    bar.className = "bar";
+    bar.style.width = `${(post.videoViews / max) * 100 * 0.8}%`;
+    const val = document.createElement("span");
+    val.className = "barval";
+    val.textContent = fmt(post.videoViews);
+    barrow.append(bar, val);
+    bc.append(barrow);
+    tr.append(bc);
+
+    rows.append(tr);
+  });
+}
+
+function renderTable() {
+  if (!DATA) return;
+  if (range === "videos") return renderVideoTable();
+  const rows = $("rows");
+  const viewsLabel =
     range === "ratio" ? "Views per follower"
     : range === "strength" ? "Strength (views ÷ √followers)"
     : range === "momentum" ? "Views gained (last 24h)"
     : "Views";
+  setHeaders([
+    {}, { label: "Person" }, { label: "Platforms" },
+    { label: viewsLabel, cls: "barcell" },
+    { label: "Followers", cls: "num" }, { label: "Tracked", cls: "num" },
+  ]);
   const sorted = [...DATA.people].sort(
     (a, b) => (personViews(b) ?? -1) - (personViews(a) ?? -1) || a.slug.localeCompare(b.slug)
   );
@@ -432,6 +548,7 @@ $("btn-season").addEventListener("click", () => setRange("season"));
 $("btn-momentum").addEventListener("click", () => setRange("momentum"));
 $("btn-ratio").addEventListener("click", () => setRange("ratio"));
 $("btn-strong").addEventListener("click", () => setRange("strength"));
+$("btn-videos").addEventListener("click", () => setRange("videos"));
 $("platform-filter").addEventListener("change", (e) => {
   platformFilter = e.target.value;
   renderTable();
@@ -442,7 +559,13 @@ function setRange(r) {
   $("btn-momentum").setAttribute("aria-pressed", String(r === "momentum"));
   $("btn-ratio").setAttribute("aria-pressed", String(r === "ratio"));
   $("btn-strong").setAttribute("aria-pressed", String(r === "strength"));
+  $("btn-videos").setAttribute("aria-pressed", String(r === "videos"));
   renderTable();
+}
+
+const initView = new URLSearchParams(location.search).get("view");
+if (["season", "momentum", "ratio", "strength", "videos"].includes(initView)) {
+  setRange(initView);
 }
 
 load();
