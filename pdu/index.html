@@ -107,6 +107,7 @@
       <div class="tile"><div class="label">Social media views</div><div class="value" id="kpi-total"></div><div class="sub" id="kpi-total-sub"></div></div>
       <div class="tile"><div class="label">Videos tracked</div><div class="value" id="kpi-tracked"></div><div class="sub">of public posts</div></div>
       <div class="tile"><div class="label">Top creator</div><div class="value" id="kpi-leader" style="font-size:18px"></div><div class="sub" id="kpi-leader-sub"></div></div>
+      <div class="tile"><div class="label">Pound for pound</div><div class="value" id="kpi-ratio" style="font-size:18px"></div><div class="sub" id="kpi-ratio-sub"></div></div>
     </div>
 
     <div class="card">
@@ -124,13 +125,15 @@
         <div class="seg" role="group" aria-label="Range">
           <button id="btn-season" aria-pressed="true">Season</button>
           <button id="btn-today" aria-pressed="false">Today's post</button>
+          <button id="btn-ratio" aria-pressed="false">Per follower</button>
         </div>
       </div>
       <table>
         <thead>
           <tr>
             <th></th><th>Person</th><th>Platforms</th>
-            <th class="barcell">Views</th><th class="num">Tracked</th>
+            <th class="barcell" id="th-views">Views</th>
+            <th class="num">Followers</th><th class="num">Tracked</th>
           </tr>
         </thead>
         <tbody id="rows"></tbody>
@@ -147,6 +150,13 @@ let range = "season"; // "season" | "today"
 
 const $ = (id) => document.getElementById(id);
 const fmt = (n) => n.toLocaleString("en-US");
+const fmtCompact = (n) =>
+  n >= 1e6 ? `${(n / 1e6).toFixed(1)}M`
+  : n >= 1e4 ? `${Math.round(n / 1e3)}K`
+  : n >= 1e3 ? `${(n / 1e3).toFixed(1)}K`
+  : String(n);
+const fmtRatio = (r) =>
+  r >= 10 ? `${r.toFixed(0)}×` : r >= 1 ? `${r.toFixed(1)}×` : `${r.toFixed(2)}×`;
 const PLATFORM_NAMES = {
   youtube: "YouTube", tiktok: "TikTok", instagram: "Instagram",
   x: "X", facebook: "Facebook", other: "Other",
@@ -155,6 +165,7 @@ const PLATFORM_ORDER = ["youtube", "tiktok", "instagram", "x", "facebook", "othe
 
 function personViews(p) {
   if (range === "today") return p.todayVideoViews; // may be null
+  if (range === "ratio") return p.viewsPerFollower;
   return p.trackedCount > 0 ? p.totalVideoViews : null;
 }
 
@@ -172,6 +183,13 @@ function render() {
   const leader = [...people].sort((a, b) => (b.totalVideoViews || 0) - (a.totalVideoViews || 0))[0];
   $("kpi-leader").textContent = leader ? leader.name : "—";
   $("kpi-leader-sub").textContent = leader ? `${fmt(leader.totalVideoViews)} views` : "";
+  const p4p = [...people]
+    .filter((p) => p.viewsPerFollower != null && p.followers >= 1000)
+    .sort((a, b) => b.viewsPerFollower - a.viewsPerFollower)[0];
+  $("kpi-ratio").textContent = p4p ? p4p.name : "—";
+  $("kpi-ratio-sub").textContent = p4p
+    ? `${fmtRatio(p4p.viewsPerFollower)} views per follower (min 1K followers)`
+    : "";
 
   renderPlatforms(totals);
   renderTable();
@@ -224,6 +242,7 @@ function renderPlatforms(totals) {
 
 function renderTable() {
   const rows = $("rows");
+  $("th-views").textContent = range === "ratio" ? "Views per follower" : "Views";
   const sorted = [...DATA.people].sort(
     (a, b) => (personViews(b) ?? -1) - (personViews(a) ?? -1) || a.slug.localeCompare(b.slug)
   );
@@ -294,6 +313,8 @@ function renderTable() {
         barcell.textContent = todays.length === 0
           ? "no post today"
           : (todays.some((x) => x.url) ? "not tracked yet" : "hidden post");
+      } else if (range === "ratio") {
+        barcell.textContent = p.trackedCount > 0 ? "followers unknown" : "no trackable videos";
       } else {
         barcell.textContent = p.postCount > 0 ? "no trackable videos" : "no posts";
       }
@@ -305,7 +326,7 @@ function renderTable() {
       bar.style.width = `${(views / max) * 100 * 0.8}%`;
       const val = document.createElement("span");
       val.className = "barval";
-      val.textContent = fmt(views);
+      val.textContent = range === "ratio" ? fmtRatio(views) : fmt(views);
       barrow.append(bar, val);
       barcell.appendChild(barrow);
       const titles = todays
@@ -314,6 +335,17 @@ function renderTable() {
       if (titles.length) barcell.title = titles.join(" · ");
     }
     tr.appendChild(barcell);
+
+    const fol = document.createElement("td");
+    fol.className = "num";
+    if (p.followers) {
+      fol.textContent = fmtCompact(p.followers) + (p.followersPartial ? "+" : "");
+      if (p.followersPartial) fol.title = "some of their platforms don't expose follower counts";
+    } else {
+      fol.textContent = "—";
+      fol.classList.add("dim");
+    }
+    tr.appendChild(fol);
 
     const trk = document.createElement("td");
     trk.className = "num dim";
@@ -342,10 +374,12 @@ async function load() {
 
 $("btn-season").addEventListener("click", () => setRange("season"));
 $("btn-today").addEventListener("click", () => setRange("today"));
+$("btn-ratio").addEventListener("click", () => setRange("ratio"));
 function setRange(r) {
   range = r;
   $("btn-season").setAttribute("aria-pressed", String(r === "season"));
   $("btn-today").setAttribute("aria-pressed", String(r === "today"));
+  $("btn-ratio").setAttribute("aria-pressed", String(r === "ratio"));
   renderTable();
 }
 
