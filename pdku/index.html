@@ -70,6 +70,10 @@
     padding: 6px 12px; cursor: pointer;
   }
   .seg button[aria-pressed="true"] { background: var(--series); color: #fff; }
+  .filter-select {
+    border: 1px solid var(--border); background: var(--surface); color: var(--ink-2);
+    border-radius: 8px; padding: 6px 10px; font: inherit; font-size: 12.5px; cursor: pointer;
+  }
 
   table { width: 100%; border-collapse: collapse; }
   th { text-align: left; color: var(--muted); font-size: 11.5px; font-weight: 500; padding: 6px 8px; border-bottom: 1px solid var(--grid); }
@@ -127,6 +131,14 @@
           <button id="btn-today" aria-pressed="false">Today's post</button>
           <button id="btn-ratio" aria-pressed="false">Per follower</button>
         </div>
+        <select id="platform-filter" class="filter-select" aria-label="Platform">
+          <option value="all">All platforms</option>
+          <option value="youtube">YouTube</option>
+          <option value="tiktok">TikTok</option>
+          <option value="instagram">Instagram</option>
+          <option value="x">X</option>
+          <option value="facebook">Facebook</option>
+        </select>
       </div>
       <table>
         <thead>
@@ -146,7 +158,8 @@
 "use strict";
 const POLL_MS = 300_000; // page checks for fresh data.json every 5 min
 let DATA = null;
-let range = "season"; // "season" | "today"
+let range = "season"; // "season" | "today" | "ratio"
+let platformFilter = "all";
 
 const $ = (id) => document.getElementById(id);
 const fmt = (n) => n.toLocaleString("en-US");
@@ -163,10 +176,30 @@ const PLATFORM_NAMES = {
 };
 const PLATFORM_ORDER = ["youtube", "tiktok", "instagram", "x", "facebook", "other"];
 
+function postsOf(p) {
+  return platformFilter === "all"
+    ? p.posts
+    : p.posts.filter((x) => x.platform === platformFilter);
+}
+
+function followersOf(p) {
+  if (platformFilter === "all") return p.followers;
+  return (p.followersByPlatform || {})[platformFilter] || null;
+}
+
 function personViews(p) {
-  if (range === "today") return p.todayVideoViews; // may be null
-  if (range === "ratio") return p.viewsPerFollower;
-  return p.trackedCount > 0 ? p.totalVideoViews : null;
+  const posts = postsOf(p);
+  const tracked = posts.filter((x) => x.videoViews != null);
+  if (range === "ratio") {
+    const followers = followersOf(p);
+    if (!followers || !tracked.length) return null;
+    return tracked.reduce((s, x) => s + x.videoViews, 0) / followers;
+  }
+  const scope = range === "today"
+    ? tracked.filter((x) => x.day === DATA.today)
+    : tracked;
+  if (!scope.length) return null;
+  return scope.reduce((s, x) => s + x.videoViews, 0);
 }
 
 function render() {
@@ -285,9 +318,10 @@ function renderTable() {
     const plats = document.createElement("td");
     const chips = document.createElement("div");
     chips.className = "chips";
+    const fPosts = postsOf(p);
     const postsToUse = range === "today"
-      ? p.posts.filter((x) => x.day === DATA.today)
-      : p.posts;
+      ? fPosts.filter((x) => x.day === DATA.today)
+      : fPosts;
     const counts = {};
     for (const post of postsToUse) {
       if (post.platform) counts[post.platform] = (counts[post.platform] || 0) + 1;
@@ -304,19 +338,24 @@ function renderTable() {
     plats.appendChild(chips);
     tr.appendChild(plats);
 
-    const todays = p.posts.filter((x) => x.day === DATA.today);
+    const todays = fPosts.filter((x) => x.day === DATA.today);
+    const filterName = platformFilter === "all" ? "" : `${PLATFORM_NAMES[platformFilter]} `;
     const barcell = document.createElement("td");
     barcell.className = "barcell";
     if (views == null) {
       barcell.classList.add("dim");
       if (range === "today") {
         barcell.textContent = todays.length === 0
-          ? "no post today"
+          ? `no ${filterName}post today`
           : (todays.some((x) => x.url) ? "not tracked yet" : "hidden post");
       } else if (range === "ratio") {
-        barcell.textContent = p.trackedCount > 0 ? "followers unknown" : "no trackable videos";
+        barcell.textContent = fPosts.some((x) => x.videoViews != null)
+          ? "followers unknown"
+          : `no trackable ${filterName}videos`;
       } else {
-        barcell.textContent = p.postCount > 0 ? "no trackable videos" : "no posts";
+        barcell.textContent = fPosts.length > 0
+          ? "no trackable videos"
+          : `no ${filterName}posts`;
       }
     } else {
       const barrow = document.createElement("div");
@@ -338,9 +377,11 @@ function renderTable() {
 
     const fol = document.createElement("td");
     fol.className = "num";
-    if (p.followers) {
-      fol.textContent = fmtCompact(p.followers) + (p.followersPartial ? "+" : "");
-      if (p.followersPartial) fol.title = "some of their platforms don't expose follower counts";
+    const followers = followersOf(p);
+    if (followers) {
+      const partial = platformFilter === "all" && p.followersPartial;
+      fol.textContent = fmtCompact(followers) + (partial ? "+" : "");
+      if (partial) fol.title = "some of their platforms don't expose follower counts";
     } else {
       fol.textContent = "—";
       fol.classList.add("dim");
@@ -349,12 +390,10 @@ function renderTable() {
 
     const trk = document.createElement("td");
     trk.className = "num dim";
-    if (range === "today") {
-      const tracked = todays.filter((x) => x.videoViews != null).length;
-      trk.textContent = todays.length ? `${tracked}/${todays.length}` : "—";
-    } else {
-      trk.textContent = `${p.trackedCount}/${p.postCount}`;
-    }
+    const trkScope = range === "today" ? todays : fPosts;
+    trk.textContent = trkScope.length
+      ? `${trkScope.filter((x) => x.videoViews != null).length}/${trkScope.length}`
+      : "—";
     tr.appendChild(trk);
 
     rows.appendChild(tr);
@@ -375,6 +414,10 @@ async function load() {
 $("btn-season").addEventListener("click", () => setRange("season"));
 $("btn-today").addEventListener("click", () => setRange("today"));
 $("btn-ratio").addEventListener("click", () => setRange("ratio"));
+$("platform-filter").addEventListener("change", (e) => {
+  platformFilter = e.target.value;
+  renderTable();
+});
 function setRange(r) {
   range = r;
   $("btn-season").setAttribute("aria-pressed", String(r === "season"));
