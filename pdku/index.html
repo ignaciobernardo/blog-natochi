@@ -111,7 +111,7 @@
       <div class="tile"><div class="label">Social media views</div><div class="value" id="kpi-total"></div><div class="sub" id="kpi-total-sub"></div></div>
       <div class="tile"><div class="label">Videos tracked</div><div class="value" id="kpi-tracked"></div><div class="sub">of public posts</div></div>
       <div class="tile"><div class="label">Top creator</div><div class="value" id="kpi-leader" style="font-size:18px"></div><div class="sub" id="kpi-leader-sub"></div></div>
-      <div class="tile"><div class="label">Pound for pound</div><div class="value" id="kpi-ratio" style="font-size:18px"></div><div class="sub" id="kpi-ratio-sub"></div></div>
+      <div class="tile"><div class="label">Strongest</div><div class="value" id="kpi-strong" style="font-size:18px"></div><div class="sub" id="kpi-strong-sub"></div></div>
     </div>
 
     <div class="card">
@@ -130,6 +130,7 @@
           <button id="btn-season" aria-pressed="true">Season</button>
           <button id="btn-today" aria-pressed="false">Today's post</button>
           <button id="btn-ratio" aria-pressed="false">Per follower</button>
+          <button id="btn-strong" aria-pressed="false">Strongest</button>
         </div>
         <select id="platform-filter" class="filter-select" aria-label="Platform">
           <option value="all">All platforms</option>
@@ -190,10 +191,13 @@ function followersOf(p) {
 function personViews(p) {
   const posts = postsOf(p);
   const tracked = posts.filter((x) => x.videoViews != null);
-  if (range === "ratio") {
+  if (range === "ratio" || range === "strength") {
     const followers = followersOf(p);
     if (!followers || !tracked.length) return null;
-    return tracked.reduce((s, x) => s + x.videoViews, 0) / followers;
+    const views = tracked.reduce((s, x) => s + x.videoViews, 0);
+    return range === "ratio"
+      ? views / followers
+      : views / Math.sqrt(Math.max(followers, 1000));
   }
   const scope = range === "today"
     ? tracked.filter((x) => x.day === DATA.today)
@@ -216,12 +220,12 @@ function render() {
   const leader = [...people].sort((a, b) => (b.totalVideoViews || 0) - (a.totalVideoViews || 0))[0];
   $("kpi-leader").textContent = leader ? leader.name : "—";
   $("kpi-leader-sub").textContent = leader ? `${fmt(leader.totalVideoViews)} views` : "";
-  const p4p = [...people]
-    .filter((p) => p.viewsPerFollower != null && p.followers >= 1000)
-    .sort((a, b) => b.viewsPerFollower - a.viewsPerFollower)[0];
-  $("kpi-ratio").textContent = p4p ? p4p.name : "—";
-  $("kpi-ratio-sub").textContent = p4p
-    ? `${fmtRatio(p4p.viewsPerFollower)} views per follower (min 1K followers)`
+  const strong = [...people]
+    .filter((p) => p.strength != null)
+    .sort((a, b) => b.strength - a.strength)[0];
+  $("kpi-strong").textContent = strong ? strong.name : "—";
+  $("kpi-strong-sub").textContent = strong
+    ? `${fmt(strong.totalVideoViews)} views at ${fmtRatio(strong.viewsPerFollower)} their audience`
     : "";
 
   renderPlatforms(totals);
@@ -275,7 +279,10 @@ function renderPlatforms(totals) {
 
 function renderTable() {
   const rows = $("rows");
-  $("th-views").textContent = range === "ratio" ? "Views per follower" : "Views";
+  $("th-views").textContent =
+    range === "ratio" ? "Views per follower"
+    : range === "strength" ? "Strength (views ÷ √followers)"
+    : "Views";
   const sorted = [...DATA.people].sort(
     (a, b) => (personViews(b) ?? -1) - (personViews(a) ?? -1) || a.slug.localeCompare(b.slug)
   );
@@ -348,7 +355,7 @@ function renderTable() {
         barcell.textContent = todays.length === 0
           ? `no ${filterName}post today`
           : (todays.some((x) => x.url) ? "not tracked yet" : "hidden post");
-      } else if (range === "ratio") {
+      } else if (range === "ratio" || range === "strength") {
         barcell.textContent = fPosts.some((x) => x.videoViews != null)
           ? "followers unknown"
           : `no trackable ${filterName}videos`;
@@ -365,7 +372,10 @@ function renderTable() {
       bar.style.width = `${(views / max) * 100 * 0.8}%`;
       const val = document.createElement("span");
       val.className = "barval";
-      val.textContent = range === "ratio" ? fmtRatio(views) : fmt(views);
+      val.textContent =
+        range === "ratio" ? fmtRatio(views)
+        : range === "strength" ? fmt(Math.round(views))
+        : fmt(views);
       barrow.append(bar, val);
       barcell.appendChild(barrow);
       const titles = todays
@@ -414,6 +424,7 @@ async function load() {
 $("btn-season").addEventListener("click", () => setRange("season"));
 $("btn-today").addEventListener("click", () => setRange("today"));
 $("btn-ratio").addEventListener("click", () => setRange("ratio"));
+$("btn-strong").addEventListener("click", () => setRange("strength"));
 $("platform-filter").addEventListener("change", (e) => {
   platformFilter = e.target.value;
   renderTable();
@@ -423,6 +434,7 @@ function setRange(r) {
   $("btn-season").setAttribute("aria-pressed", String(r === "season"));
   $("btn-today").setAttribute("aria-pressed", String(r === "today"));
   $("btn-ratio").setAttribute("aria-pressed", String(r === "ratio"));
+  $("btn-strong").setAttribute("aria-pressed", String(r === "strength"));
   renderTable();
 }
 
