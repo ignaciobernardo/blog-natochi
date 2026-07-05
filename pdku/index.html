@@ -275,12 +275,12 @@ function renderPlatforms(totals) {
     host.appendChild(row);
   }
   const ig = totals.instagram;
-  const igPending = ig && ig.videos > 0 && ig.tracked < ig.videos;
-  $("ig-notice").hidden = !igPending;
-  if (igPending) {
-    $("ig-notice-text").textContent = DATA.instagramAuth
-      ? "Instagram counts are filling in — a batch of videos is fetched every cycle to stay under rate limits."
-      : "Instagram views need a logged-in session: log in to instagram.com in Zen and counts will appear on the next refresh.";
+  // only surface the actionable case: not logged in to Instagram in Zen
+  const igNeedsAuth = ig && ig.videos > 0 && ig.tracked < ig.videos && !DATA.instagramAuth;
+  $("ig-notice").hidden = !igNeedsAuth;
+  if (igNeedsAuth) {
+    $("ig-notice-text").textContent =
+      "Instagram views need a logged-in session: log in to instagram.com in Zen and counts will appear on the next refresh.";
   }
 }
 
