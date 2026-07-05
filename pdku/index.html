@@ -61,6 +61,7 @@
   .plat-sub { color: var(--muted); font-size: 12px; text-align: right; }
 
   .notice { color: var(--ink-2); font-size: 12.5px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--grid); display: flex; gap: 7px; align-items: flex-start; }
+  .notice[hidden] { display: none; }
   .notice svg { width: 14px; height: 14px; flex: none; margin-top: 1px; fill: none; stroke: var(--muted); stroke-width: 1.6; }
 
   .controls { display: flex; gap: 8px; margin-bottom: 12px; }
@@ -92,9 +93,12 @@
   .chips { display: flex; gap: 4px; flex-wrap: wrap; }
   .chip { border: 1px solid var(--border); color: var(--ink-2); border-radius: 5px; font-size: 10.5px; padding: 1px 5px; white-space: nowrap; }
   td.barcell { width: 40%; }
-  .barrow { display: flex; align-items: center; gap: 8px; }
-  .bar { height: 10px; background: var(--series); border-radius: 0 4px 4px 0; min-width: 2px; flex: none; }
-  .barval { font-variant-numeric: tabular-nums; font-size: 13px; }
+  /* grid: bar track flexes, value sits in its own right-aligned column so a
+     huge number (e.g. 3.0M) never pushes the bar off the cell */
+  .barrow { display: grid; grid-template-columns: 1fr 64px; align-items: center; gap: 10px; }
+  .bartrack { width: 100%; }
+  .bar { height: 10px; background: var(--series); border-radius: 0 4px 4px 0; min-width: 2px; }
+  .barval { font-variant-numeric: tabular-nums; font-size: 13px; text-align: right; }
   td.dim, .dim { color: var(--muted); }
   #status { color: var(--muted); text-align: center; padding: 40px 0; }
 </style>
@@ -169,6 +173,33 @@ const fmtCompact = (n) =>
   : String(n);
 const fmtRatio = (r) =>
   r >= 10 ? `${r.toFixed(0)}×` : r >= 1 ? `${r.toFixed(1)}×` : `${r.toFixed(2)}×`;
+
+// short label for a bar value, by current mode; keeps labels narrow so a 3M
+// video and a 300-view one both fit the same fixed value column
+function barValueText(v) {
+  if (range === "ratio") return fmtRatio(v);
+  if (range === "strength") return fmt(Math.round(v));
+  if (range === "momentum") return "+" + fmtCompact(v);
+  return fmtCompact(v);
+}
+
+// bar as a % of the largest value currently shown, wrapped in a fixed track
+function makeBarRow(value, max, exactLabel) {
+  const barrow = document.createElement("div");
+  barrow.className = "barrow";
+  const track = document.createElement("div");
+  track.className = "bartrack";
+  const bar = document.createElement("div");
+  bar.className = "bar";
+  bar.style.width = `${Math.min(100, (value / max) * 100)}%`;
+  track.append(bar);
+  const val = document.createElement("span");
+  val.className = "barval";
+  val.textContent = barValueText(value);
+  if (exactLabel != null) val.title = exactLabel;
+  barrow.append(track, val);
+  return barrow;
+}
 const PLATFORM_NAMES = {
   youtube: "YouTube", tiktok: "TikTok", instagram: "Instagram",
   x: "X", facebook: "Facebook", other: "Other",
@@ -267,7 +298,8 @@ function renderPlatforms(totals) {
     barWrap.appendChild(bar);
     const views = document.createElement("div");
     views.className = "plat-views";
-    views.textContent = t.tracked > 0 ? fmt(t.views) : "—";
+    views.textContent = t.tracked > 0 ? fmtCompact(t.views) : "—";
+    if (t.tracked > 0) views.title = fmt(t.views) + " views";
     const sub = document.createElement("div");
     sub.className = "plat-sub";
     sub.textContent = `${t.tracked}/${t.videos} tracked`;
@@ -275,13 +307,15 @@ function renderPlatforms(totals) {
     host.appendChild(row);
   }
   const ig = totals.instagram;
-  // only surface the actionable case: not logged in to Instagram in Zen
   const igNeedsAuth = ig && ig.videos > 0 && ig.tracked < ig.videos && !DATA.instagramAuth;
-  $("ig-notice").hidden = !igNeedsAuth;
-  if (igNeedsAuth) {
-    $("ig-notice-text").textContent =
-      "Instagram views need a logged-in session: log in to instagram.com in Zen and counts will appear on the next refresh.";
-  }
+  const secs = DATA.refreshSeconds || 86400;
+  const cadence = secs >= 86400 ? `${Math.round(secs / 86400)}-day`
+    : secs >= 3600 ? `${Math.round(secs / 3600)}-hour`
+    : `${Math.round(secs / 60)}-minute`;
+  $("ig-notice").hidden = false;
+  $("ig-notice-text").textContent = igNeedsAuth
+    ? "Instagram views need a logged-in session: log in to instagram.com in Zen and counts will appear on the next refresh."
+    : `View counts are re-scraped on a ${cadence} cycle, so these figures reflect the latest daily pull rather than live numbers.`;
 }
 
 function avatarFor(p) {
@@ -380,16 +414,7 @@ function renderVideoTable() {
 
     const bc = document.createElement("td");
     bc.className = "barcell";
-    const barrow = document.createElement("div");
-    barrow.className = "barrow";
-    const bar = document.createElement("div");
-    bar.className = "bar";
-    bar.style.width = `${(post.videoViews / max) * 100 * 0.8}%`;
-    const val = document.createElement("span");
-    val.className = "barval";
-    val.textContent = fmt(post.videoViews);
-    barrow.append(bar, val);
-    bc.append(barrow);
+    bc.append(makeBarRow(post.videoViews, max, fmt(post.videoViews) + " views"));
     tr.append(bc);
 
     rows.append(tr);
@@ -490,20 +515,9 @@ function renderTable() {
           : `no ${filterName}posts`;
       }
     } else {
-      const barrow = document.createElement("div");
-      barrow.className = "barrow";
-      const bar = document.createElement("div");
-      bar.className = "bar";
-      bar.style.width = `${(views / max) * 100 * 0.8}%`;
-      const val = document.createElement("span");
-      val.className = "barval";
-      val.textContent =
-        range === "ratio" ? fmtRatio(views)
-        : range === "strength" ? fmt(Math.round(views))
-        : range === "momentum" ? "+" + fmt(views)
-        : fmt(views);
-      barrow.append(bar, val);
-      barcell.appendChild(barrow);
+      const exact = range === "ratio" || range === "strength" ? null
+        : (range === "momentum" ? "+" + fmt(views) + " views (24h)" : fmt(views) + " views");
+      barcell.appendChild(makeBarRow(views, max, exact));
       const latest = fPosts[fPosts.length - 1];
       if (latest) barcell.title = latest.hidden ? "(hidden post)" : latest.title;
     }
