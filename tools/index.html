@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tools — natochi</title>
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <meta name="description" content="Generative motion tools by natochi.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://natochi.cv/tools/">
+    <meta property="og:title" content="tools — natochi">
+    <meta property="og:description" content="Generative motion tools by natochi.">
+    <meta property="og:image" content="https://natochi.cv/og-image.png">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="tools — natochi">
+    <meta property="twitter:description" content="Generative motion tools by natochi.">
+    <meta property="twitter:image" content="https://natochi.cv/og-image.png">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+        @font-face {
+            font-family: 'PP Mondwest';
+            src: url('/fonts/PPMondwest-Regular.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        ::selection { background-color: #ff8800; color: #1a1a1a; }
+
+        html { background-color: #1a1a1a; }
+
+        body {
+            font-family: 'PP Mondwest', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #1a1a1a;
+            color: #e5e5e5;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 4rem 1.5rem 6rem;
+        }
+
+        .container { width: 100%; max-width: 760px; }
+
+        .back {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.8rem;
+            color: #8a8a8a;
+            text-decoration: none;
+            letter-spacing: 0.04em;
+        }
+        .back:hover { color: #ff8800; }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: normal;
+            margin: 1.5rem 0 0.5rem;
+            letter-spacing: 0.01em;
+        }
+
+        .intro {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            color: #8a8a8a;
+            max-width: 46ch;
+            margin-bottom: 3rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1px;
+            background-color: #2e2e2e;
+            border: 1px solid #2e2e2e;
+        }
+
+        .tool {
+            display: block;
+            background-color: #1a1a1a;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: inherit;
+            transition: background-color 0.2s ease;
+        }
+        .tool:hover { background-color: #212121; }
+        .tool:hover .tool-name { color: #ff8800; }
+
+        .tool-name {
+            font-size: 1.5rem;
+            transition: color 0.2s ease;
+        }
+
+        .tool-desc {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.78rem;
+            color: #8a8a8a;
+            margin-top: 0.5rem;
+        }
+
+        .tool-meta {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.7rem;
+            color: #5c5c5c;
+            margin-top: 0.9rem;
+            letter-spacing: 0.05em;
+        }
+        .tool-meta a { color: #5c5c5c; text-decoration: underline; }
+        .tool-meta a:hover { color: #ff8800; }
+
+        footer {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            color: #5c5c5c;
+            margin-top: 3rem;
+        }
+        footer a { color: #8a8a8a; }
+        footer a:hover { color: #ff8800; }
+
+        @media (max-width: 520px) {
+            body { padding: 2.5rem 1rem 4rem; }
+            h1 { font-size: 2.25rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a class="back" href="/">← natochi.cv</a>
+
+        <h1>tools</h1>
+        <p class="intro">Generative motion tools. Each one runs fully in the browser, is seeded and deterministic, and exports stills or video.</p>
+
+        <div class="grid">
+            <a class="tool" href="/tools/convergence-flow/">
+                <div class="tool-name">Convergence Flow</div>
+                <div class="tool-desc">Fine colored lines enter from the left, pinch through a central point, and fan out to visible endpoints.</div>
+                <div class="tool-meta">source ↗ <a href="https://github.com/ignaciobernardo/convergence-flow" target="_blank" rel="noopener">github</a></div>
+            </a>
+
+            <a class="tool" href="/tools/flux-knot/">
+                <div class="tool-name">Flux Knot</div>
+                <div class="tool-desc">Braided light strands accelerate through a knot — the field compresses on approach, stretches into streaks on exit.</div>
+                <div class="tool-meta">source ↗ <a href="https://github.com/ignaciobernardo/flux-knot" target="_blank" rel="noopener">github</a></div>
+            </a>
+
+            <a class="tool" href="/tools/glyph-flow/">
+                <div class="tool-name">Glyph Flow</div>
+                <div class="tool-desc">A micro-type texture revealed by a moving organic field: flowing masses, eroded voids, sparse dust.</div>
+                <div class="tool-meta">source ↗ <a href="https://github.com/ignaciobernardo/glyph-flow" target="_blank" rel="noopener">github</a></div>
+            </a>
+
+            <a class="tool" href="/tools/halftone-sweep/">
+                <div class="tool-name">Halftone Sweep</div>
+                <div class="tool-desc">A circular grid of squares toggling on and off as a selectable sweep pattern loops across it.</div>
+                <div class="tool-meta">source ↗ <a href="https://github.com/ignaciobernardo/halftone-sweep" target="_blank" rel="noopener">github</a></div>
+            </a>
+
+            <a class="tool" href="/tools/path-packets/">
+                <div class="tool-name">Path Packets</div>
+                <div class="tool-desc">Colored square packets routed along procedural curves, branching from a shared source toward destination ports.</div>
+                <div class="tool-meta">source ↗ <a href="https://github.com/ignaciobernardo/path-packets" target="_blank" rel="noopener">github</a></div>
+            </a>
+
+            <a class="tool" href="/tools/pixel-sweep/">
+                <div class="tool-name">Pixel Sweep</div>
+                <div class="tool-desc">Kinetic typography: a phrase repeats in rows, each phase-offset, riding a side-to-side sine wave.</div>
+                <div class="tool-meta">source ↗ <a href="https://github.com/ignaciobernardo/pixel-sweep" target="_blank" rel="noopener">github</a></div>
+            </a>
+
+            <a class="tool" href="/tools/prism-flow/">
+                <div class="tool-name">Prism Flow</div>
+                <div class="tool-desc">Procedural spectral motion rendered in WebGL, with timeline transport and image or video export.</div>
+                <div class="tool-meta">source ↗ <a href="https://github.com/ignaciobernardo/prism-flow" target="_blank" rel="noopener">github</a></div>
+            </a>
+
+            <a class="tool" href="/tools/signal-constellation/">
+                <div class="tool-name">Signal Constellation</div>
+                <div class="tool-desc">Signal fibers converge into pipelines, branch into channels, and emerge as particles receding into depth.</div>
+                <div class="tool-meta">source ↗ <a href="https://github.com/ignaciobernardo/signal-constellation" target="_blank" rel="noopener">github</a></div>
+            </a>
+        </div>
+
+        <footer>built with <a href="https://claude.com/claude-code" target="_blank" rel="noopener">claude code</a></footer>
+    </div>
+</body>
+</html>
