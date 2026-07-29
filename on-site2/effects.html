@@ -83,8 +83,17 @@
       font-family: mono, "SFMono-Regular", Menlo, Consolas, monospace;
       font-weight: 400; font-size: 12px; line-height: 14px;
       color: var(--ink); user-select: none;
+      /* the landing draws its band at ~.12–.67 alpha, so match that weight
+         here instead of full ink — otherwise the gallery reads far brighter
+         than the effect actually looks in place. */
+      opacity: .5;
     }
     .actions { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; }
+
+    /* footer slot: shorter and dimmer than the hero band */
+    .band.foot { height: 150px; }
+    .band.foot pre { opacity: .36; }
+    .btn.on { background: var(--invert); color: var(--bg); }
 
     footer { padding: 60px 0 80px; color: var(--muted); border-top: 1px solid var(--rule); margin-top: 50px; }
 
@@ -102,6 +111,17 @@
     </header>
 
     <div id="list"></div>
+
+    <!-- how each effect reads in the footer slot (shorter, calmer band) -->
+    <section class="item" id="foot-demo">
+      <div class="item-head">
+        <span class="item-name">En el footer</span>
+        <span class="item-id" id="foot-current">effect = pos</span>
+      </div>
+      <p class="item-desc">Los mismos efectos en la franja del footer, que es más baja y va más atenuada. Rota solo cada 4 segundos — o elige uno abajo.</p>
+      <div class="band foot"><pre></pre></div>
+      <div class="actions" id="foot-picker"></div>
+    </section>
 
     <footer class="mono">Platanus On-Site · biblioteca de efectos</footer>
   </div>
@@ -129,11 +149,12 @@
       return d2 * (1 - h) + d1 * h - k * h * (1 - h);
     };
 
-    function makeField(pre, effect) {
+    function makeField(pre, initial) {
+      let effect = initial;
       const measure = document.createElement("canvas").getContext("2d");
       const cursor = { x: 0, y: 0 };
       let cols = 0, rows = 0, lineH = 14, charW = 8, frame = 0, last = 0;
-      const fps = effect === "2" ? 60 : 30;
+      let fps = effect === "2" ? 60 : 30;
 
       function fit() {
         const cs = getComputedStyle(pre);
@@ -226,6 +247,9 @@
       requestAnimationFrame(loop);
       let t;
       window.addEventListener("resize", () => { clearTimeout(t); t = setTimeout(fit, 150); });
+
+      // lets the footer demo swap effects without rebuilding the field
+      return { set(id) { effect = id; fps = id === "2" ? 60 : 30; frame = 0; } };
     }
 
     const list = document.getElementById("list");
@@ -246,6 +270,34 @@
       list.appendChild(item);
       makeField(item.querySelector("pre"), fx.id);
     });
+
+    /* ── footer slot: same effects, cycling so you see them all ─── */
+    (() => {
+      const demo = document.getElementById("foot-demo");
+      const field = makeField(demo.querySelector("pre"), EFFECTS[0].id);
+      const label = document.getElementById("foot-current");
+      const picker = document.getElementById("foot-picker");
+      let i = 0, timer = null;
+
+      function show(index) {
+        i = index;
+        const fx = EFFECTS[i];
+        field.set(fx.id);
+        label.textContent = `effect = ${fx.id}`;
+        [...picker.children].forEach((b, n) => b.classList.toggle("on", n === i));
+      }
+
+      EFFECTS.forEach((fx, n) => {
+        const b = document.createElement("button");
+        b.className = "btn";
+        b.textContent = fx.name;
+        b.addEventListener("click", () => { clearInterval(timer); show(n); });   // picking stops the rotation
+        picker.appendChild(b);
+      });
+
+      show(0);
+      timer = setInterval(() => show((i + 1) % EFFECTS.length), 4000);
+    })();
   </script>
 </body>
 </html>

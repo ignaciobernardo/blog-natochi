@@ -707,30 +707,48 @@
     }
 
     /* ─────────────────────────────────────────────────────────────
-       Band effect. Default is the drifting noise field; ?band=<id>
-       swaps in one of the six saved sponsors effects so we can
-       preview each one in place (see effects.html).
+       Band effect. "Onda" (effect 4) is the chosen default for both
+       bands; ?band=<id> previews any of the other saved effects, and
+       ?band=noise falls back to the drifting field (see effects.html).
        ───────────────────────────────────────────────────────────── */
-    const BAND_ID = new URLSearchParams(location.search).get("band");
+    const BAND_PARAM = new URLSearchParams(location.search).get("band");
+    const BAND_ID = BAND_PARAM || "4";
     const SAVED = ["pos", "1", "2", "3", "4", "5"];
+
+    // swaps a canvas band for a <pre> running one of the saved effects.
+    // opacity matches the canvas band's alpha range so it doesn't read brighter.
+    function useSavedEffect(canvasId, effect, height, opacity) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return null;
+      // Wrap in our own box instead of resizing the canvas's parent — the footer
+      // canvas is a direct child of <footer>, so styling the parent would clip
+      // the whole footer to the band's height.
+      const box = document.createElement("div");
+      box.style.cssText = `height:${height};overflow:hidden;` + getComputedStyle(canvas).marginTop.replace(/^/, "margin-top:") + ";";
+      const pre = document.createElement("pre");
+      pre.style.cssText = "margin:0;white-space:pre;overflow:hidden;font-family:mono,'SFMono-Regular',Menlo,Consolas,monospace;" +
+        `font-weight:400;font-size:12px;line-height:14px;color:var(--ink);user-select:none;opacity:${opacity};`;
+      box.appendChild(pre);
+      canvas.replaceWith(box);
+      runSavedEffect(pre, effect);
+      return box;
+    }
 
     if (!SAVED.includes(BAND_ID)) {
       asciiBand("band-canvas", { glyphs: "·:+=*<>/\\|xX#0", threshold: .52, alpha: .55 });
+      asciiBand("foot-canvas", { glyphs: "·.:-=+*x#", threshold: .58, alpha: .40 });
     } else {
-      const canvas = document.getElementById("band-canvas");
-      const pre = document.createElement("pre");
-      pre.style.cssText = "margin:0;white-space:pre;overflow:hidden;font-family:mono,'SFMono-Regular',Menlo,Consolas,monospace;font-weight:400;font-size:12px;line-height:14px;color:var(--ink);user-select:none;";
-      const host = canvas.parentNode;
-      host.style.height = "190px";
-      canvas.replaceWith(pre);
-      runSavedEffect(pre, BAND_ID);
+      const host = useSavedEffect("band-canvas", BAND_ID, "190px", ".5");
+      useSavedEffect("foot-canvas", BAND_ID, "150px", ".36");   // footer runs dimmer
 
-      // little badge so it's obvious which effect is being previewed
-      const tag = document.createElement("a");
-      tag.href = "effects.html";
-      tag.textContent = `banda: efecto ${BAND_ID} · ver todos`;
-      tag.style.cssText = "display:inline-block;margin:8px 0 0 40px;font-family:mono,monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);";
-      host.after(tag);
+      // badge only while previewing an override — not for the default band
+      if (BAND_PARAM) {
+        const tag = document.createElement("a");
+        tag.href = "effects.html";
+        tag.textContent = `banda: efecto ${BAND_ID} · ver todos`;
+        tag.style.cssText = "display:inline-block;margin:8px 0 0 40px;font-family:mono,monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);";
+        if (host) host.after(tag);
+      }
     }
 
     // the six sponsors fields, lifted verbatim from the sponsors view
@@ -827,51 +845,98 @@
       window.addEventListener("resize", () => { clearTimeout(t); t = setTimeout(fit, 150); });
     }
 
-    // footer band — same drifting field as the hero, calmer settings
-    asciiBand("foot-canvas", { glyphs: "·.:-=+*x#", threshold: .58, alpha: .40 });
-
     /* ─────────────────────────────────────────────────────────────
-       Type-in on load — every line of copy resolves out of noise,
-       the same left-to-right scramble the main site uses. Runs top
-       to bottom so the page "decodes" as you read down it.
+       Scroll decode — copy resolves out of noise as it scrolls into
+       view, section by section, rather than all at once on load.
+
+       Two things keep it from shoving the page around:
+       · the block's box is frozen while it animates, so re-wrapping
+         noise can never change layout height;
+       · the glyph pool is narrow-width only, so lines barely re-wrap.
+       Blocks you blow past while scrolling fast just snap to final.
+
+       Works on TEXT NODES, not elements: a <p> containing an <a> is
+       not a leaf, so an element-level pass silently skips its copy.
        ───────────────────────────────────────────────────────────── */
     (() => {
-      const SKIP = new Set(["SCRIPT", "STYLE", "PRE", "CANVAS", "IMG", "SVG", "PATH", "LINE", "CIRCLE"]);
+      const SKIP = /^(SCRIPT|STYLE|PRE|CANVAS|SVG|PATH|LINE|CIRCLE|IMG)$/;
+      const DURATION = 900;
+      const STAGGER = 70;
+      // narrow glyphs only — no M/W/@, which are far wider than average
+      // in the sans face and cause visible re-wrapping mid-animation
+      const POOL = "abcdefijlnorstuvxz0123456789+=<>?!:/-.";
+      const glyph = () => POOL[Math.floor(Math.random() * POOL.length)];
 
-      const targets = [...document.querySelectorAll("body *")].filter(el => {
-        if (SKIP.has(el.tagName)) return false;
-        if (el.closest("pre")) return false;      // never touch the ASCII art
-        if (el.children.length) return false;     // leaf nodes only
-        const txt = el.textContent;
-        return txt && txt.trim() && txt.trim() !== " ";
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+          const el = node.parentElement;
+          if (!el || SKIP.test(el.tagName)) return NodeFilter.FILTER_REJECT;
+          if (el.closest("pre, canvas, svg")) return NodeFilter.FILTER_REJECT;  // never the ASCII art
+          return NodeFilter.FILTER_ACCEPT;
+        }
       });
 
-      // top-to-bottom, then left-to-right
-      targets.sort((a, b) => {
-        const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
-        return (ra.top - rb.top) || (ra.left - rb.left);
-      });
+      const groups = new Map();
+      while (walker.nextNode()) {
+        const node = walker.currentNode;
+        node._final = node.nodeValue;
+        const el = node.parentElement;
+        if (!groups.has(el)) groups.set(el, []);
+        groups.get(el).push(node);
+      }
 
-      const t0 = Date.now();
-      targets.forEach((el, i) => {
-        const final = el.textContent;
-        const delay = i * 26;
-        const duration = 620;
-        const start = t0 + delay;
-        el.style.visibility = "hidden";           // avoid a flash of clean text pre-scramble
-        (function frame() {
-          const p = (Date.now() - start) / duration;
-          if (p < 0) { requestAnimationFrame(frame); return; }
-          el.style.visibility = "";
-          if (p >= 1) { el.textContent = final; return; }
-          let out = "";
-          for (let c = 0; c < final.length; c += 1) {
-            const ch = final[c];
-            out += (ch === " " || c / final.length < p) ? ch : randomGlyph();
-          }
-          el.textContent = out;
-          requestAnimationFrame(frame);
-        })();
+      function settle(el, nodes) {
+        nodes.forEach(n => { n.nodeValue = n._final; });
+        el.style.removeProperty("height");
+        el.style.removeProperty("overflow");
+        el.style.removeProperty("visibility");
+      }
+
+      function decode(el, nodes) {
+        // freeze the box at its real size before any noise goes in
+        const h = el.getBoundingClientRect().height;
+        if (h) { el.style.height = h + "px"; el.style.overflow = "hidden"; }
+        el.style.removeProperty("visibility");
+
+        let done = 0;
+        nodes.forEach((node, i) => {
+          const final = node._final;
+          const start = performance.now() + i * STAGGER;
+          (function frame(now) {
+            const p = ((now || performance.now()) - start) / DURATION;
+            if (p < 0) { requestAnimationFrame(frame); return; }
+            if (p >= 1) {
+              node.nodeValue = final;
+              if (++done === nodes.length) settle(el, nodes);
+              return;
+            }
+            let out = "";
+            for (let c = 0; c < final.length; c += 1) {
+              const ch = final[c];
+              out += (ch === " " || c / final.length < p) ? ch : glyph();
+            }
+            node.nodeValue = out;
+            requestAnimationFrame(frame);
+          })();
+        });
+      }
+
+      const io = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          obs.unobserve(el);
+          const nodes = groups.get(el) || [];
+          // scrolled past already? don't animate behind the user
+          if (entry.boundingClientRect.bottom < 0) settle(el, nodes);
+          else decode(el, nodes);
+        });
+      }, { threshold: 0.15, rootMargin: "0px 0px -8% 0px" });
+
+      groups.forEach((nodes, el) => {
+        el.style.visibility = "hidden";
+        io.observe(el);
       });
     })();
   </script>
