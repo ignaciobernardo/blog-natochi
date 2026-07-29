@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    (function () {
+      try { if (localStorage.getItem("onsite-theme") === "light") document.documentElement.classList.add("theme-light"); } catch (e) {}
+    })();
+  </script>
+  <title>On-Site — Efectos ASCII</title>
+  <style>
+    @font-face {
+      font-family: mono;
+      src: url("fonts/DGuULq6Q.woff2") format("woff2"), url("fonts/DaHF6EGU.woff") format("woff");
+      font-weight: 400; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: abc;
+      src: url("fonts/1wkj7SUF.woff2") format("woff2"), url("fonts/D2Vkx7Xo.woff") format("woff");
+      font-weight: 100 800; font-style: normal; font-display: swap;
+    }
+
+    :root {
+      --bg: #181818; --fg: #D6D4D0; --muted: #777; --invert: #F5F5F0;
+      --ink: #F5F5F5; --rule: #3a3a3a; --dim: #4a4a4a;
+    }
+    html.theme-light {
+      --bg: #FFEC40; --fg: #000; --muted: #5c5c5c; --invert: #000;
+      --ink: #000; --rule: #cbb92e; --dim: #9a8b2a;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--fg);
+      font-family: abc, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 14px; font-weight: 300; line-height: 18px;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+    .mono { font-family: mono, monospace; font-weight: 400; text-transform: uppercase; letter-spacing: .02em; }
+
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 0 40px; }
+
+    header.top {
+      display: flex; justify-content: space-between; align-items: baseline;
+      padding: 40px 0 10px; gap: 20px; flex-wrap: wrap;
+    }
+    h1 { margin: 0; font-size: 18px; font-weight: 400; color: var(--ink); }
+    .sub { color: var(--muted); max-width: 62ch; margin: 6px 0 0; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 8px 16px; border: 1px solid var(--ink); color: var(--ink);
+      font-family: mono, monospace; font-size: 11px; text-transform: uppercase;
+      letter-spacing: .1em; text-decoration: none; cursor: pointer; background: transparent;
+      transition: background-color .12s linear, color .12s linear;
+    }
+    .btn:hover { background: var(--invert); color: var(--bg); }
+
+    /* ── one effect entry ─────────────────────────────────────── */
+    .item { margin: 46px 0; }
+    .item-head {
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 16px; margin-bottom: 10px; flex-wrap: wrap;
+    }
+    .item-name { color: var(--ink); font-size: 15px; }
+    .item-id {
+      font-family: mono, monospace; font-size: 10px; letter-spacing: .12em;
+      color: var(--muted); text-transform: uppercase;
+    }
+    .item-desc { color: var(--muted); margin: 0 0 12px; max-width: 70ch; }
+
+    /* the band is sized exactly like the landing's #band-canvas slot */
+    .band {
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      height: 190px; overflow: hidden; position: relative;
+      background: var(--bg);
+    }
+    .band pre {
+      margin: 0; white-space: pre; overflow: hidden;
+      font-family: mono, "SFMono-Regular", Menlo, Consolas, monospace;
+      font-weight: 400; font-size: 12px; line-height: 14px;
+      color: var(--ink); user-select: none;
+    }
+    .actions { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; }
+
+    footer { padding: 60px 0 80px; color: var(--muted); border-top: 1px solid var(--rule); margin-top: 50px; }
+
+    @media (max-width: 700px) { .wrap { padding: 0 20px; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div>
+        <h1>Efectos ASCII — biblioteca</h1>
+        <p class="sub">Los seis efectos que ya teníamos en <span class="mono">/sponsors</span>, renderizados en la misma franja que usa la landing. Cada uno se puede previsualizar reemplazando el efecto actual de la banda.</p>
+      </div>
+      <a class="btn" href="index.html">Volver a la landing</a>
+    </header>
+
+    <div id="list"></div>
+
+    <footer class="mono">Platanus On-Site · biblioteca de efectos</footer>
+  </div>
+
+  <script>
+    /* ─────────────────────────────────────────────────────────────
+       The six ASCII fields from the sponsors view, lifted verbatim
+       so the gallery shows the real thing (not a re-interpretation).
+       Each renders into its own band-sized <pre>.
+       ───────────────────────────────────────────────────────────── */
+    const EFFECTS = [
+      { id: "pos", name: "POS",        desc: "Las letras de “POS” barriendo en pulsos — el efecto original de la vista sponsors." },
+      { id: "1",   name: "Metaballs",  desc: "Dos círculos con unión suave (SDF). Sigue el cursor: pasa el mouse por encima." },
+      { id: "2",   name: "Anillo",     desc: "Un anillo que late, entrelazado con barras verticales. Corre a 60fps." },
+      { id: "3",   name: "Túnel",      desc: "Perspectiva radial con caracteres corriendo — un túnel infinito." },
+      { id: "4",   name: "Onda",       desc: "Interferencia diagonal suave, la más tranquila y textural del set." },
+      { id: "5",   name: "Moiré",      desc: "Dos tramas alternadas que generan un patrón moiré orgánico." }
+    ];
+
+    const TAU = Math.PI * 2;
+    const clampIndex = (v, len) => Math.max(0, Math.min(len - 1, Math.floor(v)));
+    const sdCircle = (p, r) => Math.hypot(p.x, p.y) - r;
+    const smoothUnion = (d1, d2, k) => {
+      const h = Math.max(0, Math.min(1, .5 + .5 * (d2 - d1) / k));
+      return d2 * (1 - h) + d1 * h - k * h * (1 - h);
+    };
+
+    function makeField(pre, effect) {
+      const measure = document.createElement("canvas").getContext("2d");
+      const cursor = { x: 0, y: 0 };
+      let cols = 0, rows = 0, lineH = 14, charW = 8, frame = 0, last = 0;
+      const fps = effect === "2" ? 60 : 30;
+
+      function fit() {
+        const cs = getComputedStyle(pre);
+        const fontPx = parseFloat(cs.fontSize) || 12;
+        lineH = parseFloat(cs.lineHeight) || fontPx;
+        measure.font = `${cs.fontWeight} ${fontPx}px ${cs.fontFamily}`;
+        charW = measure.measureText("M").width || fontPx * .6;
+        const box = pre.parentNode.getBoundingClientRect();
+        cols = Math.max(1, Math.floor(box.width / charW));
+        rows = Math.max(1, Math.floor(box.height / lineH));
+        cursor.x = cols / 2; cursor.y = rows / 2;
+      }
+
+      function posEffect(x, y) {
+        const name = "POS";
+        const a = frame * 0.05;
+        const f = Math.floor((1 - Math.cos(a)) * 10) + 1;
+        const g = Math.floor(a / TAU) % 10 + 1;
+        const i = (y * cols + x) % (y * g + 1) % (f % cols);
+        return name[i] || " ";
+      }
+      function effectOne(x, y) {
+        const density = "#WX?*:÷×+=-· ";
+        const m = Math.min(cols, rows), aspect = charW / lineH;
+        const st = { x: 2 * (x - cols / 2) / m * aspect, y: 2 * (y - rows / 2) / m };
+        const ptr = { x: 2 * (cursor.x - cols / 2) / m * aspect, y: 2 * (cursor.y - rows / 2) / m };
+        const d = smoothUnion(sdCircle(st, .2), sdCircle({ x: st.x - ptr.x, y: st.y - ptr.y }, .2), .7);
+        return density[clampIndex((1 - Math.exp(-5 * Math.abs(d))) * density.length, density.length)];
+      }
+      function effectTwo(x, y, time) {
+        const density = "/\\MXYZabc!?=-. ";
+        const t = time * .002, m = Math.min(cols, rows), aspect = charW / lineH;
+        const st = { x: 2 * (x - cols / 2) / m * aspect, y: 2 * (y - rows / 2) / m };
+        const radius = Math.cos(t) * .4 + .5;
+        const c = 1 - Math.exp(-5 * Math.abs(sdCircle(st, radius)));
+        return x % 2 ? "│" : density[clampIndex(c * density.length, density.length)];
+      }
+      function effectThree(x, y) {
+        const z = Math.floor(y - rows / 2);
+        if (z === 0) return " ";
+        const val = (x - cols / 2) / z;
+        const code = (Math.floor(val + cols / 2 + frame * .3) % 94 + 94) % 94 + 32;
+        return String.fromCharCode(code);
+      }
+      function effectFour(x, y, time) {
+        const pattern = "ABCxyz01═|+:. ";
+        const t = time * .0001;
+        const o = Math.sin(y * Math.sin(t) * .2 + x * .04 + t) * 20;
+        return pattern[Math.round(Math.abs(x + y + o)) % pattern.length];
+      }
+      function effectFive(x, y, time) {
+        const pattern = [" _000111_ ", ".+abc+.      "];
+        const t = time * .001;
+        const xx = x - cols / 2, yy = y - rows / 2;
+        const o = Math.sin(xx * yy * .0017 + yy * .0033 + t) * 40;
+        const c = (Math.floor(x * .09) + Math.floor(y * .09)) % 2;
+        return pattern[c][Math.floor(Math.abs(xx + yy + o)) % pattern[c].length];
+      }
+
+      function charAt(x, y, time) {
+        if (effect === "1") return effectOne(x, y);
+        if (effect === "2") return effectTwo(x, y, time);
+        if (effect === "3") return effectThree(x, y);
+        if (effect === "4") return effectFour(x, y, time);
+        if (effect === "5") return effectFive(x, y, time);
+        return posEffect(x, y);
+      }
+
+      function render(time) {
+        let out = "";
+        for (let y = 0; y < rows; y++) {
+          for (let x = 0; x < cols; x++) out += charAt(x, y, time);
+          out += "\n";
+        }
+        pre.textContent = out;
+      }
+
+      function loop(now) {
+        if (now - last >= 1000 / fps) { last = now; render(now); frame++; }
+        requestAnimationFrame(loop);
+      }
+
+      pre.parentNode.addEventListener("mousemove", e => {
+        const r = pre.getBoundingClientRect();
+        cursor.x = Math.max(0, Math.min(cols - 1, Math.floor((e.clientX - r.left) / charW)));
+        cursor.y = Math.max(0, Math.min(rows - 1, Math.floor((e.clientY - r.top) / lineH)));
+      });
+
+      fit();
+      requestAnimationFrame(loop);
+      let t;
+      window.addEventListener("resize", () => { clearTimeout(t); t = setTimeout(fit, 150); });
+    }
+
+    const list = document.getElementById("list");
+    EFFECTS.forEach(fx => {
+      const item = document.createElement("section");
+      item.className = "item";
+      item.innerHTML = `
+        <div class="item-head">
+          <span class="item-name">${fx.name}</span>
+          <span class="item-id">effect = ${fx.id}</span>
+        </div>
+        <p class="item-desc">${fx.desc}</p>
+        <div class="band"><pre></pre></div>
+        <div class="actions">
+          <a class="btn" href="index.html?band=${fx.id}">Ver en la landing</a>
+          <a class="btn" href="https://on-site.platan.us/sponsors?effect=${fx.id}">Ver original en /sponsors</a>
+        </div>`;
+      list.appendChild(item);
+      makeField(item.querySelector("pre"), fx.id);
+    });
+  </script>
+</body>
+</html>
