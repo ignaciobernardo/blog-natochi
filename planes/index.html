@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>planes — CLI de planes de isapre</title>
+
+<link rel="icon" type="image/png" href="/favicon.png">
+
+<meta name="description" content="CLI para navegar los 2.219 planes de isapre de Chile: coberturas, topes, prestadores, puntajes y cuánto pagas sobre tu 7%.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://natochi.cv/planes">
+<meta property="og:title" content="planes — CLI de planes de isapre">
+<meta property="og:description" content="Los 2.219 planes de isapre de Chile, desde tu terminal.">
+<meta property="og:image" content="https://natochi.cv/og-image.png">
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:title" content="planes — CLI de planes de isapre">
+<meta property="twitter:description" content="Los 2.219 planes de isapre de Chile, desde tu terminal.">
+<meta property="twitter:image" content="https://natochi.cv/og-image.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+@font-face {
+  font-family: 'PP Mondwest';
+  src: url('/fonts/PPMondwest-Regular.otf') format('opentype');
+  font-display: swap;
+}
+
+:root {
+  --bg: #1a1a1a;
+  --surface: #202020;
+  --raised: #262626;
+  --line: #333;
+  --text: #e5e5e5;
+  --muted: #8a8a8a;
+  --accent: #ff8800;
+  --accent-soft: #ffaa00;
+  --green: #6cc26c;
+  --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --display: 'PP Mondwest', var(--mono);
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 24px 96px;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-soft); text-decoration: underline; }
+
+/* ---------- nav ---------- */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 0 0;
+  font-size: 13px;
+}
+.nav .muted { color: var(--muted); }
+
+/* ---------- hero ---------- */
+.hero { padding: 64px 0 40px; }
+
+.eyebrow {
+  color: var(--accent);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin: 0 0 18px;
+}
+
+h1 {
+  font-family: var(--display);
+  font-size: clamp(44px, 9vw, 76px);
+  line-height: .95;
+  margin: 0 0 20px;
+  font-weight: 400;
+  letter-spacing: -.01em;
+}
+h1 .caret {
+  color: var(--accent);
+  animation: blink 1.15s step-end infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  h1 .caret { animation: none; }
+}
+
+.lede {
+  font-size: 16px;
+  color: var(--text);
+  max-width: 60ch;
+  margin: 0 0 8px;
+}
+.sub {
+  font-size: 14px;
+  color: var(--muted);
+  max-width: 62ch;
+  margin: 0;
+}
+
+/* ---------- stats ---------- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 1px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  margin: 40px 0 0;
+}
+.stat {
+  background: var(--bg);
+  box-shadow: 0 0 0 1px var(--line);
+  padding: 18px 20px;
+}
+.stat b {
+  display: block;
+  font-family: var(--display);
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--accent);
+}
+.stat span {
+  display: block;
+  font-size: 11.5px;
+  color: var(--muted);
+  margin-top: 8px;
+  letter-spacing: .04em;
+}
+
+/* ---------- terminal ---------- */
+.term {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 28px 0;
+}
+.term-bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 14px;
+  background: var(--raised);
+  border-bottom: 1px solid var(--line);
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; background: #3d3d3d; flex: none; }
+.term-title {
+  margin-left: 8px;
+  min-width: 0;
+  font-size: 11.5px;
+  color: var(--muted);
+  letter-spacing: .04em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.term-body { padding: 16px; overflow-x: auto; }
+.term pre {
+  margin: 0;
+  /* IBM Plex Mono no trae glifos box-drawing: las tablas salen cortadas.
+     Menlo/SF Mono sí, y además se ve más a terminal de verdad. */
+  font-family: ui-monospace, 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  white-space: pre;
+  min-width: max-content;
+}
+.term table {
+  border-collapse: collapse;
+  margin: 14px 0 0;
+  font-size: 12.5px;
+  min-width: max-content;
+}
+.term th, .term td {
+  padding: 3px 14px 3px 0;
+  border: 0;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+.term thead th {
+  color: var(--accent-soft);
+  font-weight: 500;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 6px;
+}
+.term tbody tr:first-child td { padding-top: 8px; }
+.term td { border-bottom: 0; color: var(--text); }
+.term td.ok { color: var(--green); }
+.term .num { text-align: right; }
+.term table + pre { margin-top: 16px; }
+
+.p { color: var(--accent); }        /* prompt */
+.c { color: var(--text); }          /* comando */
+.g { color: var(--muted); }         /* chrome de tabla */
+.hd { color: var(--accent-soft); }  /* encabezado */
+.ok { color: var(--green); }
+.dim { color: var(--muted); }
+
+/* ---------- install ---------- */
+.install { margin: 4px 0 0; }
+.copy-row {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  overflow: hidden;
+}
+.copy-row code {
+  flex: 1;
+  /* sin min-width:0 un flex item con nowrap estira toda la página */
+  min-width: 0;
+  padding: 14px 16px;
+  font-family: var(--mono);
+  font-size: 13px;
+  overflow-x: auto;
+  white-space: nowrap;
+  color: var(--text);
+}
+.copy-row code .p { user-select: none; }
+.copy-btn {
+  flex: none;
+  border: 0;
+  border-left: 1px solid var(--line);
+  background: var(--raised);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 0 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: background .15s ease, color .15s ease;
+}
+.copy-btn:hover { background: #303030; color: var(--accent); }
+.copy-btn svg { width: 13px; height: 13px; }
+.alt {
+  color: var(--muted);
+  font-size: 12.5px;
+  margin: 12px 0 0;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- secciones ---------- */
+section { margin-top: 72px; }
+
+h2 {
+  font-family: var(--display);
+  font-size: 30px;
+  font-weight: 400;
+  margin: 0 0 6px;
+  letter-spacing: -.01em;
+}
+h2 .hash { color: var(--accent); }
+.sec-note { color: var(--muted); font-size: 13.5px; margin: 0 0 24px; max-width: 62ch; }
+
+/* ---------- comandos ---------- */
+.cmds {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(238px, 1fr));
+  gap: 1px;
+  /* fondo del contenedor en --bg para que las celdas sobrantes de la última
+     fila no se vean como un bloque claro; las líneas las pone cada celda */
+  background: var(--bg);
+  border: 1px solid var(--line);
+}
+.cmd {
+  background: var(--bg);
+  box-shadow: 0 0 0 1px var(--line);
+  padding: 18px 20px;
+}
+.cmd-head { display: flex; align-items: center; gap: 9px; margin-bottom: 7px; }
+.cmd-head svg { width: 15px; height: 15px; flex: none; color: var(--accent); }
+.cmd-head code { font-size: 13px; font-weight: 600; color: var(--text); }
+.cmd p { margin: 0; font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+
+/* ---------- tabla paridad ---------- */
+.table-scroll { overflow-x: auto; border: 1px solid var(--line); }
+table { border-collapse: collapse; width: 100%; min-width: 460px; font-size: 13px; }
+th, td { text-align: left; padding: 11px 16px; border-bottom: 1px solid var(--line); }
+th { color: var(--accent-soft); font-weight: 500; font-size: 11.5px; letter-spacing: .07em; text-transform: uppercase; }
+tr:last-child td { border-bottom: 0; }
+td code { color: var(--text); font-size: 12.5px; }
+td.muted { color: var(--muted); }
+
+/* ---------- callout ---------- */
+.note {
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--accent);
+  background: var(--surface);
+  padding: 16px 20px;
+  margin-top: 28px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.note b { color: var(--text); font-weight: 600; }
+
+/* ---------- footer ---------- */
+footer {
+  margin-top: 84px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  font-size: 12.5px;
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  justify-content: space-between;
+}
+
+@media (max-width: 600px) {
+  .wrap { padding: 0 18px 72px; }
+  .hero { padding: 44px 0 28px; }
+  .copy-row { flex-direction: column; }
+  .copy-btn { border-left: 0; border-top: 1px solid var(--line); padding: 12px; justify-content: center; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="nav">
+    <a href="/">&#8592; natochi.cv</a>
+    <span class="muted">Chile · isapres</span>
+  </nav>
+
+  <header class="hero">
+    <p class="eyebrow">Command-line tool</p>
+    <h1>planes<span class="caret">_</span></h1>
+    <p class="lede">
+      Los 2.219 planes de isapre de Chile, desde tu terminal. Coberturas, topes,
+      prestadores, puntajes, contratos y cuánto pagas por sobre tu 7%.
+    </p>
+    <p class="sub">
+      Sin cuenta, sin formulario, sin ejecutivo llamándote. Un comando y tienes
+      todo el catálogo en tabla, JSON o CSV.
+    </p>
+
+    <div class="stats">
+      <div class="stat"><b>2.219</b><span>planes</span></div>
+      <div class="stat"><b>7</b><span>isapres abiertas</span></div>
+      <div class="stat"><b>10</b><span>comandos</span></div>
+      <div class="stat"><b>0</b><span>cuentas o formularios</span></div>
+    </div>
+  </header>
+
+  <section style="margin-top:52px" id="instalar">
+    <h2><span class="hash">#</span> Instalar</h2>
+    <p class="sec-note">Necesitas Python 3.10+ y <a href="https://docs.astral.sh/uv/" target="_blank" rel="noopener">uv</a>.</p>
+
+    <div class="install">
+      <div class="copy-row">
+        <code id="install-cmd"><span class="p">$ </span>uv tool install git+https://github.com/ignaciobernardo/planes</code>
+        <button class="copy-btn" id="copy-btn" type="button" aria-label="Copiar comando de instalación">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="9" y="9" width="13" height="13" rx="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          <span id="copy-label">copiar</span>
+        </button>
+      </div>
+      <p class="alt">¿Prefieres pipx? <code>pipx install git+https://github.com/ignaciobernardo/planes</code></p>
+    </div>
+  </section>
+
+  <section id="que-hace">
+    <h2><span class="hash">#</span> Qué hace</h2>
+    <p class="sec-note">
+      El caso principal: sabes tu renta y quieres saber qué planes te cubre el 7%
+      obligatorio sin pagar un peso más. Con una renta imponible de $2.500.789 son
+      411 de 929 planes con cobertura hospitalaria completa.
+    </p>
+
+    <div class="term">
+      <div class="term-bar">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="term-title">queplan cotizar</span>
+      </div>
+      <div class="term-body">
+<pre><span class="p">$</span> <span class="c">queplan cotizar --renta 2500789 --cotizante 28:M --min-hosp 100 --min-amb 80</span>
+
+<span class="dim">Cotizando 929 planes (UF $40.858, 7% = $175.055)…</span></pre>
+<table>
+  <thead>
+    <tr>
+      <th>Isapre</th><th>Código</th><th>Plan</th>
+      <th class="num">Amb</th><th class="num">Hosp</th>
+      <th class="num">Precio</th><th class="num">Extra s/7%</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>CruzBlanca</td><td>ONSL101D25</td><td>ON SOLUCION 1 100 D25</td><td class="num">100%</td><td class="num">100%</td><td class="num">$156.935</td><td class="num ok">$0</td></tr>
+    <tr><td>CruzBlanca</td><td>ONSL102D25</td><td>ON SOLUCION 1 200 D25</td><td class="num">100%</td><td class="num">100%</td><td class="num">$160.613</td><td class="num ok">$0</td></tr>
+    <tr><td>CruzBlanca</td><td>ONSL103D25</td><td>ON SOLUCION 1 300 D25</td><td class="num">100%</td><td class="num">100%</td><td class="num">$164.698</td><td class="num ok">$0</td></tr>
+  </tbody>
+</table>
+      </div>
+    </div>
+
+    <div class="term">
+      <div class="term-bar">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="term-title">queplan puntaje</span>
+      </div>
+      <div class="term-body">
+<pre><span class="p">$</span> <span class="c">queplan puntaje 13-SFS67-26</span>
+
+<span class="dim">Puntaje — SELECT FULL SUR 60 07 26 · Libre Elección</span></pre>
+<table>
+  <thead>
+    <tr><th>Categoría</th><th class="num">Ponderación</th><th class="num">Puntaje</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Consultas Médicas</td><td class="num">10.1%</td><td class="num">8.0</td></tr>
+    <tr><td>Hotelería en Cirugía</td><td class="num">34.8%</td><td class="num">7.9</td></tr>
+    <tr><td>Exámenes</td><td class="num">21.7%</td><td class="num">7.8</td></tr>
+    <tr><td>Honorarios Médicos</td><td class="num">9.2%</td><td class="num">7.8</td></tr>
+    <tr><td>Kinesiología y Otras Prestaciones</td><td class="num">2.2%</td><td class="num">8.0</td></tr>
+    <tr><td>Tratamiento Cáncer</td><td class="num">0.8%</td><td class="num">6.7</td></tr>
+  </tbody>
+</table>
+<pre>
+Puntaje hospitalario 8.5 · ambulatorio 8.3 · <span class="hd">promedio 8.4</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <section id="comandos">
+    <h2><span class="hash">#</span> Comandos</h2>
+    <p class="sec-note">Todos aceptan <code>--format table|json|csv</code>, así que puedes encadenarlos con jq o abrirlos en una planilla.</p>
+
+    <div class="cmds">
+      <div class="cmd">
+        <div class="cmd-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/><path d="M7 3v18"/></svg>
+          <code>cotizar</code>
+        </div>
+        <p>Rankea los planes por cuánto pagas sobre tu 7%. El comando principal.</p>
+      </div>
+
+      <div class="cmd">
+        <div class="cmd-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+          <code>isapres</code>
+        </div>
+        <p>Las 7 isapres abiertas con sus códigos.</p>
+      </div>
+
+      <div class="cmd">
+        <div class="cmd-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <code>planes</code>
+        </div>
+        <p>Filtra por isapre, cobertura mínima, modalidad, prestador o texto libre.</p>
+      </div>
+
+      <div class="cmd">
+        <div class="cmd-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>
+          <code>plan</code>
+        </div>
+        <p>Ficha completa: coberturas, restricciones y tabla de prestadores preferentes.</p>
+      </div>
+
+      <div class="cmd">
+        <div class="cmd-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>
+          <code>cobertura</code>
+        </div>
+        <p>Topes y porcentajes por prestación, buscables por nombre.</p>
+      </div>
+
+      <div class="cmd">
+        <div class="cmd-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20V8"/></svg>
+          <code>factores</code>
+        </div>
+        <p>Tabla de factores de riesgo por edad y sexo del plan.</p>
+      </div>
+
+      <div class="cmd">
+        <div class="cmd-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.8h4a1.7 1.7 0 0 1 0 3.4h-3a1.7 1.7 0 0 0 0 3.4h4"/></svg>
+          <code>precio</code>
+        </div>
+        <p>Precio real en UF y pesos para tu grupo familiar, con cargas.</p>
+      </div>
+
+      <div class="cmd">
+        <div class="cmd-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.6 5.6 6.4.8-4.7 4.3 1.2 6.3L12 17l-5.5 3 1.2-6.3L3 9.4l6.4-.8z"/></svg>
+          <code>puntaje</code>
+        </div>
+        <p>Desglose del puntaje por categoría y por prestador.</p>
+      </div>
+
+      <div class="cmd">
+        <div class="cmd-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 20h16"/></svg>
+          <code>contrato</code>
+        </div>
+        <p>Descarga el PDF del contrato del plan.</p>
+      </div>
+      <div class="cmd">
+        <div class="cmd-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+          <code>export</code>
+        </div>
+        <p>El catálogo completo en CSV para analizarlo donde quieras.</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>Pensado para pipear.</b> En <code>--format json</code> o <code>csv</code> la
+      salida sale limpia por stdout: el progreso y los avisos van a stderr, y no se
+      trunca a menos que pases <code>--limit</code>.
+    </div>
+  </section>
+
+  <section id="paridad">
+    <h2><span class="hash">#</span> Paridad con el sitio</h2>
+    <p class="sec-note">
+      Todo lo que muestra el modal de un plan en QuePlan.cl está cubierto. El slug de la
+      URL es el código del plan, así que copias la URL y la usas directo.
+    </p>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>En el sitio</th><th>En el CLI</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="muted">Vista General</td><td><code>queplan plan</code></td></tr>
+          <tr><td class="muted">Contrato (PDF)</td><td><code>queplan contrato</code></td></tr>
+          <tr><td class="muted">Puntaje</td><td><code>queplan puntaje</code></td></tr>
+          <tr><td class="muted">Precio</td><td><code>queplan precio</code></td></tr>
+          <tr><td class="muted">Topes y factores</td><td><code>queplan cobertura</code> · <code>queplan factores</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="como-funciona">
+    <h2><span class="hash">#</span> Cómo funciona</h2>
+    <p class="sec-note">
+      QuePlan.cl es una SPA en Angular que consume una API JSON pública. El CLI habla
+      directo con esa API — no hay scraping de HTML — y cachea todo en disco por 12 horas.
+      Una cotización completa demora ~45 s la primera vez y ~0,2 s después.
+    </p>
+    <div class="note">
+      <b>Nada de lo que escribes sale de tu máquina más allá de la consulta.</b>
+      El CLI no manda tu RUT, tu nombre ni tu correo: la renta y la edad solo se usan
+      para pedir el precio del plan. No hay formulario de contacto ni generación de leads.
+    </div>
+  </section>
+
+  <footer>
+    <span>Hecho por <a href="/">natochi</a> · MIT</span>
+    <span><a href="https://github.com/ignaciobernardo/planes" target="_blank" rel="noopener">Código en GitHub &#8599;</a></span>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  var btn = document.getElementById('copy-btn');
+  var label = document.getElementById('copy-label');
+  var cmd = 'uv tool install git+https://github.com/ignaciobernardo/planes';
+
+  btn.addEventListener('click', function () {
+    var done = function () {
+      label.textContent = 'copiado';
+      setTimeout(function () { label.textContent = 'copiar'; }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(cmd).then(done, fallback);
+    } else {
+      fallback();
+    }
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = cmd;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) { label.textContent = 'copia manual'; }
+      document.body.removeChild(ta);
+    }
+  });
+})();
+</script>
+</body>
+</html>
