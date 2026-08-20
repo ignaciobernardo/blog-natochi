@@ -3,102 +3,533 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light">
-  <meta name="description" content="Comparador de psicólogos y psicólogas con pregrado UC o Universidad de Chile, enfoque cognitivo y atención de adultos.">
-  <meta property="og:title" content="Selección personal de psicólogos/as">
-  <meta property="og:description" content="Perfiles filtrados por formación, enfoque cognitivo en adultos y coincidencias con motivos de consulta.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://natochi.cv/psicologos/">
-  <link rel="canonical" href="https://natochi.cv/psicologos/">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <title>Mi selección de psicólogos/as</title>
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Explorador independiente de psicólogos y psicólogas publicados en Doctoralia Chile.">
+  <title>psicólogos — natochi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    :root{--ink:#1d302a;--muted:#64756e;--paper:#f8faf6;--card:#fff;--line:#dbe5dc;--green:#1d6b50;--mint:#dff2e8;--blue:#e4eff8;--peach:#f8e7d9;--gold:#f1bb56;--red:#9a483f;--shadow:0 16px 44px rgba(31,58,47,.09);--radius:22px}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:radial-gradient(circle at 10% 0,#e6f5ec,transparent 34rem),radial-gradient(circle at 100% 12%,#faecdf,transparent 30rem),var(--paper);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.45}button,input,select{font:inherit}a{color:inherit}.shell{width:min(1280px,calc(100% - 32px));margin:auto}
-    header{padding:54px 0 28px}.eyebrow{display:flex;align-items:center;gap:9px;color:var(--green);font-size:.76rem;font-weight:850;letter-spacing:.09em;text-transform:uppercase}.eyebrow:before{content:"";width:28px;height:2px;background:var(--green)}h1{max-width:900px;margin:17px 0 0;font:500 clamp(2.6rem,6vw,5.2rem)/.98 Georgia,serif;letter-spacing:-.045em}.lead{max-width:760px;margin:21px 0 0;color:var(--muted);font-size:1.05rem}.summary{display:flex;flex-wrap:wrap;gap:9px;margin-top:25px}.pill{padding:9px 13px;border:1px solid var(--line);border-radius:999px;background:#ffffffc9;font-size:.8rem}.pill strong{color:var(--ink)}
-    .method{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:start;margin:5px 0 26px;padding:18px 20px;border-left:4px solid var(--gold);border-radius:4px 18px 18px 4px;background:#fff8e9;color:#66532e;font-size:.84rem}.method strong{color:#503f1f}.method button{border:1px solid #d9c394;border-radius:999px;padding:8px 12px;background:#fffdf8;color:#5c4926;font-weight:800;cursor:pointer;white-space:nowrap}
-    .method-detail{display:none;margin:-12px 0 26px;padding:18px 20px;border:1px solid #eadcbf;border-radius:18px;background:#fffdf8;color:#62583f;font-size:.82rem}.method-detail.open{display:block}.method-detail ul{margin:8px 0;padding-left:20px}.method-detail li+li{margin-top:6px}
-    .toolbar{position:sticky;top:10px;z-index:5;display:grid;grid-template-columns:minmax(220px,1fr) repeat(4,auto);gap:9px;align-items:center;margin-bottom:20px;padding:10px;border:1px solid var(--line);border-radius:18px;background:#fffffff2;box-shadow:var(--shadow);backdrop-filter:blur(12px)}input[type=search],input[type=number],select{height:42px;min-width:0;border:1px solid #cbd8ce;border-radius:11px;background:#fff;color:var(--ink);padding:0 11px;outline:none}input:focus,select:focus{border-color:var(--green);box-shadow:0 0 0 3px #1d6b501c}.toggle{display:flex;align-items:center;gap:7px;padding:0 5px;color:var(--muted);font-size:.78rem;white-space:nowrap}.toggle input{accent-color:var(--green)}
-    .priority{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 18px}.chip{border:1px solid var(--line);border-radius:999px;padding:7px 11px;background:#fff;color:#52655c;font-size:.75rem;cursor:pointer}.chip.active{border-color:var(--green);background:var(--green);color:#fff}.results-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:13px}.results-head h2{margin:0;font:500 1.55rem Georgia,serif}.count{color:var(--muted);font-size:.82rem}
-    .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;padding-bottom:70px}.card{position:relative;display:flex;flex-direction:column;min-width:0;padding:21px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);box-shadow:0 6px 24px rgba(35,61,50,.05)}.rank{position:absolute;top:18px;right:18px;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#eef3ee;color:#617069;font:700 .77rem Georgia,serif}.top{display:grid;grid-template-columns:49px minmax(0,1fr);gap:12px;padding-right:40px}.avatar{display:grid;place-items:center;width:49px;height:49px;border-radius:15px;background:var(--mint);color:var(--green);font:500 1.12rem Georgia,serif}.name{margin:1px 0 3px;font-size:1.02rem;line-height:1.2}.rating{color:#8a6516;font-size:.74rem}.rating span{color:var(--muted)}.fit{display:inline-flex;margin-top:8px;border-radius:999px;padding:5px 8px;background:var(--peach);color:#765034;font-size:.68rem;font-weight:800}
-    .degree{margin:14px 0 0;padding:11px 12px;border-radius:13px;background:#f3f6f3;color:#495c53;font-size:.77rem}.degree strong{display:block;margin-bottom:2px;color:var(--ink)}.badges{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}.badge{border-radius:999px;padding:5px 8px;background:#edf2ed;color:#53645c;font-size:.68rem;font-weight:750}.badge.online{background:var(--blue);color:#365f7e}.badge.price{background:var(--peach);color:#795237}.badge.warn{background:#fff2d2;color:#785b20}
-    .why-title{margin:5px 0 7px;color:#78867f;font-size:.66rem;font-weight:850;letter-spacing:.07em;text-transform:uppercase}.reasons{display:grid;gap:7px;min-width:0}.reason{min-width:0;padding:9px 10px;border:1px solid #e5ebe5;border-radius:12px;background:#fbfcfa}.reason strong{display:block;color:#345c4c;font-size:.75rem}.reason span{display:block;width:100%;margin-top:2px;color:#697870;font-size:.72rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.reason.direct{border-color:#e6c2be;background:#fff7f5}.reason.direct strong{color:var(--red)}
-    .meta{display:grid;gap:7px;margin:14px 0;color:#5b6b64;font-size:.76rem}.meta-row{display:grid;grid-template-columns:17px 1fr;gap:6px}.meta-row div{overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}details{margin-top:10px;padding-top:11px;border-top:1px solid #edf1ed;color:var(--muted);font-size:.76rem}summary{color:var(--green);font-weight:800;cursor:pointer}.details{display:grid;gap:10px;padding-top:11px}.details strong{display:block;margin-bottom:2px;color:var(--ink)}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:auto;padding-top:16px}.btn{display:flex;align-items:center;justify-content:center;min-height:41px;border-radius:12px;text-decoration:none;font-size:.77rem;font-weight:850;cursor:pointer}.btn.primary{border:1px solid var(--ink);background:var(--ink);color:#fff}.btn.secondary{border:1px solid #cbd7ce;background:#fff;color:var(--ink)}.btn.secondary.active{border-color:var(--green);background:var(--mint);color:var(--green)}
-    .empty{grid-column:1/-1;padding:60px 20px;border:1px dashed #cbd8ce;border-radius:var(--radius);text-align:center;color:var(--muted)}.comparebar{position:fixed;left:50%;bottom:18px;z-index:8;display:none;transform:translateX(-50%);align-items:center;gap:12px;padding:10px 12px 10px 16px;border-radius:999px;background:var(--ink);color:#fff;box-shadow:0 16px 45px #15241f4d;font-size:.78rem}.comparebar.show{display:flex}.comparebar button{border:0;border-radius:999px;padding:8px 12px;background:#fff;color:var(--ink);font-weight:850;cursor:pointer}
-    .modal{position:fixed;inset:0;z-index:12;display:none;padding:24px;background:#15261fba;backdrop-filter:blur(5px);overflow:auto}.modal.open{display:block}.modal-card{width:min(1150px,100%);margin:3vh auto;border-radius:24px;background:#fff;overflow:hidden;box-shadow:0 24px 80px #0005}.modal-head{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:18px 21px;border-bottom:1px solid var(--line);background:#fff}.modal-head h2{margin:0;font:500 1.5rem Georgia,serif}.close{width:38px;height:38px;border:0;border-radius:50%;background:#eef2ee;cursor:pointer}.compare-grid{padding:18px;overflow:auto}.row{display:grid;grid-template-columns:130px repeat(var(--cols),minmax(210px,1fr));border-bottom:1px solid var(--line)}.row>div{padding:12px;font-size:.78rem}.row>div:first-child{color:var(--muted);font-weight:850}.row.names>div:not(:first-child){font:700 1rem Georgia,serif}
-    .safety{margin:-42px auto 38px;padding:15px 18px;border-radius:15px;background:var(--mint);color:#345c4c;font-size:.8rem}.safety strong{color:#214b3b}
-    @media(max-width:900px){.toolbar{position:static;grid-template-columns:1fr 1fr}.toolbar input[type=search]{grid-column:1/-1}.cards{grid-template-columns:1fr}}
-    @media(max-width:600px){.shell{width:calc(100% - 20px)}header{padding-top:34px}.method{grid-template-columns:1fr}.method button{justify-self:start}.toolbar{grid-template-columns:1fr}.toolbar input[type=search]{grid-column:auto}.results-head{align-items:start;flex-direction:column}.card{padding:16px}.modal{padding:8px}.row{grid-template-columns:100px repeat(var(--cols),190px)}.comparebar{width:calc(100% - 20px);justify-content:space-between}}
+    @font-face { font-family: Mondwest; src: url('/fonts/PPMondwest-Regular.otf') format('opentype'); font-display: swap; }
+    :root {
+      --bg: #1a1a1a; --panel: #202020; --panel-2: #242424; --ink: #e7e7e2;
+      --muted: #989893; --faint: #666661; --line: #3a3a36; --orange: #ff8800;
+      --orange-2: #ffaa00; --red: #ff695e; --green: #96c878; --max: 1480px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--ink); background: var(--bg); font-family: "IBM Plex Mono", monospace; font-size: 14px; line-height: 1.55; }
+    button, input, select, textarea { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    a { color: var(--orange); text-underline-offset: 3px; }
+    ::selection { color: #111; background: var(--orange); }
+    :focus-visible { outline: 1px solid var(--orange); outline-offset: 3px; }
+    .shell { width: min(var(--max), calc(100% - 48px)); margin: 0 auto; }
+    .nav { display: flex; align-items: center; justify-content: space-between; min-height: 66px; border-bottom: 1px solid var(--line); }
+    .brand { color: var(--ink); text-decoration: none; font-family: Mondwest, monospace; font-size: 1.35rem; }
+    .brand span, .nav-index { color: var(--orange); }
+    .nav-index { font-size: .74rem; text-transform: uppercase; letter-spacing: .08em; }
+    .hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 60px; padding: 74px 0 56px; overflow: hidden; }
+    .kicker { color: var(--orange); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; }
+    h1 { max-width: 900px; margin: 14px 0 22px; font-family: Mondwest, monospace; font-size: clamp(3.5rem, 8vw, 7.7rem); font-weight: 400; letter-spacing: -.035em; line-height: .82; }
+    h1 em { color: var(--orange); font-style: normal; }
+    .lead { max-width: 760px; margin: 0; color: #b8b8b3; font-size: clamp(.92rem, 1.3vw, 1.05rem); }
+    .signal { align-self: end; min-height: 175px; padding: 18px; border: 1px solid var(--line); color: var(--faint); font-size: .72rem; line-height: 1.4; white-space: pre; overflow: hidden; }
+    .signal b { color: var(--orange); font-weight: 400; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .stat { padding: 19px 18px; border-right: 1px solid var(--line); }
+    .stat:first-child { padding-left: 0; }
+    .stat:last-child { border: 0; }
+    .stat strong { display: block; font-family: Mondwest, monospace; color: var(--orange); font-size: 1.55rem; font-weight: 400; }
+    .stat span { color: var(--muted); font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; }
+
+    .ai-wrap { margin: 42px 0 38px; border: 1px solid var(--orange); background: #1d1b18; }
+    .ai-bar { display: flex; justify-content: space-between; gap: 18px; padding: 10px 14px; border-bottom: 1px solid #6d481d; color: var(--orange); font-size: .71rem; letter-spacing: .06em; text-transform: uppercase; }
+    .ai-state { color: var(--muted); }
+    .ai-state.ready { color: var(--green); }
+    .ai-body { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: stretch; }
+    .prompt-wrap { position: relative; }
+    .prompt-prefix { position: absolute; top: 20px; left: 18px; color: var(--orange); }
+    #naturalQuery { width: 100%; min-height: 108px; resize: vertical; border: 0; border-radius: 0; padding: 18px 20px 18px 42px; color: var(--ink); background: transparent; outline: 0; }
+    #naturalQuery::placeholder { color: #77736d; }
+    .ai-actions { display: grid; min-width: 210px; border-left: 1px solid #6d481d; }
+    .ai-run, .ai-config { border: 0; border-bottom: 1px solid #6d481d; padding: 12px 18px; color: #13110e; background: var(--orange); font-weight: 600; cursor: pointer; }
+    .ai-run:hover { background: var(--orange-2); }
+    .ai-run:disabled { color: #8a765e; background: #493a28; cursor: wait; }
+    .ai-config { border: 0; color: var(--orange); background: transparent; font-size: .75rem; font-weight: 400; }
+    .ai-config:hover { background: #282118; }
+    .ai-note { padding: 9px 14px; border-top: 1px solid #6d481d; color: #8d8983; font-size: .68rem; }
+    .ai-note code { color: #c7a06f; }
+    .ai-output { display: none; padding: 18px; border-top: 1px solid var(--orange); background: #181818; }
+    .ai-output.open { display: block; }
+    .ai-output-head { display: flex; justify-content: space-between; gap: 14px; align-items: start; }
+    .ai-output h2 { margin: 0 0 5px; font-family: Mondwest; font-size: 1.65rem; font-weight: 400; }
+    .ai-summary { max-width: 860px; margin: 0; color: var(--muted); font-size: .78rem; }
+    .ai-clear { border: 0; padding: 0; color: var(--orange); background: transparent; cursor: pointer; }
+    .ai-disclaimer { margin-top: 12px; padding: 9px 11px; border-left: 2px solid var(--orange); color: #aaa49b; background: #211e1a; font-size: .68rem; }
+
+    .app { display: grid; grid-template-columns: 276px minmax(0, 1fr); gap: 38px; align-items: start; padding-bottom: 80px; }
+    .filters { position: sticky; top: 18px; border-top: 1px solid var(--line); }
+    .filters-head { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .filters h2 { margin: 0; font-size: .72rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; }
+    .clear { border: 0; padding: 0; color: var(--orange); background: transparent; font-size: .69rem; cursor: pointer; }
+    .field { padding: 14px 0; border-bottom: 1px solid var(--line); }
+    label, .label { display: block; margin: 0 0 8px; color: var(--muted); font-size: .67rem; letter-spacing: .05em; text-transform: uppercase; }
+    input[type="search"], input[type="number"], input[type="password"], input[type="text"], select {
+      width: 100%; height: 39px; border: 1px solid var(--line); border-radius: 0; padding: 0 10px; color: var(--ink); background: var(--panel); outline: 0;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--orange); }
+    select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--orange) 50%), linear-gradient(135deg, var(--orange) 50%, transparent 50%); background-position: calc(100% - 14px) 16px, calc(100% - 10px) 16px; background-size: 4px 4px; background-repeat: no-repeat; }
+    .mode { display: grid; grid-template-columns: repeat(3, 1fr); }
+    .mode button { min-height: 34px; border: 1px solid var(--line); border-right: 0; color: var(--muted); background: transparent; font-size: .67rem; cursor: pointer; }
+    .mode button:last-child { border-right: 1px solid var(--line); }
+    .mode button.active { border-color: var(--orange); color: #111; background: var(--orange); }
+    .checks { display: grid; gap: 10px; }
+    .check { display: flex; gap: 9px; align-items: flex-start; margin: 0; color: #b2b2ad; font-size: .72rem; letter-spacing: 0; text-transform: none; cursor: pointer; }
+    .check input { margin: 3px 0 0; accent-color: var(--orange); }
+    .mobile-filters { display: none; }
+    .results { min-width: 0; }
+    .results-head { display: flex; justify-content: space-between; align-items: end; gap: 20px; min-height: 54px; padding: 0 0 12px; border-bottom: 1px solid var(--line); }
+    .results-head h2 { margin: 0 0 2px; font-family: Mondwest; font-size: 1.7rem; font-weight: 400; }
+    .count { color: var(--muted); font-size: .7rem; }
+    .head-actions { display: flex; gap: 8px; }
+    .sort { width: 225px; height: 36px; font-size: .7rem; }
+    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .card { position: relative; min-width: 0; padding: 20px 20px 18px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--bg); }
+    .card:nth-child(2n) { border-right: 0; }
+    .card::before { content: attr(data-index); position: absolute; top: 21px; right: 19px; color: var(--faint); font-size: .62rem; }
+    .card:hover { background: #1d1d1d; }
+    .ai-reason { margin: -20px -20px 17px; padding: 11px 46px 11px 20px; color: #d2b98e; background: #292116; font-size: .68rem; }
+    .ai-reason strong { color: var(--orange); }
+    .name { max-width: calc(100% - 42px); margin: 0 0 5px; font-family: Mondwest; font-size: 1.42rem; font-weight: 400; line-height: 1.05; }
+    .rating { color: var(--orange-2); font-size: .68rem; }
+    .rating span { color: var(--faint); }
+    .tokens { display: flex; flex-wrap: wrap; gap: 5px; margin: 15px 0; }
+    .token { padding: 3px 6px; border: 1px solid var(--line); color: #aaa9a3; font-size: .62rem; }
+    .token.orange { border-color: #744919; color: var(--orange); }
+    .token.warn { border-color: #75413c; color: #ef8e85; }
+    .info { display: grid; grid-template-columns: 84px 1fr; gap: 7px 10px; margin: 14px 0; font-size: .7rem; }
+    .info dt { color: var(--faint); }
+    .info dd { min-width: 0; margin: 0; color: #b8b8b2; overflow-wrap: anywhere; }
+    .topics { min-height: 43px; margin: 15px 0; color: #aaa9a3; font-size: .69rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    details { margin-top: 14px; border-top: 1px dotted var(--line); color: var(--muted); font-size: .7rem; }
+    summary { padding: 10px 0 0; color: var(--orange); cursor: pointer; }
+    .detail-body { display: grid; gap: 11px; padding-top: 12px; }
+    .detail-body b { display: block; color: #c2c2bc; font-weight: 500; }
+    .card-actions { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-top: 18px; }
+    .profile, .copy-link { display: inline-flex; align-items: center; justify-content: center; min-height: 38px; border: 1px solid var(--orange); color: var(--orange); background: transparent; text-decoration: none; font-size: .7rem; cursor: pointer; }
+    .profile:hover { color: #111; background: var(--orange); }
+    .copy-link { width: 42px; border-color: var(--line); color: var(--muted); }
+    .copy-link:hover { border-color: var(--orange); color: var(--orange); }
+    .load { display: block; width: 100%; min-height: 48px; margin-top: 18px; border: 1px solid var(--line); color: var(--orange); background: transparent; cursor: pointer; }
+    .load:hover { border-color: var(--orange); }
+    .empty { grid-column: 1 / -1; min-height: 280px; display: grid; place-content: center; gap: 8px; text-align: center; color: var(--muted); }
+    .empty strong { color: var(--ink); font-family: Mondwest; font-size: 1.5rem; font-weight: 400; }
+
+    .modal { position: fixed; inset: 0; z-index: 30; display: none; place-items: center; padding: 20px; background: rgba(0,0,0,.76); backdrop-filter: blur(7px); }
+    .modal.open { display: grid; }
+    .modal-card { width: min(620px, 100%); max-height: calc(100vh - 40px); overflow: auto; border: 1px solid var(--orange); background: var(--bg); box-shadow: 16px 16px 0 rgba(0,0,0,.3); }
+    .modal-head { display: flex; justify-content: space-between; align-items: center; padding: 15px 18px; border-bottom: 1px solid var(--line); }
+    .modal-head h2 { margin: 0; font-family: Mondwest; font-size: 1.5rem; font-weight: 400; }
+    .close { border: 0; color: var(--orange); background: transparent; cursor: pointer; }
+    .modal-body { padding: 18px; }
+    .modal-copy { margin: 0 0 18px; color: var(--muted); font-size: .74rem; }
+    .modal-copy strong { color: var(--ink); }
+    .modal .field { border: 0; padding: 0 0 16px; }
+    .key-row { display: grid; grid-template-columns: 1fr auto; }
+    .key-row button { width: 76px; border: 1px solid var(--line); border-left: 0; color: var(--muted); background: var(--panel); cursor: pointer; }
+    .save-settings { width: 100%; min-height: 42px; border: 1px solid var(--orange); color: #111; background: var(--orange); cursor: pointer; font-weight: 600; }
+    .privacy { margin-top: 14px; color: var(--faint); font-size: .65rem; }
+    .error { display: none; margin: 0 0 15px; padding: 10px; border-left: 2px solid var(--red); color: #e8aaa5; background: #281c1b; font-size: .7rem; }
+    .error.open { display: block; }
+
+    footer { padding: 34px 0 48px; border-top: 1px solid var(--line); color: var(--faint); font-size: .68rem; }
+    .footer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    footer p { max-width: 680px; margin: 0; }
+    footer .crisis { color: #aaa9a3; }
+    .noscript { margin: 30px auto; padding: 20px; border: 1px solid var(--red); color: var(--red); }
+
+    @media (max-width: 980px) {
+      .hero { grid-template-columns: 1fr; }
+      .signal { display: none; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .stat:nth-child(2) { border-right: 0; }
+      .app { grid-template-columns: 1fr; gap: 18px; }
+      .filters { display: none; position: static; }
+      .filters.open { display: block; }
+      .mobile-filters { display: inline-flex; min-height: 36px; border: 1px solid var(--line); padding: 0 10px; color: var(--orange); background: transparent; align-items: center; cursor: pointer; }
+    }
+    @media (max-width: 680px) {
+      .shell { width: min(100% - 24px, var(--max)); }
+      .nav { min-height: 54px; }
+      .hero { padding: 46px 0 38px; }
+      h1 { font-size: clamp(3.25rem, 19vw, 5.4rem); }
+      .stats { margin-inline: -12px; }
+      .stat { padding: 14px 12px; }
+      .stat:first-child { padding-left: 12px; }
+      .ai-body { grid-template-columns: 1fr; }
+      .ai-actions { grid-template-columns: 1fr 1fr; min-width: 0; border-top: 1px solid #6d481d; border-left: 0; }
+      .ai-run { border-right: 1px solid #6d481d; border-bottom: 0; }
+      .cards { grid-template-columns: 1fr; }
+      .card { border-right: 0; padding-inline: 14px; }
+      .ai-reason { margin-inline: -14px; padding-left: 14px; }
+      .results-head { align-items: flex-start; flex-direction: column; }
+      .head-actions { width: 100%; }
+      .sort { flex: 1; min-width: 0; }
+      .footer-grid { grid-template-columns: 1fr; gap: 20px; }
+    }
   </style>
 </head>
 <body>
-  <header class="shell">
-    <div class="eyebrow">Selección hecha para tu caso</div>
-    <h1>Menos perfiles. Más razones para elegir.</h1>
-    <p class="lead">Una selección estricta basada en formación universitaria declarada, enfoque cognitivo y clínico en adultos, y coincidencias textuales con lo que quieres trabajar.</p>
-    <div class="summary"><span class="pill"><strong id="total">—</strong> perfiles finales</span><span class="pill">Pregrado: <strong>UC o U. de Chile</strong></span><span class="pill"><strong>Adultos + enfoque cognitivo</strong></span><span class="pill">Sin menciones alternativas detectadas</span></div>
+  <nav class="nav shell" aria-label="Navegación principal">
+    <a class="brand" href="/">natochi<span>.</span></a>
+    <span class="nav-index">/ psicólogos_</span>
+  </nav>
+
+  <header class="hero shell">
+    <div>
+      <div class="kicker">directorio independiente / chile</div>
+      <h1>buscar<br><em>psicólogo/a</em></h1>
+      <p class="lead">8.491 perfiles públicos, reunidos para que puedas buscar con filtros claros o describiendo en lenguaje natural lo que necesitas. Sin rankings pagados ni cuentas obligatorias.</p>
+    </div>
+    <div class="signal" aria-hidden="true">01 ────────────●────────
+   ╲               ╲
+02  ●───────●       ●─────
+       ╲       ╲
+03      ●       <b>tu búsqueda_</b>
+          ╲           ╲
+04 ────────●───────────●
+
+datos locales  ───────── 8.491
+IA opcional    ───────── BYOK</div>
   </header>
 
-  <main class="shell">
-    <div class="method"><div><strong>Cómo leer esta selección:</strong> el orden mide coincidencias del texto del perfil con tus prioridades; no mide calidad clínica. La nacionalidad no aparece de forma confiable en Doctoralia, por lo que sólo pude comprobar el pregrado declarado en Chile.</div><button id="methodButton">Ver criterio exacto</button></div>
-    <div class="method-detail" id="methodDetail">
-      <strong>Filtro base aplicado a los 8.491 perfiles:</strong>
-      <ul>
-        <li>El apartado de formación debía indicar título o licenciatura en Psicología en la Pontificia Universidad Católica de Chile o la Universidad de Chile. Cursos, diplomados, trabajos y reválidas no cuentan.</li>
-        <li>El perfil debía declarar enfoque cognitivo-conductual, cognitivo constructivista o dialéctico-conductual, y atención clínica o psicoterapia con adultos.</li>
-        <li>Se excluyeron menciones a Reiki, flores de Bach, homeopatía, biomagnetismo, tarot, medicina alternativa/complementaria, terapias energéticas, hipnosis, PNL, yoga terapéutico y categorías similares.</li>
-        <li>La posición se calcula por menciones a rumiación/pensamientos repetitivos, TOC/compulsiones, trauma/TEPT, pareja/vínculos y regulación emocional. Una mención directa de conducta autodestructiva se distingue expresamente.</li>
-      </ul>
-      Este es un análisis del texto público, no una evaluación profesional ni una verificación de nacionalidad. Conviene confirmar título en el Registro Nacional de Prestadores y preguntar directamente por experiencia con tu motivo de consulta.
-    </div>
+  <section class="stats shell" aria-label="Resumen de datos">
+    <div class="stat"><strong id="totalStat">8.491</strong><span>perfiles</span></div>
+    <div class="stat"><strong id="onlineStat">—</strong><span>indican online</span></div>
+    <div class="stat"><strong id="priceStat">—</strong><span>publican precio</span></div>
+    <div class="stat"><strong>20.08.26</strong><span>última captura</span></div>
+  </section>
 
-    <div class="toolbar">
-      <input id="query" type="search" placeholder="Buscar dentro de la selección…" aria-label="Buscar">
-      <select id="university" aria-label="Universidad"><option value="">Ambas universidades</option><option value="uc">Sólo UC</option><option value="uchile">Sólo U. de Chile</option></select>
-      <input id="maxPrice" type="number" min="5000" step="5000" placeholder="Precio máx." aria-label="Precio máximo">
-      <label class="toggle"><input id="online" type="checkbox"> Online</label>
-      <select id="sort" aria-label="Ordenar"><option value="fit">Mejor ajuste textual</option><option value="price">Menor precio</option><option value="reviews">Más opiniones</option></select>
+  <section class="ai-wrap shell" aria-labelledby="aiTitle">
+    <div class="ai-bar"><span id="aiTitle">// búsqueda con lenguaje natural</span><span class="ai-state" id="aiState">API no configurada</span></div>
+    <div class="ai-body">
+      <div class="prompt-wrap">
+        <span class="prompt-prefix">›</span>
+        <textarea id="naturalQuery" placeholder="Busco una psicóloga UC o U. de Chile, enfoque cognitivo, que atienda adultos por trauma y pensamientos rumiantes; sin terapias alternativas…"></textarea>
+      </div>
+      <div class="ai-actions">
+        <button class="ai-run" id="aiRun">buscar con IA →</button>
+        <button class="ai-config" id="aiConfig">configurar OpenRouter</button>
+      </div>
     </div>
-
-    <div class="priority" id="priorities">
-      <button class="chip active" data-key="">Todas las prioridades</button><button class="chip" data-key="rumiacion">Rumiación</button><button class="chip" data-key="compulsiones">Obsesiones / compulsiones</button><button class="chip" data-key="trauma">Trauma / TEPT</button><button class="chip" data-key="pareja">Pareja / vínculos</button><button class="chip" data-key="autodestruccion">Mención directa de autodestrucción</button><button class="chip" data-key="regulacion">Regulación / impulsividad</button>
+    <div class="ai-note">Opcional · usa tu propia API key de OpenRouter · se envían la consulta y hasta 100 candidatos preseleccionados, <strong>no</strong> la base completa.</div>
+    <div class="ai-output" id="aiOutput">
+      <div class="ai-output-head">
+        <div><h2>selección asistida</h2><p class="ai-summary" id="aiSummary"></p></div>
+        <button class="ai-clear" id="aiClear">cerrar ×</button>
+      </div>
+      <div class="ai-disclaimer" id="aiMeta"></div>
     </div>
+  </section>
 
-    <div class="results-head"><div><h2>Perfiles que pasan el filtro</h2><div class="count" id="count"></div></div></div>
-    <div class="cards" id="cards"></div>
+  <main class="app shell">
+    <aside class="filters" id="filters">
+      <div class="filters-head"><h2>// filtros locales</h2><button class="clear" id="clearFilters">limpiar</button></div>
+      <div class="field"><label for="query">texto en el perfil</label><input id="query" type="search" placeholder="trauma, cognitivo, UC…" autocomplete="off"></div>
+      <div class="field">
+        <span class="label">modalidad</span>
+        <div class="mode" id="mode"><button class="active" data-mode="all">todas</button><button data-mode="online">online</button><button data-mode="presential">presencial</button></div>
+      </div>
+      <div class="field"><label for="city">ciudad / comuna</label><select id="city"><option value="">cualquier lugar</option></select></div>
+      <div class="field"><label for="maxPrice">precio máximo publicado</label><input id="maxPrice" type="number" min="5000" step="5000" inputmode="numeric" placeholder="$ CLP"></div>
+      <div class="field"><label for="focus">tema frecuente</label><select id="focus"><option value="">cualquier tema</option><option value="trauma|postraumatico|abuso">trauma</option><option value="ansiedad|angustia|estres|panico">ansiedad / estrés</option><option value="depres|animo|autodestruc|suicid">depresión / ánimo</option><option value="obses|compuls|rumia">obsesiones / compulsiones</option><option value="pareja|conyugal|vincul|relacion">pareja / vínculos</option><option value="autoestima|inseguridad">autoestima</option><option value="duelo">duelo</option><option value="adiccion|alcohol|drog">adicciones</option></select></div>
+      <div class="field checks">
+        <label class="check"><input id="onlyPrice" type="checkbox"> sólo con precio publicado</label>
+        <label class="check"><input id="onlyReviews" type="checkbox"> sólo con opiniones</label>
+        <label class="check"><input id="onlyAdult" type="checkbox"> menciona atención de adultos</label>
+        <label class="check"><input id="excludeAlt" type="checkbox"> excluir menciones alternativas*</label>
+      </div>
+      <div class="field"><span class="label">*reiki, flores de Bach, tarot, registros akáshicos, biomagnetismo, constelaciones y similares.</span></div>
+    </aside>
+
+    <section class="results">
+      <div class="results-head">
+        <div><h2 id="resultsTitle">todos los perfiles</h2><div class="count" id="count" aria-live="polite">cargando datos…</div></div>
+        <div class="head-actions"><button class="mobile-filters" id="mobileFilters">filtros</button><select class="sort" id="sort" aria-label="Ordenar resultados"><option value="reviews">más opiniones primero</option><option value="price">menor precio</option><option value="rating">mejor evaluación</option><option value="name">nombre A—Z</option></select></div>
+      </div>
+      <div class="cards" id="cards"></div>
+      <button class="load" id="load">mostrar 24 más ↓</button>
+    </section>
   </main>
 
-  <div class="shell safety"><strong>Nota importante:</strong> un directorio no reemplaza una evaluación. Si “autodestrucción” llega a significar riesgo inmediato o ganas de hacerte daño, usa apoyo urgente además de buscar terapia: *4141 desde celular, 131 o urgencias.</div>
-  <div class="comparebar" id="comparebar"><span id="compareCount"></span><button id="openCompare">Comparar ahora</button></div>
-  <div class="modal" id="modal" role="dialog" aria-modal="true"><div class="modal-card"><div class="modal-head"><h2>Comparar finalistas</h2><button class="close" id="close" aria-label="Cerrar">✕</button></div><div class="compare-grid" id="compareGrid"></div></div></div>
+  <footer>
+    <div class="footer-grid shell">
+      <p>Fuente: información pública de perfiles en Doctoralia Chile, capturada el 20 de agosto de 2026. Este explorador no está afiliado a Doctoralia. Verifica directamente credenciales, enfoque, precio y disponibilidad antes de decidir.</p>
+      <p class="crisis">Esto ayuda a comparar; no reemplaza orientación clínica. Si tú o alguien cercano corre peligro inmediato, llama al <strong>131</strong> o acude a urgencias. En Chile, también puedes llamar gratis a <strong>*4141</strong> desde un celular.</p>
+    </div>
+  </footer>
 
-  <script src="data/seleccion_personal.js"></script>
+  <div class="modal" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="modal-card">
+      <div class="modal-head"><h2 id="settingsTitle">conectar OpenRouter_</h2><button class="close" id="closeSettings" aria-label="Cerrar">cerrar ×</button></div>
+      <form class="modal-body" id="settingsForm">
+        <p class="modal-copy"><strong>Tu clave va directamente desde este navegador a OpenRouter.</strong> natochi.cv no tiene un servidor que la reciba. Puedes dejarla sólo en memoria o conservarla en <code>sessionStorage</code> hasta cerrar esta pestaña.</p>
+        <div class="error" id="settingsError"></div>
+        <div class="field"><label for="apiKey">OpenRouter API key</label><div class="key-row"><input id="apiKey" type="password" placeholder="sk-or-v1-…" autocomplete="off" spellcheck="false"><button id="showKey" type="button">mostrar</button></div></div>
+        <div class="field"><label for="model">modelo</label><input id="model" type="text" value="openrouter/auto" list="modelOptions" spellcheck="false"><datalist id="modelOptions"><option value="openrouter/auto"><option value="openrouter/free"></datalist></div>
+        <div class="field"><label class="check"><input id="rememberKey" type="checkbox"> recordar únicamente durante esta pestaña</label></div>
+        <button class="save-settings" type="submit">guardar configuración →</button>
+        <p class="privacy">Necesitas saldo si eliges <code>openrouter/auto</code>. <code>openrouter/free</code> intenta usar un modelo gratuito y puede ser menos consistente. Crea o administra claves en <a href="https://openrouter.ai/settings/keys" target="_blank" rel="noopener noreferrer">openrouter.ai/settings/keys</a>.</p>
+      </form>
+    </div>
+  </div>
+
+  <noscript><div class="noscript shell">Este explorador necesita JavaScript para filtrar los perfiles locales.</div></noscript>
+  <script src="data/psicologos_web.js"></script>
   <script>
-    (()=>{
-      const DATA=window.SELECCION_PERSONAL||[], $=s=>document.querySelector(s), fmt=new Intl.NumberFormat('es-CL');
-      const norm=(v='')=>v.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
-      const esc=(v='')=>String(v).replace(/[&<>"]/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[x]));
-      const split=(v='')=>v.split(' | ').filter(Boolean), selected=new Set(); let priority='';
-      DATA.forEach((p,i)=>{p.id=i;p.search=norm([p.n,p.uni,p.a,p.s,p.t,p.b,p.c].join(' '))});
-      $('#total').textContent=DATA.length;
-      const price=p=>p.p?`$${fmt.format(p.p)}`:p.pa!==null?`Valor atípico: $${fmt.format(p.pa)}`:'Precio por consultar';
-      const initials=n=>n.replace(/^(Ps\.|Dr\.|Dra\.)\s*/i,'').split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase();
-      function list(){const q=norm($('#query').value).trim(),tokens=q.split(/\s+/).filter(Boolean),uni=$('#university').value,max=Number($('#maxPrice').value)||0,on=$('#online').checked;
-        const out=DATA.filter(p=>!tokens.some(t=>!p.search.includes(t))&&(!uni||(uni==='uc'?norm(p.uni).includes('catolica'):p.uni==='Universidad de Chile'))&&(!max||(p.p&&p.p<=max))&&(!on||p.on)&&(!priority||p.reasons.some(r=>r.key===priority)));
-        const sort=$('#sort').value;out.sort((a,b)=>sort==='price'?(a.p??Infinity)-(b.p??Infinity)||b.score-a.score:sort==='reviews'?b.o-a.o||b.score-a.score:b.score-a.score||b.o-a.o);return out}
-      function card(p){return `<article class="card"><div class="rank">#${p.rank}</div><div class="top"><div class="avatar">${esc(initials(p.n))}</div><div><h3 class="name">${esc(p.n)}</h3><div class="rating">★ ${esc(p.r||'—')} <span>· ${fmt.format(p.o)} opiniones</span></div><span class="fit">${esc(p.fit)}</span></div></div>
-        <div class="degree"><strong>${esc(p.uni)}</strong>${esc(p.degree[0])}</div><div class="badges">${p.on?'<span class="badge online">Online indicado</span>':''}<span class="badge ${p.pa!==null?'warn':'price'}">${esc(price(p))}</span>${split(p.a).slice(0,3).map(x=>`<span class="badge">${esc(x)}</span>`).join('')}</div>
-        <div class="why-title">Por qué apareció</div><div class="reasons">${p.reasons.map(r=>`<div class="reason ${r.key==='autodestruccion'?'direct':''}"><strong>${esc(r.label)}</strong><span title="${esc(r.evidence)}">${esc(r.evidence)}</span></div>`).join('')}</div>
-        <div class="meta">${p.c?`<div class="meta-row"><span>⌖</span><div>${esc(p.c)}</div></div>`:''}${p.i?`<div class="meta-row"><span>◇</span><div>${esc(split(p.i).slice(0,4).join(' · '))}</div></div>`:''}</div>
-        <details><summary>Leer descripción y formación completa</summary><div class="details"><div><strong>Descripción publicada</strong>${esc(p.b||'No publicada')}</div><div><strong>Áreas tratadas</strong>${esc(p.t||'No publicadas')}</div><div><strong>Especialidades</strong>${esc(p.s||'No publicadas')}</div><div><strong>Formación</strong>${esc(p.f||'No publicada')}</div>${p.other.length?`<div><strong>Otros enfoques también declarados</strong>${esc(p.other.join(' · '))}</div>`:''}${p.d?`<div><strong>Direcciones</strong>${esc(p.d)}</div>`:''}</div></details>
-        <div class="actions"><button class="btn secondary ${selected.has(p.u)?'active':''}" data-compare="${p.id}">${selected.has(p.u)?'Seleccionado':'Comparar'}</button><a class="btn primary" href="${esc(p.u)}" target="_blank" rel="noopener">Ver perfil original ↗</a></div></article>`}
-      function render(){const items=list();$('#count').textContent=`${items.length} de ${DATA.length} perfiles`;$('#cards').innerHTML=items.length?items.map(card).join(''):'<div class="empty">No hay coincidencias con todos esos filtros. Prueba quitando uno.</div>';$('#compareCount').textContent=`${selected.size} seleccionado${selected.size===1?'':'s'}`;$('#comparebar').classList.toggle('show',selected.size>0)}
-      function comparison(){const ps=DATA.filter(p=>selected.has(p.u)),rows=[['Nombre',p=>p.n],['Ajuste textual',p=>p.fit],['Universidad',p=>p.degree[0]],['Coincidencias',p=>p.reasons.map(x=>x.label).join(' · ')],['Precio',price],['Online',p=>p.on?'Sí, indicado':'No indicado'],['Ubicación',p=>p.c||'—'],['Enfoques',p=>p.a],['Áreas',p=>p.t],['Perfil',p=>`<a href="${esc(p.u)}" target="_blank">Abrir ↗</a>`]];const grid=$('#compareGrid');grid.style.setProperty('--cols',ps.length);grid.innerHTML=rows.map((r,i)=>`<div class="row ${i===0?'names':''}"><div>${r[0]}</div>${ps.map(p=>`<div>${i===9?r[1](p):esc(r[1](p))}</div>`).join('')}</div>`).join('');$('#modal').classList.add('open')}
-      let timer;$('#query').addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(render,160)});['university','maxPrice','online','sort'].forEach(id=>$('#'+id).addEventListener(id==='maxPrice'?'input':'change',render));
-      $('#priorities').addEventListener('click',e=>{if(!e.target.dataset.key&&e.target.dataset.key!=='')return;priority=e.target.dataset.key;document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x===e.target));render()});
-      $('#cards').addEventListener('click',e=>{const b=e.target.closest('[data-compare]');if(!b)return;const p=DATA[b.dataset.compare];selected.has(p.u)?selected.delete(p.u):selected.size<4?selected.add(p.u):alert('Puedes comparar hasta cuatro perfiles.');render()});
-      $('#methodButton').addEventListener('click',()=>{$('#methodDetail').classList.toggle('open');$('#methodButton').textContent=$('#methodDetail').classList.contains('open')?'Ocultar criterio':'Ver criterio exacto'});$('#openCompare').addEventListener('click',comparison);$('#close').addEventListener('click',()=>$('#modal').classList.remove('open'));$('#modal').addEventListener('click',e=>{if(e.target===$('#modal'))$('#modal').classList.remove('open')});document.addEventListener('keydown',e=>{if(e.key==='Escape')$('#modal').classList.remove('open')});render();
-    })();
+  (() => {
+    'use strict';
+    const $ = (s, root = document) => root.querySelector(s);
+    const $$ = (s, root = document) => [...root.querySelectorAll(s)];
+    const fmt = new Intl.NumberFormat('es-CL');
+    const esc = value => String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+    const norm = value => String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    const truncate = (value, max) => String(value || '').length > max ? String(value).slice(0, max - 1) + '…' : String(value || '');
+    const profiles = Array.isArray(window.PSICOLOGOS) ? window.PSICOLOGOS : [];
+    const altPattern = /reiki|flores? de bach|terapia floral|tarot|akashic|biomagnet|sanacion cuant|constelaciones? familiares|gemoterapia|auriculoterapia|regresion(es)?|cuencos tibetanos|medicina alternativa|terapia angelical|pendulo/i;
+    const adultPattern = /adult[oa]s?|adultez|mayores de 18|psicologia clinica de adultos/i;
+    const state = { mode: 'all', visible: 24, filtered: [], ai: null, apiKey: '', model: 'openrouter/auto' };
+
+    profiles.forEach((p, id) => {
+      p.id = id;
+      p._text = norm([p.n,p.c,p.d,p.a,p.s,p.t,p.f,p.e,p.i,p.b].join(' '));
+      p._alt = altPattern.test(p._text);
+      p._adult = adultPattern.test(p._text);
+    });
+
+    const els = {
+      cards: $('#cards'), count: $('#count'), load: $('#load'), query: $('#query'), city: $('#city'), maxPrice: $('#maxPrice'), focus: $('#focus'),
+      onlyPrice: $('#onlyPrice'), onlyReviews: $('#onlyReviews'), onlyAdult: $('#onlyAdult'), excludeAlt: $('#excludeAlt'), sort: $('#sort'), filters: $('#filters'),
+      aiOutput: $('#aiOutput'), aiSummary: $('#aiSummary'), aiMeta: $('#aiMeta'), naturalQuery: $('#naturalQuery'), aiRun: $('#aiRun'), aiState: $('#aiState'),
+      modal: $('#settingsModal'), apiKey: $('#apiKey'), model: $('#model'), remember: $('#rememberKey'), error: $('#settingsError')
+    };
+
+    function setup() {
+      $('#totalStat').textContent = fmt.format(profiles.length);
+      $('#onlineStat').textContent = fmt.format(profiles.filter(p => p.on).length);
+      $('#priceStat').textContent = fmt.format(profiles.filter(p => validPrice(p.p)).length);
+      [...new Set(profiles.map(p => p.c).filter(Boolean))].sort((a,b) => a.localeCompare(b,'es')).forEach(city => els.city.add(new Option(city, city)));
+      try {
+        const saved = sessionStorage.getItem('natochi_openrouter');
+        if (saved) { const parsed = JSON.parse(saved); state.apiKey = parsed.key || ''; state.model = parsed.model || state.model; els.remember.checked = Boolean(state.apiKey); }
+      } catch (_) {}
+      els.model.value = state.model;
+      updateApiState();
+      bind();
+      applyFilters();
+    }
+
+    function bind() {
+      let timer;
+      els.query.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(resetAndFilter, 120); });
+      [els.city, els.maxPrice, els.focus, els.onlyPrice, els.onlyReviews, els.onlyAdult, els.excludeAlt, els.sort].forEach(el => el.addEventListener('change', resetAndFilter));
+      $$('#mode button').forEach(btn => btn.addEventListener('click', () => { $$('#mode button').forEach(x => x.classList.remove('active')); btn.classList.add('active'); state.mode = btn.dataset.mode; resetAndFilter(); }));
+      $('#clearFilters').addEventListener('click', clearFilters);
+      $('#mobileFilters').addEventListener('click', () => els.filters.classList.toggle('open'));
+      els.load.addEventListener('click', () => { state.visible += 24; render(); });
+      $('#aiConfig').addEventListener('click', openSettings);
+      $('#closeSettings').addEventListener('click', closeSettings);
+      els.modal.addEventListener('click', e => { if (e.target === els.modal) closeSettings(); });
+      $('#showKey').addEventListener('click', () => { const show = els.apiKey.type === 'password'; els.apiKey.type = show ? 'text' : 'password'; $('#showKey').textContent = show ? 'ocultar' : 'mostrar'; });
+      $('#settingsForm').addEventListener('submit', saveSettings);
+      els.aiRun.addEventListener('click', runAI);
+      $('#aiClear').addEventListener('click', clearAI);
+      els.naturalQuery.addEventListener('keydown', e => { if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') runAI(); });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape' && els.modal.classList.contains('open')) closeSettings(); });
+      els.cards.addEventListener('click', e => {
+        const copy = e.target.closest('[data-copy]');
+        if (copy) navigator.clipboard.writeText(copy.dataset.copy).then(() => { copy.textContent = '✓'; setTimeout(() => copy.textContent = '↗', 1000); });
+      });
+    }
+
+    function validPrice(price) { return Number.isFinite(price) && price >= 5000 && price <= 300000; }
+    function resetAndFilter() { state.visible = 24; state.ai = null; els.aiOutput.classList.remove('open'); $('#resultsTitle').textContent = 'todos los perfiles'; applyFilters(); }
+    function applyFilters() {
+      const q = norm(els.query.value.trim());
+      const focus = els.focus.value ? new RegExp(els.focus.value, 'i') : null;
+      const max = Number(els.maxPrice.value) || 0;
+      state.filtered = profiles.filter(p => {
+        if (q && !p._text.includes(q) && !q.split(/\s+/).every(t => p._text.includes(t))) return false;
+        if (state.mode === 'online' && !p.on) return false;
+        if (state.mode === 'presential' && (!p.c && !p.d)) return false;
+        if (els.city.value && p.c !== els.city.value) return false;
+        if (max && (!validPrice(p.p) || p.p > max)) return false;
+        if (focus && !focus.test(p._text)) return false;
+        if (els.onlyPrice.checked && !validPrice(p.p)) return false;
+        if (els.onlyReviews.checked && !(Number(p.o) > 0)) return false;
+        if (els.onlyAdult.checked && !p._adult) return false;
+        if (els.excludeAlt.checked && p._alt) return false;
+        return true;
+      });
+      sortProfiles(state.filtered, els.sort.value);
+      render();
+    }
+
+    function sortProfiles(list, mode) {
+      const collator = new Intl.Collator('es');
+      list.sort((a,b) => {
+        if (mode === 'price') return (validPrice(a.p) ? a.p : Infinity) - (validPrice(b.p) ? b.p : Infinity) || Number(b.o)-Number(a.o);
+        if (mode === 'rating') return Number(b.r)-Number(a.r) || Number(b.o)-Number(a.o);
+        if (mode === 'name') return collator.compare(a.n,b.n);
+        return Number(b.o)-Number(a.o) || Number(b.r)-Number(a.r);
+      });
+    }
+
+    function render() {
+      const list = state.filtered.slice(0, state.visible);
+      els.count.textContent = `${fmt.format(state.filtered.length)} resultados · mostrando ${fmt.format(list.length)}`;
+      if (!list.length) {
+        els.cards.innerHTML = '<div class="empty"><strong>sin coincidencias_</strong><span>Prueba quitando uno de los filtros.</span></div>';
+      } else {
+        els.cards.innerHTML = list.map((p,i) => card(p,i)).join('');
+      }
+      els.load.hidden = list.length >= state.filtered.length;
+    }
+
+    function card(p, i) {
+      const aiMatch = state.ai?.matches?.find(x => x.id === p.id);
+      const price = validPrice(p.p) ? '$' + fmt.format(p.p) : 'sin precio';
+      const place = p.c || (p.on ? 'online' : 'no indicada');
+      const badges = [p.on ? '<span class="token orange">online</span>' : '', validPrice(p.p) ? `<span class="token">${price}</span>` : '', p._adult ? '<span class="token">adultos</span>' : '', p._alt ? '<span class="token warn">mención alternativa</span>' : ''].join('');
+      return `<article class="card" data-index="${String(i+1).padStart(2,'0')}">
+        ${aiMatch ? `<div class="ai-reason"><strong>${Math.round(aiMatch.score)}% match</strong> · ${esc(aiMatch.reason)}</div>` : ''}
+        <h3 class="name">${esc(p.n)}</h3>
+        <div class="rating">${Number(p.o) ? `★ ${esc(p.r)} <span>(${fmt.format(Number(p.o))} opiniones)</span>` : '<span>sin opiniones publicadas</span>'}</div>
+        <div class="tokens">${badges || '<span class="token">perfil básico</span>'}</div>
+        <dl class="info"><dt>ubicación</dt><dd>${esc(place)}</dd><dt>servicios</dt><dd>${esc(truncate(p.a || p.s || 'no indicados', 150))}</dd><dt>formación</dt><dd>${esc(truncate(p.f || 'no publicada', 180))}</dd></dl>
+        <div class="topics">${esc(p.t || p.b || 'El perfil no detalla temas de atención.')}</div>
+        <details><summary>leer ficha completa +</summary><div class="detail-body">${detail('sobre mí',p.b)}${detail('temas',p.t)}${detail('servicios / especialidad',[p.a,p.s].filter(Boolean).join(' · '))}${detail('formación',p.f)}${detail('experiencia',p.e)}${detail('previsión',p.i)}${detail('dirección',p.d)}</div></details>
+        <div class="card-actions"><a class="profile" href="${esc(p.u)}" target="_blank" rel="noopener noreferrer">ver perfil original →</a><button class="copy-link" data-copy="${esc(p.u)}" title="Copiar enlace" aria-label="Copiar enlace">↗</button></div>
+      </article>`;
+    }
+    function detail(label, value) { return value ? `<div><b>${esc(label)}</b>${esc(value)}</div>` : ''; }
+
+    function clearFilters() {
+      els.query.value = ''; els.city.value = ''; els.maxPrice.value = ''; els.focus.value = '';
+      els.onlyPrice.checked = els.onlyReviews.checked = els.onlyAdult.checked = els.excludeAlt.checked = false;
+      state.mode = 'all'; $$('#mode button').forEach(b => b.classList.toggle('active', b.dataset.mode === 'all'));
+      resetAndFilter();
+    }
+
+    function openSettings() { els.apiKey.value = state.apiKey; els.model.value = state.model; els.error.classList.remove('open'); els.modal.classList.add('open'); setTimeout(() => els.apiKey.focus(), 30); }
+    function closeSettings() { els.modal.classList.remove('open'); els.apiKey.type = 'password'; $('#showKey').textContent = 'mostrar'; }
+    function saveSettings(e) {
+      e.preventDefault();
+      const key = els.apiKey.value.trim(), model = els.model.value.trim();
+      if (!key.startsWith('sk-or-')) return showSettingsError('La clave no parece una API key de OpenRouter (debería comenzar con sk-or-).');
+      if (!model || !model.includes('/')) return showSettingsError('Escribe un identificador de modelo válido, por ejemplo openrouter/auto.');
+      state.apiKey = key; state.model = model;
+      try { if (els.remember.checked) sessionStorage.setItem('natochi_openrouter', JSON.stringify({key,model})); else sessionStorage.removeItem('natochi_openrouter'); } catch (_) {}
+      updateApiState(); closeSettings();
+      if (els.naturalQuery.value.trim()) els.naturalQuery.focus();
+    }
+    function showSettingsError(message) { els.error.textContent = message; els.error.classList.add('open'); }
+    function updateApiState() { els.aiState.textContent = state.apiKey ? `${state.model} conectado` : 'API no configurada'; els.aiState.classList.toggle('ready', Boolean(state.apiKey)); }
+
+    function expandedTerms(query) {
+      const clean = norm(query).replace(/[^a-z0-9ñáéíóúü\s]/g,' ');
+      const stop = new Set('busco necesito quiero una uno que con para por de del la el los las y o en me mi sea haya tenga atienda enfoque profesional psicologo psicologa chileno chilena'.split(' '));
+      const terms = clean.split(/\s+/).filter(x => x.length > 2 && !stop.has(x));
+      const groups = [
+        [/\buc\b|catolica/, ['pontificia universidad catolica','puc','uc']],
+        [/\bchile\b|uchile/, ['universidad de chile','uchile']],
+        [/rumia|rumiant/, ['rumiacion','rumiante','obsesivo','compulsivo']],
+        [/compuls|obses/, ['obsesivo','compulsivo','toc','control de impulsos']],
+        [/trauma/, ['trauma','postraumatico','tept','abuso']],
+        [/pareja|relacion/, ['pareja','vinculo','conyugal','relaciones']],
+        [/cognitiv/, ['cognitivo','conductual','tcc']],
+        [/adult/, ['adulto','adultez']],
+        [/suicid|autodestruc/, ['suicidio','autolesion','autodestructivo']],
+        [/ansied|angust|panico/, ['ansiedad','angustia','panico','estres']]
+      ];
+      groups.forEach(([re, words]) => { if (re.test(clean)) terms.push(...words); });
+      return [...new Set(terms)];
+    }
+
+    function candidateProfiles(query) {
+      const terms = expandedTerms(query);
+      const nq = norm(query);
+      const asksOnline = /\bonline\b|remot|videollamada/.test(nq);
+      const rejectsAlt = /sin (medicina|terapia|enfoque)s? alternativa|no (quiero|tenga|use).*alternativa|exclu.*alternativa/.test(nq);
+      const maxMatch = nq.match(/(?:hasta|maximo|menos de|tope|presupuesto)[^0-9]{0,12}([0-9][0-9\.]{3,})/);
+      const max = maxMatch ? Number(maxMatch[1].replace(/\./g,'')) : 0;
+      return profiles.map(p => {
+        let score = 0;
+        terms.forEach(term => { const nt = norm(term); if (p._text.includes(nt)) score += nt.includes(' ') ? 5 : 2; });
+        if (asksOnline) score += p.on ? 9 : -6;
+        if (rejectsAlt) score += p._alt ? -25 : 3;
+        if (max) score += validPrice(p.p) && p.p <= max ? 8 : -5;
+        score += Math.min(Number(p.o || 0), 80) / 80;
+        if (p.b) score += .5; if (p.f) score += .5;
+        return {p,score};
+      }).filter(x => !(rejectsAlt && x.p._alt)).sort((a,b) => b.score-a.score).slice(0,100).map(x => x.p);
+    }
+
+    async function runAI() {
+      const query = els.naturalQuery.value.trim();
+      if (!query) { els.naturalQuery.focus(); return; }
+      if (!state.apiKey) { openSettings(); return; }
+      const candidates = candidateProfiles(query);
+      const catalog = candidates.map(p => ({
+        id:p.id, nombre:p.n, rating:p.r, opiniones:Number(p.o)||0, precio:validPrice(p.p)?p.p:null, online:Boolean(p.on), ubicacion:p.c||'',
+        servicios:truncate([p.a,p.s].filter(Boolean).join(' | '),260), temas:truncate(p.t,420), formacion:truncate(p.f,420), descripcion:truncate(p.b,650), mencion_alternativa:p._alt
+      }));
+      setAILoading(true);
+      try {
+        const payload = {
+          model: state.model,
+          messages: [
+            {role:'system', content:'Eres un asistente de búsqueda responsable. Evalúa únicamente el catálogo incluido por el usuario. No inventes profesionales, títulos, enfoques ni experiencia. La formación puede incluir posgrados: no afirmes que una universidad corresponde al pregrado si el texto no lo demuestra. Devuelve como máximo 24 coincidencias, ordenadas por ajuste. Explica brevemente la evidencia explícita y advierte incertidumbres. Esto no es consejo médico.'},
+            {role:'user', content:`CONSULTA:\n${query}\n\nCATÁLOGO PRESELECCIONADO (JSON):\n${JSON.stringify(catalog)}`}
+          ],
+          response_format: { type:'json_schema', json_schema:{ name:'psychologist_matches', strict:true, schema:{ type:'object', additionalProperties:false, properties:{ summary:{type:'string'}, matches:{type:'array',maxItems:24,items:{type:'object',additionalProperties:false,properties:{id:{type:'integer'},score:{type:'number',minimum:0,maximum:100},reason:{type:'string'}},required:['id','score','reason']}}},required:['summary','matches'] } } },
+          temperature: .1
+        };
+        const fetcher = window.__OPENROUTER_FETCH__ || window.fetch.bind(window);
+        const response = await fetcher('https://openrouter.ai/api/v1/chat/completions', {
+          method:'POST', headers:{'Authorization':`Bearer ${state.apiKey}`,'Content-Type':'application/json','HTTP-Referer':'https://natochi.cv/psicologos/','X-OpenRouter-Title':'natochi psicólogos'}, body:JSON.stringify(payload)
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data?.error?.message || `OpenRouter respondió ${response.status}`);
+        let content = data?.choices?.[0]?.message?.content;
+        if (Array.isArray(content)) content = content.map(x => x.text || '').join('');
+        const parsed = typeof content === 'string' ? JSON.parse(content.replace(/^```json\s*|\s*```$/g,'')) : content;
+        const candidateIds = new Set(candidates.map(p => p.id));
+        const seen = new Set();
+        const matches = (parsed?.matches || []).filter(x => Number.isInteger(x.id) && candidateIds.has(x.id) && !seen.has(x.id) && seen.add(x.id)).map(x => ({id:x.id,score:Math.max(0,Math.min(100,Number(x.score)||0)),reason:String(x.reason||'Coincidencia sugerida.')}));
+        if (!matches.length) throw new Error('El modelo no devolvió coincidencias verificables. Prueba reformulando la búsqueda.');
+        state.ai = { matches, model:data.model || state.model };
+        state.filtered = matches.map(x => profiles[x.id]).filter(Boolean);
+        state.visible = 24;
+        $('#resultsTitle').textContent = 'resultado en lenguaje natural';
+        els.aiSummary.textContent = String(parsed.summary || `Se encontraron ${matches.length} perfiles relacionados con tu búsqueda.`);
+        els.aiMeta.textContent = `${matches.length} IDs verificados contra los datos locales · modelo: ${state.ai.model} · revisa siempre el perfil original antes de contactar.`;
+        els.aiOutput.classList.add('open');
+        render();
+        els.aiOutput.scrollIntoView({behavior:'smooth',block:'nearest'});
+      } catch (error) {
+        els.aiOutput.classList.add('open');
+        els.aiSummary.textContent = 'No pudimos completar esta búsqueda.';
+        els.aiMeta.textContent = `${error.message || 'Error desconocido'} La clave no fue almacenada ni enviada a natochi.cv.`;
+      } finally { setAILoading(false); }
+    }
+
+    function setAILoading(on) { els.aiRun.disabled = on; els.aiRun.textContent = on ? 'analizando candidatos…' : 'buscar con IA →'; }
+    function clearAI() { state.ai = null; els.aiOutput.classList.remove('open'); $('#resultsTitle').textContent = 'todos los perfiles'; applyFilters(); }
+
+    setup();
+  })();
   </script>
 </body>
 </html>
