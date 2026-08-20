@@ -1,0 +1,44 @@
+# planes
+
+> CLI y servidor MCP sobre el catálogo completo de planes de isapre de Chile:
+> 2.219 planes de las 7 isapres abiertas, con coberturas, topes, prestadores,
+> puntajes, contratos en PDF y precios reales por grupo familiar.
+
+Instalación: `uv tool install git+https://github.com/ignaciobernardo/planes`
+MCP: `claude mcp add queplan -- queplan mcp`
+
+## Para qué sirve
+
+En Chile la cotización de salud es el 7% de la renta imponible, topada en 87,8 UF,
+y es obligatoria. La pregunta útil no es cuánto cuesta un plan, sino cuánto se paga
+POR SOBRE ese 7%. `queplan cotizar` rankea los planes exactamente por eso: los que
+salen en $0 quedan cubiertos enteros por la cotización legal.
+
+## Comandos
+
+- `queplan cotizar --renta N --cotizante EDAD:M [--min-hosp 100] [--isapre X]` — ranking por costo sobre el 7%
+- `queplan planes [isapre] [--buscar T] [--prestador X] [--min-hosp N]` — busca y filtra
+- `queplan plan CODIGO` — ficha, restricciones y prestadores con sus coberturas
+- `queplan puntaje CODIGO [--prestador X]` — calidad de cobertura por categoría
+- `queplan precio CODIGO --cotizante 28:M --carga 3:F [--renta N]` — precio real
+- `queplan cobertura CODIGO [--buscar resonancia]` — topes por prestación
+- `queplan factores CODIGO` — tabla de factores de riesgo
+- `queplan contrato CODIGO -o plan.pdf` — PDF del contrato
+- `queplan isapres` · `queplan export > planes.csv` · `queplan mcp`
+
+Todos aceptan `--format table|json|csv`. La salida de json/csv es limpia por stdout.
+
+## Notas para agentes
+
+- Imponible ≠ líquido. Si te dan el líquido, pide la imponible.
+- Más barato no es mejor: cruza el precio con el puntaje (1 a 10) antes de recomendar.
+- Revisa las restricciones del plan (parto, psiquiatría, bariátrica) antes de sugerirlo.
+- El slug de la URL de QuePlan.cl es el código del plan: `/Comparar/Isapres/13-SFS67-26` → `13-SFS67-26`.
+- `cotizar` rechaza más de 700 candidatos; acota con `--min-hosp`, `--isapre` o `--prestador`.
+
+## Enlaces
+
+- [Landing](https://natochi.cv/planes)
+- [Repositorio](https://github.com/ignaciobernardo/planes)
+- [Guía completa para agentes](https://github.com/ignaciobernardo/planes/blob/main/AGENTS.md)
+- [Mapa del API de QuePlan](https://github.com/ignaciobernardo/planes#mapa-del-api)

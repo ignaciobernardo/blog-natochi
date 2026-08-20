@@ -554,6 +554,49 @@ Puntaje hospitalario 8.5 · ambulatorio 8.3 · <span class="hd">promedio 8.4</sp
     </div>
   </section>
 
+  <section id="agentes">
+    <h2><span class="hash">#</span> Con tu agente</h2>
+    <p class="sec-note">
+      Trae un servidor MCP, así que Claude Code, Codex o Cursor pueden buscarte
+      el plan en lenguaje natural. El agente hace las consultas; tú preguntas.
+    </p>
+
+    <div class="install">
+      <div class="copy-row">
+        <code id="mcp-cmd"><span class="p">$ </span>claude mcp add queplan -- queplan mcp</code>
+        <button class="copy-btn" id="copy-mcp" type="button" aria-label="Copiar comando MCP">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="9" y="9" width="13" height="13" rx="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          <span id="mcp-label">copiar</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="term" style="margin-top:22px">
+      <div class="term-bar">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="term-title">claude</span>
+      </div>
+      <div class="term-body">
+<pre><span class="p">&gt;</span> <span class="c">gano 2.500.000 imponible, tengo 28 y quiero cobertura
+  en Clínica Alemana. ¿qué plan me conviene?</span>
+
+<span class="dim">· cotizar(renta_imponible=2500789, edad=28, prestador="alemana")</span>
+<span class="dim">· detalle_plan("13-LFS27-26")</span>
+<span class="dim">· puntaje_plan("13-LFS27-26")</span></pre>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>Las tools filtran del lado del servidor.</b> El catálogo entero son unos
+      330.000 tokens, así que no cabe en una ventana de contexto: <code>cotizar</code>
+      devuelve solo los mejores ya rankeados, y el agente profundiza con
+      <code>detalle_plan</code> en los que eligió.
+    </div>
+  </section>
+
   <section id="paridad">
     <h2><span class="hash">#</span> Paridad con el sitio</h2>
     <p class="sec-note">
@@ -600,9 +643,9 @@ Puntaje hospitalario 8.5 · ambulatorio 8.3 · <span class="hd">promedio 8.4</sp
 
 <script>
 (function () {
-  var btn = document.getElementById('copy-btn');
-  var label = document.getElementById('copy-label');
-  var cmd = 'uv tool install git+https://github.com/ignaciobernardo/planes';
+  function wire(btnId, labelId, cmd) {
+  var btn = document.getElementById(btnId);
+  var label = document.getElementById(labelId);
 
   btn.addEventListener('click', function () {
     var done = function () {
@@ -626,6 +669,10 @@ Puntaje hospitalario 8.5 · ambulatorio 8.3 · <span class="hd">promedio 8.4</sp
       document.body.removeChild(ta);
     }
   });
+  }
+
+  wire('copy-btn', 'copy-label', 'uv tool install git+https://github.com/ignaciobernardo/planes');
+  wire('copy-mcp', 'mcp-label', 'claude mcp add queplan -- queplan mcp');
 })();
 </script>
 </body>
