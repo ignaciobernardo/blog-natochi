@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>OG — planes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+@font-face {
+  font-family: 'PP Mondwest';
+  src: url('/fonts/PPMondwest-Regular.otf') format('opentype');
+}
+:root {
+  --bg: #1a1a1a; --surface: #202020; --raised: #262626; --line: #333;
+  --text: #e5e5e5; --muted: #8a8a8a; --accent: #ff8800; --accent-soft: #ffaa00;
+  --green: #6cc26c;
+  --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1200px; height: 630px; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 58px 64px 46px;
+  position: relative;
+  overflow: hidden;
+}
+/* rejilla tenue de fondo */
+body::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,.028) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.028) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse 90% 75% at 22% 45%, #000 35%, transparent 78%);
+}
+.top { position: relative; flex: 1; display: flex; gap: 56px; align-items: center; }
+.left { flex: none; width: 512px; }
+
+.eyebrow {
+  color: var(--accent);
+  font-size: 15px;
+  letter-spacing: .2em;
+  margin-bottom: 20px;
+}
+h1 {
+  font-family: 'PP Mondwest', var(--mono);
+  font-size: 132px;
+  font-weight: 400;
+  line-height: .9;
+  letter-spacing: -.015em;
+  margin-bottom: 22px;
+}
+h1 .caret { color: var(--accent); }
+.lede {
+  font-size: 21px;
+  line-height: 1.5;
+  color: var(--text);
+}
+.lede b { color: var(--accent-soft); font-weight: 500; }
+.sub { font-size: 16px; color: var(--muted); margin-top: 14px; line-height: 1.5; }
+
+/* terminal */
+.term {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.term-bar {
+  display: flex; align-items: center; gap: 7px;
+  padding: 11px 15px;
+  background: var(--raised);
+  border-bottom: 1px solid var(--line);
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; background: #3d3d3d; }
+.term-title { margin-left: 9px; font-size: 12px; color: var(--muted); letter-spacing: .05em; }
+.term-body { padding: 17px 18px; font-size: 13px; line-height: 1.75; }
+.p { color: var(--accent); }
+.dim { color: var(--muted); }
+table { border-collapse: collapse; margin-top: 12px; width: 100%; }
+th, td { text-align: left; padding: 2px 10px 2px 0; font-size: 12.5px; white-space: nowrap; }
+th { color: var(--accent-soft); font-weight: 500; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+tbody tr:first-child td { padding-top: 9px; }
+.num { text-align: right; }
+.ok { color: var(--green); }
+
+/* pie */
+.bottom {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+}
+.url { font-size: 21px; color: var(--text); }
+.url span { color: var(--accent); }
+.facts { display: flex; gap: 40px; }
+.fact b {
+  display: block;
+  font-family: 'PP Mondwest', var(--mono);
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--accent);
+}
+.fact span { display: block; font-size: 12px; color: var(--muted); margin-top: 6px; letter-spacing: .04em; }
+</style>
+</head>
+<body>
+
+  <div class="top">
+    <div class="left">
+      <p class="eyebrow">COMMAND-LINE TOOL</p>
+      <h1>planes<span class="caret">_</span></h1>
+      <p class="lede">Los <b>2.219 planes de isapre</b> de Chile, desde tu terminal.</p>
+      <p class="sub">Coberturas, topes, prestadores, puntajes y cuánto pagas por sobre tu 7%.</p>
+    </div>
+
+    <div class="term">
+      <div class="term-bar">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="term-title">queplan cotizar</span>
+      </div>
+      <div class="term-body">
+        <div><span class="p">$</span> queplan cotizar --renta 2500789 \</div>
+        <div style="padding-left:14px">--cotizante 28:M --min-hosp 100</div>
+        <div class="dim" style="margin-top:8px">7% = $175.055 · 597 planes sin costo extra</div>
+        <table>
+          <thead>
+            <tr><th>Código</th><th>Plan</th><th class="num">Precio</th><th class="num">Extra</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>ONSL101D25</td><td>ON SOLUCION 1 100</td><td class="num">$156.935</td><td class="num ok">$0</td></tr>
+            <tr><td>ONSL102D25</td><td>ON SOLUCION 1 200</td><td class="num">$160.613</td><td class="num ok">$0</td></tr>
+            <tr><td>ONSL103D25</td><td>ON SOLUCION 1 300</td><td class="num">$164.698</td><td class="num ok">$0</td></tr>
+            <tr><td>SOLN102526</td><td>SOLUCION 1 200</td><td class="num">$172.870</td><td class="num ok">$0</td></tr>
+            <tr><td>PS260662</td><td>PLENO SALUD 260662</td><td class="num">$284.126</td><td class="num">+$109.071</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="url">natochi.cv<span>/planes</span></div>
+    <div class="facts">
+      <div class="fact"><b>2.219</b><span>planes</span></div>
+      <div class="fact"><b>7</b><span>isapres</span></div>
+      <div class="fact"><b>10</b><span>comandos</span></div>
+      <div class="fact"><b>MIT</b><span>open source</span></div>
+    </div>
+  </div>
+
+</body>
+</html>
