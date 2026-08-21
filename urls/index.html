@@ -23,6 +23,16 @@
     <meta property="twitter:image" content="https://natochi.cv/og-image.png">
 
     <link rel="stylesheet" href="/style.css">
+    <style>
+        .route-inventory { margin-top: 1rem; border-top: 1px solid rgba(255,255,255,.18); }
+        .route-group { border-bottom: 1px solid rgba(255,255,255,.12); }
+        .route-group summary { display: flex; justify-content: space-between; gap: 1rem; padding: .8rem 0; cursor: pointer; color: inherit; }
+        .route-group summary::marker { color: #ff8800; }
+        .route-total { color: rgba(255,255,255,.48); font-size: .8em; }
+        .route-list { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: .35rem 1rem; padding: 0 0 1rem 1rem; }
+        .route-list a { min-width: 0; overflow: hidden; color: #ff8800; font-family: monospace; font-size: .84rem; text-overflow: ellipsis; white-space: nowrap; }
+        @media (max-width: 640px) { .route-list { grid-template-columns: 1fr; } }
+    </style>
 </head>
 <body class="blog-page">
 
@@ -35,7 +45,7 @@
             <h1 class="info-title">urls</h1>
 
             <div class="blog-content">
-                <p>every page hosted on natochi.cv, in one list. descriptions come from each page itself.</p>
+                <p>every page hosted on natochi.cv, in one list. curated pages come first; the complete route inventory is below.</p>
 
                 <p>~ projects &amp; programs.</p>
                 <div class="info-grid three-col">
@@ -90,6 +100,26 @@
                     <a href="/pdku/" class="grid-title">/pdku</a>
                     <span class="grid-desc">pdku spring-26 &mdash; social views.</span>
                     <span class="grid-amount">site</span>
+
+                    <a href="/kairos/" class="grid-title">/kairos</a>
+                    <span class="grid-desc">nonprofit accelerating talent into ai safety and policy.</span>
+                    <span class="grid-amount">site</span>
+
+                    <a href="/m/" class="grid-title">/m</a>
+                    <span class="grid-desc">m3 &mdash; salary-matched fellowship for senior security people moving into ai security.</span>
+                    <span class="grid-amount">site</span>
+
+                    <a href="/planes/" class="grid-title">/planes</a>
+                    <span class="grid-desc">cli para navegar y comparar 2.219 planes de isapre de chile.</span>
+                    <span class="grid-amount">tool</span>
+
+                    <a href="/psicologos/" class="grid-title">/psicologos</a>
+                    <span class="grid-desc">explorador independiente de psicólogos y psicólogas publicados en doctoralia chile.</span>
+                    <span class="grid-amount">tool</span>
+
+                    <a href="/psicologos-v2/" class="grid-title">/psicologos-v2</a>
+                    <span class="grid-desc">motion prototype for the psychologist directory.</span>
+                    <span class="grid-amount">preview</span>
                 </div>
 
                 <p>~ about me.</p>
@@ -140,9 +170,56 @@
                     <span class="grid-desc">goes to /loi.</span>
                     <span class="grid-amount">redirect</span>
                 </div>
+
+                <p>~ complete route inventory.</p>
+                <p><span id="routeCount">117</span> public html routes currently known. grouped by their first path segment.</p>
+                <div class="route-inventory" id="routeInventory"></div>
             </div>
         </div>
     </div>
 
+    <script>
+    (() => {
+        const routes = [
+            "/", "/amigos/", "/amigos/form/", "/blog/2026/", "/blog/angelsquad-for-latam/",
+            "/blog/mental-models-for-not-knowing-what-the-fuck-your-doing/", "/blog/seguir-adelante/", "/blog/spomenik/",
+            "/catalyst/", "/catalyst/about.html", "/catalyst/events.html", "/catalyst/people.html", "/cv/", "/cv/cv-print.html",
+            "/founderplot/", "/hack/", "/info/", "/js/", "/js/posts/", "/js/posts/2026/",
+            "/js/posts/mental-models-for-not-knowing-what-the-fuck-your-doing/", "/js/posts/seguir-adelante/", "/js/updates/",
+            "/js/updates/2026-04-20/", "/js/updates/2026-04-21/", "/js/updates/2026-04-22/", "/js/updates/2026-04-23/",
+            "/js/updates/2026-04-28/", "/js/updates/2026-05-10/", "/js/updates/2026-06-13/", "/kairos/",
+            "/kairos/about-option-1/", "/kairos/about-option-2/", "/kairos/about-option-3/", "/kairos/about/",
+            "/kairos/landing-about-chapters/", "/kairos/landing-about-typographic/", "/kairos/option-1/", "/kairos/option-2/",
+            "/kairos/program-motion-options/", "/kairos/work-with-us/", "/laclase/", "/laclase2/", "/laclase2/01/",
+            "/laclase2/02/", "/laclase2/about/", "/laclase2/build/", "/laclase2/community/", "/laclase2/emboss/",
+            "/laclase2/index/", "/laclase2/ink/", "/laclase2/lectures/", "/laclase2/plastic/", "/laclase2/sponsors/",
+            "/latam-opportunity-index/", "/loi/", "/m/", "/m3/", "/m3/focus/", "/m3/program/", "/on-site/",
+            "/on-site/grid.html", "/on-site/list.html", "/on-site/rsvp.html", "/on-site/sponsors.html", "/on-site2/",
+            "/on-site2/effects.html", "/org/", "/org/3x10/", "/org/ai-amigos/", "/org/benefits/", "/org/fireside-chats/",
+            "/org/hack/", "/org/la-clase/", "/org/lightning-talks/", "/org/matchmaking-sage/", "/org/plata/", "/org/spomenik/",
+            "/org/startupchela/", "/org/tech-talks/", "/org/tienda/", "/org/torneo-de-ajedrez/", "/org/trabajos/",
+            "/pdku/", "/pdu/", "/planes/", "/posts/", "/projects/", "/psicologos-v2/", "/psicologos/", "/spomenik/",
+            "/spomenik/grantees/", "/things/", "/tools/", "/tools/convergence-flow/", "/tools/flux-knot/",
+            "/tools/glyph-currents/", "/tools/glyph-flow/", "/tools/gravity-grid/", "/tools/halftone-sweep/",
+            "/tools/kinetic-web/", "/tools/numeric-currents/", "/tools/path-packets/", "/tools/pixel-sweep/",
+            "/tools/prism-flow/", "/tools/signal-constellation/", "/tools/signal-fanout/", "/updates/",
+            "/updates/2026-04-20/", "/updates/2026-04-21/", "/updates/2026-04-22/", "/updates/2026-04-23/",
+            "/updates/2026-04-28/", "/updates/2026-05-10/", "/updates/2026-06-13/", "/updates/primera-update/", "/urls/"
+        ];
+        const groups = new Map();
+        routes.forEach(route => {
+            const group = route === "/" ? "root" : route.split("/")[1];
+            if (!groups.has(group)) groups.set(group, []);
+            groups.get(group).push(route);
+        });
+        const inventory = document.querySelector("#routeInventory");
+        document.querySelector("#routeCount").textContent = routes.length;
+        inventory.innerHTML = [...groups].map(([group, items]) => `
+            <details class="route-group" ${group === "root" ? "open" : ""}>
+                <summary><span>/${group === "root" ? "" : group}</span><span class="route-total">${items.length} ${items.length === 1 ? "route" : "routes"}</span></summary>
+                <div class="route-list">${items.map(route => `<a href="${route}">${route}</a>`).join("")}</div>
+            </details>`).join("");
+    })();
+    </script>
 </body>
 </html>
