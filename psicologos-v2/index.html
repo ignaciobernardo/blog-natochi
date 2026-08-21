@@ -4,405 +4,95 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
-  <meta name="description" content="Busca psicólogos y psicólogas en Chile usando lenguaje natural.">
-  <title>Buscar psicólogo</title>
+  <title>Grid de psicólogos — prototipo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    @property --glow-start { syntax: '<angle>'; inherits: true; initial-value: 180deg; }
-    @property --stop-2 { syntax: '<angle>'; inherits: true; initial-value: 16deg; }
-    @property --stop-3 { syntax: '<angle>'; inherits: true; initial-value: 30deg; }
-    @property --stop-4 { syntax: '<angle>'; inherits: true; initial-value: 43deg; }
-    @property --stop-5 { syntax: '<angle>'; inherits: true; initial-value: 59deg; }
-    @property --stop-6 { syntax: '<angle>'; inherits: true; initial-value: 72deg; }
-    @property --stop-7 { syntax: '<angle>'; inherits: true; initial-value: 84deg; }
+    :root { --bg:#fafaf9; --surface:#fff; --ink:#181817; --muted:#82827e; --line:#e6e6e2; --soft:#f0f0ed; --ease:cubic-bezier(.22,1,.36,1); }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:var(--bg); font-family:Inter,system-ui,sans-serif; font-size:14px; }
+    button { font:inherit; }
+    .page { width:min(860px,calc(100% - 40px)); margin:0 auto; padding:96px 0; }
+    .top { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; padding-bottom:22px; border-bottom:1px solid var(--line); }
+    h1 { margin:0 0 5px; font-size:1.15rem; font-weight:600; letter-spacing:-.025em; }
+    .count { color:var(--muted); font-size:.75rem; }
+    .controls { position:relative; display:grid; grid-template-columns:1fr 1fr; width:190px; height:38px; padding:3px; border-radius:12px; background:#efefec; }
+    .indicator { position:absolute; top:3px; bottom:3px; left:3px; width:calc(50% - 3px); border:1px solid #e1e1de; border-radius:9px; background:white; box-shadow:0 1px 2px rgba(0,0,0,.04); transform:translateX(0); transition:transform 420ms var(--ease); }
+    .controls[data-view="cards"] .indicator { transform:translateX(100%); }
+    .view-button { position:relative; z-index:1; border:0; color:#858580; background:transparent; cursor:pointer; font-size:.72rem; }
+    .view-button.active { color:var(--ink); }
+    .directory { margin-top:20px; }
+    .directory.cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+    .directory.list { display:grid; grid-template-columns:1fr; gap:0; }
+    .profile { min-width:0; background:var(--surface); }
+    .directory.cards .profile { padding:10px 10px 17px; border:1px solid var(--line); border-radius:17px; }
+    .directory.list .profile { display:grid; grid-template-columns:68px minmax(0,1fr) auto; gap:16px; align-items:center; min-height:88px; border-bottom:1px solid var(--line); }
+    .portrait { position:relative; overflow:hidden; color:rgba(255,255,255,.88); background:var(--tone); isolation:isolate; }
+    .portrait::before,.portrait::after { content:""; position:absolute; border-radius:45% 55% 52% 48%; filter:saturate(.92); }
+    .portrait::before { width:72%; aspect-ratio:1; left:-12%; bottom:-22%; background:var(--tone-2); transform:rotate(var(--turn)); }
+    .portrait::after { width:66%; aspect-ratio:1; right:-14%; top:-18%; background:var(--tone-3); transform:rotate(calc(var(--turn) * -1)); }
+    .initials { position:absolute; z-index:2; right:8%; bottom:-10%; font-size:clamp(2.3rem,7vw,4.8rem); font-weight:600; letter-spacing:-.09em; opacity:.75; }
+    .directory.list .portrait { width:68px; height:68px; border-radius:13px; }
+    .directory.list .initials { font-size:2rem; bottom:-7%; }
+    .directory.cards .portrait { width:100%; aspect-ratio:1.55/1; border-radius:11px; }
+    .content { min-width:0; }
+    .directory.cards .content { padding:15px 4px 0; }
+    .name { margin:0; overflow:hidden; color:var(--ink); font-size:.92rem; font-weight:500; letter-spacing:-.015em; text-overflow:ellipsis; white-space:nowrap; }
+    .directory.cards .name { font-size:1rem; }
+    .place { margin:5px 0 0; overflow:hidden; color:var(--muted); font-size:.71rem; text-overflow:ellipsis; white-space:nowrap; }
+    .focus { color:#60605c; font-size:.72rem; line-height:1.45; }
+    .directory.cards .focus { height:42px; margin:13px 0 0; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    .directory.list .focus { margin:4px 0 0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .side { display:flex; align-items:center; gap:14px; color:var(--muted); font-size:.71rem; }
+    .directory.cards .side { justify-content:space-between; margin:14px 4px 0; padding-top:13px; border-top:1px solid var(--line); }
+    .profile-link { color:var(--ink); text-decoration:none; }
+    .profile-link:hover { text-decoration:underline; text-underline-offset:3px; }
+    .load { display:block; width:100%; height:48px; margin-top:18px; border:1px solid var(--line); border-radius:14px; color:#666661; background:transparent; cursor:pointer; }
+    .load:hover { background:white; }
+    .hint { margin-top:18px; color:#aaa9a5; text-align:center; font-size:.67rem; }
 
-    :root {
-      --page: #f7f7f5;
-      --surface: #ffffff;
-      --surface-raised: #fbfbfa;
-      --surface-muted: #f1f1ef;
-      --line: #dededb;
-      --line-soft: #e9e9e6;
-      --ink: #171716;
-      --body: #4f4f4c;
-      --muted: #868681;
-      --faint: #aaa9a4;
-      --max: 920px;
-      --ease-out: cubic-bezier(.22, 1, .36, 1);
+    ::view-transition-group(root) { animation:none; }
+    ::view-transition-group(*) { animation-duration:500ms; animation-timing-function:var(--ease); }
+    ::view-transition-old(*),::view-transition-new(*) { mix-blend-mode:normal; animation-duration:500ms; animation-timing-function:var(--ease); }
+
+    @media(max-width:620px){
+      .page{width:min(100% - 24px,860px);padding:56px 0}.top{align-items:flex-start;flex-direction:column}.controls{width:100%}
+      .directory.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.directory.cards .profile{padding:7px 7px 13px;border-radius:14px}.directory.cards .content{padding:12px 2px 0}.directory.cards .focus{display:none}.directory.cards .side{margin:11px 2px 0;padding-top:10px;gap:5px}.directory.cards .side span{display:none}
+      .directory.list .profile{grid-template-columns:58px minmax(0,1fr);gap:12px;min-height:78px}.directory.list .portrait{width:58px;height:58px}.directory.list .side{display:none}
     }
-
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body { margin: 0; color: var(--ink); background: var(--page); font-family: Inter, system-ui, sans-serif; font-size: 14px; line-height: 1.5; }
-    button, input { font: inherit; }
-    button { -webkit-tap-highlight-color: transparent; }
-    a { color: inherit; }
-    :focus-visible { outline: 2px solid #2b6ff2; outline-offset: 3px; }
-    .page { width: min(var(--max), calc(100% - 40px)); margin: 0 auto; padding: 112px 0 90px; }
-
-    .hero { margin: 0 auto 48px; text-align: center; }
-    h1 { max-width: 780px; margin: 0 auto; font-size: clamp(2.85rem, 7vw, 5.6rem); line-height: .98; letter-spacing: -.065em; font-weight: 500; text-wrap: balance; }
-    .intro { max-width: 570px; margin: 22px auto 0; color: var(--muted); font-size: .98rem; text-wrap: balance; }
-
-    .search-stage { position: relative; z-index: 5; display: grid; place-items: center; min-height: 110px; margin: 0 auto 56px; }
-    .morph-body {
-      --r: 28px;
-      position: relative;
-      padding: 1px;
-      border-radius: var(--r);
-      background: transparent;
-      box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 12px 36px rgba(0,0,0,.06);
-      transition: width 380ms var(--ease-out), height 380ms var(--ease-out), border-radius 380ms var(--ease-out);
-      isolation: isolate;
-    }
-    .morph-body[data-initializing="true"] { transition: none; visibility: hidden; }
-    .morph-body[data-morphing="true"] .rim-layer { display: none; }
-    .morph-body[data-morphing="true"] .variant-host { content-visibility: hidden; }
-    .face {
-      position: relative;
-      z-index: 2;
-      width: 100%; height: 100%;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: calc(var(--r) - 1px);
-      color: var(--ink);
-      background: var(--surface);
-      transition: background-color 380ms var(--ease-out), border-color 380ms var(--ease-out), color 380ms var(--ease-out);
-    }
-    .morph-body[data-variant="terminal"] .face { color: #d7d7d4; border-color: #292929; background: #1c1c1c; }
-    .variant-host { width: 100%; height: 100%; opacity: 1; transition: opacity 160ms ease; }
-    .variant-host.leaving { opacity: 0; }
-    .variant-shell { display: inline-block; }
-    .variant-shell.prompt { padding: 8px 8px 8px 20px; }
-    .variant-shell.workflow { padding: 20px 24px 18px; }
-    .variant-shell.progress { padding: 15px 20px; }
-    .variant-shell.terminal { padding: 20px 24px; }
-
-    .rim-layer {
-      --glow-start: 180deg; --stop-2: 16deg; --stop-3: 30deg; --stop-4: 43deg; --stop-5: 59deg; --stop-6: 72deg; --stop-7: 84deg;
-      position: absolute;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0;
-      background: conic-gradient(from var(--glow-start), #005bf6 0deg, #b0c6e9 var(--stop-2), #feca00 var(--stop-3), #ff1c11 var(--stop-4), #ff00ea var(--stop-5), rgba(255,162,251,.8) var(--stop-6), transparent var(--stop-7), transparent 324deg, rgba(149,193,255,.63) 349deg, #005bf6 360deg);
-      mask-repeat: no-repeat;
-      mask-size: 100% 100%;
-      -webkit-mask-repeat: no-repeat;
-      -webkit-mask-size: 100% 100%;
-      will-change: opacity;
-    }
-    .morph-body[data-playing="true"] .rim-layer {
-      animation: rim-pulse 1.6s cubic-bezier(.26,.94,.6,1) both;
-    }
-    @keyframes rim-pulse {
-      0% { opacity: 0; --glow-start: 180deg; --stop-2: 16deg; --stop-3: 30deg; --stop-4: 43deg; --stop-5: 59deg; --stop-6: 72deg; --stop-7: 84deg; }
-      10% { opacity: 1; }
-      30% { opacity: 1; }
-      100% { opacity: 0; --glow-start: 30deg; --stop-2: 6deg; --stop-3: 11deg; --stop-4: 17deg; --stop-5: 40deg; --stop-6: 90deg; --stop-7: 120deg; }
-    }
-
-    .prompt-line { display: inline-flex; align-items: center; gap: 8px; }
-    .prompt-input { min-width: 0; border: 0; padding: 0; color: var(--ink); background: transparent; outline: 0; font-size: 1rem; }
-    .prompt-input::placeholder { color: #9a9994; }
-    .icon-button { display: grid; place-items: center; flex: 0 0 auto; width: 38px; height: 38px; border: 0; border-radius: 12px; color: #777772; background: transparent; cursor: pointer; }
-    .icon-button:hover { color: var(--ink); background: var(--surface-muted); }
-    .icon-button.sound-off { color: #b1b0ab; }
-    .send { color: white; background: #191918; }
-    .send:hover { color: white; background: #343432; }
-    .send svg { width: 17px; height: 17px; }
-
-    .workflow-line { position: relative; display: flex; min-width: 270px; }
-    .workflow-line::before { content: ''; position: absolute; top: 7px; left: 16.66%; right: 16.66%; height: 1px; background: var(--line); }
-    .step { position: relative; display: flex; flex: 1; flex-direction: column; align-items: center; gap: 9px; color: var(--muted); font-size: .78rem; }
-    .dot { position: relative; display: grid; place-items: center; width: 14px; height: 14px; border: 1px solid #bababa; border-radius: 4px; background: var(--surface); }
-    .step.done .dot { border-color: #878783; background: #878783; }
-    .step.live { color: var(--ink); }
-    .step.live .dot { border-color: var(--ink); background: var(--ink); }
-    .step.live .dot::after { content: ''; position: absolute; inset: -4px; border: 1px solid #777; border-radius: 7px; animation: node-ring 1.4s ease-out infinite; }
-    @keyframes node-ring { 0% { opacity: .8; transform: scale(.75); } 100% { opacity: 0; transform: scale(1.45); } }
-
-    .progress-line { display: flex; min-width: 250px; align-items: center; justify-content: space-between; gap: 34px; }
-    .progress-title { font-size: .94rem; }
-    .progress-meta { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: .78rem; font-variant-numeric: tabular-nums; }
-    .spinner { width: 15px; height: 15px; border: 2px solid var(--line); border-top-color: #555; border-radius: 50%; animation: spin .8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .terminal-line { min-width: 248px; font-family: "Roboto Mono", monospace; font-size: .82rem; line-height: 1.8; }
-    .terminal-command { color: #767672; }
-    .terminal-command::before { content: '$ '; color: #555; }
-    .terminal-result { color: #d7d7d4; }
-
-    .rise-char { display: inline-block; opacity: 0; filter: blur(2px); transform: translateY(16px); animation: char-rise 300ms cubic-bezier(.66,0,.34,1) forwards; }
-    @keyframes char-rise { to { opacity: 1; filter: blur(0); transform: translateY(0); } }
-    .probe-host { position: fixed; top: 0; left: -10000px; z-index: -1; visibility: hidden; white-space: nowrap; }
-
-    .search-feedback { min-height: 21px; margin: -38px auto 44px; color: var(--muted); text-align: center; font-size: .8rem; }
-    .search-feedback strong { color: var(--ink); font-weight: 500; }
-    .results-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
-    .results-head h2 { margin: 0; font-size: .78rem; font-weight: 500; letter-spacing: .02em; }
-    .result-count { color: var(--muted); font-size: .74rem; }
-    .grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
-    .psych-card { min-width: 0; padding: 20px; border: 1px solid var(--line-soft); border-radius: 16px; background: rgba(255,255,255,.66); transition: border-color 180ms ease, background 180ms ease, transform 180ms ease; }
-    .psych-card:hover { border-color: #cececa; background: #fff; transform: translateY(-1px); }
-    .psych-card h3 { margin: 0 0 10px; font-size: 1rem; line-height: 1.25; font-weight: 500; letter-spacing: -.02em; }
-    .card-meta { display: flex; flex-wrap: wrap; gap: 5px 12px; color: var(--muted); font-size: .72rem; }
-    .card-meta span + span::before { content: '·'; margin-right: 12px; color: #c4c4c0; }
-    .card-focus { height: 40px; margin: 16px 0 18px; color: var(--body); font-size: .76rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .match-reason { margin: -4px 0 14px; color: #62625f; font-size: .7rem; line-height: 1.45; }
-    .match-reason b { color: var(--ink); font-weight: 500; }
-    .profile-link { display: inline-flex; align-items: center; gap: 5px; color: var(--ink); font-size: .74rem; text-decoration: none; }
-    .profile-link:hover { text-decoration: underline; text-underline-offset: 3px; }
-    .load { display: block; width: 100%; height: 48px; margin-top: 16px; border: 1px solid var(--line); border-radius: 14px; color: var(--body); background: transparent; cursor: pointer; }
-    .load:hover { background: var(--surface); }
-    .empty { grid-column: 1/-1; padding: 80px 20px; color: var(--muted); text-align: center; }
-
-    .modal { position: fixed; inset: 0; z-index: 50; display: none; place-items: center; padding: 20px; background: rgba(22,22,21,.3); backdrop-filter: blur(10px); }
-    .modal.open { display: grid; }
-    .modal-card { width: min(470px,100%); padding: 24px; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); box-shadow: 0 24px 80px rgba(0,0,0,.16); }
-    .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-    .modal h2 { margin: 0; font-size: 1rem; font-weight: 500; }
-    .close { border: 0; color: var(--muted); background: transparent; cursor: pointer; }
-    .modal-copy { margin: 0 0 22px; color: var(--muted); font-size: .78rem; }
-    .field { margin-bottom: 15px; }
-    .field label { display: block; margin-bottom: 6px; color: var(--body); font-size: .72rem; }
-    .field input { width: 100%; height: 42px; border: 1px solid var(--line); border-radius: 10px; padding: 0 12px; color: var(--ink); background: var(--surface-raised); outline: 0; }
-    .field input:focus { border-color: #a8a8a3; }
-    .remember { display: flex !important; gap: 8px; align-items: center; color: var(--muted) !important; }
-    .remember input { width: auto; height: auto; accent-color: #222; }
-    .save { width: 100%; height: 43px; border: 0; border-radius: 11px; color: white; background: #1c1c1b; cursor: pointer; }
-    .modal-note { margin: 14px 0 0; color: var(--faint); font-size: .67rem; }
-    .modal-note a { text-underline-offset: 2px; }
-    .form-error { display: none; margin-bottom: 14px; color: #b03830; font-size: .72rem; }
-    .form-error.open { display: block; }
-    footer { margin-top: 52px; color: var(--faint); text-align: center; font-size: .66rem; }
-
-    @media (max-width: 620px) {
-      .page { width: min(100% - 24px, var(--max)); padding-top: 72px; }
-      .hero { margin-bottom: 36px; }
-      h1 { font-size: clamp(2.7rem, 14vw, 4rem); }
-      .intro { font-size: .88rem; }
-      .search-stage { margin-bottom: 46px; }
-      .grid { grid-template-columns: 1fr; }
-      .psych-card { padding: 18px; }
-      .results-head { padding-inline: 2px; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-      .rim-layer { display: none !important; }
-      .morph-body { transition-duration: 120ms; }
-      .face { transition-duration: 120ms; }
-      .rise-char { filter: none; transform: none; animation-name: char-fade; animation-delay: 0ms !important; }
-      @keyframes char-fade { to { opacity: 1; } }
-      .step.live .dot::after, .spinner { animation-duration: 1.8s; }
-    }
+    @media(prefers-reduced-motion:reduce){.indicator{transition-duration:1ms}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation-duration:1ms}}
   </style>
 </head>
 <body>
   <main class="page">
-    <header class="hero">
-      <h1>Encuentra a alguien con quien hablar.</h1>
-      <p class="intro">Describe lo que necesitas. La búsqueda revisa perfiles públicos de profesionales en Chile y te muestra coincidencias para explorar.</p>
-    </header>
-
-    <section class="search-stage" aria-label="Búsqueda con inteligencia artificial">
-      <div class="morph-body" id="morphBody" data-variant="prompt" data-initializing="true">
-        <div class="face"><div class="variant-host" id="variantHost"></div></div>
+    <header class="top">
+      <div><h1>Psicólogos</h1><div class="count" id="count">Cargando perfiles…</div></div>
+      <div class="controls" id="controls" data-view="list" role="group" aria-label="Vista de resultados">
+        <span class="indicator" aria-hidden="true"></span>
+        <button class="view-button active" data-view="list">Lista</button>
+        <button class="view-button" data-view="cards">Tarjetas</button>
       </div>
-      <div class="probe-host" id="probeHost" aria-hidden="true"></div>
-    </section>
-    <div class="search-feedback" id="feedback" aria-live="polite">Usa tu API key de OpenRouter. La búsqueda local permanece en tu navegador.</div>
-
-    <section aria-labelledby="resultsTitle">
-      <div class="results-head"><h2 id="resultsTitle">Psicólogos</h2><span class="result-count" id="count">Cargando…</span></div>
-      <div class="grid" id="grid"></div>
-      <button class="load" id="load">Mostrar más</button>
-    </section>
-
-    <footer>Información pública capturada desde Doctoralia Chile el 20 de agosto de 2026. Verifica credenciales, precio y disponibilidad en el perfil original.</footer>
+    </header>
+    <section class="directory list" id="directory" aria-live="polite"></section>
+    <button class="load" id="load">Mostrar más</button>
+    <p class="hint">Cambia de vista varias veces para evaluar la transición.</p>
   </main>
-
-  <div class="modal" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
-    <form class="modal-card" id="settingsForm">
-      <div class="modal-head"><h2 id="settingsTitle">Configurar OpenRouter</h2><button class="close" type="button" id="closeSettings">Cerrar</button></div>
-      <p class="modal-copy">La clave se envía directamente desde este navegador a OpenRouter. Este sitio no tiene un servidor que la reciba.</p>
-      <div class="form-error" id="formError"></div>
-      <div class="field"><label for="apiKey">API key</label><input id="apiKey" type="password" placeholder="sk-or-v1-…" autocomplete="off" spellcheck="false"></div>
-      <div class="field"><label for="model">Modelo</label><input id="model" type="text" value="openrouter/auto" list="models" spellcheck="false"><datalist id="models"><option value="openrouter/auto"><option value="openrouter/free"></datalist></div>
-      <div class="field"><label class="remember"><input id="remember" type="checkbox"> Recordar sólo durante esta pestaña</label></div>
-      <button class="save" type="submit">Guardar</button>
-      <p class="modal-note"><code>openrouter/auto</code> puede tener costo. También puedes probar <code>openrouter/free</code>. Administra tus claves en <a href="https://openrouter.ai/settings/keys" target="_blank" rel="noopener noreferrer">OpenRouter</a>.</p>
-    </form>
-  </div>
-
   <script src="/psicologos/data/psicologos_web.js"></script>
-  <script type="module">
-    import { bind, play, setEnabled, setVolume } from './vendor/cuelume/index.js';
-    setVolume(.34);
-    bind();
-    window.Cuelume = { play, setEnabled, setVolume };
-    window.dispatchEvent(new Event('cuelume-ready'));
-  </script>
   <script>
-  (() => {
-    'use strict';
-    const $ = s => document.querySelector(s);
-    const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
-    const nextFrame = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-    const fmt = new Intl.NumberFormat('es-CL');
-    const esc = v => String(v ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-    const norm = v => String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
-    const trunc = (v,n) => String(v || '').length > n ? String(v).slice(0,n-1)+'…' : String(v || '');
-    const profiles = Array.isArray(window.PSICOLOGOS) ? window.PSICOLOGOS : [];
-    const altPattern = /reiki|flores? de bach|terapia floral|tarot|akashic|biomagnet|sanacion cuant|constelaciones? familiares|gemoterapia|auriculoterapia|regresion(es)?|cuencos tibetanos|medicina alternativa|terapia angelical|pendulo/i;
-    profiles.forEach((p,id) => { p.id=id; p._text=norm([p.n,p.c,p.a,p.s,p.t,p.f,p.b].join(' ')); p._alt=altPattern.test(p._text); });
-
-    const body = $('#morphBody'), host = $('#variantHost'), probeHost = $('#probeHost');
-    const grid = $('#grid'), count = $('#count'), load = $('#load'), feedback = $('#feedback');
-    const modal = $('#settingsModal');
-    const state = { variant:'prompt', query:'', key:'', model:'openrouter/auto', sound:true, busy:false, visible:24, results:[], aiMatches:null, terminal:'Perfiles encontrados' };
-    const maskCache = new Map();
-    const layers = [
-      {stroke:0,blur:0,alpha:1,ring:1},
-      {stroke:4,blur:4,alpha:.3},
-      {stroke:8,blur:8,alpha:.2},
-      {stroke:16,blur:12,alpha:.1},
-      {stroke:20,blur:20,alpha:.32}
-    ];
-    const radii = { workflow:16, progress:'pill', terminal:14, prompt:'pill' };
-    const shellClass = { workflow:'workflow', progress:'progress', terminal:'terminal', prompt:'prompt' };
-    let sizes = {};
-
-    function rising(text, delay=0) {
-      return [...String(text)].map((ch,i) => `<span class="rise-char" style="animation-delay:${reduced.matches?0:delay+i*20}ms">${ch===' '?'&nbsp;':esc(ch)}</span>`).join('');
-    }
-    function content(name, probe=false) {
-      if (name === 'workflow') return `<div class="variant-shell workflow"><div class="workflow-line"><span class="step done"><span class="dot"></span><span>${rising('Consulta',20)}</span></span><span class="step live"><span class="dot"></span><span>${rising('Comparar',80)}</span></span><span class="step"><span class="dot"></span><span>${rising('Elegir',140)}</span></span></div></div>`;
-      if (name === 'progress') return `<div class="variant-shell progress"><div class="progress-line"><span class="progress-title">${rising('Revisando perfiles')}</span><span class="progress-meta"><span>45%</span><span class="spinner"></span></span></div></div>`;
-      if (name === 'terminal') return `<div class="variant-shell terminal"><div class="terminal-line"><div class="terminal-command">buscar --coincidencias</div><div class="terminal-result">${rising(state.terminal,50)}</div></div></div>`;
-      const inputSize = innerWidth < 620 ? 23 : 58;
-      return `<div class="variant-shell prompt"><div class="prompt-line"><input class="prompt-input" ${probe?'tabindex="-1"':'id="naturalQuery"'} type="text" size="${inputSize}" value="${esc(state.query)}" placeholder="Describe qué tipo de psicólogo/a buscas…" autocomplete="off"><button class="icon-button ${state.sound?'':'sound-off'}" ${probe?'tabindex="-1"':'id="soundButton"'} type="button" aria-label="${state.sound?'Silenciar sonidos':'Activar sonidos'}" aria-pressed="${state.sound}" title="${state.sound?'Silenciar sonidos':'Activar sonidos'}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M11 5 6.5 9H3v6h3.5l4.5 4V5Z"/><path d="${state.sound?'M15 9.5a4 4 0 0 1 0 5M17.8 6.8a7.5 7.5 0 0 1 0 10.4':'m16 9 5 5m0-5-5 5'}"/></svg></button><button class="icon-button" ${probe?'tabindex="-1"':'id="settingsButton" data-cuelume-press="press" data-cuelume-release="release"'} type="button" aria-label="Configurar OpenRouter" title="Configurar OpenRouter"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21h-4v-.1A1.7 1.7 0 0 0 8.6 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.2 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H2v-4h.5A1.7 1.7 0 0 0 4.2 8.6a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 8.6 4.2a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V2h4v.5a1.7 1.7 0 0 0 1 1.7 1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.4 8.6a1.7 1.7 0 0 0 .6 1 1.7 1.7 0 0 0 1.1.4h.9v4h-.9a1.7 1.7 0 0 0-1.7 1Z"/></svg></button><button class="icon-button send" ${probe?'tabindex="-1"':'id="sendButton" data-cuelume-press="pulse"'} type="button" aria-label="Buscar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></div></div>`;
-    }
-
-    function bindPrompt() {
-      const input = $('#naturalQuery');
-      if (!input) return;
-      input.value = state.query;
-      input.addEventListener('input', e => state.query = e.target.value);
-      input.addEventListener('keydown', e => { if (e.key === 'Enter') runSearch(); });
-      $('#sendButton').addEventListener('click', runSearch);
-      $('#settingsButton').addEventListener('click', openSettings);
-      $('#soundButton').addEventListener('click', () => { state.sound=!state.sound; try{localStorage.setItem('psych_sound',state.sound?'on':'off')}catch(_){} window.Cuelume?.setEnabled(state.sound); if(state.sound)window.Cuelume?.play('toggle',{volume:.34}); renderVariant('prompt'); });
-    }
-    function sound(name, volume=.28) { if(state.sound)window.Cuelume?.play(name,{volume}); }
-    function renderVariant(name) {
-      host.innerHTML = content(name);
-      if (name === 'prompt') bindPrompt();
-    }
-    function radiusFor(name, h) { return radii[name] === 'pill' ? h/2 : radii[name]; }
-
-    async function measureAll() {
-      probeHost.innerHTML = ['prompt','workflow','progress','terminal'].map(name => `<div data-probe="${name}">${content(name,true)}</div>`).join('');
-      sizes = {};
-      probeHost.querySelectorAll('[data-probe]').forEach(p => {
-        const r = p.firstElementChild.getBoundingClientRect();
-        sizes[p.dataset.probe] = {w:Math.ceil(r.width)+2,h:Math.ceil(r.height)+2};
-      });
-      const s = sizes[state.variant];
-      body.style.width = s.w+'px'; body.style.height=s.h+'px'; body.style.setProperty('--r',radiusFor(state.variant,s.h)+'px');
-      renderVariant(state.variant); await nextFrame(); rebuildMasks(); body.dataset.initializing='false';
-    }
-
-    function maskKey(w,h,r,l) { return [Math.round(w),Math.round(h),Math.round(r),l.stroke,l.blur,l.alpha,l.ring||0].join('|'); }
-    function buildMask(w,h,r,l) {
-      const key=maskKey(w,h,r,l); if(maskCache.has(key)) return maskCache.get(key);
-      const safari=/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-      const blur=safari?l.blur*.25:l.blur, pad=Math.ceil(l.stroke+l.blur*3);
-      const c=document.createElement('canvas'); c.width=Math.ceil(w)+pad*2; c.height=Math.ceil(h)+pad*2;
-      const ctx=c.getContext('2d'); if(!ctx)return {url:'',pad};
-      ctx.clearRect(0,0,c.width,c.height); if(blur)ctx.filter=`blur(${blur}px)`;
-      const g=ctx.createConicGradient(0,c.width/2,c.height/2);
-      [['#000',54],['transparent',126],['transparent',333],['rgba(0,0,0,.10)',347],['#000',360]].forEach(([color,stop])=>g.addColorStop(stop/360,color));
-      ctx.strokeStyle=g;ctx.fillStyle=g;ctx.globalAlpha=l.alpha;
-      ctx.beginPath();ctx.roundRect(pad,pad,w,h,Math.min(r,w/2,h/2));
-      if(l.stroke){ctx.lineWidth=l.stroke;ctx.stroke();}else{ctx.fill();if(l.ring){ctx.globalCompositeOperation='destination-out';ctx.globalAlpha=1;ctx.filter='none';const rr=Math.max(0,Math.min(r-l.ring,(w-l.ring*2)/2,(h-l.ring*2)/2));ctx.beginPath();ctx.roundRect(pad+l.ring,pad+l.ring,Math.max(0,w-l.ring*2),Math.max(0,h-l.ring*2),rr);ctx.fill();}}
-      const out={url:c.toDataURL('image/png'),pad}; if(maskCache.size>=24)maskCache.delete(maskCache.keys().next().value);maskCache.set(key,out);return out;
-    }
-    function rebuildMasks() {
-      body.querySelectorAll('.rim-layer').forEach(x=>x.remove());
-      const r=body.getBoundingClientRect(), radius=radiusFor(state.variant,r.height);
-      layers.forEach(l=>{const mask=buildMask(r.width,r.height,radius,l);[false,true].forEach(mirror=>{const span=document.createElement('span');span.className='rim-layer';span.style.inset=`${-mask.pad}px`;span.style.maskImage=`url(${mask.url})`;span.style.webkitMaskImage=`url(${mask.url})`;if(mirror)span.style.transform='scaleX(-1)';body.insertBefore(span,body.firstChild);});});
-    }
-    async function pulse() {
-      if(reduced.matches)return;
-      body.dataset.playing='false';await nextFrame();body.dataset.playing='true';await wait(1600);body.dataset.playing='false';
-    }
-    async function morphTo(name) {
-      if(name===state.variant)return;
-      host.classList.add('leaving'); await wait(reduced.matches?80:160);
-      body.dataset.morphing='true'; state.variant=name; body.dataset.variant=name;
-      const s=sizes[name]; body.style.width=s.w+'px';body.style.height=s.h+'px';body.style.setProperty('--r',radiusFor(name,s.h)+'px');
-      await wait(reduced.matches?130:410); rebuildMasks(); renderVariant(name); body.dataset.morphing='false'; host.classList.remove('leaving');
-      sound(name==='terminal'?'ready':'scan',name==='terminal'?.22:.12);
-      await wait(reduced.matches?100:330);
-    }
-
-    function expandedTerms(query) {
-      const clean=norm(query).replace(/[^a-z0-9ñ\s]/g,' '), stop=new Set('busco necesito quiero una uno que con para por de del la el los las y o en me mi sea haya tenga atienda enfoque profesional psicologo psicologa chileno chilena'.split(' '));
-      const terms=clean.split(/\s+/).filter(x=>x.length>2&&!stop.has(x));
-      const groups=[[/\buc\b|catolica/,['pontificia universidad catolica','puc']],[/\bchile\b|uchile/,['universidad de chile','uchile']],[/rumia|rumiant/,['rumiacion','rumiante','obsesivo','compulsivo']],[/compuls|obses/,['obsesivo','compulsivo','toc','control de impulsos']],[/trauma/,['trauma','postraumatico','tept','abuso']],[/pareja|relacion/,['pareja','vinculo','conyugal','relaciones']],[/cognitiv/,['cognitivo','conductual','tcc']],[/adult/,['adulto','adultez']],[/suicid|autodestruc/,['suicidio','autolesion','autodestructivo']],[/ansied|angust|panico/,['ansiedad','angustia','panico','estres']]];
-      groups.forEach(([re,words])=>{if(re.test(clean))terms.push(...words)});return [...new Set(terms)];
-    }
-    function candidates(query) {
-      const terms=expandedTerms(query), nq=norm(query), asksOnline=/\bonline\b|remot|videollamada/.test(nq), rejectsAlt=/sin (medicina|terapia|enfoque)s? alternativa|no (quiero|tenga|use).*alternativa|exclu.*alternativa/.test(nq);
-      return profiles.map(p=>{let score=0;terms.forEach(t=>{const n=norm(t);if(p._text.includes(n))score+=n.includes(' ')?5:2});if(asksOnline)score+=p.on?9:-6;if(rejectsAlt)score+=p._alt?-25:3;score+=Math.min(Number(p.o||0),80)/80;return{p,score}}).filter(x=>!(rejectsAlt&&x.p._alt)).sort((a,b)=>b.score-a.score).slice(0,100).map(x=>x.p);
-    }
-    async function requestAI(query) {
-      const pool=candidates(query), catalog=pool.map(p=>({id:p.id,nombre:p.n,rating:p.r,opiniones:Number(p.o)||0,precio:p.p||null,online:Boolean(p.on),ubicacion:p.c||'',servicios:trunc([p.a,p.s].filter(Boolean).join(' | '),230),temas:trunc(p.t,360),formacion:trunc(p.f,380),descripcion:trunc(p.b,560),mencion_alternativa:p._alt}));
-      const fetcher=window.__OPENROUTER_FETCH__||window.fetch.bind(window);
-      const response=await fetcher('https://openrouter.ai/api/v1/chat/completions',{method:'POST',headers:{Authorization:`Bearer ${state.key}`,'Content-Type':'application/json','HTTP-Referer':'https://natochi.cv/psicologos/','X-OpenRouter-Title':'Buscar psicólogo'},body:JSON.stringify({model:state.model,messages:[{role:'system',content:'Evalúa únicamente el catálogo incluido. No inventes profesionales, títulos, enfoques ni experiencia. La formación puede incluir posgrados: no afirmes que una universidad corresponde al pregrado si no es explícito. Devuelve máximo 24 coincidencias y explica evidencia e incertidumbre brevemente. Esto no es consejo médico.'},{role:'user',content:`CONSULTA:\n${query}\n\nCATÁLOGO:\n${JSON.stringify(catalog)}`}],response_format:{type:'json_schema',json_schema:{name:'psychologist_matches',strict:true,schema:{type:'object',additionalProperties:false,properties:{summary:{type:'string'},matches:{type:'array',maxItems:24,items:{type:'object',additionalProperties:false,properties:{id:{type:'integer'},score:{type:'number',minimum:0,maximum:100},reason:{type:'string'}},required:['id','score','reason']}}},required:['summary','matches']}}},temperature:.1})});
-      const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data?.error?.message||`OpenRouter respondió ${response.status}`);
-      let raw=data?.choices?.[0]?.message?.content;if(Array.isArray(raw))raw=raw.map(x=>x.text||'').join('');const parsed=typeof raw==='string'?JSON.parse(raw.replace(/^```json\s*|\s*```$/g,'')):raw;
-      const ids=new Set(pool.map(p=>p.id)),seen=new Set();const matches=(parsed?.matches||[]).filter(x=>Number.isInteger(x.id)&&ids.has(x.id)&&!seen.has(x.id)&&seen.add(x.id)).map(x=>({id:x.id,score:Math.max(0,Math.min(100,Number(x.score)||0)),reason:String(x.reason||'Coincidencia sugerida.')}));
-      if(!matches.length)throw new Error('No se obtuvieron coincidencias verificables.');return{summary:String(parsed.summary||''),matches,model:data.model||state.model};
-    }
-    async function runSearch() {
-      if(state.busy)return;const input=$('#naturalQuery');state.query=(input?.value||state.query).trim();if(!state.query){input?.focus();return;}if(!state.key){openSettings();return;}
-      state.busy=true;feedback.textContent='Preparando la búsqueda…';sound('loading',.3);const pending=requestAI(state.query);
-      try{
-        await pulse();await morphTo('workflow');await wait(350);await morphTo('progress');
-        const result=await pending;state.terminal=`${result.matches.length} perfiles encontrados`;await morphTo('terminal');await wait(650);
-        state.aiMatches=result.matches;state.results=result.matches.map(x=>profiles[x.id]);state.visible=24;renderGrid();sound('success',.3);
-        feedback.innerHTML=`<strong>${esc(result.summary||`${result.matches.length} coincidencias encontradas.`)}</strong> · ${esc(result.model)}`;
-        await morphTo('prompt');
-      }catch(err){state.terminal='No se pudo completar';await morphTo('terminal');sound('error',.28);await wait(850);feedback.textContent=err.message||'No se pudo completar la búsqueda.';await morphTo('prompt');}
-      finally{state.busy=false;}
-    }
-
-    function renderGrid() {
-      const shown=state.results.slice(0,state.visible);count.textContent=`${fmt.format(state.results.length)} perfiles`;
-      grid.innerHTML=shown.length?shown.map(card).join(''):'<div class="empty">No encontramos perfiles para esta consulta.</div>';load.hidden=shown.length>=state.results.length;
-    }
-    function card(p) {
-      const match=state.aiMatches?.find(x=>x.id===p.id), place=[p.on?'Online':'',p.c].filter(Boolean).join(' · ')||'Modalidad no indicada', price=Number.isFinite(p.p)&&p.p>=5000&&p.p<=300000?'$'+fmt.format(p.p):'Precio no publicado', reviews=Number(p.o)?`★ ${p.r} (${fmt.format(Number(p.o))})`:'Sin opiniones';
-      return `<article class="psych-card"><h3>${esc(p.n)}</h3><div class="card-meta"><span>${esc(place)}</span><span>${esc(price)}</span><span>${esc(reviews)}</span></div>${match?`<p class="match-reason"><b>${Math.round(match.score)}% coincidencia</b> · ${esc(match.reason)}</p>`:''}<p class="card-focus">${esc(p.t||p.s||p.b||'El perfil no detalla sus áreas de atención.')}</p><a class="profile-link" data-cuelume-hover="tick" href="${esc(p.u)}" target="_blank" rel="noopener noreferrer">Ver perfil <span>↗</span></a></article>`;
-    }
-
-    function openSettings(){ $('#apiKey').value=state.key;$('#model').value=state.model;$('#formError').classList.remove('open');modal.classList.add('open');setTimeout(()=>$('#apiKey').focus(),30); }
-    function closeSettings(){modal.classList.remove('open');}
-    $('#closeSettings').addEventListener('click',closeSettings);modal.addEventListener('click',e=>{if(e.target===modal)closeSettings()});
-    $('#settingsForm').addEventListener('submit',e=>{e.preventDefault();const key=$('#apiKey').value.trim(),model=$('#model').value.trim(),error=$('#formError');if(!key.startsWith('sk-or-')){error.textContent='La clave debería comenzar con sk-or-.';error.classList.add('open');return;}if(!model.includes('/')){error.textContent='Escribe un modelo válido, por ejemplo openrouter/auto.';error.classList.add('open');return;}state.key=key;state.model=model;try{if($('#remember').checked)sessionStorage.setItem('psych_openrouter',JSON.stringify({key,model}));else sessionStorage.removeItem('psych_openrouter')}catch(_){}closeSettings();feedback.textContent=`OpenRouter conectado · ${model}`;$('#naturalQuery')?.focus();});
-    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSettings()});
-    load.addEventListener('click',()=>{state.visible+=24;renderGrid()});
-
-    function init() {
-      try{const saved=JSON.parse(sessionStorage.getItem('psych_openrouter')||'null');if(saved){state.key=saved.key||'';state.model=saved.model||state.model;$('#remember').checked=Boolean(state.key)}state.sound=localStorage.getItem('psych_sound')!=='off'}catch(_){}
-      window.addEventListener('cuelume-ready',()=>window.Cuelume?.setEnabled(state.sound),{once:true});
-      state.results=[...profiles].sort((a,b)=>Number(b.o)-Number(a.o)||Number(b.r)-Number(a.r));renderGrid();
-      document.fonts.ready.then(measureAll);let resizeTimer;addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(measureAll,180)});
-    }
-    init();
+  (()=>{
+    const profiles=(window.PSICOLOGOS||[]).map((p,id)=>({...p,id})).sort((a,b)=>Number(b.o)-Number(a.o)||Number(b.r)-Number(a.r));
+    const directory=document.querySelector('#directory'),controls=document.querySelector('#controls'),count=document.querySelector('#count'),load=document.querySelector('#load');
+    const fmt=new Intl.NumberFormat('es-CL');let view='list',visible=12,changing=false;
+    const palettes=[['#376c5b','#ffb45d','#ef766e'],['#435a8b','#e9a8bd','#e7c96b'],['#744c78','#dc805e','#8ac1a2'],['#3f7778','#edc75b','#da6c7d'],['#91654b','#8dbbb2','#e0a067'],['#4f6387','#d98c79','#9aba7d']];
+    const esc=v=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+    const initials=n=>String(n||'').split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase();
+    const hash=s=>[...String(s)].reduce((a,c)=>((a<<5)-a+c.charCodeAt(0))|0,0);
+    const price=p=>Number.isFinite(p)&&p>=5000&&p<=300000?'$'+fmt.format(p):'Sin precio';
+    function card(p){const colors=palettes[Math.abs(hash(p.n))%palettes.length],place=[p.on?'Online':'',p.c].filter(Boolean).join(' · ')||'Modalidad no indicada',focus=p.t||p.s||'Áreas de atención no detalladas';return `<article class="profile" style="view-transition-name:profile-${p.id}"><div class="portrait" style="--tone:${colors[0]};--tone-2:${colors[1]};--tone-3:${colors[2]};--turn:${(Math.abs(hash(p.n))%42)-21}deg"><span class="initials">${esc(initials(p.n))}</span></div><div class="content"><h2 class="name">${esc(p.n)}</h2><p class="place">${esc(place)}</p><p class="focus">${esc(focus)}</p></div><div class="side"><span>${esc(price(p.p))}</span><a class="profile-link" href="${esc(p.u)}" target="_blank" rel="noopener noreferrer">Ver perfil ↗</a></div></article>`}
+    function render(){const shown=profiles.slice(0,visible);directory.innerHTML=shown.map(card).join('');count.textContent=`${fmt.format(profiles.length)} perfiles · mostrando ${shown.length}`;load.hidden=shown.length>=profiles.length}
+    async function setView(next){if(next===view||changing)return;changing=true;const update=()=>{view=next;directory.className=`directory ${view}`;controls.dataset.view=view;controls.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.view===view));render()};if(document.startViewTransition){const transition=document.startViewTransition(update);try{await transition.finished}catch(_){}}else update();changing=false}
+    controls.addEventListener('click',e=>{const b=e.target.closest('[data-view]');if(b)setView(b.dataset.view)});load.addEventListener('click',()=>{visible+=12;render()});render();
   })();
   </script>
 </body>
