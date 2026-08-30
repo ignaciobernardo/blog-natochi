@@ -3,48 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ai safety</title>
+    <title>ai safety - ernesto bernardo</title>
 
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="/favicon.png">
-
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://natochi.cv/ais">
-    <meta property="og:title" content="ai safety">
+    <meta property="og:title" content="ai safety - ernesto bernardo">
     <meta property="og:description" content="AI safety work - natochi">
     <meta property="og:image" content="https://natochi.cv/og-image.png">
-
-    <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://natochi.cv/ais">
-    <meta property="twitter:title" content="ai safety">
+    <meta property="twitter:title" content="ai safety - ernesto bernardo">
     <meta property="twitter:description" content="AI safety work - natochi">
     <meta property="twitter:image" content="https://natochi.cv/og-image.png">
 
-    <link rel="stylesheet" href="/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        ::selection { background: #ff8800; color: #1a1a1a; }
+
+        html, body {
+            background-color: #1a1a1a;
+        }
+
+        body {
+            font-family: 'IBM Plex Mono', monospace;
+            color: #e5e5e5;
+            font-size: 11.5px;
+            line-height: 1.65;
+            padding: 1.8cm;
+            max-width: 720px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+
+        .back-link {
+            font-size: 10px;
+            color: rgba(229,229,229,0.35);
+            margin-bottom: 1.8cm;
+            display: block;
+        }
+
+        .back-link a {
+            color: rgba(229,229,229,0.35);
+            text-decoration: none;
+            transition: color 0.2s, background-color 0.2s;
+        }
+
+        .back-link a:hover {
+            color: #e5e5e5;
+            background-color: #FF8800;
+        }
+
+        .cv-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #e5e5e5;
+            margin-bottom: 5px;
+        }
+
+        .cv-name-sub {
+            font-size: 10px;
+            color: rgba(229,229,229,0.35);
+            margin-bottom: 22px;
+        }
+
+        .cv-name-sub a {
+            color: #FF8800;
+            text-decoration: underline;
+            transition: color 0.2s, background-color 0.2s;
+            padding: 1px 3px;
+        }
+
+        .cv-name-sub a:hover {
+            color: #e5e5e5;
+            background-color: #FF8800;
+            text-decoration: none;
+        }
+
+        .cv-section-label {
+            font-size: 9px;
+            font-weight: 400;
+            color: rgba(229,229,229,0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            padding-bottom: 5px;
+            border-bottom: 1px solid rgba(229,229,229,0.1);
+            margin: 20px 0 11px 0;
+        }
+
+        .cv-entry {
+            display: grid;
+            grid-template-columns: 175px 1fr;
+            gap: 0 16px;
+            margin-bottom: 13px;
+        }
+
+        .cv-company {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #FF8800;
+            text-decoration: underline;
+            display: block;
+            line-height: 1.4;
+            transition: color 0.2s, background-color 0.2s;
+            padding: 0 3px;
+        }
+
+        .cv-company:hover {
+            color: #e5e5e5;
+            background-color: #FF8800;
+            text-decoration: none;
+        }
+
+        .cv-role {
+            font-size: 10.5px;
+            color: #e5e5e5;
+            display: block;
+            line-height: 1.4;
+        }
+
+        .cv-meta {
+            font-size: 10px;
+            color: rgba(229,229,229,0.35);
+            display: block;
+            line-height: 1.5;
+            margin-top: 1px;
+        }
+
+        .cv-bullets {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .cv-bullets li {
+            font-size: 11px;
+            color: #d4d4d4;
+            line-height: 1.65;
+            padding-left: 12px;
+            position: relative;
+            margin-bottom: 2px;
+        }
+
+        .cv-bullets li::before {
+            content: '-';
+            position: absolute;
+            left: 0;
+            color: rgba(229,229,229,0.25);
+        }
+
+        .cv-bullets li a {
+            color: #FF8800;
+            text-decoration: underline;
+            padding: 1px 3px;
+            transition: color 0.2s, background-color 0.2s;
+        }
+
+        .cv-bullets li a:hover {
+            color: #e5e5e5;
+            background-color: #FF8800;
+            text-decoration: none;
+        }
+
+        .cv-footer {
+            margin-top: 22px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(229,229,229,0.1);
+            font-size: 10px;
+            color: rgba(229,229,229,0.3);
+        }
+
+        .cv-footer a {
+            color: #FF8800;
+            text-decoration: underline;
+            padding: 1px 3px;
+            transition: color 0.2s, background-color 0.2s;
+        }
+
+        .cv-footer a:hover {
+            color: #e5e5e5;
+            background-color: #FF8800;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 1.2rem; }
+            .cv-entry { grid-template-columns: 1fr; gap: 0.3rem 0; }
+        }
+    </style>
 </head>
-<body class="info-page">
-    <div class="container">
-        <div class="content">
-            <h1>ai safety</h1>
-            <div class="separator">-</div>
+<body>
+    <span class="back-link"><a href="/">&#8592; Index</a></span>
 
-            <ul class="fancy-list">
-                <li>> completed the <a href="https://bluedot.org/" target="_blank" rel="noopener noreferrer">bluedot</a> ai strategy course — aug 2026.</li>
-                <li>> design &amp; frontend contracting for <a href="https://kairos-project.org/" target="_blank" rel="noopener noreferrer">kairos</a> — built out kairos, spar, gcp &amp; pathfinder. aug 2026 – present.</li>
-                <li>> design &amp; frontend contracting for <a href="https://m3fellowship.com/" target="_blank" rel="noopener noreferrer">m3 fellowship</a>, a generator residency project — aug 2026.</li>
-                <li>> accepted into <a href="https://genstream.org/" target="_blank" rel="noopener noreferrer">genstream</a> (3% acceptance rate) — now contracting for them.</li>
-            </ul>
+    <p class="cv-name">AI Safety</p>
+    <p class="cv-name-sub">
+        natochi.cv/ais &nbsp;·&nbsp;
+        <a href="mailto:ernesto@indies.cl">ernesto@indies.cl</a> &nbsp;·&nbsp;
+        <a href="https://www.linkedin.com/in/natochi/" target="_blank" rel="noopener">linkedin</a>
+    </p>
 
-            <div class="separator">-</div>
+    <p class="cv-section-label">Work</p>
 
-            <div class="back-link">
-                <a href="/">. . /</a>
-            </div>
+    <div class="cv-entry">
+        <div class="cv-entry-left">
+            <a href="https://kairos-project.org/" target="_blank" rel="noopener" class="cv-company">Kairos</a>
+            <span class="cv-role">Design &amp; Frontend Contractor</span>
+            <span class="cv-meta">Remote · 8/2026 - Present</span>
         </div>
+        <ul class="cv-bullets">
+            <li>Built out the full Kairos, SPAR, GCP &amp; Pathfinder pages, including design direction and animations.</li>
+            <li>Worked directly with the team; brought on after showing strong opinions on the site's design.</li>
+        </ul>
     </div>
 
-    <script src="/script.js"></script>
+    <div class="cv-entry">
+        <div class="cv-entry-left">
+            <a href="https://genstream.org/" target="_blank" rel="noopener" class="cv-company">Genstream</a>
+            <span class="cv-role">Contractor</span>
+            <span class="cv-meta">Remote · 8/2026 - Present</span>
+        </div>
+        <ul class="cv-bullets">
+            <li>Accepted into the program (3% acceptance rate); now contracting for them.</li>
+        </ul>
+    </div>
+
+    <div class="cv-entry">
+        <div class="cv-entry-left">
+            <a href="https://m3fellowship.com/" target="_blank" rel="noopener" class="cv-company">M3 Fellowship</a>
+            <span class="cv-role">Design &amp; Frontend Contractor</span>
+            <span class="cv-meta">Remote · 8/2026</span>
+        </div>
+        <ul class="cv-bullets">
+            <li>Contracting work for the Generator Residency project.</li>
+        </ul>
+    </div>
+
+    <p class="cv-section-label">Learning</p>
+
+    <div class="cv-entry">
+        <div class="cv-entry-left">
+            <a href="https://bluedot.org/" target="_blank" rel="noopener" class="cv-company">BlueDot</a>
+            <span class="cv-role">AI Strategy Course</span>
+            <span class="cv-meta">Completed 8/2026</span>
+        </div>
+        <div></div>
+    </div>
+
+    <div class="cv-footer">
+        <a href="/">natochi.cv</a>
+    </div>
 </body>
 </html>
