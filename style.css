@@ -1026,22 +1026,21 @@ body.node-page {
 
 .info-pill {
     display: inline-block;
-    background: rgba(229, 229, 229, 0.08);
+    background: #FF8800;
     padding: 6px 14px;
     font-family: 'PP Mondwest', sans-serif;
     font-size: 0.65rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: rgba(229, 229, 229, 0.5);
+    color: #1A1A1A;
     white-space: nowrap;
     text-decoration: none;
-    border: 1px solid rgba(229, 229, 229, 0.15);
-    transition: color 0.2s ease, border-color 0.2s ease;
+    border: none;
+    transition: background-color 0.2s ease;
 }
 
 a.info-pill:hover {
-    color: #FF8800;
-    border-color: #FF8800;
+    background: #FFA640;
 }
 
 @media (max-width: 767px) {
