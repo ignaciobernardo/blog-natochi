@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000000">
+<meta name="description" content="Dígitos que nacen bajo el cursor y se propagan por la grilla.">
+<title>12 — Contagio</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #000; }
+  body { touch-action: none; cursor: crosshair; }
+  canvas { display: block; width: 100vw; height: 100svh; }
+  .hint { position: fixed; bottom: 9px; right: 13px; pointer-events: none; color: #fff; opacity: .3; font: 9px/1.5 monospace; letter-spacing: .09em; }
+</style>
+</head>
+<body>
+<canvas aria-label="Grilla de dígitos que se encienden al pasar el cursor y se propagan a sus vecinos."></canvas>
+<span class="hint" aria-hidden="true">mueve el cursor</span>
+<script>
+(() => {
+  'use strict';
+  const canvas = document.querySelector('canvas');
+  const ctx = canvas.getContext('2d', { alpha: false });
+
+  // 3x5 bitmap para 0-9: cada fila son 3 bits, de arriba a abajo.
+  const GLYPHS = [
+    [0b111,0b101,0b101,0b101,0b111], [0b110,0b010,0b010,0b010,0b111],
+    [0b111,0b001,0b111,0b100,0b111], [0b111,0b001,0b111,0b001,0b111],
+    [0b101,0b101,0b111,0b001,0b001], [0b111,0b100,0b111,0b001,0b111],
+    [0b111,0b100,0b111,0b101,0b111], [0b111,0b001,0b010,0b010,0b010],
+    [0b111,0b101,0b111,0b101,0b111], [0b111,0b101,0b111,0b001,0b111],
+  ];
+
+  const CELL = 26, DECAY = 0.0052, SPREAD_P = 0.055;
+  let cols = 0, rows = 0, dpr = 1, ox = 0, oy = 0;
+  let life, digit, budget;              // estado por celda
+  let px = null, py = null;             // último punto del cursor
+
+  function resize() {
+    dpr = Math.min(2, window.devicePixelRatio || 1);
+    const w = window.innerWidth, h = window.innerHeight;
+    canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+    cols = Math.ceil(w / CELL); rows = Math.ceil(h / CELL);
+    ox = (w - cols * CELL) / 2; oy = (h - rows * CELL) / 2;
+    life = new Float32Array(cols * rows);
+    digit = new Uint8Array(cols * rows);
+    budget = new Uint8Array(cols * rows);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function ignite(cx, cy, amount, spreads) {
+    if (cx < 0 || cy < 0 || cx >= cols || cy >= rows) return;
+    const i = cy * cols + cx;
+    if (life[i] > amount) return;
+    life[i] = amount;
+    digit[i] = (Math.random() * 10) | 0;
+    budget[i] = spreads;
+  }
+
+  // La estela sigue la línea del cursor, no sólo la celda de llegada.
+  function trail(x, y) {
+    const cx = Math.floor((x - ox) / CELL), cy = Math.floor((y - oy) / CELL);
+    if (px === null) { px = cx; py = cy; }
+    const steps = Math.max(Math.abs(cx - px), Math.abs(cy - py), 1);
+    for (let s = 1; s <= steps; s++) {
+      const t = s / steps;
+      ignite(Math.round(px + (cx - px) * t), Math.round(py + (cy - py) * t), 1, 2 + ((Math.random() * 3) | 0));
+    }
+    px = cx; py = cy;
+  }
+
+  const DIRS = [[1,0],[-1,0],[0,1],[0,-1]];
+  function step() {
+    for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
+      const i = y * cols + x, l = life[i];
+      if (l <= 0) continue;
+      if (budget[i] > 0 && l > 0.45 && Math.random() < SPREAD_P) {
+        const [dx, dy] = DIRS[(Math.random() * 4) | 0];
+        budget[i]--;
+        ignite(x + dx, y + dy, l * (0.86 + Math.random() * 0.1), budget[i] ? budget[i] - 1 : 0);
+      }
+      if (Math.random() < 0.012) digit[i] = (Math.random() * 10) | 0;   // parpadeo
+      life[i] = l - DECAY;
+    }
+  }
+
+  function draw() {
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+    const pad = 1, unit = (CELL - pad * 2) / 6, gx = unit, gy = unit;  // glifo 3x5 centrado
+    // 1) los bloques blancos
+    for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
+      const l = life[y * cols + x];
+      if (l <= 0) continue;
+      ctx.fillStyle = 'rgba(255,255,255,' + Math.min(1, l * 2.2).toFixed(3) + ')';
+      ctx.fillRect(ox + x * CELL + pad, oy + y * CELL + pad, CELL - pad * 2, CELL - pad * 2);
+    }
+    // 2) los dígitos, recortados para que dejen ver el fondo negro
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.fillStyle = '#000';
+    for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
+      const i = y * cols + x;
+      if (life[i] <= 0) continue;
+      const g = GLYPHS[digit[i]];
+      const bx = ox + x * CELL + pad + 1.5 * unit, by = oy + y * CELL + pad + 0.5 * unit;
+      for (let r = 0; r < 5; r++) for (let c = 0; c < 3; c++)
+        if (g[r] & (1 << (2 - c))) ctx.fillRect(bx + c * gx, by + r * gy, gx + 0.5, gy + 0.5);
+    }
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  function frame() { step(); draw(); requestAnimationFrame(frame); }
+
+  addEventListener('resize', resize);
+  addEventListener('pointermove', e => trail(e.clientX, e.clientY), { passive: true });
+  addEventListener('pointerdown', e => { px = null; trail(e.clientX, e.clientY); }, { passive: true });
+  addEventListener('pointerleave', () => { px = null; });
+  resize();
+  frame();
+})();
+</script>
+</body>
+</html>
