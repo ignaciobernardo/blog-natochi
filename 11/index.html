@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#101210">
+<meta name="theme-color" content="#0e110f">
 <meta name="description" content="Materia verde. Una estampa orgánica generada enteramente con código.">
 <title>11 — Materia</title>
 <style>
   * { box-sizing: border-box; }
-  html, body { margin: 0; min-height: 100%; background: #101210; }
+  html, body { margin: 0; min-height: 100%; background: #0e110f; }
   body { min-height: 100svh; display: grid; place-items: center; }
   canvas { display: block; width: min(100vw, 81svh); height: auto; cursor: pointer; touch-action: manipulation; }
   canvas:focus-visible { outline: 1px solid #aed18e; outline-offset: -8px; }
@@ -39,6 +39,29 @@
   }
   function fbm(x,y) {
     return noise(x,y)*.57+noise(x*2.07+13,y*2.07+5)*.28+noise(x*4.17+4,y*4.17+19)*.15;
+  }
+  function sizeBackground() {
+    const size = 256 * canvas.getBoundingClientRect().width / W;
+    document.body.style.backgroundSize = `${size}px ${size}px`;
+  }
+  function extendBackground() {
+    const tile = document.createElement('canvas');
+    tile.width = tile.height = 256;
+    const tileCtx = tile.getContext('2d');
+    const pixels = tileCtx.createImageData(256, 256);
+    for (let y = 0; y < 256; y++) for (let x = 0; x < 256; x++) {
+      const grain = hash(x+1923, y+714);
+      const dust = (grain-.5)*14;
+      const speck = grain > .9975;
+      const i = (y*256+x)*4;
+      pixels.data[i] = 14+dust+(speck ? 70 : 0);
+      pixels.data[i+1] = 17+dust+(speck ? 74 : 0);
+      pixels.data[i+2] = 15+dust+(speck ? 64 : 0);
+      pixels.data[i+3] = 255;
+    }
+    tileCtx.putImageData(pixels, 0, 0);
+    document.body.style.backgroundImage = `url(${tile.toDataURL()})`;
+    sizeBackground();
   }
   function generate() {
     if (busy) return;
@@ -92,6 +115,7 @@
       data[index]=r;data[index+1]=g;data[index+2]=b;data[index+3]=255;
     }
     ctx.putImageData(pixels,0,0);
+    extendBackground();
     // Printer registration marks belong to the plate, outside the organic field.
     ctx.strokeStyle='rgba(202,210,194,.68)';ctx.lineWidth=1;
     for (const x of [24,W/2,W-24]) {
@@ -104,6 +128,7 @@
   canvas.addEventListener('keydown',event => {
     if (event.key==='Enter' || event.key===' ') {event.preventDefault();generate();}
   });
+  addEventListener('resize', sizeBackground);
   generate();
 })();
 </script>
