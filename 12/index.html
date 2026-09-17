@@ -32,7 +32,7 @@
     [0b111,0b101,0b111,0b101,0b111], [0b111,0b101,0b111,0b001,0b111],
   ];
 
-  const CELL = 26, DECAY = 0.0052, SPREAD_P = 0.055;
+  const CELL = 13, DECAY = 0.0052, SPREAD_P = 0.055;
   let cols = 0, rows = 0, dpr = 1, ox = 0, oy = 0;
   let life, digit, budget;              // estado por celda
   let px = null, py = null;             // último punto del cursor
@@ -88,7 +88,9 @@
   function draw() {
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, canvas.width / dpr, canvas.height / dpr);
-    const pad = 1, unit = (CELL - pad * 2) / 6, gx = unit, gy = unit;  // glifo 3x5 centrado
+    const pad = 1, inner = CELL - pad * 2;
+    const unit = Math.max(1, Math.floor(inner / 5));                     // píxel del glifo 3x5
+    const gw = unit * 3, gh = unit * 5, offx = (inner - gw) / 2, offy = (inner - gh) / 2;
     // 1) los bloques blancos
     for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
       const l = life[y * cols + x];
@@ -103,9 +105,9 @@
       const i = y * cols + x;
       if (life[i] <= 0) continue;
       const g = GLYPHS[digit[i]];
-      const bx = ox + x * CELL + pad + 1.5 * unit, by = oy + y * CELL + pad + 0.5 * unit;
+      const bx = ox + x * CELL + pad + offx, by = oy + y * CELL + pad + offy;
       for (let r = 0; r < 5; r++) for (let c = 0; c < 3; c++)
-        if (g[r] & (1 << (2 - c))) ctx.fillRect(bx + c * gx, by + r * gy, gx + 0.5, gy + 0.5);
+        if (g[r] & (1 << (2 - c))) ctx.fillRect(bx + c * unit, by + r * unit, unit, unit);
     }
     ctx.globalCompositeOperation = 'source-over';
   }
