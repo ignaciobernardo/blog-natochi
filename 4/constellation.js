@@ -57,12 +57,14 @@
     nearest.forEach(other => { if (hub < other) connect(hub, other, true); });
     if (i % 9 === 0) connect(hub, hubs[(i + 37) % hubs.length], true);
   });
+  // Great circles share the particle shell's radius and stay against its surface.
+  const shellRadius = 1.04;
   for (let i = 0; i < 4; i++) {
     const normal = direction(), u = unit(cross(normal, [0, 1, 0])), v = cross(normal, u);
     const orbit = [];
     for (let j = 0; j <= 220; j++) {
       const t = j / 220 * TAU;
-      orbit.push(add(mul(u, Math.cos(t) * (1.16 + i*.045)), mul(v, Math.sin(t) * (1.12 + i*.035))));
+      orbit.push(mul(add(mul(u, Math.cos(t)), mul(v, Math.sin(t))), shellRadius));
     }
     orbits.push(orbit);
   }
