@@ -1,19 +1,38 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#030303">
-<meta name="description" content="Vortex.">
+<meta name="description" content="Dropout, 23, based in Santiago de Chile. Growth levers for startups, ventures and cool things.">
 <title>9 — Vortex</title>
 <style>
+  @font-face {
+    font-family: 'PP Mondwest';
+    src: url('../fonts/PPMondwest-Regular.otf') format('opentype');
+    font-display: swap;
+  }
   * { box-sizing: border-box; }
   html, body { margin: 0; min-height: 100%; background: #030303; }
-  body { min-height: 100svh; display: flex; justify-content: center; padding: clamp(24px, 7vh, 72px) 16px; }
-  img { display: block; width: min(500px, 100%); height: auto; align-self: flex-start; }
+  body {
+    min-height: 100svh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: clamp(28px, 8vh, 80px) 20px clamp(40px, 10vh, 96px);
+    font-family: 'PP Mondwest', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: #d8d8d8;
+  }
+  .col { width: min(360px, 100%); }
+  p { margin: 0 0 1.1em; font-size: 1.05rem; line-height: 1.55; text-wrap: pretty; }
+  p:last-of-type { margin-bottom: 0; }
+  img { display: block; width: 100%; height: auto; margin-top: clamp(28px, 6vh, 56px); }
 </style>
 </head>
 <body>
-<img src="vortex.png" width="500" height="370" alt="Diagrama a tiza de un vórtice: dos lóbulos elípticos con flechas que giran alrededor de un eje central de líneas convergentes. Abajo, la palabra Vortex.">
+<div class="col">
+  <p>dropout, 23yo, based in santiago de chile. focused on finding growth levers for: startups, ventures, and cool things ;).</p>
+  <p>over the last 6 years i've built businesses, communities and fun stuff at the places i've worked.</p>
+  <p>interests: ai safety, cognitive science, venture capital, community stuff &amp; anything borges related.</p>
+  <img src="vortex.png" width="500" height="370" alt="Chalk diagram of a vortex: two elliptical lobes with arrows circling a central axis of converging lines. The word Vortex below.">
+</div>
 </body>
 </html>
