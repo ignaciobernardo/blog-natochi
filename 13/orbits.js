@@ -14,8 +14,8 @@
     return ((n ^ n >>> 14) >>> 0) / 4294967296;
   }
 
-  // Measured in the 600 × 338 reference frame. The third coordinate gives
-  // the oblique planes depth; the camera moves through this fixed scene.
+  // Initial ellipse geometry in the 600 × 338 reference frame. Each plane
+  // revolves independently around the same fixed point; the camera is static.
   const rings = [
     { x: 291, y: 205, a: 205, b: 59, angle: 25.4, z: -35, ink: .95, ticks: 103, line: .14 },
     { x: 301, y: 198, a: 200, b: 62, angle: -20, z: 55, ink: .57, ticks: 162, line: .055 },
@@ -27,13 +27,25 @@
     { x: 318, y: 175, a: 278, b: 85, angle: 73, z: 90, ink: .42, ticks: 94, line: 0, outer: true },
   ].map((r, id) => ({ ...r, id, angle: r.angle * Math.PI / 180 }));
 
+  const PIVOT = [-15, -24, 0];
+  const ORBIT_SPEEDS = [.16, .21, .18, .24, .19, .13, .17, .22];
+  let sceneTime = 0;
+  function revolve(p, orbit = 0) {
+    const angle = sceneTime * ORBIT_SPEEDS[orbit];
+    const c = Math.cos(angle), s = Math.sin(angle);
+    const x = p[0] - PIVOT[0], z = p[2] - PIVOT[2];
+    // Rotation around a shared vertical axis produces lateral orbital motion.
+    // There is no camera transform or animated vertical translation.
+    return [PIVOT[0] + x*c + z*s, p[1], PIVOT[2] + z*c - x*s];
+  }
+
   function point(r, t, radial = 1) {
     const c = Math.cos(t), s = Math.sin(t), ca = Math.cos(r.angle), sa = Math.sin(r.angle);
     const x = r.x + radial * (r.a * c * ca - r.b * s * sa);
     const y = r.y + radial * (r.a * c * sa + r.b * s * ca);
     const z = r.z + s * Math.sqrt(r.a * r.a - r.b * r.b) * .65;
     const depth = 1 + z / FOCAL;
-    return [(x - W / 2) * depth, (y - H / 2) * depth, z];
+    return revolve([(x - W / 2) * depth, (y - H / 2) * depth, z], r.id);
   }
 
   const marks = rings.flatMap(r => Array.from({ length: r.ticks }, (_, i) => ({
@@ -56,14 +68,14 @@
     ring: rings[5 + i % 3], t: random() * TAU, radial: .62 + random() * .68,
     type: random(), size: 2.3 + random() * 5.8, alpha: .45 + random() * .55,
   }));
-  let cameraX = 0, cameraY = 0, yaw = 0;
   function project(p) {
-    const x = p[0] * Math.cos(yaw) + p[2] * Math.sin(yaw) - cameraX;
-    const z = p[2] * Math.cos(yaw) - p[0] * Math.sin(yaw);
-    const scale = FOCAL / (FOCAL + z);
-    return [W / 2 + x * scale, H / 2 + (p[1] - cameraY) * scale, scale];
+    const scale = FOCAL / (FOCAL + p[2]);
+    return [W / 2 + p[0] * scale, H / 2 + p[1] * scale, scale];
   }
-  function screen(r, t, radial = 1) { return project(point(r, t, radial)); }
+  function screen(r, t, radial = 1) {
+    const phase = t + sceneTime * (.035 + r.id * .004);
+    return project(point(r, phase, radial));
+  }
   function line(a, b, width, alpha) {
     ctx.strokeStyle = `rgba(0,0,0,${alpha})`;
     ctx.lineWidth = width;
@@ -107,16 +119,16 @@
   }
 
   const arcs = [
-    { points: [[6,316],[38,271],[82,239],[124,211]], z: -80, text: '01020', start: .43, end: .65, size: 10 },
-    { points: [[328,334],[419,334],[550,244],[633,150]], z: -110, text: '012345 SPACE COORDINATES 010123 SPACE COORDINATES', start: .02, end: .95, size: 12 },
-    { points: [[516,39],[550,32],[594,36],[638,40]], z: 30, text: '001001101101001001100110', start: 0, end: 1, size: 4 },
+    { points: [[6,316],[38,271],[82,239],[124,211]], z: -80, orbit: 5, text: '01020', start: .43, end: .65, size: 10 },
+    { points: [[328,334],[419,334],[550,244],[633,150]], z: -110, orbit: 6, text: '012345 SPACE COORDINATES 010123 SPACE COORDINATES', start: .02, end: .95, size: 12 },
+    { points: [[516,39],[550,32],[594,36],[638,40]], z: 30, orbit: 7, text: '001001101101001001100110', start: 0, end: 1, size: 4 },
   ];
   function arcPoint(arc, t) {
     const u = 1 - t, weights = [u*u*u, 3*u*u*t, 3*u*t*t, t*t*t];
     let x = 0, y = 0;
     arc.points.forEach((p, i) => { x += p[0] * weights[i]; y += p[1] * weights[i]; });
     const d = 1 + arc.z / FOCAL;
-    return project([(x - W/2) * d, (y - H/2) * d, arc.z]);
+    return project(revolve([(x - W/2) * d, (y - H/2) * d, arc.z], arc.orbit ?? 5));
   }
   function drawArc(arc) {
     for (let i = 0; i < 135; i++) {
@@ -140,7 +152,7 @@
   ];
   function drawAnnotations() {
     for (const [x,y,text,size,angle] of annotations) {
-      const p = project([x-W/2,y-H/2,-20]);
+      const p = project(revolve([x-W/2,y-H/2,-20], 6));
       ctx.save();ctx.translate(p[0],p[1]);ctx.rotate(angle);ctx.scale(1,.65);
       ctx.font = `bold italic ${size}px 'Courier New', monospace`;
       ctx.fillStyle = 'rgba(0,0,0,.73)';ctx.fillText(text,0,0);ctx.restore();
@@ -158,18 +170,14 @@
   let inspectionTime = null;
   function renderAt(seconds) {
     const t = Math.max(0, Number(seconds) || 0);
-    // Initial travel is ~18 reference pixels/second. Slow periodic camera
-    // travel keeps the drawing in view indefinitely, without resetting a clip.
-    cameraY = 105 * Math.sin(t * .174);
-    cameraX = 8 * Math.sin(t * .15);
-    yaw = .007 * Math.sin(t * .12);
+    sceneTime = t;
     ctx.setTransform(scale, 0, 0, canvas.height / H, 0, 0);
     ctx.globalAlpha = 1; ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
     for (const r of rings) drawRing(r);
     for (const m of marks) {
       const { ring: r } = m;
       if (r.outer && Math.sin(m.t * 7 + r.id) < .78) continue;
-      const phase = m.t + t * (r.id === 0 ? .002 : .004);
+      const phase = m.t;
       const p = screen(r, phase), next = screen(r, phase + .006);
       const alpha = r.ink * m.alpha;
       if (r.id === 0) {
@@ -188,7 +196,7 @@
     line(screen(axis, Math.PI, .46), screen(axis, 0, .72), .3, .3);
     line(project([-79, -20, 40]), project([130, -115, 40]), .42, .48);
     for (const p of particles) {
-      const phase = p.t + t * .005;
+      const phase = p.t;
       const at = screen(p.ring, phase, p.radial);
       if (at[0] < -12 || at[0] > W + 12 || at[1] < -12 || at[1] > H + 12) continue;
       const tangent = screen(p.ring, phase + .012, p.radial);
@@ -236,6 +244,13 @@
     window.orbits = Object.freeze({
       renderAt(seconds) { inspectionTime = Math.max(0, Number(seconds) || 0); syncPlayback(); },
       resume() { inspectionTime = null; syncPlayback(); },
+      geometry() {
+        return {
+          pivot: project(PIVOT),
+          fixedAxis: [project([-79, -20, 40]), project([130, -115, 40])],
+          rings: rings.map(r => Array.from({length: 16}, (_, i) => screen(r, i * TAU / 16))),
+        };
+      },
     });
   }
   addEventListener('resize', resize);
