@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#291e29">
+  <meta name="description" content="Una constelación orgánica en tres dimensiones. Arrastra para explorar.">
+  <title>04 — natochi</title>
+  <link rel="icon" href="/favicon.svg">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #291e29; }
+    canvas { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; outline: none; }
+    canvas:active { cursor: grabbing; }
+    canvas:focus-visible { outline: 1px solid #baca42; outline-offset: -5px; }
+    .hint { position: fixed; bottom: 23px; left: 0; right: 0; text-align: center; color: #aba17d; font: 10px/1.5 monospace; letter-spacing: .13em; pointer-events: none; transition: opacity 1s; }
+    .interacted .hint { opacity: 0; }
+    @media (prefers-reduced-motion: reduce) { .hint { transition: none; } }
+  </style>
+</head>
+<body>
+  <canvas tabindex="0" aria-label="Escultura de partículas en 3D. Arrastra para girarla o usa las flechas del teclado. Zoom desactivado."></canvas>
+  <div class="hint" aria-hidden="true">arrastra para girar</div>
+  <script src="./constellation.js"></script>
+</body>
+</html>
