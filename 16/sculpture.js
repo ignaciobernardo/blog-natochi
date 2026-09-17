@@ -49,8 +49,8 @@
         if (rnd() < .28) v = rnd() < .5 ? Math.pow(v, 3) * .15 : 1 - Math.pow(v, 3) * .15;
         const p = surface(b, u, v);
         const edge = Math.pow(Math.abs(v * 2 - 1), 5);
-        const light = .45 + .45 * rnd() + .20 * edge;
-        points.push(...p, light, 1.0 + Math.pow(rnd(), 3) * .9);
+        const light = .62 + .65 * rnd() + .40 * edge;
+        points.push(...p, light, 1.25 + Math.pow(rnd(), 2) * 1.5);
       }
     }
     return { triangles: new Float32Array(triangles), points: new Float32Array(points) };
@@ -147,30 +147,64 @@
     ctx.clearRect(0, 0, width, height);
     return ctx;
   }
+  // Low-frequency blotches and sharp grain recreate uneven ink on rough paper.
+  function paperNoise(seed) {
+    const rnd = random(seed), grid = Array.from({length: 4096}, () => rnd());
+    return (x, y) => {
+      const ix = Math.floor(x), iy = Math.floor(y);
+      let fx = x - ix, fy = y - iy;
+      fx = fx * fx * (3 - 2 * fx); fy = fy * fy * (3 - 2 * fy);
+      const at = (a, b) => grid[((a & 63) + (b & 63) * 64)];
+      return (at(ix,iy)*(1-fx)+at(ix+1,iy)*fx)*(1-fy)
+        + (at(ix,iy+1)*(1-fx)+at(ix+1,iy+1)*fx)*fy;
+    };
+  }
   function background() {
-    const ctx = setup2D(space), rnd = random(6174);
-    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, width, height);
-    for (let i = 0; i < Math.min(26000, width * height / 32); i++) {
-      const x = rnd() * width, y = rnd() * height;
-      const bright = rnd(), size = bright > .993 ? 1.3 : .35 + rnd() * .55;
-      ctx.fillStyle = `rgba(255,255,255,${.045 + Math.pow(bright, 9) * .55})`;
-      ctx.fillRect(x, y, size, size);
+    const ctx = setup2D(space), rnd = random(6174), noise = paperNoise(1946);
+    const paper = document.createElement('canvas');
+    paper.width = Math.ceil(width); paper.height = Math.ceil(height);
+    const pctx = paper.getContext('2d'), pixels = pctx.createImageData(paper.width,paper.height);
+    for (let y=0;y<paper.height;y++) for(let x=0;x<paper.width;x++) {
+      const blotch = noise(x/85,y/85)*.7 + noise(x/19,y/19)*.3;
+      const grain = Math.pow(rnd(), 5);
+      const value = Math.min(60, (3 + grain*46) * (.3 + blotch*1.2));
+      const i=(y*paper.width+x)*4;
+      pixels.data[i]=pixels.data[i+1]=pixels.data[i+2]=value; pixels.data[i+3]=255;
     }
-    ctx.save(); ctx.translate(width / 2, height / 2);
-    const glow = ctx.createRadialGradient(0, 0, scale * .245, 0, 0, scale * .39);
-    glow.addColorStop(0, '#fff'); glow.addColorStop(.32, '#b8b8b8'); glow.addColorStop(.59, '#252525'); glow.addColorStop(1, '#0000');
-    ctx.fillStyle = glow; ctx.fillRect(-scale, -scale, scale * 2, scale * 2);
-    ctx.beginPath(); ctx.arc(0, 0, scale * .266, 0, TAU); ctx.fillStyle = '#fff'; ctx.fill();
-    ctx.restore();
+    pctx.putImageData(pixels,0,0); ctx.drawImage(paper,0,0);
+    // Dust is distributed throughout the frame, with a ragged cloud around the folds.
+    const count = Math.min(280000, width*height*.22);
+    for(let i=0;i<count;i++) {
+      const x=rnd()*width, y=rnd()*height;
+      const dx=(x-width/2)/scale, dy=(y-height/2)/scale, radius=Math.hypot(dx,dy);
+      const cloud=Math.exp(-Math.pow((radius-1.04)/.49,2));
+      const uneven=noise(x/65,y/65);
+      if(rnd() > .12 + cloud*.78*uneven) continue;
+      const size=.5+Math.pow(rnd(),3)*1.9;
+      const opacity=(.25+rnd()*.75)*(.35+cloud*.65);
+      ctx.fillStyle=`rgba(255,255,255,${opacity})`;
+      ctx.fillRect(x,y,size,size*(.55+rnd()*.7));
+    }
+    // Sparse, irregular stars: a few bright flecks among much finer emulsion grain.
+    for(let i=0;i<Math.min(1500,width*height/1050);i++) {
+      const x=rnd()*width,y=rnd()*height,r=.35+Math.pow(rnd(),3)*2.2;
+      ctx.fillStyle=`rgba(255,255,255,${.28+rnd()*.67})`;
+      ctx.beginPath();ctx.ellipse(x,y,r,r*(.65+rnd()*.6),rnd()*TAU,0,TAU);ctx.fill();
+      if(r>1.95 && rnd()>.65) {
+        ctx.strokeStyle='rgba(255,255,255,.48)';ctx.lineWidth=.65;
+        ctx.beginPath();ctx.moveTo(x-r*2,y);ctx.lineTo(x+r*2,y);
+        ctx.moveTo(x,y-r*2);ctx.lineTo(x,y+r*2);ctx.stroke();
+      }
+    }
   }
   function foreground() {
     const ctx = setup2D(details);
     const cx = width / 2, cy = height / 2, foot = cy + scale * .155;
     ctx.lineWidth = .5;
-    ctx.strokeStyle = 'rgba(150,150,150,.48)';
+    ctx.strokeStyle = 'rgba(225,225,225,.64)';
     ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, height);
     ctx.moveTo(0, foot); ctx.lineTo(width, foot); ctx.stroke();
-    // A tiny, still human scale marker silhouetted against the luminous core.
+    // The small scale marker remains in the dark central opening.
     const s = Math.max(.58, scale / 380);
     ctx.save(); ctx.translate(cx + scale * .031, foot); ctx.scale(s, s);
     ctx.fillStyle = '#050505'; ctx.strokeStyle = '#050505';
@@ -182,6 +216,17 @@
     ctx.moveTo(2,-11); ctx.lineTo(2,-5); ctx.lineTo(4,0);
     ctx.moveTo(-3,-18); ctx.lineTo(-5,-11); ctx.moveTo(3,-18); ctx.lineTo(5,-12); ctx.stroke();
     ctx.restore();
+    // Fixed print imperfections lie over both the sculpture and the surrounding field.
+    const rnd=random(1953), noise=paperNoise(932);
+    const grain=document.createElement('canvas');grain.width=Math.ceil(width);grain.height=Math.ceil(height);
+    const gctx=grain.getContext('2d'), pixels=gctx.createImageData(grain.width,grain.height);
+    for(let y=0;y<grain.height;y++) for(let x=0;x<grain.width;x++) {
+      const n=rnd(), blotch=noise(x/45,y/45), i=(y*grain.width+x)*4;
+      const white=n>.955;
+      pixels.data[i]=pixels.data[i+1]=pixels.data[i+2]=white?225:0;
+      pixels.data[i+3]=white?(n-.955)/.045*70:Math.pow(n/.955,7)*(35+blotch*140);
+    }
+    gctx.putImageData(pixels,0,0);ctx.drawImage(grain,0,0);
   }
 
   function staticFallback() {
