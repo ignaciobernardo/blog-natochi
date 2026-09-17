@@ -1,0 +1,40 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+  color: #4a4a4a;
+  font: 400 12px/1 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+#plate {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+#field {
+  display: block;
+  image-rendering: pixelated;
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 18px 20px;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+
+#cap { font-style: italic; color: #3d3d3d; }
+
+@media (max-width: 520px) {
+  body { font-size: 10px; }
+  footer { padding: 12px 14px; }
+}
