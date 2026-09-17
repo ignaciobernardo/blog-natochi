@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Sun Tools — natochi</title><meta name="description" content="Un escritorio monocromo y una herramienta de dithering. Carga una imagen, experimenta y exporta."><link rel="stylesheet" href="./desktop.css"></head>
+<body>
+<main id="desktop" aria-label="Escritorio Sun Tools">
+<section class="window boot" aria-label="Shell Tool"><header>Shell Tool 1.1</header><pre>aarhus% /etc/dmesg
+
+Aug 20 07:01
+Sun UNIX 4.2 Release 1.1 (GENERIC) #470: Tue Apr 24 14:41:44 PST 1984
+Copyright (c) 1984 by Sun Microsystems, Inc.
+mem = 1920K (0x1e0000)
+avail mem = 1472512
+Ethernet address = 8:0:20:1:d:d3
+sc0 at mbmem 80000 pri 2
+sd0 at sc0 slave 0
+sd0: &lt;Fujitsu M2243AS cyl 752 alt 2 hd 11 sec 17&gt;
+sd1 at sc0 slave 1
+sd1: &lt;Fujitsu M2243AS cyl 752 alt 2 hd 11 sec 17&gt;
+st0 at sc0 slave 32
+ropc0 at obio ee0800 pri 1
+zs0 at obio eec800 pri 2
+zs1 at obio eec000 pri 2
+zs2 at mbmem 80800 pri 2
+zs3 at mbmem 81000 pri 2
+ie0 at mbmem 88000 pri 3
+bwtwo0 at obmem 700000 pri 3
+pi0 at obio ee2000 pri 1
+root on sd0
+using 70 buffers containing 143360 bytes of main memory
+WARNING: TOD clock not initialized
+aarhus% <span class="cursor"> </span></pre></section>
+<section class="window clock" aria-label="Clock Tool"><header>Clock Tool 1.1</header><time>Mon Aug 20 07:13:00 1990</time></section>
+<section class="window manual" aria-label="Manual"><header>Shell Tool 1.1</header><pre>aarhus% man suntools
+
+SUNTOOLS(1)
+
+NAME
+     suntools - the SunTools window environment
+
+SYNOPSIS
+     [ setenv PATH ${PATH}:/usr/suntool ]
+     suntools [ -n | -s <mark>startup-file</mark> ]
+     <mark>mouse</mark> <mark>device</mark> [ - <mark>red</mark> <mark>green</mark>
+     <mark>blue</mark> [ -b <mark>red</mark> <mark>green</mark> <mark>blue</mark> ] ]
+
+GETTING STARTED
+     <mark>Suntools</mark> starts up the window environment and
+     awaits the user's directives. If the environment
+     has not been initialized, the invocation of sun-
+     <mark>tools</mark> will fail; see suntools(1). If
+     there is a file called .suntools in your home direc-
+     tory, <mark>suntools</mark> starts up the tools
+     specified in that file. The file format is
+     described in detail below.
+
+     The indications that you have successfully started:
+
+     1)  the screen is painted with a background pattern
+          gray, see OPTIONS), and
+
+     2)  an arrow-shaped cursor appears on the screen, tracking
+          motions of the mouse. The mouse
+          must be in its special pad before it can be tracked.
+          Sometimes the cursor will not move at start-up; moving
+          the mouse in large circles for a few seconds will bring</pre><button id="more" class="more">--More--</button></section>
+<section class="window graphics" aria-label="Graphics Tool"><header>Graphics Tool 1.1 <button id="edit" title="Abrir herramienta de dithering">[ dither tool ]</button></header><div class="terminal"><pre>[6]    Done                     ./panetool
+aarhus% pwd
+/usr/suntool
+aarhus% ls
+adjacentscreens  fixedwidthfonts  lockscreen       spheresdemo
+bouncedemo      framedemo        mousetool        src
+canvasflash     gfxtool          optiontool       suntools
+canvasinput     globeframes      panetool         toolplaces
+clocktool       icontool         perfmon
+coretool        jumpdemo         shelltool
+aarhus% <button id="demo">spheresdemo</button>
+<span class="cursor"> </span></pre></div><div class="picture"><canvas id="output" width="640" height="336" aria-label="Esferas con dithering monocromo"></canvas></div></section>
+<button class="sun-icon" id="icon" aria-label="Abrir herramienta de dithering">SUNCORE<svg viewBox="0 0 55 42" aria-hidden="true"><path d="M8 21H25L48 3V39L25 21M25 8V34M25 8L48 21L25 34M7 15L2 21L7 27M10 15L5 21L10 27" fill="none" stroke="currentColor" stroke-dasharray="2 2"/></svg></button>
+<section class="window editor" id="editor" hidden aria-label="Dither Tool"><header>Dither Tool 1.1 <button id="close" aria-label="Cerrar herramienta">[ close ]</button></header><form id="controls"><p>IMAGE → MONOCHROME</p><label class="file">Imagen <input type="file" id="upload" accept="image/*"></label><p class="hint">O arrastra una imagen a la ventana gráfica.</p><label>Algoritmo<select id="algorithm"><option value="floyd">Floyd–Steinberg</option><option value="atkinson">Atkinson</option><option value="noise" selected>Ruido / stipple</option><option value="bayer">Bayer 4 × 4</option></select></label><label>Brillo <output id="brightness-value">0</output><input id="brightness" type="range" min="-100" max="100" value="0"></label><label>Contraste <output id="contrast-value">100</output><input id="contrast" type="range" min="10" max="250" value="100"></label><label>Tamaño de píxel <output id="pixel-value">1</output><input id="pixel" type="range" min="1" max="8" value="1"></label><label class="check"><input id="invert" type="checkbox"> Invertir blanco / negro</label><div class="actions"><button type="button" id="reset">Esferas / reset</button><button type="button" id="download">Guardar PNG</button></div><p id="status" role="status">640 × 336 · procesamiento local</p></form></section>
+</main><script src="./desktop.js" defer></script>
+</body></html>
