@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101210">
+<meta name="description" content="Materia verde. Una estampa orgánica generada enteramente con código.">
+<title>11 — Materia</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; background: #101210; }
+  body { min-height: 100svh; display: grid; place-items: center; }
+  canvas { display: block; width: min(100vw, 81svh); height: auto; cursor: pointer; touch-action: manipulation; }
+  canvas:focus-visible { outline: 1px solid #aed18e; outline-offset: -8px; }
+  .hint { position: fixed; bottom: 8px; right: 13px; pointer-events: none; color: #9ead93; opacity: .55; font: 9px/1.5 monospace; letter-spacing: .08em; }
+</style>
+</head>
+<body>
+<canvas width="810" height="1000" tabindex="0" role="button" aria-label="Composición procedural de formas verdes y textura de tinta. Pulsa para generar otra."></canvas>
+<span class="hint" aria-hidden="true">clic · nueva forma</span>
+<script>
+(() => {
+  'use strict';
+  const canvas = document.querySelector('canvas');
+  const ctx = canvas.getContext('2d', { alpha: false });
+  const W = canvas.width, H = canvas.height;
+  let seed = 0, busy = false;
+  const clamp = (n, a=0, b=1) => Math.min(b, Math.max(a, n));
+  const mix = (a,b,t) => a+(b-a)*t;
+  function hash(x,y) {
+    let h = Math.imul(x, 374761393) ^ Math.imul(y, 668265263) ^ seed;
+    h = Math.imul(h ^ h >>> 13, 1274126177);
+    return ((h ^ h >>> 16) >>> 0) / 4294967295;
+  }
+  function noise(x,y) {
+    const ix = Math.floor(x), iy = Math.floor(y);
+    let u=x-ix, v=y-iy; u=u*u*(3-2*u); v=v*v*(3-2*v);
+    return mix(mix(hash(ix,iy),hash(ix+1,iy),u),mix(hash(ix,iy+1),hash(ix+1,iy+1),u),v);
+  }
+  function fbm(x,y) {
+    return noise(x,y)*.57+noise(x*2.07+13,y*2.07+5)*.28+noise(x*4.17+4,y*4.17+19)*.15;
+  }
+  function generate() {
+    if (busy) return;
+    busy = true;
+    seed = crypto.getRandomValues(new Uint32Array(1))[0];
+    const pixels = ctx.createImageData(W,H), data=pixels.data;
+    // Warped cellular regions grow together, separated by narrow black channels.
+    const sites = [[.22,.19],[.58,.20],[.82,.31],[.24,.51],[.66,.48],[.22,.79],[.58,.81],[.83,.76]]
+      .map(([x,y],i) => [x+(hash(i,82)-.5)*.13,y+(hash(i,34)-.5)*.1]);
+    const cell = 3, gw = Math.ceil(W/cell), gh = Math.ceil(H/cell);
+    const field = new Float32Array(gw*gh*3);
+    for (let gy=0;gy<gh;gy++) for (let gx=0;gx<gw;gx++) {
+      const x=gx*cell/W, y=gy*cell/H;
+      const wx=x+(fbm(x*5.4+9,y*6.3)-.5)*.38;
+      const wy=y+(fbm(x*5.4+39,y*6.3+31)-.5)*.29;
+      let first=10, second=10;
+      for (const [sx,sy] of sites) {
+        const d=Math.hypot((wx-sx)*.81,wy-sy);
+        if (d<first) {second=first; first=d;} else if (d<second) second=d;
+      }
+      const outside=Math.min(x-.045,.955-x,y-.055,.955-y);
+      const margin=outside+(fbm(x*14+62,y*16)-.5)*.045;
+      const edge=Math.min((second-first)*.52-.009,margin,(.185-first)*.7);
+      const erosion=fbm(x*64+10,y*79+15);
+      const grit=noise(x*160+17,y*197+10);
+      const patch=fbm(x*12+18,y*15+70);
+      const rim=1-clamp(edge/.05);
+      const hole=erosion*.72+grit*.28 > .65-(patch-.5)*.38-rim*.07;
+      const k=(gy*gw+gx)*3;
+      field[k]=edge;
+      field[k+1]=hole ? 1 : 0;
+      field[k+2]=clamp(rim*.85+(patch-.35)*.7);
+    }
+    for (let y=0;y<H;y++) for (let x=0;x<W;x++) {
+      const index=(y*W+x)*4;
+      const k=(Math.floor(y/cell)*gw+Math.floor(x/cell))*3;
+      const edge=field[k], hole=field[k+1], tone=field[k+2];
+      const grain=hash(x+1923,y+714);
+      let r=14,g=17,b=15;
+      if (edge>0 && !hole) {
+        const dust=(grain-.5)*36;
+        r=mix(54,177,tone)+dust;
+        g=mix(127,220,tone)+dust;
+        b=mix(91,139,tone)+dust;
+        if (grain>.992) {r*=.45;g*=.5;b*=.45;}
+      } else {
+        const dust=(grain-.5)*14;
+        r+=dust;g+=dust;b+=dust;
+        if (grain>.9975) {r+=70;g+=74;b+=64;}
+      }
+      data[index]=r;data[index+1]=g;data[index+2]=b;data[index+3]=255;
+    }
+    ctx.putImageData(pixels,0,0);
+    // Printer registration marks belong to the plate, outside the organic field.
+    ctx.strokeStyle='rgba(202,210,194,.68)';ctx.lineWidth=1;
+    for (const x of [24,W/2,W-24]) {
+      ctx.beginPath();ctx.moveTo(x-6,29);ctx.lineTo(x+6,29);
+      ctx.moveTo(x,23);ctx.lineTo(x,35);ctx.stroke();
+    }
+    busy=false;
+  }
+  canvas.addEventListener('click',generate);
+  canvas.addEventListener('keydown',event => {
+    if (event.key==='Enter' || event.key===' ') {event.preventDefault();generate();}
+  });
+  generate();
+})();
+</script>
+</body>
+</html>
