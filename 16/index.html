@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000000">
+<meta name="description" content="Una escultura de partículas, pliegues y luz en rotación lenta.">
+<title>16 — natochi</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #000; }
+  main { position: fixed; inset: 0; isolation: isolate; }
+  canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+</style>
+</head>
+<body>
+<main role="img" aria-label="Escultura esférica de pliegues granulados blancos y bandas negras, que gira lentamente alrededor de un núcleo luminoso. Una pequeña silueta y dos líneas finas marcan el centro.">
+  <canvas id="space" aria-hidden="true"></canvas>
+  <canvas id="sculpture" aria-hidden="true"></canvas>
+  <canvas id="details" aria-hidden="true"></canvas>
+</main>
+<script src="./sculpture.js"></script>
+</body>
+</html>
