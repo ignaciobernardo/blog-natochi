@@ -1,0 +1,56 @@
+:root {
+  --paper: #68706b;
+  --paper-dark: #59615c;
+  --ink: #d5ded8;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  background: var(--paper-dark);
+  overflow: hidden;
+}
+
+#plate {
+  position: fixed;
+  inset: 0;
+  background: var(--paper);
+  isolation: isolate;
+}
+
+#plate canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* the printed marks sit slightly soft, like ink on rough stock */
+#chart, #trails { filter: blur(0.15px) contrast(1.04); }
+
+/* paper tooth + press dirt, multiplied over the plate */
+#grain {
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+  background-repeat: repeat;
+  background-size: 220px 220px;
+  mix-blend-mode: overlay;
+  opacity: 0.28;
+  pointer-events: none;
+}
+
+#vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 100% at 50% 45%, rgba(0,0,0,0) 45%, rgba(20,24,22,0.28) 100%),
+    linear-gradient(105deg, rgba(255,255,255,0.05), rgba(0,0,0,0.07));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #chart, #trails { filter: none; }
+}
