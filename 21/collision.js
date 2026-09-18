@@ -1,4 +1,4 @@
-/* natochi.cv/15 — event display.
+/* natochi.cv/21 — event display.
    A charged particle in a uniform magnetic field travels a circle through the
    point where it was born, with a radius proportional to its momentum. That one
    fact draws the whole picture: soft particles curl into rosettes around the
