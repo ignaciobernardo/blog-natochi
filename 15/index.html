@@ -1,151 +1,19 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#e9e5d9">
-<title>Documents — natochi</title>
-<link rel="icon" href="/favicon.svg">
-<style>
-@font-face { font-family: NeueBit; src: url('/fonts/PPNeueBit-Bold.otf') format('opentype'); font-display: swap; }
-@font-face { font-family: Mondwest; src: url('/fonts/PPMondwest-Regular.otf') format('opentype'); font-display: swap; }
-:root { --paper:#e9e5d9; --ink:#252317; --grid:rgba(101,87,64,.12); --accent:#be862b; --sidebar:#201300; --side-text:#cec9b5; --side-width:18.65vw; --document-font:'Times New Roman',serif; --grain:.13; }
-* { box-sizing:border-box; }
-html { background:var(--paper); color:var(--ink); }
-body { margin:0; }
-button,input { font:inherit; }
-button { cursor:pointer; }
-button:focus-visible,a:focus-visible,input:focus-visible { outline:1px solid var(--accent); outline-offset:2px; }
-#panel { position:fixed; z-index:5; top:5px; bottom:5px; left:7px; width:calc(var(--side-width) - 7px); background:var(--sidebar); color:var(--side-text); border:1px solid #94846a; overflow:auto; scrollbar-width:thin; scrollbar-color:#8f7959 var(--sidebar); font:18px/.85 NeueBit,'Courier New',monospace; }
-.toolbar { display:flex; position:sticky; top:0; z-index:2; height:31px; background:var(--accent); color:#291a05; font-size:25px; line-height:31px; }
-.mark { width:30px; text-align:center; }
-#toggle { border:0; border-left:1px solid #a78e64; border-right:1px solid #a78e64; background:#706959; color:#dfdacb; padding:0 10px; white-space:nowrap; }
-.toolbar strong { padding:0 17px; font-weight:400; white-space:nowrap; }
-.tree,.tree ul { list-style:none; margin:0; padding:0 0 0 29px; }
-.tree { padding-left:15px; padding-top:3px; }
-.tree li { position:relative; min-height:15px; padding-left:13px; border-left:1px solid #a89d88; }
-.tree li:before { content:''; position:absolute; left:0; top:7px; width:24px; border-top:1px solid #a89d88; }
-.tree li:last-child { border-left-color:transparent; }
-.tree li:last-child:after { content:''; position:absolute; left:-1px; top:0; height:7px; border-left:1px solid #a89d88; }
-.tree>li { padding-left:14px; }
-.tree>li:before { width:12px; }
-.tree ul { padding-left:10px; }
-.tree ul li { padding-left:27px; }
-.tree button,.tree summary,.tree label { display:block; color:inherit; background:none; border:0; margin:0; padding:0 3px; min-height:15px; text-align:left; line-height:15px; white-space:nowrap; }
-.tree button:hover,.tree summary:hover,.tree label:hover { color:#f6daa1; }
-.tree button[aria-pressed=true] { color:#e7ad4d; }
-.tree summary { cursor:pointer; list-style:none; }
-.tree summary::-webkit-details-marker { display:none; }
-.tree details>summary:before { content:'▾ '; }
-.tree details:not([open])>summary:before { content:'▸ '; }
-.tree input[type=checkbox] { appearance:none; width:9px; height:9px; margin:0 5px 0 0; border:1px solid #87775d; vertical-align:baseline; }
-.tree input:checked { background:var(--accent); box-shadow:inset 0 0 0 2px var(--sidebar); }
-.range { display:flex; align-items:center; height:17px; margin-left:-66px; width:calc(100% + 66px); background:#b8b3a5; color:#332511; }
-.range output { width:28px; }
-.range input { appearance:none; height:9px; width:calc(100% - 31px); background:#aaa699; margin:0; }
-.range input::-webkit-slider-thumb { appearance:none; width:14px; height:13px; background:var(--accent); cursor:ew-resize; }
-.range input::-moz-range-thumb { width:14px; height:13px; border:0; border-radius:0; background:var(--accent); }
-main { min-height:100vh; margin-left:var(--side-width); padding:8.6vw 8vw 10vw 8.35vw; background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px); background-size:31px 31px; font:clamp(18px,1.36vw,26px)/1.2 var(--document-font); }
-body:after { content:''; position:fixed; inset:0; pointer-events:none; z-index:9; opacity:var(--grain); background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23000' filter='url(%23n)' opacity='.6' d='M0 0h180v180H0z'/%3E%3C/svg%3E"); background-size:var(--grain-size,180px) var(--grain-size,180px); mix-blend-mode:multiply; }
-.opening { position:relative; font-size:clamp(30px,2.7vw,52px); line-height:1.24; font-weight:400; margin:0 0 31px; padding-left:47px; letter-spacing:0; }
-.opening:before { content:'I'; position:absolute; left:0; }
-.intro { margin:0 0 29px; }
-table { border-collapse:collapse; width:100%; text-align:left; }
-th { font-weight:400; }
-th:first-child,td:first-child { width:21.4%; padding-right:30px; }
-td { vertical-align:top; }
-td p { margin:28px 0 0; }
-.red-lines table td,.red-lines table th { border-bottom:1px solid #a55445; }
-.table-gradient table { background:linear-gradient(120deg,transparent,#be862b22); }
-.tag-background th { background:#d5cda9; }
-.uniform h1,.uniform h2 { font-size:1.3em; }
-.header-style .opening { font-style:italic; }
-.no-grid main { background-image:none; }
-.dark { --paper:#211c16; --ink:#dbd3bf; --grid:rgba(190,170,126,.13); }
-.hidden-panel #panel { display:none; }
-.hidden-panel main { margin-left:0; }
-#restore { display:none; position:fixed; top:8px; left:8px; z-index:6; background:var(--accent); border:1px solid #756342; padding:4px 8px; font:19px NeueBit,monospace; }
-.hidden-panel #restore { display:block; }
-#document h1:not(.opening) { font-size:2em; font-weight:400; }
-#document img { max-width:100%; }
-#document a { color:inherit; }
-.status { font:14px monospace; }
-@media(min-width:1900px) { :root { --side-width:350px; } main { padding-top:165px; } }
-@media(max-width:900px) { :root { --side-width:225px; } #panel { font-size:17px; } main { padding:75px 35px; } .opening { padding-left:27px; font-size:32px; } .opening br { display:none; } .toolbar strong { padding-left:9px; } }
-@media(max-width:600px) { :root { --side-width:210px; } #panel { box-shadow:8px 0 25px #20130033; } main { margin-left:0; padding:90px 25px 60px; } body:not(.hidden-panel) main { opacity:.3; } .opening { font-size:30px; padding-left:23px; } th:first-child,td:first-child { width:29%; padding-right:15px; } }
-</style>
+<title>Event Display — natochi</title>
+<meta name="description" content="Un display de colisión: trazas helicoidales en un campo magnético, impactos en el calorímetro, y una pantalla de fósforo fotografiada.">
+<link rel="icon" href="../favicon.svg">
+<link rel="stylesheet" href="./collision.css">
 </head>
 <body>
-<aside id="panel" aria-label="Document and appearance controls">
-<div class="toolbar"><span class="mark">⇆</span><button id="toggle" aria-label="Hide control panel">CTRL+G</button><strong>DEV MODE</strong></div>
-<ul class="tree">
-<li><details open><summary>Documents</summary><ul id="documents"></ul></details></li>
-<li><details open><summary>Settings</summary><ul>
-  <li><details open><summary>Appearance</summary><ul><li><button data-theme="dark">Dark</button></li><li><button data-theme="light">Light</button></li></ul></details></li>
-  <li><details open><summary>Config</summary><ul>
-    <li><details open><summary>Grain</summary><ul>
-      <li><label for="frequency">Frequency</label><div class="range"><output id="freq-value">066</output><input id="frequency" type="range" min="10" max="100" value="66" aria-label="Grain frequency"></div></li>
-      <li><label for="intensity">Intensity</label><div class="range"><output id="int-value">066</output><input id="intensity" type="range" min="0" max="100" value="66" aria-label="Grain intensity"></div></li>
-    </ul></details></li>
-    <li><label><input type="checkbox" id="grid" checked>Grid</label></li>
-    <li><label><input type="checkbox" data-class="header-style">Header Styles</label></li>
-    <li><label><input type="checkbox" data-class="red-lines">Red Lines</label></li>
-    <li><label><input type="checkbox" data-class="table-gradient">Table Gradient</label></li>
-    <li><label><input type="checkbox" data-class="tag-background">Tag Background</label></li>
-    <li><label><input type="checkbox" data-class="uniform">Uniform Header Size</label></li>
-  </ul></details></li>
-  <li><details open><summary>Fonts</summary><ul id="fonts"></ul></details></li>
-  <li><details open><summary>OKLCH Color Spaces</summary><ul id="colors"></ul></details></li>
-</ul></details></li>
-</ul>
-</aside>
-<button id="restore" aria-label="Show control panel">CTRL+G · DEV MODE</button>
-<main><article id="document">
-<h1 class="opening">“Just as the scientist must think and experiment<br> alternately, so the artist, the author and the scholar must<br> alternate creation or study with participation in the life<br> around them.”</h1>
-<p class="intro">This document has been generated for research purposes after reading 75 sources after considering 75 sources. This document contains confidential and proprietary information. It is intended solely for the designated recipient(s). Any unauthorized review, use, distribution, or disclosure of this document, in whole or in part, is strictly prohibited.</p>
-<table><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody>
-<tr><td>Confidence</td><td>high</td></tr>
-<tr><td><p>Mi sina alta mappa ëa, lómëa coivië, lómëa lúmë, á tyelë, á auta mi i sáma lómë, liëa olassëar ar ilyë lúmët elenaië.</p><p>Neldë Cormar Eldain arani úmë i ëari, Otso Naucor arani úmë i ononti tánar, Nertë Firë Atanin nahatina caranwa, Minë i Morna Heru úmë i morna mahalma</p></td><td><p>After receiving the prompt, the agents generated the following analytical reasoning:</p><p>The recommended allocation is heavily weighted towards equities (70%) due to the concentrated rally in AI-exposed mega-cap tech observed in 2025, while diversifying into relatively inexpensive small-cap and value segments, as well as real estate, energy, and healthcare sectors. This strategy aims to capture secular growth from AI and benefit from potential cyclical recoveries, aligning with an investor with a long time horizon and above-average risk tolerance. Fixed income (15%) is included to provide a hedge and liquidity, with a focus on short-to-intermediate investment-grade bonds given expectations of Fed easing and a gradual decline in long-term yields, while also incorporating high-yield/emerging-market debt for additional risk premium. Alternatives (10%) are allocated to real assets and commodities for inflation protection and exposure to structural themes like energy supply constraints and AI infrastructure, with a small, optional crypto sleeve for potential upside. A 5% cash allocation maintains dry powder for rebalancing and tactical deployment during market pullbacks, leveraging positive real returns from high-yield savings or T-bills.</p></td></tr>
-</tbody></table>
-</article></main>
-<script>
-(() => {
-  const body=document.body, article=document.getElementById('document');
-  const reference=article.innerHTML;
-  const docs=[['data.json',null],['seguir-adelante.json','seguir-adelante'],['mental-models.json','mental-models-for-not-knowing-what-the-fuck-your-doing'],['angelsquad.json','angelsquad-for-latam'],['spomenik.json','spomenik'],['2026.json','2026']];
-  for(const date of ['primera-update','2026-04-20','2026-04-21','2026-04-22','2026-04-23','2026-04-28','2026-05-10','2026-06-13'])docs.push([date+'.json','/updates/'+date+'/']);
-  let request=0;
-  for(const [name,path] of docs){
-    const li=document.createElement('li'),button=document.createElement('button');button.textContent=name;li.append(button);document.getElementById('documents').append(li);
-    button.addEventListener('click',async()=>{
-      const current=++request;
-      if(!path){article.innerHTML=reference;return;}
-      article.innerHTML='<p class="status">Loading document…</p>';
-      try{
-        const response=await fetch(path.startsWith('/')?path:'/blog/'+path+'/');if(!response.ok)throw Error('Unavailable');
-        const parsed=new DOMParser().parseFromString(await response.text(),'text/html');
-        if(current!==request)return;
-        const content=parsed.querySelector('.blog-content');if(!content)throw Error('Unavailable');
-        content.querySelectorAll('script,style,iframe').forEach(node=>node.remove());
-        content.querySelectorAll('[src],[href]').forEach(node=>{for(const attr of ['src','href'])if(node.hasAttribute(attr))node.setAttribute(attr,new URL(node.getAttribute(attr),response.url).href);});
-        article.replaceChildren();const title=document.createElement('h1');title.textContent=parsed.querySelector('h1')?.textContent||name;article.append(title,content);
-        window.scrollTo(0,0);
-      }catch{if(current===request)article.innerHTML='<p>Este documento no está disponible. Selecciona otro en el panel.</p>';}
-    });
-  }
-  const fonts=[['Arial [OS]','Arial, sans-serif'],['Arial Narrow [OS]','"Arial Narrow", sans-serif'],['Avenir [OS]','Avenir, sans-serif'],['Baskerville [OS]','Baskerville, serif'],['Big Caslon [OS]','"Big Caslon", serif'],['Book Antiqua [OS]','"Book Antiqua", serif'],['Copperplate [OS]','Copperplate, serif'],['Courier [OS]','Courier, monospace'],['Courier New [OS]','"Courier New", monospace'],['Didot [OS]','Didot, serif'],['Futura [OS]','Futura, sans-serif'],['Georgia [OS]','Georgia, serif'],['Gill Sans [OS]','"Gill Sans", sans-serif'],['Helvetica [OS]','Helvetica, sans-serif'],['Helvetica Neue [OS]','"Helvetica Neue", sans-serif'],['Hoefler Text [OS]','"Hoefler Text", serif'],['Lucida Grande [OS]','"Lucida Grande", sans-serif'],['Menlo [OS]','Menlo, monospace'],['Monaco [OS]','Monaco, monospace'],['Palatino [OS]','Palatino, serif'],['PP Mondwest','Mondwest, serif'],['PP NeueBit','NeueBit, monospace'],['SF Mono [OS]','ui-monospace, monospace'],['Tahoma [OS]','Tahoma, sans-serif'],['Times New Roman [OS]','"Times New Roman", serif'],['Trebuchet MS [OS]','"Trebuchet MS", sans-serif'],['Verdana [OS]','Verdana, sans-serif'],['System sans','system-ui, sans-serif'],['System serif','ui-serif, serif'],['System mono','ui-monospace, monospace']];
-  for(const [name,stack] of fonts){const li=document.createElement('li'),button=document.createElement('button');button.textContent=name;button.addEventListener('click',()=>{document.documentElement.style.setProperty('--document-font',stack);document.querySelectorAll('#fonts button').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));});li.append(button);document.getElementById('fonts').append(li);}
-  for(const [name,color] of [['Blue','#7497ba'],['Green','#92a577'],['None','#aaa596'],['Orange','#be862b'],['Purple','#a38bad'],['Red','#bb7460']]){const li=document.createElement('li'),button=document.createElement('button');button.textContent=name;button.addEventListener('click',()=>document.documentElement.style.setProperty('--accent',color));li.append(button);document.getElementById('colors').append(li);}
-  const toggle=()=>body.classList.toggle('hidden-panel');
-  document.getElementById('toggle').onclick=toggle;document.getElementById('restore').onclick=toggle;
-  addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='g'){e.preventDefault();toggle();}});
-  document.querySelectorAll('[data-theme]').forEach(button=>button.onclick=()=>body.classList.toggle('dark',button.dataset.theme==='dark'));
-  document.querySelectorAll('[data-class]').forEach(input=>input.onchange=()=>body.classList.toggle(input.dataset.class,input.checked));
-  document.getElementById('grid').onchange=e=>body.classList.toggle('no-grid',!e.target.checked);
-  document.getElementById('frequency').oninput=e=>{document.documentElement.style.setProperty('--grain-size',(280-e.target.value*2)+'px');document.getElementById('freq-value').value=e.target.value.padStart(3,'0');};
-  document.getElementById('intensity').oninput=e=>{document.documentElement.style.setProperty('--grain',e.target.value/500);document.getElementById('int-value').value=e.target.value.padStart(3,'0');};
-  if(matchMedia('(max-width:600px)').matches)body.classList.add('hidden-panel');
-})();
-</script>
+<main id="tube" aria-label="Display de un evento de colisión de partículas">
+  <canvas id="screen"></canvas>
+  <div id="scanlines" aria-hidden="true"></div>
+  <div id="glass" aria-hidden="true"></div>
+</main>
+<script src="./collision.js"></script>
 </body>
 </html>

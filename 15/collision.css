@@ -1,0 +1,47 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  background: #04084a;
+  overflow: hidden;
+}
+
+#tube {
+  position: fixed;
+  inset: 0;
+  isolation: isolate;
+}
+
+#screen {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* the horizontal banding you get photographing a phosphor screen */
+#scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.035) 0px,
+    rgba(255, 255, 255, 0.035) 1px,
+    rgba(0, 0, 20, 0.055) 2px,
+    rgba(0, 0, 20, 0.075) 4px
+  );
+  mix-blend-mode: overlay;
+  opacity: 0.85;
+}
+
+/* curvature of the glass: a little brightness in the middle, dark at the edges */
+#glass {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 95% at 47% 44%, rgba(120, 150, 255, 0.05), rgba(0, 0, 0, 0) 55%),
+    radial-gradient(135% 115% at 50% 50%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 25, 0.5) 100%);
+}
