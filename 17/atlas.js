@@ -7,7 +7,8 @@
   const paper = document.createElement('canvas');
   const ink = paper.getContext('2d');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
-  let seed = 17943;
+  // Generate a new city on each load; retain its plan when the viewport changes.
+  let seed = crypto.getRandomValues(new Uint32Array(1))[0];
   const random = () => {
     seed |= 0; seed = seed + 0x6D2B79F5 | 0;
     let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
@@ -21,7 +22,12 @@
     [512, 290, .64, 56], [667, 323, 0, 67], [88, 451, -.52, 31],
     [270, 458, .55, 68], [520, 510, 0, 62], [98, 652, .04, 46],
     [294, 660, .04, 56], [650, 650, .02, 40],
-  ].map(([x, y, angle, spacing]) => ({x, y, angle, spacing}));
+  ].map(([x, y, angle, spacing]) => ({
+    x: x + between(-32, 32),
+    y: y + between(-32, 32),
+    angle: angle + between(-.25, .25),
+    spacing: spacing * between(.78, 1.24),
+  }));
   const roads = [];
   const buildings = [];
   const nodes = [];
