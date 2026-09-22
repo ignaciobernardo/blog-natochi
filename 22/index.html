@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#272727">
+  <title>Panels that form a ring — natochi</title>
+  <meta name="description" content="Un anillo de paneles que aparece y se transforma con el tiempo.">
+  <link rel="icon" href="../favicon.svg">
+  <link rel="stylesheet" href="./ring.css">
+  <script type="importmap">
+    {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"}}
+  </script>
+</head>
+<body>
+  <main aria-label="Anillo animado de paneles negros con bordes blancos">
+    <canvas id="ring" aria-hidden="true"></canvas>
+    <p class="hint">arrastra para girar</p>
+  </main>
+  <script type="module" src="./ring.js"></script>
+</body>
+</html>
