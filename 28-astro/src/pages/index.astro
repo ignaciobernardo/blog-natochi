@@ -1,0 +1,128 @@
+---
+const rows = [
+  ['III', 'N', 'N', 'PPP', 'U', 'U', 'TTTT'],
+  ['I', 'NN', 'N', 'P', 'P U', 'U', 'T'],
+  ['I', 'N NN', '', 'PPP', 'U', 'U', 'T'],
+  ['I', 'N', 'N', 'P', 'U', 'U', 'T'],
+  ['III', 'N', 'N', 'P', '', 'UU', 'T'],
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#222126" />
+    <meta name="description" content="INPUT — Identity, minimalism and simplicity in AV performance. Artist talk, workshop and live performance with Robert Lippok." />
+    <title>INPUT — Robert Lippok</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23222126' d='M0 0h32v32H0z'/%3E%3Cpath stroke='%23c2cfb8' stroke-width='3' d='M9 6v20M16 6v20M23 6v20'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <main aria-label="INPUT event programme">
+      <section class="sheet cover" aria-label="INPUT poster">
+        <h1 class="letter-grid" aria-label="INPUT">
+          {rows.map(row => <span class="letter-row" aria-hidden="true">{row.map(letter => <span>{letter}</span>)}</span>)}
+        </h1>
+        <div class="cover-details">
+          <p>#1 w/”Robert Lippok”</p>
+          <p class="date"><span>22.9.</span><span>UMPRUM</span></p>
+          <p class="date"><span>23.9.</span><span>NEONE</span></p>
+          <p class="theme">Identity,<br />minimalism and<br />simplicity in<br />av performance<span class="cursor"></span></p>
+        </div>
+        <div class="stamp" aria-label="Lunchmeat">
+          <span>L/∧M</span>
+          <svg viewBox="0 0 36 44" fill="none" aria-hidden="true"><path d="M5 42 8 11 13 15 18 6 22 15 28 10 32 42M8 11l5-8 5 3 5-3 5 7M13 19l3 5-3 6 3 12m8-23-3 5 3 6-3 12" stroke="currentColor" stroke-width=".6" /></svg>
+        </div>
+      </section>
+
+      <section class="sheet programme" aria-label="Workshop and artist information">
+        <header class="intro">
+          <p>INPUT<br />Intensive series of<br />5 new media workshops<br />presenting artists<br />focused on the inter-<br />section of art &amp;<br />technology<span class="cursor"></span></p>
+        </header>
+        <div class="intro-note serif">
+          <p>Experience the artists through different perspec-<br />tives in lectures, workshop leaders and their new<br />media practice (performance, installation, etc.)</p>
+          <p>Invited artists for &lt;input&gt; season 2017 are:<br />Robert Lippok, Goto80, Kang, Petr Krk,<br />Matthijs Munnik &amp; Mark Coniglio</p>
+        </div>
+
+        <div class="schedule">
+          <section class="talk">
+            <h2>&lt;ARTIST TALK&gt;<br />22.9. 13h<br />@ UMPRUM, hall 115</h2>
+            <p class="small indented">nám. Jana Palacha 80, Praha 1<br />free entry</p>
+          </section>
+          <section class="workshop">
+            <h2>&lt;WORKSHOP&gt;<br />23.9. 10:00 – 20:00<br />@ NEONE</h2>
+            <blockquote class="serif">“How to prepare sound for your audiovisual piece.”<br />You will work on a sound object (ping-ing) of various<br />length analogue to Peter Cook’s “Archigram” idea of<br />a plug-in unit out of pre-cast units with a different<br />functions, living, transport etc.)<br />The object will be conceived to a sonic structure and<br />the “outcomes” of the workshop will be connected impro-<br />visation before Robert Lippok’s live set at the following<br />afterparty. At the end, each participant will get a CD-R<br />with the results and resources. An musical approach is<br />welcome. From amateurs to professionals. Create with<br />your laptops, voice, or more modular systems.</blockquote>
+            <p class="small indented entry">entry:<br />1500,- / 1300,- students<br />package for all 5 workshops:<br />7.000,- / 5.500,- students</p>
+          </section>
+          <section class="party">
+            <h2>&lt;AFTER PARTY&gt;<br />23.9. 22:00 – 06:00<br />@ NEONE<br />Robert Lippok (live)</h2>
+            <p class="serif party-note">conducted improvisation of workshop<br />participants (rest of the lineup TBA)</p>
+            <p class="small indented">entry: 150,-<br />free for workshop<br />participants</p>
+          </section>
+        </div>
+
+        <section class="artist">
+          <h2>Robert Lippok:</h2>
+          <p class="serif biography">Avant-garde German visual artist and composer Robert Lippok has been an influential player in Berlin’s thriving experimental music scene from a very early age. In 1983, he co-founded dissident punk band Ornament und Verbrechen with his brother Ronald, inspired by industrial trailblazers Throbbing Gristle. An open platform to explore jazz, electronic, and industrial concepts with likeminded contemporaries of the East German underground persuasion, the group remained active until the mid-1990s, at which point it was overtaken by the brothers’ next and most well-known collaboration, the polyrhythmic To Rococo Rot. A significant post-rock / electronic outfit started by the Lippok brethren and Düsseldorf bass guitarist Stefan Schneider, the Krautrock band ushered in a new generation of electronic acts committed to acoustic investigations and improvisation of all stripes. Known for his expansive imagination, inventive rhythmic patterns, and layers of fuzzy tones, Lippok’s solo work is just as wide-ranging — from funky, glitchy, twisted techno record Redsuperstructure for Raster-Noton (2011), to stage designs for operas, gallery exhibitions, and notable collaborations with Italian harpist Beatrice Martini, Canadian percussionist Dasha Rush or brother Ronald and Italian composer Ludovico Einaudi (for latter two in Whitetree).</p>
+        </section>
+
+        <section class="info">
+          <h2>INFO</h2>
+          <p class="small indented">please note:<br />workshops will be<br />held in english<br />reserve your seat on<br /><a href="mailto:kiara@lunchmeat.cz">kiara@lunchmeat.cz</a></p>
+          <p class="small">organised by Lunchmeat z.s.<br />co-funded by Ministry of Culture,<br />Czech Republic</p>
+          <p class="small"><a href="https://www.lunchmeat.cz/input">www.lunchmeat.cz/input</a></p>
+        </section>
+        <footer class="partners" aria-label="Partners"><span class="ministry">◉ <span>MINISTRY<br />OF CULTURE</span></span><span class="seal">lm</span><strong>UMPRUM</strong></footer>
+      </section>
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  * { box-sizing: border-box; }
+  html { margin: 0; background: #222126; }
+  body { margin: 0; font-family: 'Andale Mono', 'Courier New', monospace; font-weight: 400; }
+  p, h1, h2, blockquote { margin: 0; }
+  h1, h2 { font-size: inherit; font-weight: 400; }
+  a { color: inherit; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  a:focus-visible { outline: 1px solid currentColor; outline-offset: 3px; }
+  .sheet { width: 100%; aspect-ratio: 342 / 484; position: relative; overflow: hidden; container-type: inline-size; }
+  .sheet::after { content: ''; pointer-events: none; position: absolute; inset: 0; z-index: 2; opacity: .12; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.84' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23000' filter='url(%23n)' opacity='.5' d='M0 0h180v180H0z'/%3E%3C/svg%3E"); mix-blend-mode: multiply; }
+  .cover { color: #bacab4; background: radial-gradient(ellipse at 30% 4%, #343537 0%, transparent 33%), #222126; }
+  .letter-grid { position: absolute; top: 2.25%; left: 3.4%; right: 2%; font-family: 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif; font-size: 10.2cqw; font-weight: 500; line-height: .95; }
+  .letter-row { display: grid; grid-template-columns: 14% 14% 10.7% 20.5% 13.8% 14% 13%; height: 9.5cqw; }
+  .letter-row > span { display: block; transform: scaleX(.55); transform-origin: left center; white-space: pre; letter-spacing: .035em; }
+  .letter-row > span:last-child { transform: scaleX(.48); }
+  .cover-details { position: absolute; left: 3.1%; bottom: 1.85%; font-size: 3.55cqw; line-height: .88; letter-spacing: -.12cqw; }
+  .date { display: flex; gap: 15cqw; }
+  .theme { margin-top: 3.1cqw; }
+  .cursor { display: inline-block; width: 4.1cqw; height: 1.65cqw; margin-left: .5cqw; background: currentColor; }
+  .stamp { position: absolute; right: 1.8%; bottom: 2.2%; width: 10.5%; height: 8.25%; color: #333936; background: #bccbb6; padding: .55cqw 1.6cqw; font-size: 1.8cqw; line-height: 1; }
+  .stamp svg { display: block; height: 8.9cqw; width: 100%; }
+  .programme { color: #19251f; background: radial-gradient(ellipse at 84% 62%, #c7d5bf 0%, transparent 60%), linear-gradient(105deg, #bdcdb6, #c5d2ba 50%, #b5c6af); font-size: 3.45cqw; }
+  .intro { position: absolute; top: 2%; left: 2.5%; font-size: 3.52cqw; line-height: .89; letter-spacing: -.15cqw; }
+  .intro-note { position: absolute; top: 1.8%; left: 53%; width: 41.5%; text-align: center; }
+  .intro-note p + p { margin-top: 2.2cqw; }
+  .serif { font-family: 'Times New Roman', Times, serif; font-size: 1.87cqw; line-height: 1.12; }
+  .schedule { position: absolute; top: 29.8%; left: 2.5%; width: 47%; }
+  h2 { font-size: 3.5cqw; line-height: .91; letter-spacing: -.15cqw; }
+  .small { font-size: 2.03cqw; line-height: 1.05; letter-spacing: -.055cqw; }
+  .indented { margin-left: 5.2cqw; }
+  .talk .small { margin-top: 2.5cqw; }
+  .workshop { margin-top: 3.4cqw; }
+  blockquote { margin-top: 2.5cqw; text-align: center; font-size: 1.84cqw !important; line-height: 1.14 !important; }
+  .entry { margin-top: 2.3cqw; }
+  .party { margin-top: 3.4cqw; }
+  .party-note { text-align: center; margin: 2.6cqw 0 2.3cqw 3.5cqw; }
+  .artist { position: absolute; top: 29.8%; left: 51.3%; width: 43%; }
+  .biography { margin-top: 2cqw; text-align: center; font-size: 1.9cqw; line-height: 1.12; }
+  .info { position: absolute; top: 76.3%; left: 51.3%; width: 44%; }
+  .info p { margin-top: 1.8cqw; }
+  .info .indented { margin-left: 5cqw; }
+  .partners { position: absolute; bottom: 2%; right: 3%; display: flex; align-items: center; gap: 2.7cqw; font: 700 2.7cqw Arial, sans-serif; }
+  .ministry { display: flex; align-items: center; gap: .5cqw; font-size: 3.1cqw; }
+  .ministry span { font-size: .8cqw; line-height: 1; }
+  .seal { background: #26342c; color: #c2d0b8; border-radius: 50%; width: 3.5cqw; height: 3.5cqw; display: grid; place-items: center; font: 1.7cqw Georgia, serif; }
+  ::selection { background: #657c64; color: #f2f2df; }
+</style>
