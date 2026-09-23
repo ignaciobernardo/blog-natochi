@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f6f6f4"><meta name="description" content="Figuras que se dividen y se unen. Arrastra cualquier figura mientras la animación continúa.">
+<title>Shapes — natochi</title><link rel="icon" href="../favicon.svg">
+<style>
+*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;background:#f6f6f4;overflow:hidden}main{width:100%;height:100%;height:100dvh;display:grid;place-items:center}canvas{display:block;width:min(100vw,177.7778dvh);aspect-ratio:16/9;touch-action:none;cursor:grab}canvas.dragging{cursor:grabbing}.hint{position:fixed;bottom:20px;left:24px;margin:0;color:#777;font:11px/1.4 monospace;letter-spacing:.04em;pointer-events:none;user-select:none}button{position:fixed;right:24px;bottom:16px;border:1px solid #d3d3ce;border-radius:5px;background:#f6f6f4;color:#666;padding:7px 11px;font:11px monospace;cursor:pointer}button:focus-visible{outline:2px solid #398064;outline-offset:4px}@media(max-width:500px){.hint{left:16px;font-size:10px}button{right:16px}}
+</style>
+</head><body><main><canvas id="animation" aria-label="Figuras animadas: haz clic y arrastra cualquier figura para modificarla"></canvas></main><p class="hint">arrastra las figuras · 0.40×</p><button id="toggle" aria-label="Pausar animación">pausar</button><script src="./animation.js"></script></body>
+</html>
