@@ -1,0 +1,22 @@
+---
+import LandingHero from '../components/LandingHero.astro';
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#1B1B1B" />
+    <meta name="description" content="Todo empieza con una idea. Dale forma a lo que viene." />
+    <title>Ideas que cobran vida</title>
+  </head>
+  <body><LandingHero /></body>
+</html>
+
+<style is:global>
+  * { box-sizing: border-box; }
+  html { background: #1b1b1b; color-scheme: dark; }
+  body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: #fafaf7; }
+  a, button, summary { -webkit-tap-highlight-color: transparent; }
+  a:focus-visible, summary:focus-visible { outline: 2px solid #a4840d; outline-offset: 5px; }
+</style>

@@ -1,0 +1,38 @@
+<button class="palette-toggle" type="button" role="switch" aria-checked="false" aria-label="Paleta violeta" data-palette-switch data-trail-controls>
+  <span class="original-label">Original</span>
+  <span class="toggle-track" aria-hidden="true"><i></i></span>
+  <span class="violet-label">Violeta</span>
+</button>
+
+<script>
+  const switches = document.querySelectorAll<HTMLButtonElement>('[data-palette-switch]');
+  const updatePalette = (palette: string) => {
+    switches.forEach(button => button.setAttribute('aria-checked', String(palette === 'violet')));
+    document.querySelectorAll<HTMLElement>('[data-palette-preview]').forEach(legend => {
+      legend.hidden = legend.dataset.palettePreview !== palette;
+    });
+  };
+  switches.forEach(button => button.addEventListener('click', () => {
+    const palette = button.getAttribute('aria-checked') === 'true' ? 'original' : 'violet';
+    window.dispatchEvent(new CustomEvent('pixel-trail:settings', { detail: { palette } }));
+  }));
+  window.addEventListener('pixel-trail:settings', ((event: CustomEvent<{ palette?: string }>) => {
+    if (event.detail.palette) updatePalette(event.detail.palette);
+  }) as EventListener);
+  updatePalette(document.querySelector('pixel-trail')?.getAttribute('data-palette') ?? 'original');
+</script>
+
+<style>
+  .palette-toggle { pointer-events: auto; display: inline-flex; align-items: center; gap: 12px; padding: 10px 13px; background: #232323; border: 1px solid #3d3d39; border-radius: 8px; cursor: pointer; color: #eeeae3; font: 11px Arial, sans-serif; }
+  .palette-toggle:hover { background: #292929; }
+  .palette-toggle:focus-visible { outline: 2px solid #bfabfe; outline-offset: 4px; }
+  .palette-toggle span { margin: 0; }
+  .palette-toggle .original-label { color: #eeeae3; }
+  .palette-toggle .violet-label { color: #92928b; }
+  .palette-toggle .toggle-track { position: relative; display: block; width: 30px; height: 17px; border-radius: 12px; background: #55554f; }
+  .toggle-track i { position: absolute; top: 3px; left: 3px; width: 11px; height: 11px; background: #ebeff2; border-radius: 50%; }
+  .palette-toggle[aria-checked='true'] .toggle-track { background: #7d4dfa; }
+  .palette-toggle[aria-checked='true'] .toggle-track i { left: 16px; }
+  .palette-toggle[aria-checked='true'] .original-label { color: #92928b; }
+  .palette-toggle[aria-checked='true'] .violet-label { color: #bfabfe; }
+</style>

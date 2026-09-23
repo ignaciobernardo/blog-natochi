@@ -1,0 +1,160 @@
+---
+import PixelTrail from './PixelTrail.astro';
+import PaletteSwitch from './PaletteSwitch.astro';
+import { pixelTrailDefaults } from '../scripts/pixel-trail-config';
+interface Props { variant?: 'blocks' | 'dots' | 'numbers'; }
+const { variant = 'blocks' } = Astro.props;
+const dots = variant === 'dots';
+const numbers = variant === 'numbers';
+const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#1B1B1B" />
+    <meta name="description" content={dots ? 'Puntos de color con pesos aleatorios que determinan su opacidad.' : 'Un fondo de píxeles vivos que sigue tu movimiento.'} />
+    <title>{dots ? 'Dot trail' : numbers ? 'Weighted pixels' : 'Pixel trail'} — Playground</title>
+  </head>
+  <body>
+    <PixelTrail variant={variant} />
+    <header>
+      <a class="brand" href={base} aria-label="Pixel trail, inicio"><span class="mark"><i></i><i></i><i></i></span>pixel trail<span class="edition">/ 001</span></a>
+      <nav class="variants" aria-label="Versión del efecto" data-trail-controls>
+        <a href={`${base}blocks`} aria-current={variant === 'blocks' ? 'page' : undefined}>Bloques</a>
+        <a href={`${base}numbers`} aria-current={numbers ? 'page' : undefined}>Pesos</a>
+        <a href={`${base}points`} aria-current={dots ? 'page' : undefined}>Puntos</a>
+      </nav>
+    </header>
+    <main>
+      <p class="eyebrow">UN POCO DE COLOR. TU PROPIO CAMINO.</p>
+      <h1>Deja tu rastro<span>.</span></h1>
+      <p class="hint">Mueve el cursor. Haz clic para una explosión de color.</p>
+      {numbers && <div class="palette-control"><PaletteSwitch /></div>}
+      {variant === 'blocks' && <div class="palette-control" data-trail-controls>
+        <button class="rounding-switch" id="rounding-switch" type="button" role="switch" aria-checked="false" aria-label="Bordes redondeados">
+          <span class="square-label">Cuadrado</span><span class="rounding-track" aria-hidden="true"><i></i></span><span class="round-label">Redondeado</span>
+        </button>
+      </div>}
+      {dots && <div class="weight-scale" aria-label="A mayor peso, mayor opacidad">
+        <span>PESO / OPACIDAD</span>
+        {[10, 30, 50, 75, 100].map(weight => <span class="weight-sample"><i style={`opacity:${weight / 100}`}></i>{weight}</span>)}
+      </div>}
+    </main>
+    <footer>
+      <div class="palette" aria-label="Paleta original" data-palette-preview="original">
+        <span style="--swatch:#237B9F"></span><span style="--swatch:#18D392"></span><span style="--swatch:#08A10B"></span><span style="--swatch:#05D306"></span><span style="--swatch:#00F701"></span><span style="--swatch:#A4840D"></span><span style="--swatch:#F2C103"></span><span style="--swatch:#FFCC01"></span><span style="--swatch:#A23A91"></span><span style="--swatch:#FA4EDE"></span>
+      </div>
+      {numbers && <div class="palette" aria-label="Paleta violeta" data-palette-preview="violet" hidden>
+        {['#EBEFF2', '#CFD8DC', '#BFABFE', '#7D4DFA'].map(color => <span style={`--swatch:${color}`}></span>)}
+      </div>}
+      <div class="controls" data-trail-controls>
+        <details>
+          <summary>Ajustar <span>↗</span></summary>
+          <div class="panel">
+            <label for="size">{dots ? 'Espaciado' : 'Bloque'} <output id="size-value">{pixelTrailDefaults.size} px</output></label>
+            <input id="size" type="range" min="24" max="80" step="4" value={pixelTrailDefaults.size} />
+            <label for="duration">Duración <output id="duration-value">{pixelTrailDefaults.duration / 1000} s</output></label>
+            <input id="duration" type="range" min="0.5" max="10" step="0.1" value={pixelTrailDefaults.duration / 1000} />
+            <label for="branches">Ramas <output id="branches-value">{pixelTrailDefaults.branches * 100} %</output></label>
+            <input id="branches" type="range" min="0" max="100" step="5" value={pixelTrailDefaults.branches * 100} />
+            <label for="maxBlocks">{dots ? 'Máximo de puntos' : 'Máximo de bloques'} <output id="maxBlocks-value">{pixelTrailDefaults.maxBlocks}</output></label>
+            <input id="maxBlocks" type="range" min="10" max="300" step="10" value={pixelTrailDefaults.maxBlocks} />
+          </div>
+        </details>
+        <button id="demo" type="button">Ver ejemplo <span>↗</span></button>
+        <button id="clear" type="button" aria-label="Limpiar el rastro">Limpiar <span>×</span></button>
+      </div>
+    </footer>
+    <script>
+      const rounding = document.getElementById('rounding-switch');
+      rounding?.addEventListener('click', () => {
+        const rounded = rounding.getAttribute('aria-checked') !== 'true';
+        rounding.setAttribute('aria-checked', String(rounded));
+        window.dispatchEvent(new CustomEvent('pixel-trail:settings', { detail: { rounded } }));
+      });
+      for (const name of ['size', 'duration', 'branches', 'maxBlocks'] as const) {
+        const input = document.getElementById(name) as HTMLInputElement;
+        input.addEventListener('input', () => {
+          const value = Number(input.value);
+          const unit = name === 'size' ? ' px' : name === 'duration' ? ' s' : name === 'branches' ? ' %' : '';
+          document.getElementById(`${name}-value`)!.textContent = `${value}${unit}`;
+          window.dispatchEvent(new CustomEvent('pixel-trail:settings', {
+            detail: { [name]: name === 'duration' ? value * 1000 : name === 'branches' ? value / 100 : value },
+          }));
+        });
+      }
+      document.getElementById('demo')!.addEventListener('click', () => window.dispatchEvent(new Event('pixel-trail:demo')));
+      document.getElementById('clear')!.addEventListener('click', () => window.dispatchEvent(new Event('pixel-trail:clear')));
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  * { box-sizing: border-box; }
+  html { background: #1b1b1b; color-scheme: dark; }
+  body { margin: 0; min-height: 100svh; color: #eeeae3; font-family: Arial, Helvetica, sans-serif; }
+  header, main, footer { position: relative; z-index: 1; pointer-events: none; }
+  header { padding: 36px 40px; display: flex; align-items: center; justify-content: space-between; }
+  .brand { display: flex; align-items: center; gap: 12px; color: inherit; text-decoration: none; font-size: 19px; font-weight: 600; letter-spacing: -0.6px; pointer-events: auto; }
+  .edition { margin-left: 10px; color: #7f807c; font: 11px monospace; }
+  .mark { position: relative; width: 24px; height: 24px; }
+  .mark i { position: absolute; height: 11px; width: 11px; border-radius: 2px; background: #ffcc01; }
+  .mark i:nth-child(1) { top: 0; left: 0; background: #a4840d; }
+  .mark i:nth-child(2) { top: 12px; left: 0; }
+  .mark i:nth-child(3) { top: 12px; left: 12px; }
+  .tag, .eyebrow { font: 10px monospace; letter-spacing: 1.6px; color: #92928b; }
+  main { margin: 70px 40px 0; }
+  h1 { font-weight: 400; font-size: clamp(40px, 6.5vw, 88px); letter-spacing: -0.065em; margin: 19px 0 16px; line-height: 1.05; }
+  h1 span { color: #ffcc01; }
+  .hint { color: #96968f; font-size: 14px; }
+  .palette-control { margin-top: 24px; }
+  .rounding-switch { pointer-events: auto; display: inline-flex; align-items: center; gap: 12px; font-size: 11px; }
+  .rounding-switch span { margin: 0; }
+  .rounding-switch .square-label { color: #eeeae3; }
+  .rounding-switch .round-label { color: #92928b; }
+  .rounding-switch .rounding-track { position: relative; width: 30px; height: 17px; border-radius: 12px; background: #55554f; }
+  .rounding-track i { position: absolute; top: 3px; left: 3px; width: 11px; height: 11px; background: #ebeff2; border-radius: 50%; }
+  .rounding-switch[aria-checked='true'] .rounding-track { background: #a4840d; }
+  .rounding-switch[aria-checked='true'] .rounding-track i { left: 16px; }
+  .rounding-switch[aria-checked='true'] .square-label { color: #92928b; }
+  .rounding-switch[aria-checked='true'] .round-label { color: #ffcc01; }
+  .variants { display: flex; gap: 4px; pointer-events: auto; }
+  .variants a { font: 12px Arial, sans-serif; color: #92928b; padding: 9px 12px; border: 1px solid transparent; border-radius: 7px; text-decoration: none; }
+  .variants a[aria-current='page'] { color: #eeeae3; border-color: #3d3d39; background: #232323; }
+  .variants a:hover { color: #fff; }
+  .weight-scale { display: flex; align-items: center; gap: 16px; margin-top: 26px; color: #92928b; font: 10px monospace; }
+  .weight-scale > span:first-child { font-size: 9px; letter-spacing: 1px; margin-right: 4px; }
+  .weight-sample { display: flex; flex-direction: column; align-items: center; gap: 7px; }
+  .weight-sample i { display: block; width: 13px; height: 13px; border-radius: 50%; background: #00f701; }
+  footer { position: fixed; bottom: 30px; left: 40px; right: 40px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .palette { display: flex; gap: 4px; }
+  .palette[hidden] { display: none; }
+  .palette span { height: 13px; width: 13px; border-radius: 3px; background: var(--swatch); }
+  .controls { display: flex; gap: 6px; pointer-events: auto; }
+  button, summary { border: 1px solid #3d3d39; border-radius: 8px; background: #202020; color: #c7c7be; padding: 12px 15px; font: 12px Arial, sans-serif; cursor: pointer; list-style: none; white-space: nowrap; }
+  summary::-webkit-details-marker { display: none; }
+  button:hover, summary:hover { background: #30302b; color: #fff; }
+  button span, summary span { margin-left: 15px; color: #85857f; }
+  button:focus-visible, summary:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid #ffcc01; outline-offset: 4px; }
+  details { position: relative; }
+  .panel { position: absolute; bottom: 54px; right: 0; width: 240px; padding: 22px; background: #232323; border: 1px solid #3d3d39; border-radius: 12px; box-shadow: 0 12px 50px #0004; }
+  label { display: flex; justify-content: space-between; font-size: 12px; }
+  output { color: #92928b; font-family: monospace; }
+  input { display: block; width: 100%; margin: 14px 0 24px; accent-color: #ffcc01; }
+  input:last-child { margin-bottom: 0; }
+  @media (max-width: 600px) {
+    header { padding: 25px 24px; }
+    .tag { display: none; }
+    .edition { display: none; }
+    .variants a { padding: 8px; font-size: 11px; }
+    main { margin: 70px 24px 0; }
+    .eyebrow { font-size: 8px; letter-spacing: 1px; }
+    footer { left: 24px; right: 24px; bottom: 24px; flex-wrap: wrap; }
+    .panel { left: 0; right: auto; }
+    button, summary { padding: 12px; }
+    button span, summary span { margin-left: 8px; }
+  }
+</style>

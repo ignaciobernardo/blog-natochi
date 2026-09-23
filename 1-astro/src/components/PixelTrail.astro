@@ -1,0 +1,44 @@
+---
+import { pixelTrailDefaults, type PixelTrailSettings, type PixelTrailPalette } from '../scripts/pixel-trail-config';
+
+type Props = Partial<PixelTrailSettings> & {
+  variant?: 'blocks' | 'dots' | 'numbers';
+  background?: string;
+  grid?: boolean;
+  preview?: boolean;
+  palette?: PixelTrailPalette;
+  rounded?: boolean;
+};
+const {
+  size = pixelTrailDefaults.size,
+  duration = pixelTrailDefaults.duration,
+  branches = pixelTrailDefaults.branches,
+  maxBlocks = pixelTrailDefaults.maxBlocks,
+  variant = 'blocks',
+  background = '#1B1B1B',
+  grid = true,
+  preview = false,
+  palette = 'original',
+  rounded = false,
+} = Astro.props;
+---
+
+<pixel-trail data-size={size} data-duration={duration} data-branches={branches} data-max-blocks={maxBlocks} data-variant={variant} data-palette={palette} data-rounded={rounded} data-background={background} data-grid={grid} data-preview={preview} style={`--trail-background: ${background}`} aria-hidden="true">
+  <canvas></canvas>
+</pixel-trail>
+
+<script>
+  import '../scripts/pixel-trail';
+</script>
+
+<style>
+  pixel-trail {
+    position: fixed;
+    inset: 0;
+    display: block;
+    z-index: 0;
+    pointer-events: none;
+    background: var(--trail-background, #1b1b1b);
+  }
+  canvas { display: block; width: 100%; height: 100%; }
+</style>
