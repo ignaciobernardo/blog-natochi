@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="Un espacio construido con palabras. Camina entre sus páginas.">
+  <title>32 — Natochi</title>
+  <link rel="icon" href="/favicon.svg">
+  <link rel="stylesheet" href="./space.css">
+</head>
+<body>
+  <canvas id="space" tabindex="0" aria-label="Espacio tipográfico caminable. Usa WASD o flechas para caminar; arrastra para mirar. R vuelve al inicio."></canvas>
+  <div id="instructions">WASD / flechas · arrastra para mirar · R reinicia</div>
+  <button id="reset" aria-label="Volver al inicio">↺</button>
+  <div id="pad" aria-label="Caminar">
+    <button data-key="ArrowUp" aria-label="Avanzar">↑</button>
+    <button data-key="ArrowLeft" aria-label="Izquierda">←</button>
+    <button data-key="ArrowDown" aria-label="Retroceder">↓</button>
+    <button data-key="ArrowRight" aria-label="Derecha">→</button>
+  </div>
+  <noscript>Activa JavaScript para caminar por este espacio.</noscript>
+  <script type="module" src="./space.js"></script>
+</body>
+</html>
