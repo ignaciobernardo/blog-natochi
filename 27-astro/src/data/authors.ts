@@ -1,0 +1,33 @@
+// Label hit areas in the original image's 751 × 646 coordinate system.
+const labels: [string, number, number, number, number][] = [
+  ['WOOLF',350,19,51,17], ['BARNES',287,32,53,17],
+  ['WICKHAM',432,32,66,17], ['Bennett',205,46,49,16],
+  ['Beach',513,49,41,17], ['CATHER',240,79,53,17],
+  ['WHITE',489,81,47,17], ['Coleman',183,97,57,16],
+  ['Barney',576,96,43,17], ['CUNARD',198,124,56,17],
+  ['WEST',532,127,41,17], ['Sackville-West',132,141,56,30],
+  ['Marsden',591,144,52,17], ['H. D.',170,171,39,18],
+  ['WARNER',550,171,59,17], ['Yeats',128,185,35,16],
+  ['Hemingway',620,190,72,17], ['ELIOT',146,217,39,17],
+  ['STEIN',584,218,42,17], ['Wright',83,231,45,17],
+  ['Wells',651,234,36,17], ['FAUSET',128,247,55,17],
+  ['Sitwell',626,250,44,17], ['DuBois',84,264,44,17],
+  ['HURSTON',82,295,65,17], ['SINCLAIR',632,295,59,17],
+  ['Hughes',82,324,49,17], ['JOYCE',122,340,42,17],
+  ['RICHARDSON',589,341,84,17], ['Van Vechten',82,355,55,31],
+  ['Lowell',650,358,41,17], ['LARSEN',137,386,51,17],
+  ['RHYS',588,385,39,17], ['Proust',108,415,41,17],
+  ['Lewis',638,418,39,17], ['LAWRENCE',158,431,71,17],
+  ['POUND',565,431,49,17], ['Conrad',128,462,44,17],
+  ['Ford',604,463,31,17], ['LOY',205,478,33,17],
+  ['MOORE',534,482,48,17], ['M. Anderson',125,492,78,17],
+  ['Williams',568,509,50,17], ['MACAULAY',230,523,74,17],
+  ['MEW',507,525,38,17], ['Murry',527,540,36,17],
+  ['MACDIARMID',289,569,88,17], ['MANSFIELD',418,567,74,17],
+  ['Bryher',512,585,41,17],
+];
+export const authors = labels.map(([name, x, y, width, height]) => ({
+  name, x, y, width, height,
+  slug: name.toLowerCase().replace(/\./g, '').replace(/\s+/g, '-'),
+  text: `${name} es uno de los nombres de esta trama de modernistas. Cada línea invita a seguir una conexión: encuentros, correspondencias y conversaciones que atraviesan el mapa. Una obra puede leerse por sí sola, pero también junto a las voces que la rodean.`,
+}));

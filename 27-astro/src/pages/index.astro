@@ -1,0 +1,40 @@
+---
+import { authors } from '../data/authors';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="A Tangled Mesh of Modernists. Explore each name in the map." />
+    <title>A Tangled Mesh of Modernists</title>
+    <link rel="icon" href="/favicon.svg" />
+  </head>
+  <body>
+    <main aria-label="A Tangled Mesh of Modernists">
+      <div class="map">
+        <img src="/27/modernists.png" width="751" height="646" alt="A Tangled Mesh of Modernists: a printed network of writers and their connections." fetchpriority="high" />
+        <nav aria-label="Modernists">
+          {authors.map(author => (
+            <a href={`/27/${author.slug}/`} aria-label={author.name} title={author.name}
+              style={`left:${author.x / 751 * 100}%;top:${author.y / 646 * 100}%;width:${author.width / 751 * 100}%;height:${author.height / 646 * 100}%`}>
+              <span>{author.name}</span>
+            </a>
+          ))}
+        </nav>
+      </div>
+    </main>
+  </body>
+</html>
+<style>
+  :global(*) { box-sizing: border-box; }
+  :global(html) { background: #f3f3ed; }
+  :global(body) { margin: 0; }
+  main { min-height: 100svh; display: grid; place-items: center; }
+  .map { position: relative; width: min(100vw, 116.254svh); }
+  img { width: 100%; height: auto; display: block; }
+  a { position: absolute; display: block; border-radius: 1px; color: #161613; }
+  a:hover { background: rgb(0 0 0 / 8%); outline: 1px solid rgb(0 0 0 / 35%); }
+  a:focus-visible { outline: 2px solid #161613; outline-offset: 2px; background: rgb(0 0 0 / 8%); }
+  a span { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+</style>
