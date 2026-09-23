@@ -16,3 +16,7 @@ Sources:
 Edit endpoints and binary strings in `map.js`. `Paper.presets` defines the 15 materials; `Paper.render(canvas, id, seed)` and `PulsarMap.render(canvas, {mode, wear, seed})` are independently usable. Both use seeded deterministic random generators.
 
 The material comparison and selection rationale are in `docs/paper-study.md`. Desktop, mobile, route switching, material selection, ink controls, binary consistency, export and error checks are captured in the accompanying verification report.
+
+## Printed corners
+
+`corners.js` generates four asymmetric fields of overlapping Spanish words and syllables. Text is rotated, offset, overprinted and distressed with seeded ink holes. Density fades toward the center. The overlay is independent of both the paper and the pulsar geometry, and participates in PNG export. Navigation labels have soft clearings for readability. The paper gallery includes the same corner treatment.
