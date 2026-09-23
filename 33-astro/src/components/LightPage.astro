@@ -1,0 +1,23 @@
+---
+const { base } = Astro.props;
+---
+<section class="paper" aria-label="Rapunzel, light mode">
+  <img class="engraving" src={`${base}/rapunzel-engraving.png`} alt="Antique engraving of the Rapunzel story" />
+  <h1>RAPUNZEL.</h1>
+  <div class="story">
+    <img class="illuminated" src={`${base}/rapunzel-initial.png`} alt="Illuminated letter T" />
+    <p>HERE once lived a man and his wife, who had long wished for a child, but in vain. Now there was at the back of their house a little window which overlooked a beautiful garden full of the finest vegetables and flowers; but there was a high wall all round it, and no one ventured into it, for it belonged to a witch of great might, and of whom all the world was afraid. One day that the wife was standing at the window, and looking into the garden, she saw a bed filled with the finest rampion; and it looked so fresh and green that she began to wish for some; and at length she longed for it greatly. This went on for days, and as she knew she could not get the rampion, she pined away, and grew pale and miserable. Then the man was uneasy, and asked,<br />“What is the matter, dear wife?”<br />“Oh,” answered she, “I shall die unless I can have some of that rampion to eat that grows in the garden at the back of our house.” The man, who loved her very much, thought to himself,<br />“Rather than lose my wife I will get some rampion, cost what it will.”<br />So in the twilight he climbed over the wall into the witch’s garden, plucked hastily a handful of rampion and brought it to his wife. She made a salad of it at once, and ate of it to her heart’s content. But she liked it so much, and it tasted so good, that the next day she longed for it</p>
+  </div>
+</section>
+<style is:global>
+  @font-face{font-family:OldFell;src:url('/33/im-fell-english.ttf') format('truetype');font-display:swap}
+  .paper{display:none;position:absolute;left:50%;top:50%;width:816px;height:1200px;transform:translate(-50%,-50%) scale(var(--paper-fit,1));transform-origin:center;overflow:hidden;color:#3b382e;background:radial-gradient(ellipse at 10% 27%,#f9f4da 0,transparent 44%),radial-gradient(ellipse at 91% 87%,#e7dfbf 0,transparent 52%),linear-gradient(105deg,#f3ebcc,#faf5df 47%,#eee4c4)}
+  .paper::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.42' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.24'/%3E%3C/svg%3E");mix-blend-mode:multiply}
+  .paper::after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 80px #ad987232}
+  .paper .engraving{position:absolute;left:65px;top:35px;width:658px;height:220px;object-fit:contain;opacity:.89;mix-blend-mode:multiply}
+  .paper h1{position:absolute;left:0;top:319px;width:100%;margin:0;text-align:center;font:42px/1 Georgia,serif;letter-spacing:1px;font-weight:400;color:#342f25}
+  .paper .story{position:absolute;left:65px;top:407px;width:667px;height:793px;overflow:hidden;font:25px/1.085 Georgia,'Times New Roman',serif;letter-spacing:1.1px;text-align:justify;filter:contrast(.83)}
+  .paper .story p{margin:0}
+  .paper .illuminated{float:left;width:214px;height:221px;margin:2px 7px 5px 0;mix-blend-mode:multiply;opacity:.98}
+  @media(prefers-color-scheme:light){.paper{display:block}.dark-page{display:none!important}body{background:#f1e8c9!important}}
+</style>
