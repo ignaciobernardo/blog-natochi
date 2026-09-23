@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="Dropout, 23, based in Santiago de Chile. Growth levers for startups, ventures and cool things.">
+<title>25 — Natochi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@300;400&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; background: #fff; }
+  body {
+    min-height: 100svh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: clamp(28px, 8vh, 80px) 20px clamp(40px, 10vh, 96px);
+    font-family: 'Spectral', Georgia, 'Times New Roman', serif;
+    color: #111;
+  }
+  ::selection { background: #111; color: #fff; }
+  .col { width: min(360px, 100%); }
+  p { margin: 0 0 1.1em; font-size: 1rem; line-height: 1.65; text-align: justify; hyphens: auto; }
+  p:last-of-type { margin-bottom: 0; }
+  img { display: block; width: 100%; height: auto; margin-top: clamp(28px, 6vh, 56px); }
+</style>
+</head>
+<body>
+<div class="col">
+  <p>dropout, 23yo, based in santiago de chile. focused on finding growth levers for: startups, ventures, and cool things ;).</p>
+  <p>over the last 6 years i've built businesses, communities and fun stuff at the places i've worked.</p>
+  <p>interests: ai safety, cognitive science, venture capital, community stuff &amp; anything borges related.</p>
+  <img id="drawing" width="440" height="652" alt="">
+  <noscript><style>#drawing { display: none; }</style><img src="dude-horizon.png" width="440" height="652" alt="Person standing beneath a hand-drawn horizon and dome."></noscript>
+</div>
+<script>
+  const drawings = [
+    { src: 'dude-horizon.png', width: 440, height: 652, alt: 'Person standing beneath a hand-drawn horizon and dome.' },
+    { src: 'dude-room.png', width: 1200, height: 1200, alt: 'Person seated in a hand-drawn room filled with arrows.' }
+  ];
+  const drawing = drawings[Math.random() < 0.5 ? 0 : 1];
+  const image = document.getElementById('drawing');
+  image.width = drawing.width;
+  image.height = drawing.height;
+  image.alt = drawing.alt;
+  image.src = drawing.src;
+</script>
+</body>
+</html>
