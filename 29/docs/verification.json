@@ -1,0 +1,33 @@
+{
+  "base": "http://127.0.0.1:8424",
+  "pulsars": 14,
+  "paperVariants": 15,
+  "distinctPaperHashes": [
+    1993193032,
+    2870858802,
+    2562865145,
+    4118065082,
+    3924295168,
+    4263367200,
+    510225131,
+    1689016897,
+    2123041768,
+    3450677752,
+    92831076,
+    1156082355,
+    1601179836,
+    2584890614,
+    1512213779
+  ],
+  "inkUnaffectedByPaper": true,
+  "inkWearControl": true,
+  "binaryRendering": true,
+  "versionAndPaperLinks": true,
+  "exportPNG": true,
+  "mobileWidths": [
+    390,
+    320
+  ],
+  "errors": [],
+  "failed": []
+}
