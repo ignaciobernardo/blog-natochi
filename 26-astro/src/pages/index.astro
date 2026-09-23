@@ -1,89 +1,103 @@
 ---
-const paragraphsLeft = [
+const left = [
   'Nimbus was once called Nibiru. It began as a frozen gas giant on an elliptical solar orbit that extended beyond the Kuiper belt.',
   'Following the Badoon infestation of the early thirty-first century, the Outreach project was created to convert Nibiru into a super-intellect in the hopes of attracting -- and establishing -- a suitor-alliance with a Type III interstellar civilization.',
   'Mirroring the Kree intelligence model, 100 of the greatest post-human scientists, scholars and artists of their generation submitted to the copying -- and integration -- of their minds into a single thinking machine, called Nimbus.',
   'Housed in a Nimrod shell, Nimbus’ journey from Earth to Nibiru took approximately four years.*',
 ];
-const paragraphsRight = [
+const right = [
   'When it crashed into Nibiru, Nimbus tore through the upper atmosphere and mantle of the ice giant and used the force of the impact to inject its self-replicating machines into the core of the planet.',
   'As Nimbus consumed/converted the iron and nickel core into an ever-increasing number of memory farms and logic crystals, its intelligence level grew until the goals of the Outreach project were achieved.',
   'Nimbus achieved Worldmind status ten years after impact.',
 ];
+const note = '*A more linear path would have seen the Intelligence arrive sooner, but it stopped to consume multiple Saturnian and Jovian moons in order to increase its density and intellect (which it calculated would increase the conversion rate of Nibiru).';
 ---
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#101010" />
-    <meta name="description" content="Nimbus: a speculative dossier on the worldmind of Nibiru." />
-    <title>Nimbus — Natochi</title>
-  </head>
-  <body>
-    <main>
-      <div class="desktop-facsimile">
-        <img src="/26/nimbus-reference.png" width="1199" height="922" alt="" aria-hidden="true" />
-      </div>
-
-      <div class="mobile-layout">
-        <header class="mobile-hero">
-          <div class="topline"><span class="corner">⌜</span><span class="serial">[0.01_NIM_]<br />[0.10_BUS_]</span><span class="corner">⌝</span></div>
-          <div class="monogram" aria-label="Nimbus symbol"><span>N</span><span class="orbit"><i></i></span><span>N</span></div>
-          <div class="orbit-window" role="img" aria-label="Orbital diagram showing Nimbus's path toward Nibiru" style="background-image: url('/26/nimbus-reference.png')"></div>
-          <h1>NIMBUS</h1>
-        </header>
-        <section class="dossier" aria-label="Nimbus dossier">
-          <div class="column">
-            {paragraphsLeft.map((paragraph) => <p>{paragraph}</p>)}
-          </div>
-          <div class="column">
-            {paragraphsRight.map((paragraph) => <p>{paragraph}</p>)}
-            <p class="note">*A more linear path would have seen the Intelligence arrive sooner, but it stopped to consume multiple Saturnian and Jovian moons in order to increase its density and intellect (which it calculated would increase the conversion rate of Nibiru).</p>
-          </div>
-          <small>[Europa_00.00shell]<br />[Io____00.15shell]</small>
-        </section>
-      </div>
-
-      <div class="screen-reader-copy">
-        <h1>Nimbus</h1>
-        {[...paragraphsLeft, ...paragraphsRight].map((paragraph) => <p>{paragraph}</p>)}
-        <p>*A more linear path would have seen the Intelligence arrive sooner, but it stopped to consume multiple Saturnian and Jovian moons in order to increase its density and intellect (which it calculated would increase the conversion rate of Nibiru).</p>
-      </div>
-    </main>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#101010" />
+  <meta name="description" content="Nimbus — a speculative dossier on the worldmind of Nibiru." />
+  <title>Nimbus — Natochi</title>
+</head>
+<body>
+<main>
+  <section class="hero" aria-labelledby="title">
+    <svg class="art" viewBox="0 0 1200 574" role="img" aria-label="Orbital diagram tracing Nimbus's path to Nibiru">
+      <defs><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(23)"><line x1="0" y1="0" x2="0" y2="7" stroke="#777" stroke-width="1" /></pattern></defs>
+      <g fill="none" stroke="#fff">
+        <path d="M30 33h11v11 M30 128h11v-11 M213 33h11 M213 128h11 M557 33h11v11 M557 128h11v-11 M30 245h12 M30 267h12 M557 245h12 M557 267h12 M630 301h12 M1157 301h12" stroke-width="1.4" />
+        <path d="M50 33h38v16H67v63h21v16H50z M165 33h39v95h-39v-16h21V49h-21z" fill="#fff" stroke="none" />
+        <circle cx="125" cy="80" r="40" /><circle cx="125" cy="80" r="32" stroke-dasharray="1 2" /><circle cx="125" cy="80" r="25" />
+        <circle cx="125" cy="80" r="5" fill="#fff" /><circle cx="125" cy="55" r="2" fill="#fff" /><circle cx="125" cy="120" r="2" fill="#fff" />
+        <ellipse cx="794" cy="339" rx="187" ry="100" transform="rotate(-17 794 339)" fill="url(#hatch)" stroke="#777" stroke-width=".7" />
+        <ellipse cx="919" cy="282" rx="290" ry="163" transform="rotate(-29 919 282)" stroke-width="2.5" stroke-dasharray="2 3" />
+        <ellipse cx="851" cy="355" rx="199" ry="78" transform="rotate(-13 851 355)" stroke-width="1.2" />
+        <ellipse cx="796" cy="340" rx="116" ry="58" transform="rotate(-17 796 340)" stroke-width="1.7" />
+        <ellipse cx="794" cy="340" rx="79" ry="39" transform="rotate(-17 794 340)" stroke-width="1.4" />
+        <ellipse cx="792" cy="340" rx="41" ry="24" transform="rotate(-17 792 340)" stroke-width="1.4" />
+        <ellipse cx="792" cy="340" rx="21" ry="12" transform="rotate(-17 792 340)" />
+        <ellipse cx="791" cy="340" rx="10" ry="6" transform="rotate(-17 791 340)" />
+        <path d="M683 350c1-40 48-82 121-102 81-23 151-7 170 38 M782 331c53-31 94-43 116-28" stroke-width="1.4" />
+        <path d="M660 112v201 M759 112v182 M909 110v49 M809 175v141 M1012 159v153 M741 383v138 M783 330v191 M898 333v188 M1008 423v98" stroke-width=".85" />
+        <g fill="#fff" stroke="none">
+          <circle cx="660" cy="112" r="2.2" /><circle cx="759" cy="112" r="2.2" /><circle cx="909" cy="110" r="2.2" /><circle cx="809" cy="175" r="2.2" /><circle cx="1012" cy="159" r="2.2" />
+          <circle cx="660" cy="313" r="2.2" /><circle cx="759" cy="294" r="2.2" /><circle cx="909" cy="159" r="2.2" /><circle cx="1012" cy="312" r="2.2" />
+          <circle cx="741" cy="383" r="2.2" /><circle cx="741" cy="521" r="2.2" /><circle cx="783" cy="521" r="2.2" /><circle cx="898" cy="333" r="2.2" /><circle cx="898" cy="521" r="2.2" /><circle cx="1008" cy="521" r="2.2" />
+        </g>
+        <circle cx="809" cy="316" r="5" fill="#101010" /><circle cx="783" cy="330" r="5" fill="#101010" />
+        <circle cx="1008" cy="423" r="11" fill="#101010" stroke-width="2" /><circle cx="1008" cy="423" r="6" fill="#101010" />
+      </g>
+      <g fill="#fff" class="mono">
+        <text x="226" y="43">[0.01_NIM_]</text><text x="226" y="51">[0.10_BUS_]</text>
+        <text x="1033" y="39">[Nibiru]...........[0.000]</text><text x="1033" y="47">[NIMBUS]..........[0.005]</text>
+        <text x="455" y="224">[Intellect]........[0...1]</text><text x="455" y="232">[WORLDMIND].......[X...1]</text>
+        <text x="669" y="116">KUIPER BELT</text><text x="768" y="116">PLUTO ORBIT</text><text x="918" y="163">NIBIRU ORBIT</text>
+        <text x="819" y="179">SATURN INTERCEPT</text><text x="819" y="190">Moons consumed:</text><text x="819" y="201">[Titan]</text>
+        <text x="1021" y="163">NIMBUS FLIGHT PATH</text><text x="1021" y="174">Intelligence:</text><text x="1021" y="185">[Nimrod replicating</text><text x="1021" y="196">shell]</text>
+        <text x="669" y="526">URANUS ORBIT</text><text x="791" y="526">JUPITER INTERCEPT</text><text x="791" y="537">Moons consumed:</text><text x="791" y="548">[Europa, Io]</text>
+        <text x="906" y="526">NEPTUNE</text><text x="906" y="537">ORBIT</text><text x="1017" y="526">NIMBUS INTERCEPT</text><text x="1017" y="537">Nibiru conversion</text><text x="1017" y="548">[Worldmind]</text>
+      </g>
+    </svg>
+    <svg class="mobile-mark" viewBox="0 0 180 100" aria-hidden="true">
+      <g fill="none" stroke="#fff"><path d="M0 0h38v16H17v63h21v16H0z M115 0h39v95h-39V79h21V16h-21z" fill="#fff" stroke="none" /><circle cx="75" cy="48" r="40" /><circle cx="75" cy="48" r="32" stroke-dasharray="1 2" /><circle cx="75" cy="48" r="25" /><circle cx="75" cy="48" r="5" fill="#fff" /><circle cx="75" cy="23" r="2" fill="#fff" /><circle cx="75" cy="88" r="2" fill="#fff" /></g>
+    </svg>
+    <h1 id="title">NIMBUS</h1>
+  </section>
+  <section class="dossier" aria-label="Nimbus dossier">
+    <div class="panel"><div class="copy">{left.map(p => <p>{p}</p>)}</div></div>
+    <div class="panel"><div class="copy">{right.map(p => <p>{p}</p>)}<p class="footnote">{note}</p></div></div>
+    <small>[Europa_00.00shell]<br />[Io____00.15shell]</small>
+  </section>
+</main>
+</body>
 </html>
-
 <style>
   * { box-sizing: border-box; }
   html, body { margin: 0; min-width: 320px; }
-  body { background: #fff; color: #111; }
-  .desktop-facsimile { width: 100%; }
-  .desktop-facsimile img { display: block; width: 100%; height: auto; }
-  .mobile-layout { display: none; }
-  @media (max-width: 699px) {
-    .desktop-facsimile { display: none; }
-    .mobile-layout { display: block; }
-    .screen-reader-copy { display: none; }
-    .mobile-hero { position: relative; min-height: 590px; overflow: hidden; background: #101010; color: white; padding: 25px 25px 20px; }
-    .topline { display: flex; align-items: flex-start; justify-content: space-between; font: 7px/1.1 'Courier New', monospace; }
-    .corner { font: 28px/1 'Courier New', monospace; }
-    .serial { margin-right: auto; padding: 5px 0 0 20px; }
-    .monogram { display: flex; align-items: center; height: 92px; margin-top: 8px; font: 900 87px/.8 Arial, sans-serif; letter-spacing: -11px; }
-    .monogram > span:first-child { transform: scaleX(.63); transform-origin: left; margin-right: -22px; }
-    .monogram > span:last-child { transform: scaleX(.63); transform-origin: right; margin-left: -22px; }
-    .orbit { width: 75px; height: 75px; flex: 0 0 75px; border: 1px solid #fff; border-radius: 50%; display: grid; place-items: center; outline: 1px dotted #fff; outline-offset: -7px; }
-    .orbit::before { content: ''; position: absolute; width: 54px; height: 54px; border: 1px solid white; border-radius: 50%; }
-    .orbit i { width: 10px; height: 10px; border-radius: 50%; background: #fff; }
-    .orbit-window { position: absolute; top: 175px; left: 0; width: 100%; height: 365px; background-repeat: no-repeat; background-position: -480px -10px; background-size: 900px auto; }
-    .mobile-hero h1 { position: absolute; left: 25px; bottom: 14px; margin: 0; font: 800 25px/1 Arial, sans-serif; letter-spacing: -.04em; }
-    .dossier { position: relative; display: grid; gap: 30px; padding: 34px 25px 58px; background: #fff; }
-    .column { border: 1px solid #111; padding: 20px 18px; }
-    .column p { margin: 0 0 15px; font: 12px/1.2 Arial, sans-serif; letter-spacing: .025em; }
-    .column p:last-child { margin-bottom: 0; }
-    .column .note { margin-top: 24px; font-style: italic; }
-    .dossier small { font: 7px/1.1 'Courier New', monospace; }
+  body { color: #111; background: #fff; font-family: Arial, Helvetica, sans-serif; }
+  main { width: 100%; overflow: hidden; }
+  .hero { position: relative; width: 100%; aspect-ratio: 1200 / 574; background: #101010; color: #fff; overflow: hidden; }
+  .art { display: block; width: 100%; height: 100%; }
+  .mono { font-family: 'Courier New', monospace; font-size: 9px; letter-spacing: -.25px; }
+  .hero h1 { position: absolute; left: 4.2%; bottom: 1.8%; margin: 0; font-size: clamp(15px, 1.9vw, 23px); font-weight: 800; letter-spacing: -.04em; }
+  .mobile-mark { display: none; }
+  .dossier { position: relative; display: grid; grid-template-columns: 1fr 1fr; min-height: 348px; padding: 26px 2.5% 70px; gap: 5%; background: #fff; }
+  .panel { position: relative; min-height: 222px; padding: 13px 20px 18px; }
+  .panel::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(#111,#111) left top / 12px 1.5px no-repeat, linear-gradient(#111,#111) left top / 1.5px 12px no-repeat, linear-gradient(#111,#111) right top / 12px 1.5px no-repeat, linear-gradient(#111,#111) right top / 1.5px 12px no-repeat, linear-gradient(#111,#111) left bottom / 12px 1.5px no-repeat, linear-gradient(#111,#111) left bottom / 1.5px 12px no-repeat, linear-gradient(#111,#111) right bottom / 12px 1.5px no-repeat, linear-gradient(#111,#111) right bottom / 1.5px 12px no-repeat; }
+  .copy { max-width: 390px; }
+  p { margin: 0 0 10px; font-size: clamp(10px, 1.04vw, 12.5px); line-height: 1.08; letter-spacing: .035em; }
+  .footnote { margin-top: 23px; font-style: italic; }
+  .dossier small { position: absolute; left: 4%; bottom: 38px; font: 7px/1.15 'Courier New', monospace; }
+  @media (max-width: 700px) {
+    .hero { aspect-ratio: auto; height: 540px; }
+    .art { width: 1125px; height: 538px; max-width: none; transform: translateX(-540px); }
+    .mobile-mark { display: block; position: absolute; top: 28px; left: 25px; width: 154px; height: 95px; background: #101010; }
+    .hero h1 { left: 24px; bottom: 21px; font-size: 25px; }
+    .dossier { display: block; padding: 25px 25px 70px; }
+    .panel { min-height: 0; margin-bottom: 28px; padding: 20px 18px; }
+    p { font-size: 12px; line-height: 1.2; letter-spacing: .02em; margin-bottom: 14px; }
+    .dossier small { left: 25px; bottom: 28px; }
   }
-  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
-  .screen-reader-copy { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 </style>
