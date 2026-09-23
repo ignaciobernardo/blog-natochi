@@ -1,0 +1,89 @@
+---
+const paragraphsLeft = [
+  'Nimbus was once called Nibiru. It began as a frozen gas giant on an elliptical solar orbit that extended beyond the Kuiper belt.',
+  'Following the Badoon infestation of the early thirty-first century, the Outreach project was created to convert Nibiru into a super-intellect in the hopes of attracting -- and establishing -- a suitor-alliance with a Type III interstellar civilization.',
+  'Mirroring the Kree intelligence model, 100 of the greatest post-human scientists, scholars and artists of their generation submitted to the copying -- and integration -- of their minds into a single thinking machine, called Nimbus.',
+  'Housed in a Nimrod shell, Nimbus’ journey from Earth to Nibiru took approximately four years.*',
+];
+const paragraphsRight = [
+  'When it crashed into Nibiru, Nimbus tore through the upper atmosphere and mantle of the ice giant and used the force of the impact to inject its self-replicating machines into the core of the planet.',
+  'As Nimbus consumed/converted the iron and nickel core into an ever-increasing number of memory farms and logic crystals, its intelligence level grew until the goals of the Outreach project were achieved.',
+  'Nimbus achieved Worldmind status ten years after impact.',
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101010" />
+    <meta name="description" content="Nimbus: a speculative dossier on the worldmind of Nibiru." />
+    <title>Nimbus — Natochi</title>
+  </head>
+  <body>
+    <main>
+      <div class="desktop-facsimile">
+        <img src="/26/nimbus-reference.png" width="1199" height="922" alt="" aria-hidden="true" />
+      </div>
+
+      <div class="mobile-layout">
+        <header class="mobile-hero">
+          <div class="topline"><span class="corner">⌜</span><span class="serial">[0.01_NIM_]<br />[0.10_BUS_]</span><span class="corner">⌝</span></div>
+          <div class="monogram" aria-label="Nimbus symbol"><span>N</span><span class="orbit"><i></i></span><span>N</span></div>
+          <div class="orbit-window" role="img" aria-label="Orbital diagram showing Nimbus's path toward Nibiru" style="background-image: url('/26/nimbus-reference.png')"></div>
+          <h1>NIMBUS</h1>
+        </header>
+        <section class="dossier" aria-label="Nimbus dossier">
+          <div class="column">
+            {paragraphsLeft.map((paragraph) => <p>{paragraph}</p>)}
+          </div>
+          <div class="column">
+            {paragraphsRight.map((paragraph) => <p>{paragraph}</p>)}
+            <p class="note">*A more linear path would have seen the Intelligence arrive sooner, but it stopped to consume multiple Saturnian and Jovian moons in order to increase its density and intellect (which it calculated would increase the conversion rate of Nibiru).</p>
+          </div>
+          <small>[Europa_00.00shell]<br />[Io____00.15shell]</small>
+        </section>
+      </div>
+
+      <div class="screen-reader-copy">
+        <h1>Nimbus</h1>
+        {[...paragraphsLeft, ...paragraphsRight].map((paragraph) => <p>{paragraph}</p>)}
+        <p>*A more linear path would have seen the Intelligence arrive sooner, but it stopped to consume multiple Saturnian and Jovian moons in order to increase its density and intellect (which it calculated would increase the conversion rate of Nibiru).</p>
+      </div>
+    </main>
+  </body>
+</html>
+
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-width: 320px; }
+  body { background: #fff; color: #111; }
+  .desktop-facsimile { width: 100%; }
+  .desktop-facsimile img { display: block; width: 100%; height: auto; }
+  .mobile-layout { display: none; }
+  @media (max-width: 699px) {
+    .desktop-facsimile { display: none; }
+    .mobile-layout { display: block; }
+    .screen-reader-copy { display: none; }
+    .mobile-hero { position: relative; min-height: 590px; overflow: hidden; background: #101010; color: white; padding: 25px 25px 20px; }
+    .topline { display: flex; align-items: flex-start; justify-content: space-between; font: 7px/1.1 'Courier New', monospace; }
+    .corner { font: 28px/1 'Courier New', monospace; }
+    .serial { margin-right: auto; padding: 5px 0 0 20px; }
+    .monogram { display: flex; align-items: center; height: 92px; margin-top: 8px; font: 900 87px/.8 Arial, sans-serif; letter-spacing: -11px; }
+    .monogram > span:first-child { transform: scaleX(.63); transform-origin: left; margin-right: -22px; }
+    .monogram > span:last-child { transform: scaleX(.63); transform-origin: right; margin-left: -22px; }
+    .orbit { width: 75px; height: 75px; flex: 0 0 75px; border: 1px solid #fff; border-radius: 50%; display: grid; place-items: center; outline: 1px dotted #fff; outline-offset: -7px; }
+    .orbit::before { content: ''; position: absolute; width: 54px; height: 54px; border: 1px solid white; border-radius: 50%; }
+    .orbit i { width: 10px; height: 10px; border-radius: 50%; background: #fff; }
+    .orbit-window { position: absolute; top: 175px; left: 0; width: 100%; height: 365px; background-repeat: no-repeat; background-position: -480px -10px; background-size: 900px auto; }
+    .mobile-hero h1 { position: absolute; left: 25px; bottom: 14px; margin: 0; font: 800 25px/1 Arial, sans-serif; letter-spacing: -.04em; }
+    .dossier { position: relative; display: grid; gap: 30px; padding: 34px 25px 58px; background: #fff; }
+    .column { border: 1px solid #111; padding: 20px 18px; }
+    .column p { margin: 0 0 15px; font: 12px/1.2 Arial, sans-serif; letter-spacing: .025em; }
+    .column p:last-child { margin-bottom: 0; }
+    .column .note { margin-top: 24px; font-style: italic; }
+    .dossier small { font: 7px/1.1 'Courier New', monospace; }
+  }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+  .screen-reader-copy { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+</style>
