@@ -1,5 +1,6 @@
 ---
 import { authors } from '../data/authors';
+import Paper from '../components/Paper.astro';
 export function getStaticPaths() {
   return authors.map(author => ({ params: { slug: author.slug }, props: { author } }));
 }
@@ -10,11 +11,12 @@ const { author } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{author.name} — A Tangled Mesh of Modernists</title>
+    <title>{author.name} — A tangled mesh of Natochi</title>
     <meta name="description" content={author.text} />
     <link rel="icon" href="/favicon.svg" />
   </head>
   <body>
+    <Paper />
     <main>
       <a href="/27/">← Volver al mapa</a>
       <h1>{author.name}</h1>
