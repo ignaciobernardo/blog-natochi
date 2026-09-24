@@ -87,6 +87,30 @@
     });
   }
 
+  // Conserva la silueta de cada sponsor y la traduce a la grilla cuadrada del sistema.
+  function dotLogo(el) {
+    var img = el.querySelector('img'), cols = +el.dataset.cols, rows = 14, pitch = 3, dot = 2.3;
+    if (!img || !cols) return;
+    loadImg(img.src).then(function (source) {
+      var sampleCanvas = document.createElement('canvas');
+      sampleCanvas.width = cols; sampleCanvas.height = rows;
+      var sampleCtx = sampleCanvas.getContext('2d', { willReadFrequently: true });
+      sampleCtx.drawImage(source, 0, 0, cols, rows);
+      var pixels = sampleCtx.getImageData(0, 0, cols, rows).data;
+      var cv = canvasFor(el, cols, rows, pitch);
+      cv.c.className = 'ex-sponsor-dots';
+      var ctx = cv.ctx, lit = tok('dot-lit'), amber = tok('dot-amber');
+      for (var y = 0; y < rows; y++) for (var x = 0; x < cols; x++) {
+        var at = (y * cols + x) * 4, alpha = pixels[at + 3] / 255;
+        if (alpha < 0.22) continue;
+        ctx.fillStyle = alpha > 0.62 ? lit : amber;
+        var size = alpha > 0.62 ? dot : dot * 0.72;
+        ctx.fillRect(x * pitch + (pitch - size) / 2, y * pitch + (pitch - size) / 2, size, size);
+      }
+      el.classList.add('ex-sponsor--dots');
+    }).catch(function () { /* La imagen original sigue visible. */ });
+  }
+
   // 150 personas: un punto por persona, repartidas por el porcentaje de cada grupo.
   function people(el) {
     var total = +el.dataset.total, split = JSON.parse(el.dataset.split), cols = +el.dataset.cols || 30;
@@ -166,6 +190,7 @@
 
   function boot() {
     document.querySelectorAll('[data-dot-photo]').forEach(dotPhoto);
+    document.querySelectorAll('[data-dot-logo]').forEach(dotLogo);
     document.querySelectorAll('[data-people]').forEach(people);
     document.querySelectorAll('[data-day-bar]').forEach(dayBar);
     document.querySelectorAll('[data-dot-text]').forEach(dotText);

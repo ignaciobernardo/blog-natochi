@@ -1,4 +1,4 @@
-// Only original Forum artwork. No Chronicle, Inscription, Hellenize or startup animation.
+// Original Forum artwork for the independent landing explorations.
 (function(){
   const F=window.Forum;
   if(!F)return;
@@ -12,14 +12,14 @@
   const assembly=document.querySelector('[data-ex-assembly]');
   if(assembly)F.Assembly(assembly,{tone:'night'});
   const footerAssembly=document.querySelector('[data-ex-footer-assembly]');
-  if(footerAssembly)F.Assembly(footerAssembly,{tone:'night',bottom:'meander',pitch:3,dot:2.3,bandPitch:3,bandDot:2});
+  if(footerAssembly)F.Assembly(footerAssembly,{tone:'night',bottom:'meander',pitch:3,dot:2.3,bandPitch:3,bandDot:2,trimEdges:true});
   const pediment=document.querySelector('[data-ex-pediment]');
-  if(pediment)F.Pediment(pediment,{revealDuration:3000,revealEasing:'linear',twinkleInterval:320});
+  if(pediment)F.Pediment(pediment,{revealDuration:3000,revealEasing:'linear',twinkleInterval:320,tone:/[?&]pediment=line/.test(location.search)?'line':'fill'});
   const speakerVariant=new URLSearchParams(location.search).get('speakers');
   document.querySelectorAll('[data-ex-procession]').forEach(el=>{
     const variant=speakerVariant==='stripe'||speakerVariant==='original'?speakerVariant:'clean';
     el.dataset.speakers=variant;
-    F.Procession(el,{tone:'night',figures:JSON.parse(el.dataset.figures),animate:false,background:variant==='original'?'sparse':'none'});
+    F.Procession(el,{variant:'animated',tone:'night',figures:JSON.parse(el.dataset.figures),background:variant==='original'?'sparse':'none'}); // animada: gestos al pasar el mouse y se pueden agarrar
     if(variant==='stripe')el.style.setProperty('--ex-figure-height',el.querySelector('.fx-procession__art canvas')?.style.height||'208px');
   });
   document.querySelectorAll('[data-ex-footer], [data-ex-footer-copy]').forEach(el=>{
@@ -34,4 +34,5 @@
     },{rootMargin:'-15% 0px -65% 0px'});
     document.querySelectorAll('[data-session]').forEach(el=>observer.observe(el));
   }
+
 })();
