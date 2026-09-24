@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,400;0,500;1,400&display=swap');
+
+.fx-page { background: var(--ground); color: var(--ink); font-family: var(--font-sans); font-size: 17px; line-height: 28px; color-scheme: dark; }
+
+/* Display: una sola vez por página */
+.fx-display { font-family: var(--font-display); font-weight: 400; font-size: clamp(36px, 8vw, 72px); line-height: .95; letter-spacing: 0; color: var(--dot-lit); margin: 0; text-wrap: balance; text-transform: uppercase; }
+.fx-display .fx-year { color: var(--dot-amber); }
+.fx-numeral { font-family: var(--font-display); font-weight: 400; font-size: 28px; line-height: 1; color: var(--dot-lit); }
+
+/* Prosa estilo ensayo */
+.fx-prose { max-width: var(--prose-width); display: flex; flex-direction: column; gap: var(--space-1); color: var(--ink); font-family: var(--font-sans); font-size: 17px; line-height: 28px; }
+.fx-prose p { margin: 0; }
+.fx-prose strong { font-weight: 500; color: var(--dot-lit); }
+.fx-prose em { font-style: italic; }
+.fx-prose .fx-gap { margin-top: var(--space-1); }
+.fx-prose a, .fx-link { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; transition: color .15s; }
+.fx-prose a:hover, .fx-link:hover { color: var(--dot-amber); }
+.fx-prose a:focus-visible, .fx-link:focus-visible, .fx-button:focus-visible { outline: 2px solid var(--dot-lit); outline-offset: 3px; }
+
+/* Marcador */
+.fx-marker { background: var(--marker); color: var(--ground); padding: 1px 5px; border-radius: var(--radius-marker); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.fx-marker--soft { background: var(--marker-soft); color: var(--ink); }
+
+/* Etiquetas y datos */
+.fx-label { font-family: var(--font-mono); font-size: 12px; line-height: 16px; font-weight: 400; letter-spacing: 1px; text-transform: uppercase; color: var(--ink-muted); }
+.fx-label::before { content: '< '; }
+.fx-label::after { content: ' />'; }
+.fx-data { font-family: var(--font-mono); font-size: 13px; line-height: 20px; letter-spacing: .5px; font-variant-numeric: tabular-nums; color: var(--ink-muted); }
+
+/* CTA */
+.fx-links { display: flex; flex-direction: column; gap: 4px; }
+.fx-link--strong { font-weight: 500; }
+.fx-button { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: var(--dot-lit); background: transparent; border: 1px solid var(--dot-lit); border-radius: var(--radius-none); padding: 10px 18px; text-decoration: none; cursor: pointer; transition: background .15s, color .15s; }
+.fx-button::before { content: ''; width: 6px; height: 6px; background: currentColor; }
+.fx-button:hover { background: var(--dot-lit); color: var(--ground); }
+
+/* Agenda como texto */
+.fx-agenda { list-style: none; margin: 0; padding: 0; max-width: var(--prose-width); display: flex; flex-direction: column; gap: var(--space-2); }
+.fx-agenda li { display: grid; grid-template-columns: 64px 1fr; gap: var(--space-1); }
+.fx-agenda time { font-family: var(--font-mono); font-size: 13px; letter-spacing: .5px; line-height: 28px; font-variant-numeric: tabular-nums; color: var(--ink-muted); }
+.fx-agenda p { margin: 0; }
+.fx-agenda strong { font-weight: 500; }
+
+.fx-frieze { line-height: 0; min-width: 0; }
+.fx-frieze svg { display: block; max-width: 100%; }  /* max-width: la banda nunca agranda a su contenedor */
+
+/* Ventanas en arco */
+.fx-arches { display: flex; flex-wrap: wrap; gap: var(--space-2); justify-content: center; }
+.fx-arches > * { width: min(220px, 100%); }
+.fx-arch { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.fx-arch figcaption { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+.fx-arch__name { font-family: var(--font-display); font-weight: 400; font-size: 22px; line-height: 1; letter-spacing: 1px; color: var(--dot-lit); text-transform: uppercase; }
+.fx-arch__note { font-family: var(--font-mono); font-size: 12px; line-height: 16px; color: var(--ink-muted); }
+
+/* Pantalla de carga: de Atenas a hoy */
+.fx-chronicle { position: fixed; inset: 0; z-index: 1000; background: var(--ground); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; padding: 16px; box-sizing: border-box; transition: opacity .2s; }
+.fx-chronicle__field { width: min(1100px, 100%); }
+.fx-chronicle__label { margin: 0; min-height: 20px; font-family: var(--font-mono); font-size: 14px; line-height: 20px; letter-spacing: 2px; text-transform: uppercase; color: var(--dot-amber); }
+.fx-chronicle__bar { width: min(600px, 80%); height: 24px; overflow: hidden; }
+.fx-chronicle__fill { width: 0; height: 24px; overflow: hidden; }
+.fx-chronicle__fill .fx-frieze { width: min(600px, 80vw); }
+.fx-chronicle__skip { position: absolute; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); background: none; border: 1px solid var(--line); color: var(--ink-muted); font-family: var(--font-mono); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; padding: 8px 12px; cursor: pointer; }
+.fx-chronicle__skip:hover { color: var(--dot-lit); border-color: var(--dot-lit); }
+.fx-chronicle__skip:focus-visible { outline: 2px solid var(--dot-lit); outline-offset: 3px; }
+html.fx-chronicle-on { overflow: hidden; }
+
+/* Lápida tallada */
+.fx-inscription { width: 100%; margin: 0; line-height: 0; }
+.fx-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Marco de meandro: el ornamento llena la sección y deja un recuadro para el copy */
+.fx-meander-frame { position: relative; box-sizing: border-box; padding: 108px clamp(48px, 7vw, 96px) 156px clamp(48px, 34%, 400px); }
+.fx-meander-frame__dots { position: absolute; top: 0; left: 0; pointer-events: none; }
+.fx-meander-frame__copy { position: relative; z-index: 1; max-width: 560px; box-sizing: border-box; padding: 40px 44px; background: var(--ground); }
+.fx-meander-frame__copy > * + * { margin-top: var(--space-1); }
+.fx-meander-frame__title { font-family: var(--font-display); font-size: 14px; line-height: 20px; letter-spacing: 1px; text-transform: uppercase; color: var(--dot-lit); margin: 0; }
+@media (max-width: 640px) {
+  .fx-meander-frame { padding: 72px 28px 96px; }
+  .fx-meander-frame__copy { padding: 24px 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) { .fx-prose a, .fx-link, .fx-button { transition: none; } }
+
+/* plugin: AgoraType */
+/* Ágora Dots: la fuente vive en fonts/ del sistema (el integrador copia assets/AgoraDots.woff2 a fonts/). */
+@font-face { font-family: "Agora Dots"; src: url("../fonts/AgoraDots.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+/* 1em = 16 puntos: con font-size múltiplo de 16 (48, 64, 96, 128px) cada punto cae justo en un píxel entero. */
+.fx-agora { font-family: "Agora Dots", var(--font-display); font-weight: 400; font-size: 64px; line-height: 1.05; letter-spacing: 0; color: var(--dot-lit); font-kerning: none; text-wrap: balance; margin: 0; }
+.fx-agora--xl { font-size: 128px; }
+.fx-agora--md { font-size: 48px; }
+.fx-agora--amber { color: var(--dot-amber); }
+.fx-agora-canvas { width: 100%; line-height: 0; }
+@media (max-width: 640px) { .fx-agora { font-size: 48px; } .fx-agora--xl { font-size: 64px; } .fx-agora--md { font-size: 32px; } }
+
+/* plugin: Assembly */
+/* Asamblea: friso continuo en contorno */
+.fx-assembly { margin: 0; display: flex; flex-direction: column; gap: 10px; background: var(--ground); }
+.fx-assembly--clay { background: var(--ground); }
+.fx-assembly__viewport { line-height: 0; overflow: hidden; outline: none; }
+.fx-assembly__viewport:focus-visible { outline: 2px solid var(--dot-lit); outline-offset: 3px; }
+.fx-assembly__viewport--drag { overflow-x: auto; cursor: grab; scrollbar-width: none; overscroll-behavior-x: contain; }
+.fx-assembly__viewport--drag::-webkit-scrollbar { display: none; }
+.fx-assembly__viewport--drag.is-dragging { cursor: grabbing; }
+.fx-assembly__viewport canvas { display: block; max-width: none; }
+.fx-assembly__viewport--fit canvas { max-width: 100%; }
+
+/* plugin: Pediment */
+/* Frontón: canvas centrado y numerales romanos debajo */
+.fx-pediment { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.fx-pediment__dots { display: block; }
+.fx-pediment__numerals { position: relative; height: 16px; max-width: 100%; }
+.fx-pediment__numerals span { position: absolute; top: 0; transform: translateX(-50%); font-family: var(--font-mono); font-size: 12px; line-height: 16px; letter-spacing: 1px; color: var(--ink-muted); white-space: nowrap; }
+@media (max-width: 640px) { .fx-pediment__numerals span { font-size: 10px; letter-spacing: .5px; } }
+
+/* plugin: Procession */
+/* Procession: friso de figuras con nombres y fila de corredores */
+.fx-procession { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+.fx-procession__row { list-style: none; margin: 0; padding: 4px 0 8px; display: flex; gap: 18px; justify-content: center; align-items: flex-start; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; }
+.fx-procession__row::-webkit-scrollbar { display: none; }
+.fx-procession__row > li { flex: 0 0 auto; scroll-snap-align: center; }
+.fx-procession__fig { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 104px; max-width: 120px; text-decoration: none; color: inherit; outline: none; transition: opacity .2s; }
+.fx-procession__art { display: block; line-height: 0; }
+.fx-procession__name { font-family: var(--font-mono); font-size: 12px; line-height: 16px; letter-spacing: 1px; text-transform: uppercase; text-align: center; color: var(--dot-amber); }
+.fx-procession__note { font-family: var(--font-mono); font-size: 10px; line-height: 14px; letter-spacing: .5px; text-transform: uppercase; text-align: center; color: var(--ink-muted); }
+.fx-procession.is-focusing .fx-procession__fig:not(.is-active) { opacity: .35; }
+.fx-procession__fig.is-active .fx-procession__name { color: var(--dot-lit); }
+.fx-procession__fig:focus-visible { outline: 2px solid var(--dot-lit); outline-offset: 4px; }
+.fx-procession__track { width: 100%; line-height: 0; }
+@media (max-width: 640px) {
+  .fx-procession__row { justify-content: flex-start; gap: 12px; padding-inline: 8px; }
+  .fx-procession__fig { min-width: 88px; }
+}
+@media (prefers-reduced-motion: reduce) { .fx-procession__fig { transition: none; } }
+
+/* plugin: VasePanel */
+.fx-vase { margin: 0; display: flex; flex-direction: column; background: var(--ground); }
+.fx-vase__panel { display: block; width: 100%; height: auto; }
+.fx-vase__band { overflow: hidden; line-height: 0; padding-block: 4px; }
+.fx-vase--black .fx-vase__band { background: var(--dot-amber); }
+.fx-vase--red .fx-vase__band { background: var(--ground); }
+.fx-vase__band-inner { width: 100%; }
+.fx-vase--moving .fx-vase__band--bottom .fx-vase__band-inner { width: calc(100% + var(--tile, 0px)); animation: fx-vase-drift 6s linear infinite; }
+@keyframes fx-vase-drift { from { transform: translateX(0); } to { transform: translateX(calc(-1 * var(--tile, 0px))); } }
+.fx-vase figcaption { display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 12px; text-align: center; }
+.fx-vase__name { font-family: var(--font-display); font-size: 20px; line-height: 1; letter-spacing: 1px; text-transform: uppercase; color: var(--dot-lit); }
+.fx-vase__note { font-family: var(--font-mono); font-size: 12px; line-height: 16px; letter-spacing: .5px; color: var(--ink-muted); }
+@media (prefers-reduced-motion: reduce) { .fx-vase--moving .fx-vase__band--bottom .fx-vase__band-inner { animation: none; } }
