@@ -17,7 +17,7 @@
   if(pediment)F.Pediment(pediment,{revealDuration:3000,revealEasing:'linear',twinkleInterval:320});
   const speakerVariant=new URLSearchParams(location.search).get('speakers');
   document.querySelectorAll('[data-ex-procession]').forEach(el=>{
-    const variant=speakerVariant==='clean'||speakerVariant==='stripe'?speakerVariant:'original';
+    const variant=speakerVariant==='stripe'||speakerVariant==='original'?speakerVariant:'clean';
     el.dataset.speakers=variant;
     F.Procession(el,{tone:'night',figures:JSON.parse(el.dataset.figures),animate:false,background:variant==='original'?'sparse':'none'});
     if(variant==='stripe')el.style.setProperty('--ex-figure-height',el.querySelector('.fx-procession__art canvas')?.style.height||'208px');
