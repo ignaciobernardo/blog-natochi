@@ -1155,7 +1155,7 @@
 
   // ---------------------------------------------------------------- musas
   var MUSE_W = Math.max.apply(null, DATA.muses.map(function (m) { return m[0].length; })) + 4;
-  function figureGrid(m, tone, active, seed, width) {
+  function figureGrid(m, tone, active, seed, width, background) {
     var rows = m.length, cols = width || MUSE_W, g = [], ox = Math.floor((cols - m[0].length) / 2);
     for (var y = 0; y < rows; y++) {
       g.push([]);
@@ -1165,7 +1165,7 @@
           // Figura negra recortada sobre un panel ámbar.
           g[y].push(c === '#' ? -1 : c === '+' ? 1 : active ? 3 : (rnd(x, y, seed) < 0.9 ? 2 : 3));
         } else {
-          var bg = x % 2 === 0 && y % 2 === 0 ? 0 : -1;
+          var bg = background === 'none' ? -1 : x % 2 === 0 && y % 2 === 0 ? 0 : -1;
           g[y].push(c === '#' ? (active ? 3 : 2) : c === '+' ? (active ? 2 : 1) : bg);
         }
       }
@@ -1194,7 +1194,7 @@
       if (f.name) { var n = document.createElement('span'); n.className = 'fx-procession__name'; n.textContent = f.name; el.appendChild(n); }
       if (f.note) { var t = document.createElement('span'); t.className = 'fx-procession__note'; t.textContent = f.note; el.appendChild(t); }
       li.appendChild(el); row.appendChild(li);
-      var item = { el: el, draw: function (on) { paint(cv, figureGrid(m, tone, on, i + 3), dot); } };
+      var item = { el: el, draw: function (on) { paint(cv, figureGrid(m, tone, on, i + 3, undefined, opts.background), dot); } };
       item.draw(false);
       items.push(item);
       function on() { root.classList.add('is-focusing'); items.forEach(function (it) { var a = it === item; it.el.classList.toggle('is-active', a); it.draw(a); }); }
@@ -1319,7 +1319,7 @@
       var item = {
         el: el, kind: kind, frames: frames, active: false, mode: 'idle', pos: 0, seq: [], frame: 0,
         shown: frames[0].map(function (r) { return r.split(''); }), pending: null,
-        paint: function () { paint(cv, figureGrid(item.shown.map(function (r) { return r.join(''); }), tone, item.active, i + 3, ANIM_W), dot); },
+        paint: function () { paint(cv, figureGrid(item.shown.map(function (r) { return r.join(''); }), tone, item.active, i + 3, ANIM_W, opts.background), dot); },
       };
       // Primer paso del cambio de cuadro: una mitad al azar de los puntos que cambian; el resto va en el paso siguiente.
       item.goTo = function (k) {
