@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en" class="forest">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Leaf · Forest</title>
+<meta name="description" content="Leaf’s autumn 2026 online courses in a single forest-green look.">
+<link rel="icon" href="/leaf/assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Open+Sans:wght@300;400;600;700&family=IBM+Plex+Mono:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="/leaf/assets/leaf.css">
+<style>
+html.forest:not(#x){color-scheme:dark;
+  --bg:#0e2416; --fg:#f0f7f1; --fg-2:#c3d8c9; --fg-3:#9bb7a4; --tint:190,230,200;
+  --line-subtle:rgba(190,230,200,.14); --line:rgba(190,230,200,.28); --line-strong:rgba(190,230,200,.7);
+  --inverse:#f0f7f1; --on-inverse:#0e2416; --accent-text:#9fd8b0; --cta:#ed7354; --on-cta:#060e23; --cta-h:#f28c72;
+  --coral-soft:rgba(237,115,84,.2); --coral-ink:#ffc2b1; --tick:rgba(190,230,200,.25); --dot:rgba(190,230,200,.14);
+  --stat-a:#153420; --stat-b:#3a2119; --stat-c:#1a2e20;}
+.forest .frame{background:var(--bg)}
+.f-hero{position:relative;min-height:520px;display:flex;align-items:flex-end;border-bottom:1px solid var(--line);overflow:hidden}
+.f-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:68% 30%;filter:grayscale(.35) contrast(1.05)}
+.f-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,36,22,.96) 0%,rgba(14,36,22,.82) 42%,rgba(33,107,57,.35) 100%);mix-blend-mode:multiply}
+.f-hero .copy{position:relative;z-index:1;padding:64px 48px;max-width:760px;display:flex;flex-direction:column;gap:18px}
+.f-hero h1{font-size:60px;line-height:64px;letter-spacing:-.015em}
+.f-hero .lead{color:var(--fg-2)}
+.promises{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-bottom:1px solid var(--line)}
+.promise{display:flex;gap:14px;align-items:center;padding:20px 24px;border-right:1px solid var(--line-subtle);border-bottom:1px solid var(--line-subtle)}
+.promise:nth-child(3n){border-right:0}.promise:nth-last-child(-n+3){border-bottom:0}
+.promise .i{width:40px;height:40px;flex-shrink:0;display:grid;place-items:center;border:1px solid var(--line);border-radius:var(--r-sm);color:var(--accent-text)}
+.promise b{display:block;font-family:var(--serif);font-weight:700;font-size:16px;line-height:22px}
+.promise span{font-size:13px;line-height:18px;color:var(--fg-2)}
+.grid4{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.card{display:flex;flex-direction:column;text-decoration:none;color:inherit;border-right:1px solid var(--line);border-bottom:1px solid var(--line);transition:background .1s}
+.card:nth-child(2n){border-right:0}.card:nth-last-child(-n+2){border-bottom:0}
+.card:hover{background:var(--bg-1)}
+.card .ph{position:relative;aspect-ratio:16/8;overflow:hidden}
+.card .ph img{width:100%;height:100%;object-fit:cover;transition:transform .4s cubic-bezier(.33,1,.68,1)}
+.card:hover .ph img{transform:scale(1.03)}
+.card .lab{position:absolute;left:0;bottom:0;display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg);font-family:var(--mono);font-size:11px;text-transform:uppercase;border-top-right-radius:var(--r-sm)}
+.card .lab svg{width:14px;height:14px;color:var(--accent-text)}
+.card .b{padding:20px 24px 24px;display:flex;flex-direction:column;gap:8px}
+.card h3{margin:0;font-family:var(--serif);font-size:22px;line-height:30px}
+.card p{margin:0;color:var(--fg-2)}
+.card .more{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--accent-text)}
+.card .more svg{transition:transform .3s}.card:hover .more svg{transform:translateX(4px)}
+.tl{padding:28px 48px 40px;border-bottom:1px solid var(--line)}
+.tl-track{position:relative;height:150px;margin-top:8px}
+.tl-axis{position:absolute;left:0;right:0;top:92px;height:1px;background:var(--line)}
+.tl-tick{position:absolute;top:92px;height:6px;border-left:1px solid var(--line)}
+.tl-tick span{position:absolute;top:10px;left:-20px;width:40px;text-align:center;font-family:var(--mono);font-size:10px;color:var(--fg-3);text-transform:uppercase}
+.tl-week{position:absolute;top:60px;height:24px;background:rgba(159,216,176,.18);box-shadow:inset 0 0 0 1px rgba(159,216,176,.45);font-family:var(--mono);font-size:10px;text-transform:uppercase;display:grid;place-items:center;color:var(--fg);overflow:hidden;white-space:nowrap}
+.tl-mark{position:absolute;top:0;bottom:58px;border-left:1.5px solid var(--c);}
+.tl-mark span{position:absolute;left:6px;top:calc(var(--r,0) * 28px);font-family:var(--mono);font-size:10px;line-height:13px;text-transform:uppercase;white-space:nowrap;color:var(--fg)}
+.tl-mark b{display:block;color:var(--c);font-weight:400}
+.voices{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--line)}
+.voice{margin:0;padding:32px 48px;display:flex;flex-direction:column;gap:14px}
+.voice+.voice{border-left:1px solid var(--line)}
+.voice p{margin:0;font-family:var(--serif);font-size:19px;line-height:31px}
+.voice cite{font-style:normal;font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--fg-3)}
+@media (max-width:900px){
+ .f-hero{min-height:460px}.f-hero .copy{padding:40px 20px}.f-hero h1{font-size:40px;line-height:44px}
+ .promises,.grid4,.voices{grid-template-columns:1fr}
+ .promise{border-right:0!important;border-bottom:1px solid var(--line-subtle)!important}
+ .card{border-right:0!important;border-bottom:1px solid var(--line)!important}
+ .voice{padding:28px 20px}.voice+.voice{border-left:0;border-top:1px solid var(--line)}
+ .tl{padding:24px 20px 32px}.tl-scroll{overflow-x:auto}.tl-track{min-width:640px}
+}
+</style>
+</head>
+<body>
+<header class="nav">
+  <a class="nav-logo" href="https://leaf.courses/" aria-label="Leaf home"><img src="/leaf/assets/logoWhite.webp" alt="Leaf"></a>
+  <nav class="nav-links">
+    <a class="nav-link" href="#courses" aria-current="page"><span class="nav-dot"></span>Courses</a>
+    <a class="nav-link" href="#calendar"><span class="nav-dot"></span>Calendar</a>
+    <a class="nav-link" href="https://leaf.courses/info-for-parents"><span class="nav-dot"></span>Parents</a>
+    <a class="nav-link" href="https://leaf.courses/info-for-schools"><span class="nav-dot"></span>Schools</a>
+    <a class="nav-link" href="https://support-leaf.paperform.co/"><span class="nav-dot"></span>Donate</a>
+    <a class="btn cta sm" href="https://leaf-autumn-2026.paperform.co/" style="margin-left:8px;align-self:center">Apply</a>
+  </nav>
+</header>
+<div class="frame-wrap"><div class="frame"><div class="col">
+<section class="f-hero">
+  <img src="/leaf/assets/hero.webp" alt="A smiling Leaf student in a seminar">
+  <div class="copy">
+    <div class="eyebrow">Autumn cohort · 12 October – 22 November 2026</div>
+    <h1>Exceptional courses for exceptional students</h1>
+    <p class="lead">Five-week online courses that prepare talented teenagers to have a positive impact at university and in their careers.</p>
+    <div class="actions"><a class="btn cta" href="https://leaf-autumn-2026.paperform.co/">Apply by October 1</a><a class="btn ghost" href="#courses"><span class="lbl">Explore courses</span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></span></a></div>
+  </div>
+</section>
+<div class="promises"><div class="promise"><span class="i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span><div><b>Sliding scale</b><span>Free if needed. Admission is merit-based.</span></div></div><div class="promise"><span class="i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span><div><b>University prep</b><span>Support with applications and interviews.</span></div></div><div class="promise"><span class="i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22h18"/><path d="M6 18v-7"/><path d="M10 18v-7"/><path d="M14 18v-7"/><path d="M18 18v-7"/><path d="m12 2 8 5H4z"/></svg></span><div><b>Oxbridge / Ivy-style</b><span>Small discussion groups and tutorials.</span></div></div><div class="promise"><span class="i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 22h8"/><path d="M12 18v4"/></svg></span><div><b>100% online</b><span>Around five hours a week, mostly self-paced.</span></div></div><div class="promise"><span class="i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg></span><div><b>Ages 14–19</b><span>For students who haven’t started university.</span></div></div><div class="promise"><span class="i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-6.4A8 8 0 1 1 21 12z"/></svg></span><div><b>Q&As with experts</b><span>Researchers, founders and policymakers.</span></div></div></div>
+<div id="courses" class="section-head"><div class="eyebrow">Five-week online courses</div><h2>Choose where to point your talents</h2></div>
+<div class="grid4" id="cards"></div>
+<div id="calendar" class="section-head"><div class="eyebrow">Autumn 2026, to scale</div><h2>The cohort calendar</h2><p class="sub">Five weeks of course content between 12 October and 22 November. Week positions are illustrative; your facilitator confirms the call times.</p></div>
+<div class="tl"><div class="tl-scroll"><div class="tl-track" id="tl"></div></div></div>
+<div class="voices">
+  <figure class="voice"><p>“My daughter thoroughly enjoyed the Leaf programme; it will have a <span class="hl">lasting impact</span> on her.”</p><cite>Claire, parent of a Leaf participant</cite></figure>
+  <figure class="voice"><p>“Thank you for all you do to support our students, they say great things when they come back <span class="hl">buzzing</span> from working with you.”</p><cite>Head of Year 12, sixth form college</cite></figure>
+</div>
+<footer class="footer">
+  <img src="/leaf/assets/logoWhite.webp" alt="Leaf">
+  <nav><a href="https://leaf.courses/about">About</a><a href="https://leaf.courses/after-leaf">After Leaf</a><a href="https://leaf.courses/faq">FAQ</a><a href="https://leaf-autumn-2026.paperform.co/">Apply</a><a href="https://support-leaf.paperform.co/">Donate</a></nav>
+  <div class="email"><code id="mail">info@leaf.courses</code><button class="btn sm" id="copy" type="button">Copy</button></div>
+  <div class="fine">Leaf is a US-registered 501(c)(3) non-profit organization.</div>
+</footer>
+</div></div></div>
+<script src="/leaf/assets/leaf.js"></script>
+<script>
+document.getElementById("cards").innerHTML=COURSES.map(c=>`<a class="card" href="${c.url}"><div class="ph"><img src="${IMG[c.id]}" alt=""><span class="lab">${svg(ICON[c.id],14,1.5)}${esc(c.tab)}</span></div><div class="b"><h3>${esc(c.title)}</h3><p>${esc(c.desc)}</p><div class="more"><span>5 weeks · ${c.speakers.length}+ expert speakers</span>${svg('<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',14,2)}</div></div></a>`).join("");
+// timeline to scale: 28 Sep -> 29 Nov 2026
+const D=(m,d)=>new Date(2026,m-1,d).getTime(), t0=D(9,28), t1=D(11,29), X=t=>((t-t0)/(t1-t0)*100).toFixed(2)+"%";
+let h="<div class='tl-axis'></div>";
+for(let t=t0;t<=t1;t+=7*864e5){const d=new Date(t);h+=`<div class="tl-tick" style="left:${X(t)}"><span>${d.toLocaleString("en",{month:"short"})} ${d.getDate()}</span></div>`;}
+const s=D(10,12),e=D(11,22),w=(e-s)/5;
+for(let i=0;i<5;i++)h+=`<div class="tl-week" style="left:calc(${X(s+i*w)} + 1px);width:calc(${((w)/(t1-t0)*100).toFixed(2)}% - 2px)">Week ${i+1}</div>`;
+[[D(10,1),"Oct 1","Applications close","var(--cta)",0],[D(10,12),"Oct 12","Cohort starts","var(--accent-text)",1],[D(11,15),"Mid Nov","Non-Trivial opens","#f3d37a",0],[D(11,22),"Nov 22","Cohort ends","var(--accent-text)",1]].forEach(([t,a,b,c,r])=>{h+=`<div class="tl-mark" style="left:${X(t)};--c:${c};--r:${r}"><span><b>${a}</b>${b}</span></div>`;});
+document.getElementById("tl").innerHTML=h;
+leafCopy("copy","mail");
+leafSwitcher("3");
+</script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Leaf · Compare the four courses</title>
+<meta name="description" content="Compare Leaf’s four five-week online courses: workload, weekly topics and speakers.">
+<link rel="icon" href="/leaf/assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Open+Sans:wght@300;400;600;700&family=IBM+Plex+Mono:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="/leaf/assets/leaf.css">
+<style>
+.lb-hero{padding:72px 48px 40px;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:48px;align-items:end;border-bottom:1px solid var(--line)}
+.lb-hero .facts{display:grid;gap:4px}
+.lb-hero .facts div{display:flex;justify-content:space-between;gap:12px;padding:8px 12px;background:var(--bg-1);font-family:var(--mono);font-size:11px;text-transform:uppercase}
+.lb-hero .facts dt{color:var(--fg-3)} .lb-hero .facts dd{margin:0}
+.chart-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;min-height:48px;padding:8px 16px;border-bottom:1px solid var(--line)}
+.toggles{display:flex;gap:4px;flex-wrap:wrap}
+.toggle{display:inline-flex;align-items:center;gap:0;height:28px;padding:0;border:0;background:transparent;cursor:pointer;font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--fg);border-radius:var(--r-sm)}
+.toggle .i{width:28px;height:28px;display:grid;place-items:center;background:var(--bg-2);border-radius:var(--r-sm);color:var(--fg-2)}
+.toggle .t{padding:0 8px}
+.toggle:hover{background:var(--bg-1h)}
+.toggle[aria-pressed="true"]{background:var(--bg-2)}
+.toggle[aria-pressed="true"] .i{background:var(--inverse);color:var(--on-inverse)}
+.stamp{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--fg-2)}
+.stamp img{height:18px;width:auto}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;padding:10px 16px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:10px;text-transform:uppercase}
+.legend span{display:inline-flex;gap:6px;align-items:center} .legend i{width:8px;height:8px;display:inline-block}
+.plot{position:relative;height:340px;padding:28px 0 0 48px;background-image:radial-gradient(circle,var(--dot) .8px,transparent .9px);background-size:8px 8px}
+.gridlines{position:absolute;inset:28px 0 0 48px;pointer-events:none}
+.gridlines div{position:absolute;left:0;right:0;border-top:1px dashed var(--line-subtle)}
+.gridlines span{position:absolute;left:-44px;top:-7px;width:38px;text-align:right;font-family:var(--mono);font-size:10px;color:var(--fg-3)}
+.bars{position:relative;display:flex;align-items:flex-end;height:100%}
+.bar{flex:1 1 0;min-width:0;height:var(--h);background:var(--c);color:var(--on);display:flex;flex-direction:column;justify-content:space-between;padding:10px 10px;font-family:var(--mono);font-size:11px;line-height:13px;text-transform:uppercase;transition:height .5s cubic-bezier(.33,1,.68,1);box-shadow:inset 0 0 0 1px rgba(0,0,0,.12);position:relative;overflow:hidden}
+.bar .val{font-size:15px;line-height:18px}
+.bar .lo{position:absolute;left:0;right:0;bottom:0;height:var(--lo,0%);background:rgba(0,0,0,.18);transition:height .5s cubic-bezier(.33,1,.68,1)}
+.bar .nm{position:relative;display:flex;flex-direction:column;gap:6px}
+.bar svg{width:14px;height:14px}
+.chart-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:8px 8px 8px 16px;background:var(--bg-1);border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:12px;color:var(--fg-2)}
+.cmp-wrap{overflow-x:auto;border-bottom:1px solid var(--line)}
+.cmp{border-collapse:collapse;width:100%;min-width:860px;table-layout:fixed}
+.cmp th,.cmp td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+.cmp tr>*:last-child{border-right:0}
+.cmp thead th{padding:0;font-weight:400;background:var(--bg)}
+.cmp thead th:first-child{width:180px;padding:12px 16px;font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--fg-2);vertical-align:bottom}
+.cmp thead img{width:100%;aspect-ratio:16/9;object-fit:cover}
+.cmp thead .h{display:flex;gap:8px;align-items:center;padding:10px 12px;font-family:var(--mono);font-size:11px;text-transform:uppercase}
+.cmp thead .h i{width:8px;height:8px;display:inline-block;flex-shrink:0}
+.cmp tbody th{padding:12px 16px;font-family:var(--mono);font-weight:400;font-size:11px;text-transform:uppercase;color:var(--fg-2);background:var(--bg)}
+.cmp td{padding:12px;background:var(--bg-1);font-family:var(--serif);font-size:14px;line-height:21px}
+.cmp td.num{font-family:var(--mono);font-size:13px}
+.cmp td.best{background:var(--bg-2)}
+.cmp tbody tr.week td{font-size:13.5px}
+.cta-band{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:24px;background:var(--inverse);color:var(--on-inverse)}
+.cta-band h2{color:var(--on-inverse);font-size:26px;line-height:32px}
+.cta-band .mono{font-size:11px;opacity:.85}
+@media (max-width:900px){.lb-hero{grid-template-columns:1fr;gap:24px;padding:48px 20px 32px}.plot{height:300px;padding-left:40px}.gridlines{left:40px}.bar{padding:8px 6px;font-size:10px}.bar .nm .long{display:none}}
+</style>
+</head>
+<body>
+<header class="nav">
+  <a class="nav-logo" href="https://leaf.courses/" aria-label="Leaf home"><img class="logo-light" src="/leaf/assets/logo.webp" alt="Leaf"><img class="logo-dark" src="/leaf/assets/logoWhite.webp" alt="Leaf"></a>
+  <nav class="nav-links">
+    <a class="nav-link" href="#courses" aria-current="page"><span class="nav-dot"></span>Courses</a>
+    <a class="nav-link" href="#results"><span class="nav-dot"></span>Results</a>
+    <a class="nav-link" href="#after"><span class="nav-dot"></span>After Leaf</a>
+    <a class="nav-link" href="#faq"><span class="nav-dot"></span>FAQ</a>
+    <a class="nav-link" href="https://support-leaf.paperform.co/"><span class="nav-dot"></span>Donate</a>
+    <a class="btn cta sm" href="https://leaf-autumn-2026.paperform.co/" style="margin-left:8px;align-self:center">Apply</a>
+  </nav>
+</header>
+
+<div class="frame-wrap"><div class="frame"><div class="col">
+<div class="announce" aria-live="polite">
+  <button id="ann-prev" aria-label="Previous announcement"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+  <div class="ann-body"><span class="d" id="ann-d"></span><span class="t" id="ann-t"></span></div>
+  <button id="ann-next" aria-label="Next announcement"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+</div>
+
+
+<section class="lb-hero">
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <div class="eyebrow">Autumn 2026 · four courses · one cohort</div>
+    <h1>Compare the four Leaf courses</h1>
+    <p class="lead">Every course asks the same question: how can you use your talents to help others? They differ in subject, weekly workload and the experts you meet. Pick the one that fits.</p>
+    <div class="actions"><a class="btn cta" href="https://leaf-autumn-2026.paperform.co/">Apply by October 1 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a><a class="btn ghost" href="#compare"><span class="lbl">Side by side</span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></span></a></div>
+  </div>
+  <dl class="facts" style="margin:0">
+    <div><dt>Runs</dt><dd>12 Oct – 22 Nov 2026</dd></div>
+    <div><dt>Apply by</dt><dd>1 Oct 2026</dd></div>
+    <div><dt>Ages</dt><dd>14–19, pre-university</dd></div>
+    <div><dt>Cost</dt><dd>Sliding scale · free if needed</dd></div>
+    <div><dt>Format</dt><dd>100% online</dd></div>
+  </dl>
+</section>
+
+<div class="chart-bar">
+  <div class="toggles" role="group" aria-label="Metric" id="toggles"></div>
+  <div class="stamp"><img class="logo-light" src="/leaf/assets/logo.webp" alt="Leaf"><img class="logo-dark" src="/leaf/assets/logoWhite.webp" alt="Leaf">· Autumn 2026</div>
+</div>
+<div class="legend" id="legend"></div>
+<div class="plot"><div class="gridlines" id="grid"></div><div class="bars" id="bars"></div></div>
+<div class="chart-foot"><span id="note"></span><a class="btn ghost sm" href="#compare"><span class="lbl">Full comparison</span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></span></a></div>
+
+<div id="compare" class="section-head"><div class="eyebrow">Side by side</div><h2>Week by week</h2><p class="sub">Every course ends the same way: deciding your own future and planning next steps. The highlighted cell marks the heaviest weekly workload.</p></div>
+<div class="cmp-wrap"><table class="cmp" id="cmp"></table></div>
+
+<div class="section-head"><div class="eyebrow">Surveyed at the end of the summer cohort</div><h2>What 300+ Finalists told us</h2></div>
+<div class="stats">
+  <div class="stat a"><div class="l">Would recommend (7/10+)</div><div class="v">97<small>%</small></div><div class="ticks" style="--p:97%"></div><p>Ranked 7/10 or above on their likelihood to recommend the course.</p></div>
+  <div class="stat b"><div class="l">Gave a perfect 10/10</div><div class="v">35<small>%</small></div><div class="ticks" style="--p:35%"></div><p>More than a third gave the highest possible score.</p></div>
+  <div class="stat c"><div class="l">More confident about impact</div><div class="v"><small>~</small>90<small>%</small></div><div class="ticks" style="--p:90%"></div><p>Felt more confident in their ability to make a positive impact.</p></div>
+</div>
+
+<div class="cta-band"><div style="display:flex;flex-direction:column;gap:6px"><span class="mono">Applications close 2026/10/01</span><h2>One application, any of the four courses</h2></div><a class="btn cta" href="https://leaf-autumn-2026.paperform.co/">Apply now</a></div>
+<footer class="footer">
+  <img class="logo-light" src="/leaf/assets/logo.webp" alt="Leaf"><img class="logo-dark" src="/leaf/assets/logoWhite.webp" alt="Leaf">
+  <nav><a href="https://leaf.courses/about">About</a><a href="#courses">Courses</a><a href="https://leaf.courses/after-leaf">After Leaf</a><a href="https://leaf.courses/info-for-parents">Parents</a><a href="https://leaf.courses/info-for-schools">Schools</a><a href="https://leaf.courses/faq">FAQ</a><a href="https://leaf-autumn-2026.paperform.co/">Apply</a><a href="https://support-leaf.paperform.co/">Donate</a></nav>
+  <div class="email"><code id="mail">info@leaf.courses</code><button class="btn sm" id="copy" type="button">Copy</button></div>
+  <div class="fine">Leaf is a US-registered 501(c)(3) non-profit organization.</div>
+  <nav><a href="https://www.linkedin.com/company/leafcourses/">LinkedIn</a><a href="https://www.instagram.com/leaf.courses/">Instagram</a></nav>
+</footer>
+</div></div></div>
+<script src="/leaf/assets/leaf.js"></script>
+<script>
+const COLORS={math:["var(--leaf)","#f2f8f3"],bio:["var(--coral)","#060e23"],policy:["#060e23","#f2f8f3"],ai:["var(--leaf-bright)","#f2f8f3"]};
+const lo=c=>c.hours.reduce((a,h)=>a+h[1],0), hi=c=>c.hours.reduce((a,h)=>a+h[2],0);
+const METRICS=[
+ {id:"hours",label:"Core hours / week",icon:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',max:6,unit:"h",val:c=>hi(c),low:c=>lo(c),fmt:c=>fmt(lo(c))+"–"+fmt(hi(c))+" h",note:"Core weekly hours, lower and upper estimate. The darker base is the minimum."},
+ {id:"work",label:"Written work / week",icon:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>',max:3,unit:"h",val:c=>c.hours[2][2],low:c=>c.hours[2][1],fmt:c=>fmt(c.hours[2][1])+"–"+fmt(c.hours[2][2])+" h",note:"Hours on the weekly written or project work: problem sheets, projects, position papers or exploration sheets."},
+ {id:"opt",label:"Optional extras",icon:'<path d="M12 5v14M5 12h14"/>',max:5,unit:"",val:c=>c.optional.length,low:()=>0,fmt:c=>c.optional.length+" types",note:"Kinds of optional weekly activity on top of the core: talks, peer-led sessions, games and more."}
+];
+let m=0;
+const tg=document.getElementById("toggles");
+tg.innerHTML=METRICS.map((x,i)=>`<button class="toggle" aria-pressed="${i===0}"><span class="i">${svg(x.icon,14,1.5)}</span><span class="t">${x.label}</span></button>`).join("");
+document.getElementById("legend").innerHTML=COURSES.map(c=>`<span><i style="background:${COLORS[c.id][0]}"></i>${esc(c.title)}</span>`).join("");
+const bars=document.getElementById("bars");
+bars.innerHTML=COURSES.map(c=>`<div class="bar" style="--c:${COLORS[c.id][0]};--on:${COLORS[c.id][1]}"><span class="lo"></span><span class="val" style="position:relative"></span><span class="nm">${svg(ICON[c.id],14,1.5)}<span>${esc(c.tab)}</span><span class="long" style="text-transform:none;font-family:var(--serif);font-size:13px;line-height:17px;opacity:.9">${esc(c.title)}</span></span></div>`).join("");
+function draw(){
+  const x=METRICS[m];
+  [...tg.children].forEach((b,i)=>b.setAttribute("aria-pressed",String(i===m)));
+  document.getElementById("grid").innerHTML=Array.from({length:x.max+1},(_,i)=>`<div style="bottom:${i/x.max*100}%"><span>${i}${x.unit}</span></div>`).join("");
+  COURSES.forEach((c,i)=>{const b=bars.children[i];b.style.setProperty("--h",(x.val(c)/x.max*100)+"%");b.style.setProperty("--lo",(x.low(c)/x.val(c)*100||0)+"%");b.querySelector(".val").textContent=x.fmt(c);});
+  document.getElementById("note").textContent=x.note;
+}
+tg.addEventListener("click",e=>{const b=e.target.closest(".toggle");if(b){m=[...tg.children].indexOf(b);draw();}});
+draw();
+const heaviest=COURSES.reduce((a,c,i)=>hi(c)>hi(COURSES[a])?i:a,0);
+const rows=[["Question",c=>esc(c.desc)],...[0,1,2,3,4].map(w=>["Week "+(w+1),c=>esc(c.weeks[w]),"week"]),["Written work",c=>esc(c.hours[2][0])+" · "+fmt(c.hours[2][1])+"–"+fmt(c.hours[2][2])+" h"],["Core hours / week",(c,i)=>fmt(lo(c))+"–"+fmt(hi(c))+" h","num",true],["Past speakers",c=>c.speakers.slice(0,3).map(s=>esc(s[0])).join(", ")+" and more"]];
+document.getElementById("cmp").innerHTML=`<thead><tr><th>Course</th>${COURSES.map(c=>`<th><img src="${IMG[c.id]}" alt=""><div class="h"><i style="background:${COLORS[c.id][0]}"></i>${esc(c.title)}</div></th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr class="${r[2]||""}"><th>${r[0]}</th>${COURSES.map((c,i)=>`<td class="${r[2]==="num"?"num":""}${r[3]&&i===heaviest?" best":""}">${r[1](c,i)}</td>`).join("")}</tr>`).join("")}<tr><th></th>${COURSES.map(c=>`<td style="background:var(--bg)"><a class="btn ghost sm" href="${c.url}"><span class="lbl">Course page</span><span class="ic">${svg('<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',12,2)}</span></a></td>`).join("")}</tr></tbody>`;
+leafAnnounce([["2026/10/01","Applications for the autumn cohort close October 1"],["2026/10/12","Autumn cohort begins: four five-week online courses"]]);
+leafCopy("copy","mail");
+leafSwitcher("2");
+</script>
+</body>
+</html>

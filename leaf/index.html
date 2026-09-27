@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Leaf · Iterations</title>
+<meta name="description" content="Four iterations of the Leaf homepage built on the Vals design system.">
+<link rel="icon" href="/leaf/assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Open+Sans:wght@300;400;600;700&family=IBM+Plex+Mono:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="/leaf/assets/leaf.css">
+<style>
+.idx-head{padding:64px 48px 32px;display:flex;flex-direction:column;gap:12px;border-bottom:1px solid var(--line)}
+.idx{display:grid;grid-template-columns:1fr 1fr}
+.it{display:flex;flex-direction:column;text-decoration:none;color:inherit;border-right:1px solid var(--line);border-bottom:1px solid var(--line);transition:background .1s}
+.it:nth-child(2n){border-right:0}
+.it:hover{background:var(--bg-1)}
+.it .top{display:flex;justify-content:space-between;align-items:center;height:40px;padding:0 16px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;text-transform:uppercase}
+.it .top b{font-weight:400;color:var(--accent-text)}
+.it img{width:100%;aspect-ratio:8/5;object-fit:cover;object-position:top;border-bottom:1px solid var(--line-subtle)}
+.it .b{padding:20px 24px 24px;display:flex;flex-direction:column;gap:8px}
+.it h2{font-size:24px;line-height:30px}
+.it p{margin:0;color:var(--fg-2)}
+.it .go{margin-top:6px;display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--accent-text)}
+.it .go svg{transition:transform .3s}.it:hover .go svg{transform:translateX(4px)}
+@media (max-width:800px){.idx{grid-template-columns:1fr}.it{border-right:0}.idx-head{padding:48px 20px 24px}}
+body{padding-bottom:0}
+</style>
+</head>
+<body>
+<header class="nav">
+  <a class="nav-logo" href="https://leaf.courses/" aria-label="Leaf"><img class="logo-light" src="/leaf/assets/logo.webp" alt="Leaf"><img class="logo-dark" src="/leaf/assets/logoWhite.webp" alt="Leaf"></a>
+  <a class="btn sm" href="https://leaf.courses/">leaf.courses</a>
+</header>
+<div class="frame-wrap"><div class="frame"><div class="col">
+<div class="idx-head"><div class="eyebrow">Leaf × Vals design system</div><h1>Four iterations of the Leaf homepage</h1><p class="lead">Each one uses the Vals AI system for structure (hairline grid, square controls, mono data) with Leaf’s logo, green, coral, Baskerville and photos. Content comes from leaf.courses.</p></div>
+<div class="idx"><a class="it" href="/leaf/1/"><div class="top"><span>Iteration 01</span><b>/leaf/1</b></div><img src="/leaf/assets/thumb1.webp" alt="Preview of iteration 1, Ledger"><div class="b"><h2>Ledger</h2><p>The first version: hero, cohort facts, course tabs with week-by-week plans and weekly hours, survey results, After Leaf, FAQ and sign-up.</p><span class="go">Open <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></div></a><a class="it" href="/leaf/2/"><div class="top"><span>Iteration 02</span><b>/leaf/2</b></div><img src="/leaf/assets/thumb2.webp" alt="Preview of iteration 2, Leaderboard"><div class="b"><h2>Leaderboard</h2><p>Vals home, adapted: a bar chart comparing the four courses by workload, then a full side-by-side table.</p><span class="go">Open <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></div></a><a class="it" href="/leaf/3/"><div class="top"><span>Iteration 03</span><b>/leaf/3</b></div><img src="/leaf/assets/thumb3.webp" alt="Preview of iteration 3, Forest"><div class="b"><h2>Forest</h2><p>One forest-green look closer to leaf.courses today: photo hero, six promises, course cards and a cohort calendar drawn to scale.</p><span class="go">Open <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></div></a><a class="it" href="/leaf/4/"><div class="top"><span>Iteration 04</span><b>/leaf/4</b></div><img src="/leaf/assets/thumb4.webp" alt="Preview of iteration 4, Report"><div class="b"><h2>Report</h2><p>Reads like a Vals report: a prospectus with score tables, highlighted prose and the application steps.</p><span class="go">Open <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></div></a></div>
+<footer class="footer"><div class="fine">Design exploration for Leaf, a US-registered 501(c)(3) non-profit. Not the official site.</div></footer>
+</div></div></div>
+</body>
+</html>

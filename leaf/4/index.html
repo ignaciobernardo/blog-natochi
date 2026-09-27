@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Leaf · What five weeks at Leaf looks like</title>
+<meta name="description" content="A report-style prospectus for Leaf’s autumn 2026 online courses.">
+<link rel="icon" href="/leaf/assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Open+Sans:wght@300;400;600;700&family=IBM+Plex+Mono:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="/leaf/assets/leaf.css">
+<style>
+.rep{display:grid;grid-template-columns:1fr minmax(0,800px) 1fr}
+.rep>.mid{border-inline:1px solid var(--line);min-width:0}
+.post-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:24px 32px 0}
+.post-top .d{font-family:var(--mono);font-size:11px;color:var(--fg-3)}
+.post-head{padding:24px 32px 32px;display:flex;flex-direction:column;gap:16px;border-bottom:1px solid var(--line)}
+.post-head h1{font-size:40px;line-height:46px}
+.byline{display:flex;gap:10px;align-items:center;font-size:13px;color:var(--fg-2)}
+.byline img{height:20px;width:auto}
+.cover{border-bottom:1px solid var(--line)}
+.cover img{width:100%;aspect-ratio:800/340;object-fit:cover;object-position:65% 30%}
+.cover figcaption{padding:8px 32px;font-size:12px;color:var(--fg-3);font-family:var(--serif);font-style:italic}
+.tbl{margin:32px;border:1px solid var(--line)}
+.tbl-legend{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 16px;background:var(--bg-1);border-bottom:1px solid var(--line);font-family:var(--mono);font-size:10.5px;text-transform:uppercase;color:var(--fg-2)}
+.tbl-legend .items{display:flex;gap:16px;flex-wrap:wrap}.tbl-legend i{width:8px;height:8px;display:inline-block;margin-right:6px}
+.tbl-legend img{height:16px;width:auto}
+.tbl-scroll{overflow-x:auto}
+.tbl table{width:100%;border-collapse:collapse;min-width:520px}
+.tbl th{white-space:nowrap;font-family:var(--mono);font-weight:400;font-size:10.5px;text-transform:uppercase;color:var(--fg-2);text-align:left;padding:14px 16px 6px}
+.tbl th.r,.tbl td.r{text-align:right}
+.tbl td{padding:8px 16px;font-size:14px;white-space:nowrap}
+.tbl td.nm{display:flex;gap:10px;align-items:center;font-weight:400}
+.tbl td.nm svg{color:var(--fg-2)}
+.tbl td.bar{width:44%}
+.tick{position:relative;height:18px;background:repeating-linear-gradient(to right,var(--tk) 0 1px,transparent 1px 4px)}
+.tick i{position:absolute;top:0;bottom:0;background:var(--mk);opacity:.85}
+.tick b{position:absolute;top:0;bottom:0;width:1.5px;background:var(--mk)}
+.tbl .sc{font-family:var(--mono);font-weight:300;font-size:13px}
+.tbl .pm{font-family:var(--mono);font-weight:300;font-size:13px;color:var(--accent-text)}
+.tbl-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:8px 8px 8px 16px;background:var(--bg-1);border-top:1px solid var(--line);font-size:12px;color:var(--fg-2)}
+.prose{padding:8px 32px 8px;font-family:var(--serif);font-size:16.5px;line-height:28px}
+.prose h2{font-family:var(--sans);font-weight:600;font-size:26px;line-height:34px;letter-spacing:-.015em;margin:24px 0 8px}
+.prose p{margin:0;padding-block:8px}
+.prose ul{margin:4px 0;padding-left:20px}.prose li{padding-block:3px}
+.prose a{text-decoration-color:var(--line);text-underline-offset:3px}
+.hl-c{padding:1px 6px;border-radius:9999px;background:rgba(var(--tint),.14);color:var(--accent-text);font-family:var(--sans);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.02em;text-decoration:none;white-space:nowrap}
+.hl-n{padding:1px 6px;border-radius:9999px;background:var(--coral-soft);color:var(--coral-ink);font-family:var(--mono);font-size:14px;white-space:nowrap}
+.steps{list-style:none;margin:16px 32px 32px;padding:0;border:1px solid var(--line)}
+.steps li{display:grid;grid-template-columns:56px 1fr auto;align-items:center;min-height:52px;border-bottom:1px solid var(--line-subtle)}
+.steps li:last-child{border-bottom:0}
+.steps .n{font-family:var(--mono);font-size:12px;color:var(--accent-text);padding-left:16px}
+.steps .t{padding:12px 0;font-size:15px;line-height:22px}
+.steps .t b{font-weight:600}
+.steps .w{padding-right:16px;font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--fg-3);white-space:nowrap}
+.end{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin:0 32px 48px;padding:20px;background:var(--stat-b)}
+.end b{font-family:var(--serif);font-size:20px;line-height:28px}
+@media (max-width:900px){.rep{grid-template-columns:1fr}.rep>.side{display:none}.rep>.mid{border-inline:0}.post-top,.post-head,.prose{padding-inline:20px}.tbl,.steps{margin-inline:20px}.end{margin-inline:20px}.post-head h1{font-size:32px;line-height:38px}.steps li{grid-template-columns:44px 1fr}.steps .w{grid-column:2;padding:0 0 12px}}
+</style>
+</head>
+<body>
+<header class="nav">
+  <a class="nav-logo" href="https://leaf.courses/" aria-label="Leaf home"><img class="logo-light" src="/leaf/assets/logo.webp" alt="Leaf"><img class="logo-dark" src="/leaf/assets/logoWhite.webp" alt="Leaf"></a>
+  <nav class="nav-links">
+    <a class="nav-link" href="#courses" aria-current="page"><span class="nav-dot"></span>Courses</a>
+    <a class="nav-link" href="#results"><span class="nav-dot"></span>Results</a>
+    <a class="nav-link" href="#after"><span class="nav-dot"></span>After Leaf</a>
+    <a class="nav-link" href="#faq"><span class="nav-dot"></span>FAQ</a>
+    <a class="nav-link" href="https://support-leaf.paperform.co/"><span class="nav-dot"></span>Donate</a>
+    <a class="btn cta sm" href="https://leaf-autumn-2026.paperform.co/" style="margin-left:8px;align-self:center">Apply</a>
+  </nav>
+</header>
+
+<div class="frame-wrap"><div class="frame"><div class="col">
+<div class="announce" aria-live="polite">
+  <button id="ann-prev" aria-label="Previous announcement"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+  <div class="ann-body"><span class="d" id="ann-d"></span><span class="t" id="ann-t"></span></div>
+  <button id="ann-next" aria-label="Next announcement"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+</div>
+
+
+<div class="rep"><div class="side"></div><article class="mid">
+  <div class="post-top"><div style="display:flex;gap:8px;align-items:center"><span class="tag">Prospectus</span><span class="mono" style="font-size:11px;color:var(--fg-2)">Autumn 2026</span></div><span class="d">2026/09/27</span></div>
+  <header class="post-head">
+    <h1>What five weeks at Leaf looks like</h1>
+    <p class="lead">Four online courses, one cohort, about five hours a week. Here is the workload, the evidence from last cohort, and what happens after.</p>
+    <div class="byline"><img class="logo-light" src="/leaf/assets/logo.webp" alt="Leaf"><img class="logo-dark" src="/leaf/assets/logoWhite.webp" alt="Leaf"><span>A 501(c)(3) non-profit · courses for ages 14–19</span></div>
+  </header>
+  <figure class="cover" style="margin:0"><img src="/leaf/assets/hero.webp" alt="A smiling Leaf student in a seminar"><figcaption>Leaf seminars run in small discussion groups, Oxbridge and Ivy style.</figcaption></figure>
+
+  <div class="prose"><p>Leaf runs five-week online courses for smart, curious and ambitiously altruistic students who haven’t yet started university. The autumn cohort runs from <span class="hl-n">12 Oct</span> to <span class="hl-n">22 Nov</span>, and applications close on <span class="hl-n">1 Oct</span>.</p></div>
+
+  <div class="tbl">
+    <div class="tbl-legend"><div class="items"><span><i style="background:var(--leaf)"></i>Survey result</span><span><i style="background:var(--coral)"></i>Top score only</span></div><span>Summer cohort · 300+ Finalists</span></div>
+    <div class="tbl-scroll"><table><thead><tr><th>Survey question</th><th></th><th class="r">Share</th></tr></thead><tbody id="survey"></tbody></table></div>
+    <div class="tbl-foot"><span style="display:inline-flex;gap:8px;align-items:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Surveyed at the end of the summer cohort.</span><a class="btn ghost sm" href="https://leaf.courses/the-mathematics-of-morality"><span class="lbl">Source</span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span></a></div>
+  </div>
+
+  <div class="prose"><h2>The four courses</h2><p>Every course shares the same spine: a self-paced module, one group discussion call with tutorial break-outs, and a written or project component. What changes is the subject and how much you write.</p></div>
+
+  <div class="tbl">
+    <div class="tbl-legend"><div class="items"><span><i style="background:var(--leaf)"></i>Core hours per week (range)</span></div><span>0–6 h scale</span></div>
+    <div class="tbl-scroll"><table><thead><tr><th>Course</th><th></th><th class="r">Hours / week</th><th class="r">Speakers</th></tr></thead><tbody id="courses"></tbody></table></div>
+    <div class="tbl-foot"><span>Optional talks, peer sessions and games come on top.</span><a class="btn ghost sm" href="/leaf/2/"><span class="lbl">Compare in detail</span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></a></div>
+  </div>
+
+  <div class="prose">
+    <p>Students in <a class="hl-c" href="https://leaf.courses/the-mathematics-of-morality">The Mathematics of Morality</a> work through problem sheets and home labs; <a class="hl-c" href="https://leaf.courses/power-policy-progress">Power, Policy and Progress</a> asks for weekly position papers; <a class="hl-c" href="https://leaf.courses/dilemmas-and-dangers-in-ai">Dilemmas and Dangers in AI</a> has the heaviest exploration sheet, up to <span class="hl-n">3 h</span> a week.</p>
+    <h2>How it works</h2>
+  </div>
+  <ol class="steps">
+    <li><span class="n">01</span><span class="t"><b>Apply</b> to any of the four courses. Admission is merit-based.</span><span class="w">By 1 Oct</span></li>
+    <li><span class="n">02</span><span class="t"><b>Choose a tier</b> based on ability to pay, including free.</span><span class="w">On acceptance</span></li>
+    <li><span class="n">03</span><span class="t"><b>Take the course</b>: self-paced work, a weekly call and written work.</span><span class="w">12 Oct – 22 Nov</span></li>
+    <li><span class="n">04</span><span class="t"><b>Get support</b> with university applications and interviews.</span><span class="w">During &amp; after</span></li>
+    <li><span class="n">05</span><span class="t"><b>Keep going</b>: top participants get mentorship, referrals and funding, often through Non-Trivial.</span><span class="w">From mid Nov</span></li>
+  </ol>
+  <div class="prose">
+    <h2>What students say</h2>
+    <p>“Perhaps the most impactful programme I’ve ever done. I explored how to maximise my impact.” One alumna put it more concretely: “Leaf led me to change my degree subject and consider Oxford University; I’ve now got an offer.”</p>
+  </div>
+  <div class="alumni" style="margin:8px 32px 32px;border:1px solid var(--line)"><span class="mono">Alumni now at</span><img src="/leaf/assets/uOxford.webp" alt="University of Oxford"><img src="/leaf/assets/uCambridge.webp" alt="University of Cambridge"><img src="/leaf/assets/uHarvard.webp" alt="Harvard University"><img src="/leaf/assets/uLSE.webp" alt="London School of Economics"></div>
+  <div class="end"><div><div class="mono" style="font-size:11px;color:var(--fg-2)">Applications close 2026/10/01</div><b>Apply to the autumn cohort</b></div><a class="btn cta" href="https://leaf-autumn-2026.paperform.co/">Apply now</a></div>
+</article><div class="side"></div></div>
+<footer class="footer">
+  <img class="logo-light" src="/leaf/assets/logo.webp" alt="Leaf"><img class="logo-dark" src="/leaf/assets/logoWhite.webp" alt="Leaf">
+  <nav><a href="https://leaf.courses/about">About</a><a href="#courses">Courses</a><a href="https://leaf.courses/after-leaf">After Leaf</a><a href="https://leaf.courses/info-for-parents">Parents</a><a href="https://leaf.courses/info-for-schools">Schools</a><a href="https://leaf.courses/faq">FAQ</a><a href="https://leaf-autumn-2026.paperform.co/">Apply</a><a href="https://support-leaf.paperform.co/">Donate</a></nav>
+  <div class="email"><code id="mail">info@leaf.courses</code><button class="btn sm" id="copy" type="button">Copy</button></div>
+  <div class="fine">Leaf is a US-registered 501(c)(3) non-profit organization.</div>
+  <nav><a href="https://www.linkedin.com/company/leafcourses/">LinkedIn</a><a href="https://www.instagram.com/leaf.courses/">Instagram</a></nav>
+</footer>
+</div></div></div>
+<script src="/leaf/assets/leaf.js"></script>
+<script>
+const SURVEY=[["Would recommend (7/10 or above)",97,"var(--leaf)","var(--tick)"],["Feel more confident about making an impact",90,"var(--leaf)","var(--tick)","~"],["Gave the course a perfect 10/10",35,"var(--coral)","rgba(237,115,84,.25)"]];
+document.getElementById("survey").innerHTML=SURVEY.map(([q,v,mk,tk,pre])=>`<tr><td class="nm">${esc(q)}</td><td class="bar"><div class="tick" style="--mk:${mk};--tk:${tk}"><i style="left:0;width:${v}%"></i></div></td><td class="r"><span class="sc">${pre||""}${v}%</span></td></tr>`).join("");
+const lo=c=>c.hours.reduce((a,h)=>a+h[1],0), hi=c=>c.hours.reduce((a,h)=>a+h[2],0);
+document.getElementById("courses").innerHTML=COURSES.map(c=>`<tr><td class="nm">${svg(ICON[c.id],14,1.4)}<a href="${c.url}" style="text-decoration:none">${esc(c.title)}</a></td><td class="bar"><div class="tick" style="--mk:var(--leaf);--tk:var(--tick)"><i style="left:${lo(c)/6*100}%;width:${(hi(c)-lo(c))/6*100}%"></i><b style="left:${lo(c)/6*100}%"></b></div></td><td class="r"><span class="sc">${fmt(lo(c))}–${fmt(hi(c))}</span><span class="pm"> h</span></td><td class="r"><span class="sc">${c.speakers.length}</span><span class="pm">+</span></td></tr>`).join("");
+leafAnnounce([["2026/10/01","Applications for the autumn cohort close October 1"],["2026/10/12","Autumn cohort begins: four five-week online courses"]]);
+leafCopy("copy","mail");
+leafSwitcher("4");
+</script>
+</body>
+</html>
