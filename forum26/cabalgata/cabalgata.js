@@ -164,7 +164,7 @@
   ];
   function Sky(el, opts) {
     opts = opts || {};
-    var mode = +opts.mode || 1, c = surface(el, 'A night sky over the Andes, drawn in dots'), ctx, cols, rows, pitch, dot, stars, meteors = [], t0 = 0, last = 0;
+    var mode = +opts.mode || 1, c = surface(el, mode === 6 ? 'Riding a horse through the Andes, seen from the saddle, drawn in dots' : 'A night sky over the Andes, drawn in dots'), ctx, cols, rows, pitch, dot, stars, far, mid, meteors = [], t0 = 0, last = 0;
     c.style.height = '100%';
     function build() {
       var W = el.clientWidth || 1000, H = el.clientHeight || 520;
@@ -175,6 +175,12 @@
       stars = [];
       var n = cols * rows * (mode === 2 ? 0.035 : mode === 4 ? 0.02 : 0.03);
       for (var i = 0; i < n; i++) stars.push({ x: rnd(i, 1, 11) * cols, y: rnd(i, 2, 11) * rows, b: rnd(i, 3, 11), p: rnd(i, 4, 11) * 20 });
+      if (mode === 6) {
+        // POV: cordillera al frente, horizonte del valle y estrellas solo sobre las cumbres.
+        far = ridge(cols, rows, 1.3, rows * 0.56, rows * 0.26);
+        mid = ridge(cols, rows, 4.1, rows * 0.64, rows * 0.08);
+        stars = stars.filter(function (s) { return s.y < far[Math.min(cols - 1, Math.floor(s.x))] - 1; });
+      }
       if (mode === 2) {
         // Banda de la Vía Láctea en diagonal: muchos más puntos cerca de la línea, con un núcleo más denso.
         for (var j = 0; j < cols * rows * 0.12; j++) {
@@ -188,6 +194,7 @@
     function draw(t) {
       var col = colors();
       ctx.globalAlpha = 1; ctx.clearRect(0, 0, cols * pitch, rows * pitch);
+      if (mode === 6) { pov(t, col); ctx.globalAlpha = 1; return; }
       if (mode === 5) {
         // Estelas: cada estrella dibuja un arco alrededor del polo sur (abajo a la derecha, fuera del título).
         var cx = cols * 0.5, cy = rows * 1.05, rot = t * 0.02;
@@ -228,6 +235,81 @@
         meteors = meteors.filter(function (m) { return m.age < 40; });
       }
       ctx.globalAlpha = 1;
+    }
+    // 6: POV desde la montura. Sendero que avanza hacia uno, orejas y crin del caballo, riendas en las manos.
+    function pov(t, col) {
+      var cx = cols / 2, s = Math.min(rows * 1.15, cols * 1.5), yh = rows * 0.62;
+      var gait = reduced ? 0 : t * 5.2, bob = Math.sin(gait) * s * 0.012, nod = Math.sin(gait + 0.9) * s * 0.01;
+      function blk(x, y) { ctx.globalAlpha = 1; ctx.fillStyle = '#000'; ctx.fillRect(Math.round(x) * pitch, Math.round(y) * pitch, pitch, pitch); }
+      stars.forEach(function (st) { pt(st.x, st.y, st.b > 0.93 ? col[3] : st.b > 0.7 ? col[2] : col[1], reduced ? 0.6 : 0.25 + 0.6 * Math.abs(Math.sin(t * (0.5 + st.b) + st.p))); });
+      // Cordillera: nieve en las cumbres altas, cordón medio más oscuro.
+      for (var x = 0; x < cols; x++) {
+        for (var y = far[x]; y < yh; y++) {
+          if (y >= mid[x]) { if (y === mid[x]) pt(x, y, col[2], 0.9); else if ((x + y) % 2 === 0) pt(x, y, col[0], 1); continue; }
+          if (y === far[x]) pt(x, y, col[2], 0.8);
+          else if (y - far[x] < 4 && far[x] < rows * 0.4) pt(x, y, col[3], 0.85 - (y - far[x]) * 0.15);
+          else if ((x + y) % 2 === 0) pt(x, y, col[1], 0.5);
+        }
+      }
+      // Suelo en perspectiva: la textura corre hacia abajo con el paso; el sendero se abre hacia el jinete.
+      var run = reduced ? 0 : t * 2.2;
+      for (var gy = Math.ceil(yh); gy < rows; gy++) {
+        var d = (gy - yh + 1) / (rows - yh + 1), z = 1 / d, half = d * s * 0.5 + 0.5;
+        for (var gx = 0; gx < cols; gx++) {
+          var lx = (gx - cx) / (d * s), key = Math.floor(z * 5 - run);
+          if (Math.abs(gx - cx) <= half) {
+            if (Math.abs(Math.abs(gx - cx) - half) < 1) pt(gx, gy, col[1], 0.8);
+            else if (rnd(Math.floor(lx * 30), key, 21) < 0.06) pt(gx, gy, col[2], 0.35 + d * 0.5);
+          } else if (rnd(Math.floor(lx * 14), key, 7) < 0.14 + d * 0.22) pt(gx, gy, rnd(gx, key, 3) > 0.85 ? col[2] : col[1], 0.3 + d * 0.6);
+        }
+      }
+      // Caballo desde atrás: cuello que se abre hacia abajo, nuca redonda y dos orejas encima.
+      var yTop = rows - s * 0.36 + bob + nod, bottom = rows + 2, headW = s * 0.1, headH = s * 0.07;
+      function neckHalf(y) { var k = Math.max(0, (y - yTop) / (bottom - yTop)); return s * (0.085 + 0.24 * Math.pow(k, 1.1)); }
+      function hide(x, y, lit) {
+        blk(x, y);
+        // Pelaje: todo el cuerpo con puntos oscuros y vetas verticales que dan volumen.
+        var vein = rnd(Math.round(x), 5, 41) > 0.72;
+        pt(x, y, lit ? col[2] : vein ? col[1] : col[1], lit ? 1 : vein ? 0.55 : 0.28);
+      }
+      for (var hy = Math.floor(yTop - headH); hy < rows; hy++) {
+        var hw = neckHalf(hy);
+        if (hy < yTop + headH * 0.6) { var q2 = (hy - yTop) / headH; hw = Math.max(hy < yTop ? 0 : hw, headW * Math.sqrt(Math.max(0, 1 - q2 * q2))); }
+        for (var hx = Math.ceil(cx - hw); hx <= cx + hw; hx++) hide(hx, hy, Math.abs(hx - cx) > hw - 1 || hy === Math.floor(yTop - headH));
+      }
+      // Orejas: copas abiertas hacia adelante, borde encendido e interior oscuro, con un tic de vez en cuando.
+      [-1, 1].forEach(function (sd, i) {
+        var twitch = reduced ? 0 : Math.max(0, Math.sin(t * 0.7 + i * 2.4)) > 0.97 ? sd * s * 0.015 : 0;
+        var bx = cx + sd * s * 0.055, by = yTop - headH * 0.55, tx = bx + sd * s * 0.018 + twitch, ty = by - s * 0.13, bw = s * 0.038;
+        for (var ey = Math.floor(ty); ey <= by + 1; ey++) {
+          var k = Math.min(1, (ey - ty) / (by - ty)), ex = tx + (bx - tx) * k, w = Math.max(0.6, bw * Math.sin(Math.min(1, k * 1.25) * Math.PI / 2));
+          for (var exx = Math.ceil(ex - w); exx <= ex + w; exx++) {
+            var rim = Math.abs(exx - ex) > w - 1.2 || ey === Math.floor(ty);
+            blk(exx, ey); pt(exx, ey, rim ? col[3] : col[0], rim ? 1 : 1);
+          }
+        }
+      });
+      // Crin: franja clara al centro que se mece con el viento; el tupé cae entre las orejas.
+      for (var my = Math.floor(yTop - headH * 0.9); my < rows; my++) {
+        var mk = Math.max(0, (my - yTop) / (bottom - yTop)), sway = reduced ? 0 : Math.sin(t * 3 + my * 0.35) * s * 0.01 * (0.3 + mk);
+        var mw = s * (my < yTop ? 0.025 : 0.018 + 0.03 * mk) + (rnd(my, 1, 31) - 0.5) * s * 0.018, mc = cx + sway;
+        for (var mx = Math.ceil(mc - mw); mx <= mc + mw; mx++) pt(mx, my, rnd(mx, my, 17) > 0.4 ? col[3] : col[2], 0.95);
+      }
+      // Riendas y manos.
+      var hands = [-1, 1].map(function (sd) { return [cx + sd * Math.min(s * 0.36, cols * 0.4), rows - s * 0.09 + bob * 0.5]; });
+      [-1, 1].forEach(function (sd, i) {
+        var ry = yTop + s * 0.1, a = [cx + sd * (neckHalf(ry) - 1), ry], b = hands[i], n = Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]));
+        for (var k = 0; k <= n; k++) { var u = k / n; pt(a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u + Math.sin(u * Math.PI) * s * 0.03, col[2], 1, dot + 1); }
+      });
+      hands.forEach(function (h) {
+        var rx = s * 0.06, ry = s * 0.04;
+        for (var y2 = Math.floor(h[1] - ry); y2 <= h[1] + ry; y2++) for (var x2 = Math.floor(h[0] - rx); x2 <= h[0] + rx; x2++) {
+          var q = Math.pow((x2 - h[0]) / rx, 2) + Math.pow((y2 - h[1]) / ry, 2); if (q > 1) continue;
+          blk(x2, y2);
+          var knuckle = y2 === Math.floor(h[1] - ry * 0.4) && (x2 % 2 === 0);
+          pt(x2, y2, q > 0.7 || knuckle ? col[2] : col[1], q > 0.7 ? 1 : 0.7);
+        }
+      });
     }
     build();
     var lw = el.clientWidth;
