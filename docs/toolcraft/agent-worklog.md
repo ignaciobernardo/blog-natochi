@@ -18,3 +18,10 @@
 - Defaults from user screenshots: scale 114%, tracking 0%, letter width 63%, stripe pitch 7 px, ink width 72%, edge threshold 85%, grain 49%, paper `#EEE800`, ink `#002800`.
 - Renderer and export: a shared poster text layout drives Canvas preview, PNG, and SVG. Text is escaped in SVG. The lower phrase distributes its words across the poster width, and copy shrinks to fit its allotted space.
 - Verification: checked defaults, live copy edits, SVG text, PNG signature, clean layout visibility, and desktop/mobile browser previews.
+
+## 2026-09-30 — Poster edits not refreshing for existing visitors
+
+- Reproduction: a fresh browser session on the live site updates the poster; the published page loads unversioned `app.js` and `style.css`, both served with a four-hour cache lifetime. The previous `app.js` does not register listeners for the new poster fields.
+- Root cause: an existing visitor can receive the new HTML with the cached script from the first release.
+- Fix: version the script and stylesheet URLs in the HTML so the browser requests the current assets.
+- Verification: repeat the live poster edit after deployment with the versioned URLs.
