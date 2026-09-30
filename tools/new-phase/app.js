@@ -1,10 +1,11 @@
 const $ = (id) => document.getElementById(id);
 const preview = $('preview');
-const fields = ['text','format','layout','scale','tracking','condense','pitch','weight','threshold','grain','paper','ink'];
+const fields = ['text','format','layout','scale','tracking','poster1','poster2','poster3','posterCredit','posterFooter','condense','pitch','weight','threshold','grain','paper','ink'];
 const formats = {square:[1200,1200],landscape:[1600,900],portrait:[1080,1350]};
 let customFont = null;
 let fontUrl = null;
 let queued = false;
+const posterMeasure = document.createElement('canvas').getContext('2d');
 
 function settings(){
   return Object.fromEntries(fields.map(id=>[id,$(id).value]));
@@ -25,16 +26,70 @@ function paper(ctx,w,h,color,grain){
   }
   ctx.putImageData(image,0,0);
 }
-function editorial(ctx,w,h,ink){
+function wrappedBlock(value,width,size){
+  posterMeasure.font=`700 ${size}px Arial, sans-serif`;
+  const lines=[];
+  for(const paragraph of value.toUpperCase().split('\n')){
+    let line='';
+    for(const word of paragraph.trim().split(/\s+/).filter(Boolean)){
+      if(posterMeasure.measureText(word).width>width){
+        if(line){lines.push(line);line='';}
+        let part='';
+        for(const letter of Array.from(word)){
+          const next=part+letter;
+          if(part&&posterMeasure.measureText(next).width>width){lines.push(part);part=letter;}
+          else part=next;
+        }
+        line=part;
+        continue;
+      }
+      const next=line?`${line} ${word}`:word;
+      if(line&&posterMeasure.measureText(next).width>width){lines.push(line);line=word;}
+      else line=next;
+    }
+    if(line)lines.push(line);
+  }
+  return lines;
+}
+function posterItems(s){
+  const items=[];
+  [[s.poster1,64,295],[s.poster2,420,355],[s.poster3,842,295]].forEach(([value,x,width])=>{
+    let size=29,lines=[];
+    do{
+      lines=wrappedBlock(value,width,size);
+      posterMeasure.font=`700 ${size}px Arial, sans-serif`;
+      if(lines.length*size*1.02<=170&&lines.every(line=>posterMeasure.measureText(line).width<=width))break;
+      size--;
+    }while(size>10);
+    lines.forEach((line,i)=>items.push({text:line,x,y:65+i*size*1.02,size}));
+  });
+  let size=27;
+  const credit=s.posterCredit.trim().toUpperCase();
+  while(size>10){posterMeasure.font=`700 ${size}px Arial, sans-serif`;if(posterMeasure.measureText(credit).width<=650)break;size--;}
+  if(credit)items.push({text:credit,x:64,y:528,size});
+  const words=s.posterFooter.trim().toUpperCase().split(/\s+/).filter(Boolean);
+  size=25;
+  while(size>8){
+    posterMeasure.font=`700 ${size}px Arial, sans-serif`;
+    const width=words.reduce((sum,word)=>sum+posterMeasure.measureText(word).width,0);
+    if(width+Math.max(0,words.length-1)*8<=1072)break;
+    size--;
+  }
+  posterMeasure.font=`700 ${size}px Arial, sans-serif`;
+  const widths=words.map(word=>posterMeasure.measureText(word).width);
+  const total=widths.reduce((a,b)=>a+b,0);
+  const gap=words.length>1?(1072-total)/(words.length-1):0;
+  let x=words.length===1?64+(1072-total)/2:64;
+  words.forEach((word,i)=>{items.push({text:word,x,y:1111,size});x+=widths[i]+gap;});
+  return items;
+}
+function editorial(ctx,w,h,s){
   const sx=w/1200, sy=h/1200, k=Math.min(sx,sy);
-  ctx.save();ctx.fillStyle=ink;ctx.textBaseline='top';ctx.font=`700 ${29*k}px Arial, sans-serif`;
-  const blocks=[['NEW PHASE IS','A DECORATIVE','DISPLAY','TYPEFACE.'],['INSPIRED BY MEDIE-','VAL LETTERING AND','ARCHITECTURAL','RHYTHM.'],['AN EXPERIMENTAL','FONT WITH A','TRANSITION','EFFECT.']];
-  [64,420,842].forEach((x,i)=>blocks[i].forEach((line,j)=>ctx.fillText(line,x*sx,(65+j*29)*sy)));
-  ctx.font=`700 ${27*k}px Arial, sans-serif`;ctx.fillText('BY SOFTULKA',64*sx,528*sy);
-  ctx.font=`700 ${25*k}px Arial, sans-serif`;
-  const footer=['A','SIMPLE','SHAPE','WITH','A','HALFTONE','TEXTURE.'];
-  const xs=[64,155,336,508,663,752,982];
-  footer.forEach((word,i)=>ctx.fillText(word,xs[i]*sx,1111*sy));
+  ctx.save();ctx.fillStyle=s.ink;ctx.textBaseline='top';
+  for(const item of posterItems(s)){
+    ctx.font=`700 ${item.size*k}px Arial, sans-serif`;
+    ctx.fillText(item.text,item.x*sx,item.y*sy);
+  }
   ctx.restore();
 }
 function measureLine(ctx,line,size,tracking,condense){
@@ -110,7 +165,7 @@ function render(w,h,s,canvas,vector=false){
   const ctx=canvas.getContext('2d');
   const ratio=w/formats[s.format][0];
   paper(ctx,w,h,s.paper,Number(s.grain));
-  if(s.layout==='poster')editorial(ctx,w,h,s.ink);
+  if(s.layout==='poster')editorial(ctx,w,h,s);
   const {canvas:maskCanvas,mask,lines}=textMask(w,h,s);
   if(customFont){
     // The supplied font may already contain its own stripe pattern.
@@ -131,6 +186,7 @@ function render(w,h,s,canvas,vector=false){
 function refresh(){
   queued=false;const s=settings(),[w,h]=formats[s.format];
   $('dimensionLabel').textContent=`${w} × ${h} PX`;
+  $('posterCopy').hidden=s.layout!=='poster';
   const outputs={scale:v=>`${v}%`,tracking:v=>`${v>0?'+':''}${v}%`,condense:v=>`${v}%`,pitch:v=>`${v} px`,weight:v=>`${v}%`,threshold:v=>`${v}%`,grain:v=>`${v}%`};
   for(const [key,format] of Object.entries(outputs))$(key+'Val').textContent=format(Number(s[key]));
   render(w,h,s,preview);
@@ -152,12 +208,9 @@ $('svg').addEventListener('click',()=>{
   const {rects}=render(w,h,s,canvas,true);
   let svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><title>${escapeXml(s.text)}</title><rect width="100%" height="100%" fill="${s.paper}"/>`;
   if(s.layout==='poster'){
-    const blocks=[['NEW PHASE IS','A DECORATIVE','DISPLAY','TYPEFACE.'],['INSPIRED BY MEDIE-','VAL LETTERING AND','ARCHITECTURAL','RHYTHM.'],['AN EXPERIMENTAL','FONT WITH A','TRANSITION','EFFECT.']];
     const sx=w/1200,sy=h/1200,k=Math.min(sx,sy);
     svg+=`<g fill="${s.ink}" font-family="Arial,sans-serif" font-weight="700">`;
-    [64,420,842].forEach((x,i)=>blocks[i].forEach((line,j)=>svg+=`<text x="${x*sx}" y="${(89+j*29)*sy}" font-size="${29*k}">${escapeXml(line)}</text>`));
-    svg+=`<text x="${64*sx}" y="${550*sy}" font-size="${27*k}">BY SOFTULKA</text>`;
-    ['A','SIMPLE','SHAPE','WITH','A','HALFTONE','TEXTURE.'].forEach((word,i)=>svg+=`<text x="${[64,155,336,508,663,752,982][i]*sx}" y="${1133*sy}" font-size="${25*k}">${word}</text>`);
+    for(const item of posterItems(s))svg+=`<text x="${item.x*sx}" y="${(item.y+item.size*.83)*sy}" font-size="${item.size*k}">${escapeXml(item.text)}</text>`;
     svg+='</g>';
   }
   svg+=`<g fill="${s.ink}">`+rects.map(([x,y,bw,bh])=>`<rect x="${x}" y="${y}" width="${bw}" height="${bh}"/>`).join('')+'</g></svg>';
