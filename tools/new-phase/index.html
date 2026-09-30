@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1e1e1b">
+  <meta name="description" content="Un laboratorio tipográfico de líneas verticales inspirado en New Phase.">
+  <link rel="icon" href="/favicon.png">
+  <link rel="stylesheet" href="./style.css">
+  <title>Phase Lines — natochi tools</title>
+</head>
+<body>
+  <header class="topbar"><a href="/tools/" class="back">← <span>natochi / tools</span></a><span class="top-title">PHASE LINES <i>↗</i></span><span class="top-index">TYPE EXPERIMENT / 015</span></header>
+  <main>
+    <section class="workspace" aria-label="Vista previa">
+      <div class="workspace-head"><span>01 / LIENZO</span><span id="dimensionLabel">1200 × 1200 PX</span></div>
+      <div class="preview-wrap"><canvas id="preview" width="1200" height="1200" aria-label="Previsualización del texto"></canvas></div>
+      <div class="workspace-foot"><span>VISTA EN TIEMPO REAL</span><span>HECHO EN TU NAVEGADOR</span></div>
+    </section>
+    <aside class="panel">
+      <div class="panel-intro"><div class="small-label">ESTUDIO TIPOGRÁFICO / 001</div><h1>Phase<br><em>Lines.</em></h1><p>Convierte tus palabras en una composición de columnas de tinta. Inspirado en el ritmo visual de <a href="https://supply.family/shop/new-phase/" target="_blank" rel="noopener noreferrer">New Phase de Softulka ↗</a>.</p></div>
+      <div class="panel-scroll">
+        <section class="control-group"><h2><b>01</b> Texto</h2><label for="text">TU TEXTO</label><textarea id="text" rows="2" spellcheck="false" maxlength="100">NEW PHASE</textarea><p class="hint">Usa Enter para separar líneas.</p></section>
+        <section class="control-group"><h2><b>02</b> Composición</h2><label for="format">FORMATO</label><select id="format"><option value="square">Cuadrado · 1200 × 1200</option><option value="landscape">Horizontal · 1600 × 900</option><option value="portrait">Vertical · 1080 × 1350</option></select><label for="layout">PRESENTACIÓN</label><select id="layout"><option value="poster">Póster editorial</option><option value="clean">Solo tipografía</option></select><div class="range-head"><label for="scale">ESCALA DEL TEXTO</label><output id="scaleVal">100%</output></div><input type="range" id="scale" min="50" max="125" value="100"><div class="range-head"><label for="tracking">ESPACIADO</label><output id="trackingVal">+3%</output></div><input type="range" id="tracking" min="-8" max="14" value="3"></section>
+        <section class="control-group"><h2><b>03</b> Construcción</h2><div class="range-head"><label for="condense">ANCHO DE LETRA</label><output id="condenseVal">23%</output></div><input type="range" id="condense" min="20" max="85" value="23"><div class="range-head"><label for="pitch">DISTANCIA ENTRE LÍNEAS</label><output id="pitchVal">13 px</output></div><input type="range" id="pitch" min="7" max="26" value="13"><div class="range-head"><label for="weight">GROSOR DE TINTA</label><output id="weightVal">70%</output></div><input type="range" id="weight" min="35" max="90" value="70"><div class="range-head"><label for="threshold">RECORTE DE BORDES</label><output id="thresholdVal">50%</output></div><input type="range" id="threshold" min="15" max="85" value="50"><div class="range-head"><label for="grain">GRANO DE PAPEL</label><output id="grainVal">25%</output></div><input type="range" id="grain" min="0" max="70" value="25"></section>
+        <section class="control-group"><h2><b>04</b> Acabado</h2><div class="color-row"><label>PAPEL <input type="color" id="paper" value="#eeeade"></label><label>TINTA <input type="color" id="ink" value="#282824"></label></div><label class="upload" for="fontFile"><span id="fontName">Cargar tu fuente (OTF / TTF / WOFF)</span><strong>＋</strong></label><input id="fontFile" type="file" accept=".otf,.ttf,.woff,.woff2" hidden><p class="hint">Si tienes New Phase, cárgala aquí. El archivo se usa solo en este navegador. <button id="removeFont" class="inline-button" hidden>Quitar fuente</button></p></section>
+      </div>
+      <div class="panel-bottom"><div class="export-row"><button id="png" class="primary">DESCARGAR PNG <span>↗</span></button><button id="svg" class="secondary" title="Exportar líneas vectoriales">SVG</button></div><p id="status" role="status" aria-live="polite">Listo para exportar · PNG 2400 px</p></div>
+    </aside>
+  </main>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
