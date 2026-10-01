@@ -1,0 +1,65 @@
+---
+import '@fontsource/space-grotesk/latin-400.css';
+import '@fontsource/space-grotesk/latin-500.css';
+import '@fontsource/space-grotesk/latin-600.css';
+import '@fontsource/ibm-plex-serif/latin-500.css';
+import '../styles/global.css';
+const possibilities = [
+ { icon: '◎', title: 'Muestras en qué estás.', text: 'Aunque esté a medias. Siempre hay alguien que te tira una idea, un dato o un contacto.' },
+ { icon: '■', title: 'Conoces gente de otro rubro.', text: 'Una ilustradora, alguien que programa, alguien que hace música. Gente con la que no te toparías en tu pega.' },
+ { icon: '⊞', title: 'Pruebas cosas.', text: 'Hay tiempo para probar, equivocarse y partir de nuevo, sin que nadie espere un resultado.' },
+ { icon: '◈', title: 'Sale algo que no tenías planeado.', text: 'A veces un proyecto en conjunto, a veces solo una buena conversación. Las dos cuentan.' },
+];
+---
+<!doctype html>
+<html lang="es">
+ <head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Punto — arte, diseño y tecnología</title>
+  <meta name="description" content="Encuentros para gente que hace cosas en arte, diseño y tecnología."/>
+  <meta name="theme-color" content="#171817"/>
+  <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`}/>
+ </head>
+ <body>
+  <a class="skip-link" href="#contenido">Ir al contenido</a>
+  <canvas id="walkers" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+  <header class="header">
+   <a class="wordmark" href="#inicio" aria-label="Punto, inicio">Punto<span class="logo-dot">.</span></a>
+   <nav aria-label="Navegación principal"><a href="#el-punto">El punto</a><a href="#encuentros">Lo que pasa aquí</a><a href="#ser-parte">Encontrémonos <span aria-hidden="true">↗</span></a></nav>
+  </header>
+  <main id="contenido">
+   <section class="intro prose" id="inicio">
+    <p class="eyebrow">ARTE, DISEÑO Y TECNOLOGÍA</p>
+    <h1>Un punto de encuentro<br/>para gente que crea.</h1>
+    <p>Juntamos a gente de arte, diseño y tecnología<br class="desktop-break"/> que está haciendo algo, para que se conozca.</p>
+    <a class="text-link intro-link" href="#el-punto">Qué es Punto <span aria-hidden="true">↓</span></a>
+   </section>
+   <section class="prose about" id="el-punto">
+    <span class="section-number" aria-hidden="true">01 /</span>
+    <h2>La mayoría de las ideas<br class="desktop-break"/> se quedan en la cabeza.</h2>
+    <p>Tienes algo dando vueltas hace meses. Se lo cuentas a un par de amigos, te dicen que está bueno, y ahí queda.</p>
+    <p>Casi siempre falta lo mismo: alguien más metido en el tema, que te pregunte cómo va y te diga qué le cambiaría.</p>
+    <p><strong>Punto es esa mesa.</strong> Gente que está haciendo cosas y quiere ver lo que estás haciendo tú.</p>
+   </section>
+   <section class="prose opportunities" id="encuentros">
+    <span class="section-number" aria-hidden="true">02 /</span>
+    <h2>Lo que pasa cuando<br class="desktop-break"/> nos juntamos</h2>
+    <ul class="possibilities">{possibilities.map(item=><li><span class="bullet" aria-hidden="true">{item.icon}</span><p><strong>{item.title}</strong><br/>{item.text}</p></li>)}</ul>
+   </section>
+   <section class="prose closing" id="ser-parte">
+    <span class="section-number" aria-hidden="true">03 /</span>
+    <h2>Trae lo que tengas.</h2>
+    <p>Un boceto, un prototipo, una pregunta.<br/>No tiene que estar listo para mostrarlo.</p>
+    <button class="text-link direction-button" id="reroute">Cambiar el rumbo <span aria-hidden="true">↗</span></button>
+    <p class="little-note" id="direction-note" role="status" aria-live="polite">Aprieta y mira cómo se mueven los personajes.</p>
+   </section>
+  </main>
+  <footer><a class="footer-brand" href="#inicio">Punto.</a><p>Arte, diseño y tecnología en la misma mesa.</p><a href="#inicio" class="back-top">Volver arriba <span aria-hidden="true">↑</span></a></footer>
+  <button id="motion-toggle" class="motion-toggle" aria-label="Pausar personajes" aria-pressed="false"><span class="motion-symbol" aria-hidden="true">Ⅱ</span><span class="motion-label">Pausar</span></button>
+  <script>
+   import { startWalkers } from '../scripts/walkers.js';
+   startWalkers();
+  </script>
+ </body>
+</html>
