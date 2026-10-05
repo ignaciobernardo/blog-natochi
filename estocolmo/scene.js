@@ -531,7 +531,7 @@ if (tidy) {
   const st = {
     mode: 'off', x: DOOR[0], z: DOOR[1], y: 0, face: 0, ph: 0, m: 0,
     chair: null, target: null, pickI: null, wait: 0, alpha: 0, lean: 0,
-    anger: 0, mad: false, red: 0, t: 0, messLeft: 0, cool: 0, leftAt: -1e9, picked: new Set(),
+    anger: 0, mad: false, red: 0, fury: 0, hd: 0, turn: 0, turnIn: 0, t: 0, messLeft: 0, cool: 0, leftAt: -1e9, picked: new Set(),
   };
   const angDiff = (a, b) => Math.atan2(Math.sin(a - b), Math.cos(a - b));
   const misplaced = (c, i) => Math.hypot(c.x - home[i].x, c.z - home[i].z) > 0.1 || Math.abs(angDiff(home[i].rot, c.drot)) > 0.12;
@@ -584,11 +584,7 @@ if (tidy) {
 
   tidyInterrupt = () => {
     if (st.mode === 'off' || (st.mode === 'leave' && st.mad)) return;
-    if (st.mode === 'angry' || st.mode === 'mess') {
-      // ignores you; only lets go if you grab the chair out of their hands
-      if (st.chair !== null && drag && drag.chair === chairs[st.chair]) drop();
-      return;
-    }
+    if (st.mode === 'angry' || st.mode === 'rampage' || st.mode === 'calm') return; // ignores you
     drop();
     if (st.mode !== 'pause') {
       st.anger += 1;
@@ -625,22 +621,53 @@ if (tidy) {
     }
     if (st.mode === 'angry') {
       faceTo(az, dt);
-      if (st.t > 1.7) { st.mode = 'mess'; st.messLeft = 4 + ((Math.random() * 2) | 0); st.picked.clear(); st.pickI = null; }
+      if (st.t > 1.4) { st.mode = 'rampage'; st.fury = 1; st.hd = st.face; st.turnIn = 0; st.turn = 0; }
     }
-    if (st.mode === 'mess') {
-      if (st.chair === null) {
-        if (st.messLeft <= 0) st.mode = 'leave';
-        else {
-          if (st.pickI === null) {
-            const pool = chairs.map((c, i) => i).filter((i) => !st.picked.has(i) && !(drag && drag.chair === chairs[i]));
-            st.pickI = pool[(Math.random() * pool.length) | 0];
-            st.target = randomSpot();
-          }
-          moving = !approach(st.pickI, st.target, 1.6, dt);
-          if (!moving) { st.chair = st.pickI; chairs[st.chair].carried = true; st.picked.add(st.pickI); st.pickI = null; st.wait = 0.08; }
+    if (st.mode === 'rampage') {
+      // runs around erratically, shoving chairs with the body; the anger wears off slowly
+      st.fury = Math.max(0, st.fury - dt / 12);
+      const f = st.fury;
+      st.turnIn -= dt;
+      if (st.turnIn <= 0) {
+        st.turn = (Math.random() * 2 - 1) * (1.5 + 5 * f);
+        st.turnIn = 0.25 + Math.random() * (0.5 + (1 - f) * 0.9);
+        if (Math.random() < 0.25 * f) st.hd += (Math.random() < 0.5 ? -1 : 1) * (1.2 + Math.random()); // sudden swerve
+      }
+      st.hd += st.turn * dt;
+      // drift back toward the middle so the whole terrace gets it
+      const dc = Math.hypot(center.x - st.x, center.z - st.z);
+      if (dc > 1.6) st.hd += angDiff(Math.atan2(center.x - st.x, center.z - st.z), st.hd) * Math.min(1, dt * (dc - 1.4) * 1.2);
+      const speed = 0.55 + 1.75 * f;
+      let nx = st.x + Math.sin(st.hd) * speed * dt, nz = st.z + Math.cos(st.hd) * speed * dt;
+      const probe = { x: nx, z: nz }; constrain(probe);
+      if (Math.abs(probe.x - nx) + Math.abs(probe.z - nz) > 1e-4) {
+        // hit a wall/column: turn toward the middle
+        st.hd = Math.atan2(center.x - st.x, center.z - st.z) + (Math.random() - 0.5) * 1.2;
+        nx = probe.x; nz = probe.z;
+      }
+      st.x = nx; st.z = nz;
+      faceTo(st.hd, dt * 1.5);
+      moving = true;
+      // shove any chair in the way
+      const R = 0.46;
+      let shoved = false;
+      for (const c of chairs) {
+        if (drag && drag.chair === c) continue;
+        const dx = c.x - st.x, dz = c.z - st.z, d = Math.hypot(dx, dz);
+        if (d < R) {
+          const k = (R - d) / (d || 1);
+          c.x += dx * k * 1.05; c.z += dz * k * 1.05;
+          c.drot += (Math.random() - 0.5) * 6 * dt * (0.3 + f) + Math.sign(dx * Math.cos(st.hd) - dz * Math.sin(st.hd)) * 2.2 * dt;
+          shoved = true;
         }
-      } else if (st.wait > 0) st.wait -= dt;
-      else { const [done, mv] = carry(dt, 1.5); moving = mv; if (done) st.messLeft -= 1; }
+      }
+      if (shoved) separate(null);
+      if (f <= 0) { st.mode = 'calm'; st.t = 0; }
+    }
+    if (st.mode === 'calm') {
+      // catches their breath, looks at you, then gets back to tidying
+      faceTo(az, dt * 0.6);
+      if (st.t > 1.8) { st.mode = 'seek'; st.mad = false; st.anger = 0; }
     }
     if (st.mode === 'leave') {
       moving = true;
@@ -653,11 +680,12 @@ if (tidy) {
     if (st.mode === 'pause') faceTo(az, dt); // turn and look at you
 
     st.m += ((moving ? 1 : 0) - st.m) * Math.min(1, dt * 8);
-    st.ph += dt * 4.4 * st.m * (st.mad ? 1.45 : 1);
+    const fury = st.mode === 'rampage' ? st.fury : 0;
+    st.ph += dt * 4.4 * st.m * (1 + fury * 1.1);
     walkPose(p, st.ph, st.m);
     const holding = st.chair !== null ? 1 : 0;
     st.lean += (holding - st.lean) * Math.min(1, dt * 6);
-    p.torso.rotation.x = 0.14 * st.lean;
+    p.torso.rotation.x = 0.14 * st.lean + fury * 0.22 + (st.mode === 'calm' ? 0.18 + Math.sin(st.t * 5) * 0.05 : 0);
     const fuming = st.mode === 'angry';
     for (const [k, a] of p.arms.entries()) {
       a.upper.rotation.z = 0;
@@ -666,13 +694,22 @@ if (tidy) {
         a.upper.rotation.x = -2.75 + Math.sin(st.t * 28 + k * 2) * 0.28;
         a.upper.rotation.z = (k ? -1 : 1) * 0.32;
         a.fore.rotation.x = -0.5;
+      } else if (fury > 0) {
+        // flailing while running, settles as the fury fades
+        const w = Math.min(1, fury * 1.6);
+        a.upper.rotation.x = a.upper.rotation.x * (1 - w) + (-2.2 + Math.sin(st.t * 22 + k * 2.5) * 0.7) * w;
+        a.upper.rotation.z = (k ? -1 : 1) * 0.45 * w;
+        a.fore.rotation.x = -0.6 * w + a.fore.rotation.x * (1 - w);
       }
     }
-    p.head.rotation.y = fuming ? Math.sin(st.t * 24) * 0.35 : 0;
-    const hop = fuming ? Math.abs(Math.sin(st.t * 13)) * 0.08 : 0;
+    p.head.rotation.y = fuming ? Math.sin(st.t * 24) * 0.35 : fury * Math.sin(st.t * 17) * 0.3;
+    const hop = fuming ? Math.abs(Math.sin(st.t * 13)) * 0.08 : fury * Math.abs(Math.sin(st.ph)) * 0.05;
 
-    st.red += ((st.mad ? 1 : 0) - st.red) * Math.min(1, dt * 5);
-    tLine.color.copy(CALM).lerp(MAD, st.red);
+    const redT = st.mode === 'angry' ? 1 : st.mode === 'rampage' ? Math.min(1, 0.15 + st.fury * 1.1) : 0;
+    st.red += (redT - st.red) * Math.min(1, dt * (st.mode === 'calm' ? 1.2 : 5));
+    // the red pulses while furious
+    const pulse = st.mode === 'angry' || (st.mode === 'rampage' && st.fury > 0.3) ? 0.82 + 0.18 * Math.sin(st.t * 14) : 1;
+    tLine.color.copy(CALM).lerp(MAD, st.red * pulse);
 
     const dDoor = Math.hypot(st.x - DOOR[0], st.z - DOOR[1]);
     const aT = st.mode === 'leave' ? Math.min(1, dDoor / 0.8) : 1;
