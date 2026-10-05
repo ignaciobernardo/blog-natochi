@@ -1,6 +1,6 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js';
 
-export function mount({ canvas, stage, statusEl, hoverLights = false }) {
+export function mount({ canvas, stage, statusEl, hoverLights = false, azimuth = Math.PI / 4 }) {
 
 
 // ---------- palette ----------
@@ -384,7 +384,7 @@ function separate(dragged) {
 
 // ---------- camera fit ----------
 const TARGET = v(0, 0.9, -0.2);
-let az = Math.PI / 4, azTarget = az;
+let az = azimuth, azTarget = az;
 const EL = Math.atan(1 / Math.SQRT2) + 0.02;
 const AZ_MIN = Math.PI / 4 - 0.7, AZ_MAX = Math.PI / 4 + 0.7;
 const bboxCorners = [];
