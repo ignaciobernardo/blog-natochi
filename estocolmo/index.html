@@ -70,15 +70,11 @@
 
 <section class="stage" id="stage">
   <canvas id="c" aria-label="Terraza isométrica interactiva: arrastra las sillas, click en las ampolletas para encenderlas"></canvas>
-  <div class="label tl">Fig 1 &middot; la terraza</div>
-  <div class="label tr"><a href="terraza/">fotos &rarr;</a></div>
-  <div class="label bl">mueve las sillas &middot; <span class="click">click en</span><span class="tap">toca</span> las luces</div>
-  <div class="label br" id="status"></div>
 </section>
 
 <script type="module">
 import { mount } from "./scene.js";
-mount({ canvas: document.getElementById("c"), stage: document.getElementById("stage"), statusEl: document.getElementById("status") });
+mount({ canvas: document.getElementById("c"), stage: document.getElementById("stage"), statusEl: document.createElement("div") });
 </script>
 </body>
 </html>
