@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Estocolmo</title>
+<meta name="description" content="Una terraza en Santiago. Mueve las sillas.">
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://natochi.cv/estocolmo/terraza">
+<meta property="og:title" content="Estocolmo">
+<meta property="og:description" content="Una terraza en Santiago. Mueve las sillas.">
+<meta property="og:image" content="https://natochi.cv/estocolmo/img/1.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --ink: #d8d8d8;
+    --mute: #6a6a6a;
+    --faint: #2a2a2a;
+    --warm: #ffcf8a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--bg); }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    letter-spacing: .06em;
+    -webkit-font-smoothing: antialiased;
+  }
+  .stage {
+    position: relative;
+    height: 100vh;
+    height: 100svh;
+    overflow: hidden;
+    background: radial-gradient(60% 55% at 50% 52%, rgba(255,190,110,0) 0%, rgba(255,190,110,0) 100%), var(--bg);
+    transition: background 1.2s ease;
+  }
+  .stage.lit {
+    background: radial-gradient(60% 55% at 50% 50%, rgba(255,186,100,.075) 0%, rgba(255,186,100,0) 100%), var(--bg);
+  }
+  canvas { display: block; width: 100%; height: 100%; touch-action: pan-y; outline: none; }
+  .label {
+    position: absolute;
+    color: var(--mute);
+    text-transform: uppercase;
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .tl { top: 24px; left: 24px; color: var(--ink); text-transform: none; }
+  .tr { top: 24px; right: 24px; }
+  .bl { bottom: 24px; left: 24px; }
+  .br { bottom: 24px; right: 24px; text-transform: none; }
+  .tap { display: none; }
+  @media (hover: none) { .tap { display: inline; } .click { display: none; } }
+  .br b { font-weight: 400; color: var(--ink); }
+  .scroll {
+    position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%);
+    width: 1px; height: 28px; background: linear-gradient(var(--mute), transparent);
+    pointer-events: none;
+  }
+
+  main { max-width: 1120px; margin: 0 auto; padding: 120px 24px 96px; }
+  .intro {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    border-top: 1px solid var(--faint); padding-top: 20px; margin-bottom: 72px;
+  }
+  .intro h1 { font-size: 12px; font-weight: 400; text-transform: uppercase; color: var(--mute); }
+  .intro p { font-size: 15px; line-height: 1.6; letter-spacing: .01em; max-width: 34ch; color: var(--ink); }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 56px 24px; }
+  figure img {
+    width: 100%; height: auto; display: block; aspect-ratio: 3 / 2; object-fit: cover;
+    filter: saturate(.9);
+  }
+  figure.wide { grid-column: 1 / -1; }
+  figcaption {
+    display: flex; justify-content: space-between; margin-top: 10px;
+    color: var(--mute); text-transform: uppercase;
+  }
+  footer {
+    display: flex; justify-content: space-between; color: var(--mute);
+    border-top: 1px solid var(--faint); padding-top: 20px; margin-top: 96px;
+    text-transform: uppercase;
+  }
+  footer a { color: var(--mute); text-decoration: none; }
+  footer a:hover { color: var(--ink); }
+
+  @media (max-width: 720px) {
+    .tl, .tr { top: 16px; } .tl, .bl { left: 16px; } .tr, .br { right: 16px; }
+    .bl, .br { bottom: 16px; }
+    .bl { bottom: 36px; }
+    .scroll { display: none; }
+    main { padding: 80px 16px 64px; }
+    .intro { grid-template-columns: 1fr; }
+    .grid { grid-template-columns: 1fr; gap: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<section class="stage" id="stage">
+  <canvas id="c" aria-label="Terraza isométrica interactiva: arrastra las sillas, click en las ampolletas para encenderlas"></canvas>
+  <div class="label tl">Fig 1</div>
+  <div class="label tr">Estocolmo &middot; Terraza</div>
+  <div class="label bl">Arrastra las sillas &middot; <span class="click">click en</span><span class="tap">toca</span> las luces</div>
+  <div class="label br" id="status">luces off &middot; 10 sillas</div>
+  <div class="scroll"></div>
+</section>
+
+<main>
+  <div class="intro">
+    <h1>Estocolmo</h1>
+    <p>Una terraza en Santiago. Diez sillas de mimbre, una guirnalda de ampolletas y gente construyendo cosas.</p>
+  </div>
+  <div class="grid">
+    <figure class="wide"><img src="../img/1.jpg" alt="Grupo trabajando en laptops en la terraza" loading="lazy"><figcaption><span>Fig 2</span><span>Mediodía</span></figcaption></figure>
+    <figure><img src="../img/2.jpg" alt="Círculo de sillas de mimbre en la terraza" loading="lazy"><figcaption><span>Fig 3</span><span>El círculo</span></figcaption></figure>
+    <figure><img src="../img/3.jpg" alt="Vista hacia la ciudad desde la terraza" loading="lazy"><figcaption><span>Fig 4</span><span>Hacia el oriente</span></figcaption></figure>
+    <figure><img src="../img/4.jpg" alt="La pérgola de hormigón sobre la terraza" loading="lazy"><figcaption><span>Fig 5</span><span>La pérgola</span></figcaption></figure>
+    <figure><img src="../img/6.jpg" alt="Vista lateral de la terraza bajo la pérgola" loading="lazy"><figcaption><span>Fig 6</span><span>Desde la escalera</span></figcaption></figure>
+    <figure class="wide"><img src="../img/5.jpg" alt="Foto grupal en la terraza con la ciudad de fondo" loading="lazy"><figcaption><span>Fig 7</span><span>Todos</span></figcaption></figure>
+  </div>
+  <footer><span>Estocolmo</span><a href="/estocolmo/">Request for events</a></footer>
+</main>
+
+<script type="module">
+import { mount } from "../scene.js";
+mount({ canvas: document.getElementById("c"), stage: document.getElementById("stage"), statusEl: document.getElementById("status") });
+</script>
+</body>
+</html>
