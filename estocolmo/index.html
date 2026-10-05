@@ -20,37 +20,22 @@
   * { box-sizing: border-box; }
   html, body { margin: 0; min-height: 100%; background: #030303; }
   body {
-    min-height: 100svh;
-    display: flex; flex-direction: column; align-items: center;
-    padding: clamp(28px, 8vh, 80px) 20px clamp(40px, 10vh, 96px);
     font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
     color: #d8d8d8;
   }
   ::selection { background: #fff; color: #030303; }
+  .layout {
+    min-height: 100svh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: clamp(28px, 8vh, 80px) 20px clamp(40px, 10vh, 96px);
+  }
   .col { width: min(360px, 100%); }
   p { margin: 0 0 1.1em; font-size: 1.02rem; line-height: 1.65; text-align: justify; hyphens: auto; }
-  .title { font-style: italic; }
+  .title { font-style: italic; font-size: 1.42rem; line-height: 1.25; margin-bottom: .9em; text-align: left; }
   a { color: #d8d8d8; text-decoration: underline; text-decoration-color: #555; text-underline-offset: 3px; }
   a:hover { text-decoration-color: #d8d8d8; }
   .cta { margin: 1.6em 0 0; text-align: left; }
-
-  /* highlighted phrase that opens a photo underneath */
-  .hl {
-    font: inherit; color: inherit; letter-spacing: inherit;
-    border: 0; padding: 0 .12em; margin: 0 -.12em; cursor: pointer;
-    background: rgba(255,255,255,.11);
-    -webkit-box-decoration-break: clone; box-decoration-break: clone;
-    transition: background .2s ease;
-  }
-  .hl:hover { background: rgba(255,255,255,.19); }
-  a.hl { text-decoration: none; }
-  .hl[aria-expanded="true"] { background: rgba(255,255,255,.24); }
-  .hl:focus-visible { outline: 1px solid #d8d8d8; outline-offset: 2px; }
-  .reveal { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s cubic-bezier(.2,.7,.2,1), margin .45s cubic-bezier(.2,.7,.2,1); margin: 0; }
-  .reveal > div { overflow: hidden; }
-  .reveal img { display: block; width: 100%; height: auto; opacity: 0; transform: translateY(-6px); transition: opacity .4s ease .05s, transform .45s cubic-bezier(.2,.7,.2,1); }
-  .reveal.open { grid-template-rows: 1fr; margin: 0 0 1.4em; }
-  .reveal.open img { opacity: 1; transform: none; }
+  .shot { display: block; width: 100%; height: auto; margin: 0 0 1.4em; }
 
   .stage {
     position: relative;
@@ -58,41 +43,31 @@
     aspect-ratio: 16 / 11;
     margin-top: clamp(28px, 6vh, 56px);
     background: #030303;
-    font-family: 'Geist Mono', ui-monospace, Menlo, monospace;
-    font-size: 11px; letter-spacing: .06em;
   }
   .stage canvas { display: block; width: 100%; height: 100%; touch-action: pan-y; }
-  @media (max-width: 600px) {
-    .stage { aspect-ratio: 7 / 6; }
-  }
+
+  @media (max-width: 600px) { .stage { aspect-ratio: 7 / 6; } }
 </style>
 </head>
 <body>
+<main class="layout">
 <div class="col">
   <p class="title">Request for Events: Estocolmo House.</p>
-  <p><button class="hl" type="button" aria-expanded="false" aria-controls="r-agus">con agus tenemos un departamento en santiago</button>.</p>
-  <div class="reveal" id="r-agus"><div><img src="img/tenemos.jpg" width="1250" height="932" alt="Natochi y Agus sonriendo de noche frente al Golden Gate" loading="lazy"></div></div>
-  <p>tiene una <button class="hl" type="button" aria-expanded="false" aria-controls="r-terraza">terraza</button> muy grande, 15 sillas de mimbre y una guirnalda de ampolletas.<br>casi siempre hay gente con laptops usándolo de cowork. ahora queremos que también sea de otros.</p>
-  <div class="reveal" id="r-terraza"><div><img src="img/depa.jpg" width="1280" height="854" alt="La terraza del departamento, gente trabajando bajo la pérgola" loading="lazy"></div></div>
-  <p>si eres parte de chais, aisuc o quieres armar algo, propón tu <button class="hl" type="button" aria-expanded="false" aria-controls="r-evento">evento</button>. una charla, una hackathon, una cena, un reading group, una noche de demos, lo que sea.</p>
-  <div class="reveal" id="r-evento"><div><img src="img/evento.jpg" width="1600" height="1066" alt="Foto grupal en la terraza con la ciudad de fondo" loading="lazy"></div></div>
+  <p>con agus tenemos un departamento en santiago.</p>
+  <img class="shot" src="img/tenemos.jpg" width="1250" height="932" alt="Natochi y Agus sonriendo de noche frente al Golden Gate">
+  <p>tiene una terraza muy grande, 15 sillas de mimbre y una guirnalda de ampolletas.<br>casi siempre hay gente con laptops usándolo de cowork. ahora queremos que también sea de otros.</p>
+  <img class="shot" src="img/depa.jpg" width="1280" height="854" alt="La terraza del departamento, gente trabajando bajo la pérgola" loading="lazy">
+  <p>si eres parte de chais, aisuc o quieres armar algo, propón tu evento. una charla, una hackathon, una cena, un reading group, una noche de demos, lo que sea.</p>
+  <img class="shot" src="img/evento.jpg" width="1600" height="1066" alt="Foto grupal en la terraza con la ciudad de fondo" loading="lazy">
   <p>el depa es tuyo por una tarde.</p>
-  <p class="cta"><a class="hl" href="https://tally.so/r/obX4rb">proponer un evento</a></p>
+  <p class="cta"><a href="https://tally.so/r/obX4rb">proponer un evento &rarr;</a></p>
 </div>
 
 <section class="stage" id="stage">
   <canvas id="c" aria-label="Terraza isométrica interactiva: arrastra las sillas, click en las ampolletas para encenderlas"></canvas>
 </section>
+</main>
 
-<script>
-document.querySelectorAll('.hl').forEach((b) => {
-  b.addEventListener('click', () => {
-    const open = b.getAttribute('aria-expanded') !== 'true';
-    b.setAttribute('aria-expanded', open);
-    document.getElementById(b.getAttribute('aria-controls')).classList.toggle('open', open);
-  });
-});
-</script>
 <script type="module">
 import { mount } from "./scene.js";
 mount({ canvas: document.getElementById("c"), stage: document.getElementById("stage"), statusEl: document.createElement("div"), hoverLights: true, azimuth: 0.31, tidy: true });
