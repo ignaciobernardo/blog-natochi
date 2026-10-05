@@ -1,6 +1,6 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js';
 
-export function mount({ canvas, stage, statusEl, hoverLights = false, azimuth = Math.PI / 4 }) {
+export function mount({ canvas, stage, statusEl, hoverLights = false, azimuth = Math.PI / 4, people = false, tidy = false }) {
 
 
 // ---------- palette ----------
@@ -382,6 +382,243 @@ function separate(dragged) {
   }
 }
 
+// ---------- people (low-poly) ----------
+const tickers = [];
+const pLine = lineMat(0x7c7c7c);
+const pFill = fillMat(C.fill);
+  function buildPerson(pFill_ = pFill, pLine_ = pLine) {
+    const pFill = pFill_, pLine = pLine_;
+    const part = (w, h, d, parent, x, y, z) => {
+      const geo = new THREE.BoxGeometry(w, h, d).translate(0, -h / 2, 0); // pivot at top
+      const s = solid(geo, { fill: pFill, line: pLine });
+      s.position.set(x, y, z);
+      parent.add(s);
+      return s;
+    };
+    const root = new THREE.Group();
+    const body = new THREE.Group(); root.add(body);
+    const hip = new THREE.Group(); hip.position.y = 0.9; body.add(hip);
+    const torso = solid(new THREE.BoxGeometry(0.34, 0.54, 0.2).translate(0, 0.27, 0), { fill: pFill, line: pLine });
+    hip.add(torso);
+    const head = solid(new THREE.IcosahedronGeometry(0.115, 0), { fill: pFill, line: pLine, angle: 1 });
+    head.position.set(0, 0.72, 0); torso.add(head);
+    const legs = [-1, 1].map((sx) => {
+      const thigh = part(0.13, 0.46, 0.15, hip, sx * 0.09, 0, 0);
+      const shin = part(0.12, 0.44, 0.14, thigh, 0, -0.46, 0);
+      return { thigh, shin };
+    });
+    const arms = [-1, 1].map((sx) => {
+      const upper = part(0.09, 0.3, 0.1, torso, sx * 0.225, 0.52, 0);
+      const fore = part(0.08, 0.28, 0.09, upper, 0, -0.3, 0);
+      return { upper, fore };
+    });
+    return { root, body, hip, torso, head, legs, arms };
+  }
+  function walkPose(p, ph, m) {
+    const s = Math.sin(ph);
+    p.legs[0].thigh.rotation.x = s * 0.5 * m;
+    p.legs[1].thigh.rotation.x = -s * 0.5 * m;
+    p.legs[0].shin.rotation.x = Math.max(0, s) * 0.7 * m;
+    p.legs[1].shin.rotation.x = Math.max(0, -s) * 0.7 * m;
+    p.arms[0].upper.rotation.x = -s * 0.4 * m;
+    p.arms[1].upper.rotation.x = s * 0.4 * m;
+    p.arms[0].fore.rotation.x = p.arms[1].fore.rotation.x = -0.25 * m;
+  }
+if (people) {
+
+  // sitters ride inside their chair's group, so dragging the chair carries them
+  const sitIdx = [0, 2, 3, 6, 9, 11, 12, 15, 17];
+  sitIdx.forEach((ci, n) => {
+    const ch = chairs[ci]; if (!ch) return;
+    const p = buildPerson();
+    p.hip.position.set(0, 0.5, -0.1);
+    p.torso.rotation.x = -0.08;
+    for (const l of p.legs) { l.thigh.rotation.x = -Math.PI / 2 + 0.05; l.shin.rotation.x = Math.PI / 2 - 0.1; }
+    const laptop = n % 3 !== 2;
+    if (laptop) {
+      for (const a of p.arms) { a.upper.rotation.x = -0.35; a.fore.rotation.x = -1.0; }
+      const lap = new THREE.Group();
+      lap.add(solid(new THREE.BoxGeometry(0.3, 0.018, 0.21), { fill: pFill, line: pLine }));
+      const scr = solid(new THREE.BoxGeometry(0.3, 0.2, 0.012).translate(0, 0.1, 0), { fill: pFill, line: pLine });
+      scr.position.z = -0.1; scr.rotation.x = -0.25; lap.add(scr);
+      lap.position.set(0, 0.6, 0.26);
+      p.root.add(lap);
+    } else {
+      // hands behind the head, leaning back
+      p.torso.rotation.x = -0.22;
+      for (const [i, a] of p.arms.entries()) { a.upper.rotation.set(-2.6, 0, (i ? -1 : 1) * 0.5); a.fore.rotation.x = 2.4; }
+      p.head.rotation.x = 0.2;
+    }
+    ch.group.add(p.root);
+    const seed = n * 1.7;
+    tickers.push((dt, now) => {
+      const t = now / 1000 + seed;
+      p.head.rotation.y = Math.sin(t * 0.4) * 0.25;
+      if (laptop) p.head.rotation.x = 0.25 + Math.sin(t * 0.7) * 0.05;
+    });
+  });
+
+  // walkers: follow a path, pause at the ends, ping-pong
+  function walker(path, speed, seed, pause = 1.6) {
+    const p = buildPerson();
+    world.add(p.root);
+    const st = { i: 0, dir: 1, x: path[0][0], z: path[0][1], y: 0, face: 0, ph: seed, wait: seed % 1.5, moving: 0 };
+    tickers.push((dt) => {
+      let tgtI = st.i + st.dir;
+      if (tgtI < 0 || tgtI >= path.length) { st.dir *= -1; tgtI = st.i + st.dir; }
+      if (st.wait > 0) { st.wait -= dt; st.moving += (0 - st.moving) * Math.min(1, dt * 6); }
+      else {
+        const [tx, tz] = path[tgtI];
+        const dx = tx - st.x, dz = tz - st.z, d = Math.hypot(dx, dz);
+        const step = speed * dt;
+        if (d <= step) {
+          st.x = tx; st.z = tz; st.i = tgtI;
+          if (st.i === 0 || st.i === path.length - 1) st.wait = pause;
+        } else {
+          st.x += dx / d * step; st.z += dz / d * step;
+          const f = Math.atan2(dx, dz);
+          let df = f - st.face; df = Math.atan2(Math.sin(df), Math.cos(df));
+          st.face += df * Math.min(1, dt * 7);
+        }
+        st.moving += (1 - st.moving) * Math.min(1, dt * 6);
+      }
+      st.ph += dt * speed * 4.6 * st.moving;
+      const m = st.moving;
+      walkPose(p, st.ph, m);
+      const gy = heightAt(st.x, st.z);
+      st.y += (gy - st.y) * Math.min(1, dt * 10);
+      p.root.position.set(st.x, st.y + Math.abs(Math.cos(st.ph)) * 0.025 * m, st.z);
+      p.root.rotation.y = st.face;
+    });
+  }
+  walker([[-3.9, 2.75], [0.5, 2.75], [3.9, 2.75]], 0.85, 0.3);
+  walker([[-3.7, -2.25], [-3.7, 1.2], [-3.7, 2.6], [-1.5, 2.6]], 0.7, 2.1, 2.4);
+  walker([[3.62, 1.9], [3.62, -0.2], [3.62, -2.2]], 0.6, 4.4, 3.0);
+
+  // one standing in the middle of the circle, talking
+  {
+    const p = buildPerson();
+    p.root.position.set(center.x + 0.2, DECK.top, center.z + 0.35);
+    p.root.rotation.y = 0.5;
+    world.add(p.root);
+    tickers.push((dt, now) => {
+      const t = now / 1000;
+      p.root.rotation.y = 0.5 + Math.sin(t * 0.35) * 0.9;
+      p.arms[1].upper.rotation.x = -0.9 + Math.sin(t * 1.3) * 0.35;
+      p.arms[1].fore.rotation.x = -0.8 + Math.sin(t * 2.1) * 0.25;
+      p.arms[0].upper.rotation.x = -0.15 + Math.sin(t * 0.9 + 1) * 0.1;
+      p.torso.rotation.z = Math.sin(t * 0.8) * 0.04;
+    });
+  }
+}
+
+// ---------- the tidier: after 2s without touching anything, someone comes to put the chairs back ----------
+let lastTouch = -1e9;
+let tidyInterrupt = () => {};
+function noteInteraction() { lastTouch = performance.now(); tidyInterrupt(); }
+if (tidy) {
+  const tLine = new THREE.LineBasicMaterial({ color: 0x9a9a9a, transparent: true, opacity: 0 });
+  const tFill = fillMat(C.fill, { transparent: true, opacity: 0 });
+  const p = buildPerson(tFill, tLine);
+  p.root.visible = false;
+  world.add(p.root);
+  const home = homeLayout();
+  const DOOR = [-4.25, 2.8];
+  const GRIP = 0.4;
+  const st = { mode: 'off', x: DOOR[0], z: DOOR[1], y: 0, face: 0, ph: 0, m: 0, chair: null, wait: 0, alpha: 0, lean: 0 };
+  const angDiff = (a, b) => Math.atan2(Math.sin(a - b), Math.cos(a - b));
+  const misplaced = (c, i) => Math.hypot(c.x - home[i].x, c.z - home[i].z) > 0.1 || Math.abs(angDiff(home[i].rot, c.drot)) > 0.12;
+  function nextChair() {
+    let best = null, bd = Infinity;
+    chairs.forEach((c, i) => {
+      if (!misplaced(c, i)) return;
+      const d = Math.hypot(c.x - st.x, c.z - st.z);
+      if (d < bd) { bd = d; best = i; }
+    });
+    return best;
+  }
+  const faceTo = (f, dt) => { st.face += angDiff(f, st.face) * Math.min(1, dt * 8); };
+  function moveTo(tx, tz, speed, dt) {
+    const dx = tx - st.x, dz = tz - st.z, d = Math.hypot(dx, dz), s = speed * dt;
+    if (d <= s) { st.x = tx; st.z = tz; return true; }
+    st.x += (dx / d) * s; st.z += (dz / d) * s;
+    faceTo(Math.atan2(dx, dz), dt);
+    return false;
+  }
+  tidyInterrupt = () => {
+    for (const c of chairs) c.carried = false;
+    st.chair = null;
+    if (st.mode !== 'off') st.mode = 'pause';
+  };
+
+  tickers.push((dt, now) => {
+    const idle = now - lastTouch > 2000 && !drag;
+    if (st.mode === 'off') {
+      if (!idle || nextChair() === null) return;
+      st.mode = 'seek'; st.x = DOOR[0]; st.z = DOOR[1]; st.alpha = 0;
+      p.root.visible = true;
+    }
+    if (st.mode === 'pause' && idle) st.mode = 'seek';
+
+    let moving = false;
+    if (st.mode === 'seek') {
+      const i = nextChair();
+      if (i === null) st.mode = 'leave';
+      else {
+        const c = chairs[i], h = home[i];
+        // stand behind the chair, on the side opposite to where it has to go
+        let ux = h.x - c.x, uz = h.z - c.z, ud = Math.hypot(ux, uz);
+        if (ud < 0.05) { ux = st.x - c.x; uz = st.z - c.z; ud = Math.hypot(ux, uz) || 1; ux = -ux; uz = -uz; }
+        moving = !moveTo(c.x - (ux / ud) * GRIP, c.z - (uz / ud) * GRIP, 1.05, dt);
+        if (!moving) { st.mode = 'carry'; st.chair = i; c.carried = true; st.wait = 0.3; }
+      }
+    }
+    if (st.mode === 'carry') {
+      const c = chairs[st.chair], h = home[st.chair];
+      if (st.wait > 0) st.wait -= dt;
+      else {
+        const dx = h.x - c.x, dz = h.z - c.z, d = Math.hypot(dx, dz), s = 0.8 * dt;
+        if (d > s) {
+          c.x += (dx / d) * s; c.z += (dz / d) * s;
+          st.x = c.x - (dx / d) * GRIP; st.z = c.z - (dz / d) * GRIP;
+          faceTo(Math.atan2(dx, dz), dt);
+          moving = true;
+        } else { c.x = h.x; c.z = h.z; }
+        const dr = angDiff(h.rot, c.drot);
+        c.drot += dr * Math.min(1, dt * 3);
+        if (d <= s && Math.abs(dr) < 0.02) {
+          c.drot += dr; c.carried = false; st.chair = null;
+          st.mode = 'seek'; st.wait = 0;
+        }
+      }
+    }
+    if (st.mode === 'leave') {
+      moving = true;
+      if (moveTo(DOOR[0], DOOR[1], 1.05, dt)) { st.mode = 'off'; p.root.visible = false; return; }
+    }
+    if (st.mode === 'pause') faceTo(az, dt); // turn and look at you
+
+    st.m += ((moving ? 1 : 0) - st.m) * Math.min(1, dt * 8);
+    st.ph += dt * 4.4 * st.m;
+    walkPose(p, st.ph, st.m);
+    // grab the top of the backrest (~0.95m): lean in a bit, arms down and slightly forward
+    const carrying = st.mode === 'carry' ? 1 : 0;
+    st.lean += (carrying - st.lean) * Math.min(1, dt * 6);
+    p.torso.rotation.x = 0.14 * st.lean;
+    if (carrying) for (const a of p.arms) { a.upper.rotation.x = -0.42; a.fore.rotation.x = -0.3; }
+
+    const dDoor = Math.hypot(st.x - DOOR[0], st.z - DOOR[1]);
+    const aT = st.mode === 'leave' ? Math.min(1, dDoor / 0.8) : 1;
+    st.alpha += (aT - st.alpha) * Math.min(1, dt * (st.mode === 'leave' ? 20 : 4));
+    tLine.opacity = st.alpha; tFill.opacity = st.alpha;
+    tFill.depthWrite = st.alpha > 0.95;
+
+    st.y += (heightAt(st.x, st.z) - st.y) * Math.min(1, dt * 10);
+    p.root.position.set(st.x, st.y + Math.abs(Math.cos(st.ph)) * 0.025 * st.m, st.z);
+    p.root.rotation.y = st.face;
+  });
+}
+
 // ---------- camera fit ----------
 const TARGET = v(0, 0.9, -0.2);
 let az = azimuth, azTarget = az;
@@ -471,6 +708,7 @@ function setLights(on) {
 }
 
 function rotateChair(c, delta) {
+  noteInteraction();
   c.drot += delta;
   lastChair = c;
   updateStatus();
@@ -499,6 +737,7 @@ canvas.addEventListener('pointerdown', (e) => {
     const fp = floorPoint(c.y);
     drag = { chair: c, ox: fp ? c.x - fp.x : 0, oz: fp ? c.z - fp.z : 0, y: c.y, sx: e.clientX, sy: e.clientY, t, moved: false };
     c.active = true; lastChair = c;
+    noteInteraction();
     canvas.setPointerCapture(e.pointerId);
     canvas.style.cursor = 'grabbing';
     updateStatus();
@@ -519,6 +758,7 @@ canvas.addEventListener('pointermove', (e) => {
     if (fp) {
       const c = drag.chair;
       c.x = fp.x + drag.ox; c.z = fp.z + drag.oz;
+      noteInteraction();
       separate(c);
       updateStatus();
     }
@@ -597,13 +837,14 @@ function frame(now) {
 
   az += (azTarget - az) * (1 - Math.exp(-dt * 8));
   placeCamera();
+  for (const t of tickers) t(dt, now);
 
   for (const c of chairs) {
     c.dx += (c.x - c.dx) * k;
     c.dz += (c.z - c.dz) * k;
     c.drotV = (c.drotV ?? c.drot); c.drotV += (c.drot - c.drotV) * k;
     const isDrag = drag && drag.chair === c && drag.moved;
-    c.lift += ((isDrag ? 0.07 : 0) - c.lift) * k;
+    c.lift += ((isDrag || c.carried ? 0.07 : 0) - c.lift) * k;
     const gy = heightAt(c.dx, c.dz);
     c.y += (gy - c.y) * (1 - Math.exp(-dt * 18));
     c.group.position.set(c.dx, c.y + c.lift, c.dz);
@@ -639,4 +880,5 @@ function frame(now) {
 updateStatus();
 statusEl.innerHTML = `luces <b>off</b> &middot; ${chairs.length} sillas`;
 requestAnimationFrame(frame);
+return { chairs, camera, world };
 }
