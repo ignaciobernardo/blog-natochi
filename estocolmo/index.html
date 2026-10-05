@@ -36,7 +36,7 @@
 
   .stage {
     position: relative;
-    width: min(880px, calc(100vw - 40px));
+    width: min(540px, calc(100vw - 40px));
     aspect-ratio: 16 / 11;
     margin-top: clamp(28px, 6vh, 56px);
     background: #030303;
@@ -44,17 +44,8 @@
     font-size: 11px; letter-spacing: .06em;
   }
   .stage canvas { display: block; width: 100%; height: 100%; touch-action: pan-y; }
-  .label { position: absolute; color: #5a5a5a; text-transform: uppercase; user-select: none; white-space: nowrap; pointer-events: none; }
-  .label a { pointer-events: auto; color: inherit; text-decoration: none; }
-  .label a:hover { color: #d8d8d8; }
-  .tl { top: 0; left: 0; } .tr { top: 0; right: 0; }
-  .bl { bottom: 0; left: 0; } .br { bottom: 0; right: 0; text-transform: none; }
-  .br b { font-weight: 400; color: #bdbdbd; }
-  .tap { display: none; }
-  @media (hover: none) { .tap { display: inline; } .click { display: none; } }
   @media (max-width: 600px) {
     .stage { aspect-ratio: 7 / 6; }
-    .br { display: none; }
   }
 </style>
 </head>
