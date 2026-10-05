@@ -43,6 +43,7 @@
     transition: background .2s ease;
   }
   .hl:hover { background: rgba(255,255,255,.19); }
+  a.hl { text-decoration: none; }
   .hl[aria-expanded="true"] { background: rgba(255,255,255,.24); }
   .hl:focus-visible { outline: 1px solid #d8d8d8; outline-offset: 2px; }
   .reveal { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s cubic-bezier(.2,.7,.2,1), margin .45s cubic-bezier(.2,.7,.2,1); margin: 0; }
@@ -69,12 +70,13 @@
 <body>
 <div class="col">
   <p class="title">Request for Events: Estocolmo House.</p>
-  <p><button class="hl" type="button" aria-expanded="false" aria-controls="r-tenemos">tenemos</button> un <button class="hl" type="button" aria-expanded="false" aria-controls="r-depa">departamento en santiago</button>. tiene una terraza, veinte sillas de mimbre y una guirnalda de ampolletas. casi siempre hay gente con laptops. queremos que también sea de otros.</p>
-  <div class="reveal" id="r-tenemos"><div><img src="img/tenemos.jpg" width="1250" height="932" alt="Dos amigos sonriendo de noche frente al Golden Gate" loading="lazy"></div></div>
-  <div class="reveal" id="r-depa"><div><img src="img/depa.jpg" width="1280" height="854" alt="La terraza del departamento, gente trabajando bajo la pérgola" loading="lazy"></div></div>
-  <p>si eres parte de chais, aisuc o cualquier organización que esté armando algo, propón tu evento. una charla, un hackathon chico, una cena, un reading group, una noche de demos.</p>
+  <p><button class="hl" type="button" aria-expanded="false" aria-controls="r-agus">con agus tenemos un departamento en santiago</button>.</p>
+  <div class="reveal" id="r-agus"><div><img src="img/tenemos.jpg" width="1250" height="932" alt="Natochi y Agus sonriendo de noche frente al Golden Gate" loading="lazy"></div></div>
+  <p>tiene una <button class="hl" type="button" aria-expanded="false" aria-controls="r-terraza">terraza</button> muy grande, 15 sillas de mimbre y una guirnalda de ampolletas.<br>casi siempre hay gente con laptops usándolo de cowork. ahora queremos que también sea de otros.</p>
+  <div class="reveal" id="r-terraza"><div><img src="img/depa.jpg" width="1280" height="854" alt="La terraza del departamento, gente trabajando bajo la pérgola" loading="lazy"></div></div>
+  <p>si eres parte de chais, aisuc o quieres armar algo, propón tu evento. una charla, una hackathon, una cena, un reading group, una noche de demos, lo que sea.</p>
   <p>el depa es tuyo por una tarde.</p>
-  <p class="cta"><a href="https://tally.so/r/obX4rb">proponer un evento &rarr;</a></p>
+  <p class="cta"><a class="hl" href="https://tally.so/r/obX4rb">proponer un evento</a></p>
 </div>
 
 <section class="stage" id="stage">

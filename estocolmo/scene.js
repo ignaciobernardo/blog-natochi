@@ -305,10 +305,10 @@ function buildChair() {
 const chairs = [];
 const R_CHAIR = 0.33;
 const center = { x: -0.05, z: -0.25 };
-const N_CHAIRS = 20;
+const N_CHAIRS = 15;
 function homeLayout() {
   // evenly spaced by arc length around an ellipse that fits the deck
-  const rx = 2.5, rz = 1.85, S = 720;
+  const rx = 2.15, rz = 1.6, S = 720;
   const pts = [], acc = [0];
   for (let k = 0; k <= S; k++) { const a = (k / S) * Math.PI * 2 + 0.2; pts.push([Math.cos(a) * rx, Math.sin(a) * rz]); }
   for (let k = 1; k <= S; k++) acc.push(acc[k - 1] + Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]));
@@ -512,12 +512,14 @@ if (people) {
   }
 }
 
-// ---------- the tidier: after 2s without touching anything, someone comes to put the chairs back ----------
+// ---------- the tidier: after 2s without touching anything, someone comes to put the chairs back.
+// interrupt them too many times and they lose it: they mess the chairs up and storm off. ----------
 let lastTouch = -1e9;
 let tidyInterrupt = () => {};
 function noteInteraction() { lastTouch = performance.now(); tidyInterrupt(); }
 if (tidy) {
-  const tLine = new THREE.LineBasicMaterial({ color: 0x9a9a9a, transparent: true, opacity: 0 });
+  const CALM = new THREE.Color(0x9a9a9a), MAD = new THREE.Color(0xe0644f);
+  const tLine = new THREE.LineBasicMaterial({ color: CALM.clone(), transparent: true, opacity: 0 });
   const tFill = fillMat(C.fill, { transparent: true, opacity: 0 });
   const p = buildPerson(tFill, tLine);
   p.root.visible = false;
@@ -525,7 +527,12 @@ if (tidy) {
   const home = homeLayout();
   const DOOR = [-4.25, 2.8];
   const GRIP = 0.4;
-  const st = { mode: 'off', x: DOOR[0], z: DOOR[1], y: 0, face: 0, ph: 0, m: 0, chair: null, wait: 0, alpha: 0, lean: 0 };
+  const ANGER_LIMIT = 3;
+  const st = {
+    mode: 'off', x: DOOR[0], z: DOOR[1], y: 0, face: 0, ph: 0, m: 0,
+    chair: null, target: null, pickI: null, wait: 0, alpha: 0, lean: 0,
+    anger: 0, mad: false, red: 0, t: 0, messLeft: 0, cool: 0, leftAt: -1e9, picked: new Set(),
+  };
   const angDiff = (a, b) => Math.atan2(Math.sin(a - b), Math.cos(a - b));
   const misplaced = (c, i) => Math.hypot(c.x - home[i].x, c.z - home[i].z) > 0.1 || Math.abs(angDiff(home[i].rot, c.drot)) > 0.12;
   function nextChair() {
@@ -545,19 +552,62 @@ if (tidy) {
     faceTo(Math.atan2(dx, dz), dt);
     return false;
   }
+  function randomSpot() {
+    const c = { x: FLOOR.x0 + 0.6 + Math.random() * (FLOOR.x1 - FLOOR.x0 - 1.2), z: FLOOR.z0 + 0.6 + Math.random() * (FLOOR.z1 - FLOOR.z0 - 1.2) };
+    constrain(c);
+    return { x: c.x, z: c.z, rot: Math.random() * Math.PI * 2 };
+  }
+  // walk to the spot behind chair i (opposite to where it has to go); true when there
+  function approach(i, tgt, speed, dt) {
+    const c = chairs[i];
+    let ux = tgt.x - c.x, uz = tgt.z - c.z, ud = Math.hypot(ux, uz);
+    if (ud < 0.05) { ux = c.x - st.x; uz = c.z - st.z; ud = Math.hypot(ux, uz) || 1; }
+    return moveTo(c.x - (ux / ud) * GRIP, c.z - (uz / ud) * GRIP, speed, dt);
+  }
+  // push the held chair toward st.target; returns [placed, moving]
+  function carry(dt, speed) {
+    const c = chairs[st.chair], h = st.target;
+    const dx = h.x - c.x, dz = h.z - c.z, d = Math.hypot(dx, dz), s = speed * dt;
+    let moving = false;
+    if (d > s) {
+      c.x += (dx / d) * s; c.z += (dz / d) * s;
+      st.x = c.x - (dx / d) * GRIP; st.z = c.z - (dz / d) * GRIP;
+      faceTo(Math.atan2(dx, dz), dt);
+      moving = true;
+    } else { c.x = h.x; c.z = h.z; }
+    const dr = angDiff(h.rot, c.drot);
+    c.drot += dr * Math.min(1, dt * 3);
+    if (d <= s && Math.abs(dr) < 0.03) { c.drot += dr; c.carried = false; st.chair = null; return [true, moving]; }
+    return [false, moving];
+  }
+  function drop() { if (st.chair !== null) chairs[st.chair].carried = false; st.chair = null; }
+
   tidyInterrupt = () => {
-    for (const c of chairs) c.carried = false;
-    st.chair = null;
-    if (st.mode !== 'off') st.mode = 'pause';
+    if (st.mode === 'off' || (st.mode === 'leave' && st.mad)) return;
+    if (st.mode === 'angry' || st.mode === 'mess') {
+      // ignores you; only lets go if you grab the chair out of their hands
+      if (st.chair !== null && drag && drag.chair === chairs[st.chair]) drop();
+      return;
+    }
+    drop();
+    if (st.mode !== 'pause') {
+      st.anger += 1;
+      st.t = 0;
+      if (st.anger >= ANGER_LIMIT) { st.mode = 'angry'; st.mad = true; } else st.mode = 'pause';
+    }
   };
 
   tickers.push((dt, now) => {
     const idle = now - lastTouch > 2000 && !drag;
     if (st.mode === 'off') {
-      if (!idle || nextChair() === null) return;
+      st.anger = Math.max(0, st.anger - dt / 20);
+      st.cool -= dt;
+      if (!idle || st.cool > 0 || nextChair() === null) return;
+      if (now - st.leftAt < 15000) st.anger += 1; // you messed it up again right after
       st.mode = 'seek'; st.x = DOOR[0]; st.z = DOOR[1]; st.alpha = 0;
       p.root.visible = true;
     }
+    st.t += dt;
     if (st.mode === 'pause' && idle) st.mode = 'seek';
 
     let moving = false;
@@ -565,47 +615,64 @@ if (tidy) {
       const i = nextChair();
       if (i === null) st.mode = 'leave';
       else {
-        const c = chairs[i], h = home[i];
-        // stand behind the chair, on the side opposite to where it has to go
-        let ux = h.x - c.x, uz = h.z - c.z, ud = Math.hypot(ux, uz);
-        if (ud < 0.05) { ux = st.x - c.x; uz = st.z - c.z; ud = Math.hypot(ux, uz) || 1; ux = -ux; uz = -uz; }
-        moving = !moveTo(c.x - (ux / ud) * GRIP, c.z - (uz / ud) * GRIP, 1.05, dt);
-        if (!moving) { st.mode = 'carry'; st.chair = i; c.carried = true; st.wait = 0.3; }
+        moving = !approach(i, home[i], 1.05, dt);
+        if (!moving) { st.mode = 'carry'; st.chair = i; st.target = home[i]; chairs[i].carried = true; st.wait = 0.3; }
       }
     }
     if (st.mode === 'carry') {
-      const c = chairs[st.chair], h = home[st.chair];
       if (st.wait > 0) st.wait -= dt;
-      else {
-        const dx = h.x - c.x, dz = h.z - c.z, d = Math.hypot(dx, dz), s = 0.8 * dt;
-        if (d > s) {
-          c.x += (dx / d) * s; c.z += (dz / d) * s;
-          st.x = c.x - (dx / d) * GRIP; st.z = c.z - (dz / d) * GRIP;
-          faceTo(Math.atan2(dx, dz), dt);
-          moving = true;
-        } else { c.x = h.x; c.z = h.z; }
-        const dr = angDiff(h.rot, c.drot);
-        c.drot += dr * Math.min(1, dt * 3);
-        if (d <= s && Math.abs(dr) < 0.02) {
-          c.drot += dr; c.carried = false; st.chair = null;
-          st.mode = 'seek'; st.wait = 0;
+      else { const [done, mv] = carry(dt, 0.8); moving = mv; if (done) st.mode = 'seek'; }
+    }
+    if (st.mode === 'angry') {
+      faceTo(az, dt);
+      if (st.t > 1.7) { st.mode = 'mess'; st.messLeft = 4 + ((Math.random() * 2) | 0); st.picked.clear(); st.pickI = null; }
+    }
+    if (st.mode === 'mess') {
+      if (st.chair === null) {
+        if (st.messLeft <= 0) st.mode = 'leave';
+        else {
+          if (st.pickI === null) {
+            const pool = chairs.map((c, i) => i).filter((i) => !st.picked.has(i) && !(drag && drag.chair === chairs[i]));
+            st.pickI = pool[(Math.random() * pool.length) | 0];
+            st.target = randomSpot();
+          }
+          moving = !approach(st.pickI, st.target, 1.6, dt);
+          if (!moving) { st.chair = st.pickI; chairs[st.chair].carried = true; st.picked.add(st.pickI); st.pickI = null; st.wait = 0.08; }
         }
-      }
+      } else if (st.wait > 0) st.wait -= dt;
+      else { const [done, mv] = carry(dt, 1.5); moving = mv; if (done) st.messLeft -= 1; }
     }
     if (st.mode === 'leave') {
       moving = true;
-      if (moveTo(DOOR[0], DOOR[1], 1.05, dt)) { st.mode = 'off'; p.root.visible = false; return; }
+      if (moveTo(DOOR[0], DOOR[1], st.mad ? 1.6 : 1.05, dt)) {
+        st.mode = 'off'; p.root.visible = false; st.leftAt = now;
+        if (st.mad) { st.anger = 0; st.cool = 6; st.mad = false; st.red = 0; tLine.color.copy(CALM); }
+        return;
+      }
     }
     if (st.mode === 'pause') faceTo(az, dt); // turn and look at you
 
     st.m += ((moving ? 1 : 0) - st.m) * Math.min(1, dt * 8);
-    st.ph += dt * 4.4 * st.m;
+    st.ph += dt * 4.4 * st.m * (st.mad ? 1.45 : 1);
     walkPose(p, st.ph, st.m);
-    // grab the top of the backrest (~0.95m): lean in a bit, arms down and slightly forward
-    const carrying = st.mode === 'carry' ? 1 : 0;
-    st.lean += (carrying - st.lean) * Math.min(1, dt * 6);
+    const holding = st.chair !== null ? 1 : 0;
+    st.lean += (holding - st.lean) * Math.min(1, dt * 6);
     p.torso.rotation.x = 0.14 * st.lean;
-    if (carrying) for (const a of p.arms) { a.upper.rotation.x = -0.42; a.fore.rotation.x = -0.3; }
+    const fuming = st.mode === 'angry';
+    for (const [k, a] of p.arms.entries()) {
+      a.upper.rotation.z = 0;
+      if (holding) { a.upper.rotation.x = -0.42; a.fore.rotation.x = -0.3; }
+      if (fuming) {
+        a.upper.rotation.x = -2.75 + Math.sin(st.t * 28 + k * 2) * 0.28;
+        a.upper.rotation.z = (k ? -1 : 1) * 0.32;
+        a.fore.rotation.x = -0.5;
+      }
+    }
+    p.head.rotation.y = fuming ? Math.sin(st.t * 24) * 0.35 : 0;
+    const hop = fuming ? Math.abs(Math.sin(st.t * 13)) * 0.08 : 0;
+
+    st.red += ((st.mad ? 1 : 0) - st.red) * Math.min(1, dt * 5);
+    tLine.color.copy(CALM).lerp(MAD, st.red);
 
     const dDoor = Math.hypot(st.x - DOOR[0], st.z - DOOR[1]);
     const aT = st.mode === 'leave' ? Math.min(1, dDoor / 0.8) : 1;
@@ -614,7 +681,7 @@ if (tidy) {
     tFill.depthWrite = st.alpha > 0.95;
 
     st.y += (heightAt(st.x, st.z) - st.y) * Math.min(1, dt * 10);
-    p.root.position.set(st.x, st.y + Math.abs(Math.cos(st.ph)) * 0.025 * st.m, st.z);
+    p.root.position.set(st.x, st.y + hop + Math.abs(Math.cos(st.ph)) * 0.025 * st.m, st.z);
     p.root.rotation.y = st.face;
   });
 }
