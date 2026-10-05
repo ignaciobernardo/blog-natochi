@@ -1,6 +1,6 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js';
 
-export function mount({ canvas, stage, statusEl }) {
+export function mount({ canvas, stage, statusEl, hoverLights = false }) {
 
 
 // ---------- palette ----------
@@ -305,14 +305,19 @@ function buildChair() {
 const chairs = [];
 const R_CHAIR = 0.33;
 const center = { x: -0.05, z: -0.25 };
-const N_CHAIRS = 10;
+const N_CHAIRS = 20;
 function homeLayout() {
+  // evenly spaced by arc length around an ellipse that fits the deck
+  const rx = 2.5, rz = 1.85, S = 720;
+  const pts = [], acc = [0];
+  for (let k = 0; k <= S; k++) { const a = (k / S) * Math.PI * 2 + 0.2; pts.push([Math.cos(a) * rx, Math.sin(a) * rz]); }
+  for (let k = 1; k <= S; k++) acc.push(acc[k - 1] + Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]));
   const out = [];
-  for (let i = 0; i < N_CHAIRS; i++) {
-    const a = (i / N_CHAIRS) * Math.PI * 2 + 0.25;
-    const rx = 1.55, rz = 1.25;
-    const x = center.x + Math.cos(a) * rx + Math.sin(i * 3.1) * 0.06;
-    const z = center.z + Math.sin(a) * rz + Math.cos(i * 2.3) * 0.06;
+  for (let i = 0, k = 0; i < N_CHAIRS; i++) {
+    const L = (i / N_CHAIRS) * acc[S];
+    while (acc[k] < L) k++;
+    const x = center.x + pts[k][0] + Math.sin(i * 3.1) * 0.04;
+    const z = center.z + pts[k][1] + Math.cos(i * 2.3) * 0.04;
     const rot = Math.atan2(center.x - x, center.z - z) + Math.sin(i * 1.7) * 0.18;
     out.push({ x, z, rot });
   }
@@ -453,8 +458,10 @@ function floorPoint(y) {
   return ray.ray.intersectPlane(plane, p) ? p : null;
 }
 
-function toggleLights() {
-  lightsOn = !lightsOn;
+function toggleLights() { setLights(!lightsOn); }
+function setLights(on) {
+  if (on === lightsOn) return;
+  lightsOn = on;
   stage.classList.toggle('lit', lightsOn);
   // boot sequence: left to right with a little randomness
   const order = bulbs.map((b, i) => [b, b.mesh.position.x + b.mesh.position.z * 0.3 + Math.random() * 0.6]).sort((a, b) => a[1] - b[1]);
@@ -467,6 +474,14 @@ function rotateChair(c, delta) {
   c.drot += delta;
   lastChair = c;
   updateStatus();
+}
+
+if (hoverLights) {
+  stage.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') setLights(true); });
+  stage.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse' && !drag) setLights(false); });
+  if (matchMedia('(hover: none)').matches && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([en]) => setLights(en.intersectionRatio > 0.6), { threshold: [0, 0.6, 1] }).observe(stage);
+  }
 }
 
 canvas.addEventListener('touchstart', (e) => {
