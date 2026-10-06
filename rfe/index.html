@@ -5,68 +5,87 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#030303">
 <title>Estocolmo House — Request for Events</title>
-<meta name="description" content="Request for Events: propón un evento para hacer en Estocolmo House. Leemos cada propuesta, una por una.">
+<meta name="description" content="Request for Events: propón un evento para hacer en Estocolmo House.">
 <link rel="icon" type="image/png" href="/favicon.png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://natochi.cv/rfe">
 <meta property="og:title" content="Estocolmo House — Request for Events">
-<meta property="og:description" content="Propón un evento para hacer en el depa. Leemos cada propuesta, una por una.">
+<meta property="og:description" content="Propón un evento para hacer en el depa.">
 <meta property="og:image" content="https://natochi.cv/estocolmo/img/1.jpg">
-<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,400&family=Geist+Mono&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&display=swap">
 <style>
+  /* Tufte-style layout: a 55% text column and a wide right margin for figures and notes */
   * { box-sizing: border-box; }
-  html, body { margin: 0; min-height: 100%; background: #030303; }
+  html { font-size: 15px; background: #030303; }
   body {
-    font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
-    color: #d8d8d8;
+    margin: 0 auto; width: 87.5%; max-width: 1400px;
+    padding: 5rem 0 6rem 12.5%;
+    background: #030303; color: #d8d8d8;
+    font-family: 'Newsreader', Georgia, 'Times New Roman', serif; font-weight: 300;
+    counter-reset: sidenote-counter;
   }
   ::selection { background: #fff; color: #030303; }
-  .layout {
-    min-height: 100svh;
-    display: flex; flex-direction: column; align-items: center;
-    padding: clamp(28px, 8vh, 80px) 20px clamp(40px, 10vh, 96px);
-  }
-  .col { width: min(360px, 100%); }
-  p { font-weight: 300; margin: 0 0 1.1em; font-size: 1.02rem; line-height: 1.65; text-align: justify; hyphens: auto; }
-  .title { font-weight: 400; font-style: italic; font-size: 1.42rem; line-height: 1.25; margin-bottom: .9em; text-align: left; }
-  a { color: #d8d8d8; text-decoration: underline; text-decoration-color: #555; text-underline-offset: 3px; }
+  h1 { font-weight: 400; font-style: italic; font-size: 2.6rem; line-height: 1.1; margin: 0 0 .4rem; }
+  .subtitle { font-style: italic; font-size: 1.45rem; color: #8a8a8a; margin: 0 0 3.2rem; display: block; }
+  section { padding: 0; }
+  p { width: 55%; margin: 0 0 1.6rem; font-size: 1.4rem; line-height: 2rem; }
+  a { color: inherit; text-decoration: underline; text-decoration-color: #555; text-underline-offset: 4px; }
   a:hover { text-decoration-color: #d8d8d8; }
-  .cta { margin: 1.6em 0 0; text-align: left; }
-  .shot { display: block; width: 100%; height: auto; margin: 0 0 1.4em; }
 
-  .stage {
-    position: relative;
-    width: min(540px, calc(100vw - 40px));
-    aspect-ratio: 16 / 11;
-    margin-top: clamp(28px, 6vh, 56px);
-    background: #030303;
+  .marginnote {
+    float: right; clear: right;
+    margin-right: -60%; width: 50%;
+    margin-top: .3rem; margin-bottom: 1.2rem;
+    font-size: 1.05rem; line-height: 1.4; color: #8a8a8a;
+    vertical-align: baseline; position: relative;
   }
+  .marginnote img { display: block; width: 100%; height: auto; margin-bottom: .5rem; }
+  .marginnote i { font-style: italic; }
+
+  figure.terrace { width: 55%; margin: 2.4rem 0 3rem; padding: 0; }
+  .stage { position: relative; width: 100%; aspect-ratio: 16 / 11; background: #030303; }
   .stage canvas { display: block; width: 100%; height: 100%; touch-action: pan-y; }
 
-  @media (max-width: 600px) { .stage { aspect-ratio: 7 / 6; } }
+  .cta { margin-top: 2.4rem; }
+  .colophon { width: 55%; margin-top: 5rem; padding-top: 1rem; border-top: 1px solid #222; font-size: 1rem; color: #5a5a5a; font-style: italic; }
+
+  @media (max-width: 760px) {
+    html { font-size: 14px; }
+    body { width: 100%; padding: 3rem 20px 4rem; }
+    p, figure.terrace, .colophon { width: 100%; }
+    h1 { font-size: 2.1rem; }
+    .marginnote {
+      display: block; float: none;
+      width: 100%; margin: 1rem 0 1.4rem;
+    }
+  }
 </style>
 </head>
 <body>
-<main class="layout">
-<div class="col">
-  <p class="title">Request for Events: Estocolmo House.</p>
-  <p>con agus y fernando tenemos un departamento en santiago.</p>
-  <img class="shot" src="/estocolmo/img/tenemos.jpg" width="1250" height="932" alt="Natochi y Agus sonriendo de noche frente al Golden Gate">
-  <p>tiene una terraza muy grande, 15 sillas de mimbre y una guirnalda de ampolletas.<br>casi siempre hay gente con laptops usándolo de cowork. ahora queremos que también sea de otros.</p>
-  <img class="shot" src="/estocolmo/img/depa.jpg" width="1280" height="854" alt="La terraza del departamento, gente trabajando bajo la pérgola" loading="lazy">
-  <p>si eres parte de chais, aisuc o quieres armar algo, propón tu evento. una charla, una hackathon, una cena, un reading group, una noche de demos, lo que sea.</p>
-  <img class="shot" src="/estocolmo/img/evento.jpg" width="1600" height="1066" alt="Foto grupal en la terraza con la ciudad de fondo" loading="lazy">
-  <p>el depa es tuyo por una tarde.</p>
-  <p class="cta"><a href="/estocolmo/proponer/">proponer un evento &rarr;</a></p>
-</div>
+<article>
+  <h1>Request for Events</h1>
+  <span class="subtitle">Estocolmo House.</span>
 
-<section class="stage" id="stage">
-  <canvas id="c" aria-label="Terraza isométrica interactiva: arrastra las sillas, click en las ampolletas para encenderlas"></canvas>
-</section>
-</main>
+  <section>
+    <p>con agus y fernando tenemos un departamento en santiago.<span class="marginnote"><img src="/estocolmo/img/tenemos.jpg" width="1250" height="932" alt="Natochi y Agus sonriendo de noche frente al Golden Gate">Agus y Natochi frente al Golden Gate, San Francisco.</span></p>
+
+    <p>tiene una terraza muy grande, 15 sillas de mimbre y una guirnalda de ampolletas. casi siempre hay gente con laptops usándolo de cowork. ahora queremos que también sea de otros.<span class="marginnote"><img src="/estocolmo/img/depa.jpg" width="1280" height="854" alt="La terraza del departamento, gente trabajando bajo la pérgola">La terraza en un día de trabajo cualquiera.</span></p>
+
+    <p>si eres parte de chais, aisuc o quieres armar algo, propón tu evento. una charla, una hackathon, una cena, un reading group, una noche de demos, lo que sea.<span class="marginnote"><img src="/estocolmo/img/evento.jpg" width="1600" height="1066" alt="Foto grupal en la terraza con la ciudad de fondo" loading="lazy">Asistentes al término de un evento (véanse las sonrisas).</span></p>
+
+    <p>el depa es tuyo por una tarde.</p>
+
+    <figure class="terrace">
+      <div class="stage" id="stage"><canvas id="c" aria-label="Terraza isométrica interactiva: arrastra las sillas, pasa el mouse para encender las luces"></canvas></div>
+    </figure>
+
+    <p class="cta"><a href="/estocolmo/proponer/">proponer un evento &rarr;</a></p>
+  </section>
+
+  <p class="colophon">natochi.cv/rfe</p>
+</article>
 
 <script type="module">
 import { mount } from "/estocolmo/scene.js";
