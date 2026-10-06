@@ -526,11 +526,25 @@ if (tidy) {
   world.add(p.root);
   const home = homeLayout();
   const DOOR = [-4.25, 2.8];
+  // enter/leave through the edge of the terrace closest to (x, z), so they show up fast
+  function edgeNear(x, z) {
+    const m = 0.35, pts = [
+      [FLOOR.x0 + m, z], [FLOOR.x1 - m, z], [x, FLOOR.z0 + m], [x, FLOOR.z1 - m],
+    ];
+    let best = pts[0], bd = Infinity;
+    for (const q of pts) {
+      const c = { x: Math.min(FLOOR.x1 - m, Math.max(FLOOR.x0 + m, q[0])), z: Math.min(FLOOR.z1 - m, Math.max(FLOOR.z0 + m, q[1])) };
+      constrain(c);
+      const d = Math.hypot(c.x - x, c.z - z);
+      if (d < bd) { bd = d; best = [c.x, c.z]; }
+    }
+    return best;
+  }
   const GRIP = 0.4;
   const ANGER_LIMIT = 2;
   const IDLE_MS = 1100;
   const st = {
-    mode: 'off', x: DOOR[0], z: DOOR[1], y: 0, face: 0, ph: 0, m: 0,
+    mode: 'off', door: DOOR, x: DOOR[0], z: DOOR[1], y: 0, face: 0, ph: 0, m: 0,
     chair: null, target: null, pickI: null, wait: 0, alpha: 0, lean: 0,
     anger: 0, mad: false, red: 0, fury: 0, hd: 0, turn: 0, turnIn: 0, t: 0, messLeft: 0, cool: 0, leftAt: -1e9, picked: new Set(),
   };
@@ -604,7 +618,9 @@ if (tidy) {
       st.cool -= dt;
       if (!idle || st.cool > 0 || nextChair() === null) return;
       if (now - st.leftAt < 15000) st.anger += 1; // you messed it up again right after
-      st.mode = 'seek'; st.x = DOOR[0]; st.z = DOOR[1]; st.alpha = 0;
+      const first = chairs[nextChair()];
+      st.door = edgeNear(first.x, first.z);
+      st.mode = 'seek'; st.x = st.door[0]; st.z = st.door[1]; st.alpha = 0;
       p.root.visible = true;
     }
     st.t += dt;
@@ -613,15 +629,15 @@ if (tidy) {
     let moving = false;
     if (st.mode === 'seek') {
       const i = nextChair();
-      if (i === null) st.mode = 'leave';
+      if (i === null) { st.mode = 'leave'; st.door = edgeNear(st.x, st.z); }
       else {
-        moving = !approach(i, home[i], 1.05, dt);
-        if (!moving) { st.mode = 'carry'; st.chair = i; st.target = home[i]; chairs[i].carried = true; st.wait = 0.3; }
+        moving = !approach(i, home[i], 1.6, dt);
+        if (!moving) { st.mode = 'carry'; st.chair = i; st.target = home[i]; chairs[i].carried = true; st.wait = 0.15; }
       }
     }
     if (st.mode === 'carry') {
       if (st.wait > 0) st.wait -= dt;
-      else { const [done, mv] = carry(dt, 0.8); moving = mv; if (done) st.mode = 'seek'; }
+      else { const [done, mv] = carry(dt, 1.05); moving = mv; if (done) st.mode = 'seek'; }
     }
     if (st.mode === 'angry') {
       faceTo(az, dt);
@@ -675,7 +691,7 @@ if (tidy) {
     }
     if (st.mode === 'leave') {
       moving = true;
-      if (moveTo(DOOR[0], DOOR[1], st.mad ? 1.6 : 1.05, dt)) {
+      if (moveTo(st.door[0], st.door[1], st.mad ? 1.8 : 1.4, dt)) {
         st.mode = 'off'; p.root.visible = false; st.leftAt = now;
         if (st.mad) { st.anger = 0; st.cool = 6; st.mad = false; st.red = 0; tLine.color.copy(CALM); }
         return;
@@ -715,7 +731,7 @@ if (tidy) {
     const pulse = st.mode === 'angry' || (st.mode === 'rampage' && st.fury > 0.3) ? 0.82 + 0.18 * Math.sin(st.t * 14) : 1;
     tLine.color.copy(CALM).lerp(MAD, st.red * pulse);
 
-    const dDoor = Math.hypot(st.x - DOOR[0], st.z - DOOR[1]);
+    const dDoor = Math.hypot(st.x - st.door[0], st.z - st.door[1]);
     const aT = st.mode === 'leave' ? Math.min(1, dDoor / 0.8) : 1;
     st.alpha += (aT - st.alpha) * Math.min(1, dt * (st.mode === 'leave' ? 20 : 4));
     tLine.opacity = st.alpha; tFill.opacity = st.alpha;
