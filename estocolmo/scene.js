@@ -512,7 +512,7 @@ if (people) {
   }
 }
 
-// ---------- the tidier: after 2s without touching anything, someone comes to put the chairs back.
+// ---------- the tidier: after ~1s without touching anything, someone comes to put the chairs back.
 // interrupt them too many times and they lose it: they mess the chairs up and storm off. ----------
 let lastTouch = -1e9;
 let tidyInterrupt = () => {};
@@ -527,7 +527,8 @@ if (tidy) {
   const home = homeLayout();
   const DOOR = [-4.25, 2.8];
   const GRIP = 0.4;
-  const ANGER_LIMIT = 3;
+  const ANGER_LIMIT = 2;
+  const IDLE_MS = 1100;
   const st = {
     mode: 'off', x: DOOR[0], z: DOOR[1], y: 0, face: 0, ph: 0, m: 0,
     chair: null, target: null, pickI: null, wait: 0, alpha: 0, lean: 0,
@@ -585,16 +586,19 @@ if (tidy) {
   tidyInterrupt = () => {
     if (st.mode === 'off' || (st.mode === 'leave' && st.mad)) return;
     if (st.mode === 'angry' || st.mode === 'rampage' || st.mode === 'calm') return; // ignores you
+    // snatching the chair out of their hands is the worst offence
+    const snatched = st.chair !== null && drag && drag.chair === chairs[st.chair];
     drop();
-    if (st.mode !== 'pause') {
-      st.anger += 1;
+    if (snatched) st.anger += ANGER_LIMIT;
+    if (st.mode !== 'pause' || snatched) {
+      if (!snatched) st.anger += 1;
       st.t = 0;
       if (st.anger >= ANGER_LIMIT) { st.mode = 'angry'; st.mad = true; } else st.mode = 'pause';
     }
   };
 
   tickers.push((dt, now) => {
-    const idle = now - lastTouch > 2000 && !drag;
+    const idle = now - lastTouch > IDLE_MS && !drag;
     if (st.mode === 'off') {
       st.anger = Math.max(0, st.anger - dt / 20);
       st.cool -= dt;
