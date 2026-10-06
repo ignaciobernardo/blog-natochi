@@ -35,7 +35,7 @@
   p { margin: 0 0 1em; font-size: 1.02rem; line-height: 1.65; }
   .muted { color: #8a8a8a; }
 
-  form { margin-top: 1rem; }
+  form { margin-top: 2.4rem; }
   .field { margin: 0 0 2.2rem; }
   label { display: block; font-weight: 400; font-size: 1.08rem; line-height: 1.4; margin-bottom: .35rem; }
   label .req { color: #6a6a6a; font-weight: 300; }
@@ -75,22 +75,15 @@
 
   <div class="intro">
     <h1>Propón un evento de AI safety en la terraza</h1>
-    <p>Tenemos una terraza en un departamento y queremos abrirla a encuentros que ayuden a aprender, conectar y trabajar en seguridad de la IA (AI safety) en Chile.</p>
-    <p>¿Tienes una idea? Queremos conocerla. Puede ser un club de lectura, un taller, una conversación con invitados, una sesión de trabajo o un formato que todavía no hayamos probado. No necesitas tener todo resuelto: una propuesta concreta y unas ganas de llevarla a cabo son un buen comienzo.</p>
-    <p class="muted">Completar este formulario toma unos 5–7 minutos. Puedes responder con frases cortas.</p>
-
-    <h2>El espacio</h2>
-    <p>El encuentro sería en la terraza de un departamento. La capacidad, el equipamiento, la accesibilidad y los horarios disponibles se confirmarán al coordinar cada propuesta.</p>
-    <p>Buscamos actividades vinculadas a AI safety que aporten a la comunidad. Enviar una propuesta no reserva el espacio: conversaremos contigo para evaluar cómo hacerla posible.</p>
-
-    <h2>Tu propuesta</h2>
+    <p>Queremos abrir la terraza a encuentros para aprender, conectar y trabajar en AI safety en Chile: un club de lectura, un taller, una charla, una sesión de trabajo o algo nuevo. No necesitas tenerlo todo resuelto.</p>
+    <p class="muted">Toma unos 5 minutos. Frases cortas están bien.</p>
   </div>
 
   <form id="f" novalidate></form>
 
   <div class="thanks">
-    <h1>¡Gracias por proponer!</h1>
-    <p>Recibimos tu idea. Usaremos el contacto que dejaste para conversar sobre la propuesta y los próximos pasos.</p>
+    <h1>¡Gracias!</h1>
+    <p>Te escribimos al correo que dejaste para conversar la propuesta.</p>
     <p><a href="/estocolmo/">volver a estocolmo house &rarr;</a></p>
   </div>
 </div>
@@ -99,15 +92,15 @@
 // Same questions as the Tally form (tally.so/r/obX4rb); answers are sent to Tally, keyed by its field ids.
 const TALLY_FORM = 'obX4rb';
 const FIELDS = [
-  { id: '181b35f0-d053-4b6c-b47b-36a85ea16ac4', q: '¿Qué quieres proponer?', help: 'Dale un nombre a tu idea y cuéntanos qué pasaría durante el encuentro. ¿Qué formato tendría y cómo se relaciona con AI safety?' },
-  { id: '0f5dea29-68d1-4d9a-b47d-c7fe1e8e08b8', q: '¿Quién se va a encargar de organizarlo?', help: 'Tu nombre y, si hay más personas, quiénes son y qué rol asumiría cada una. Si estás buscando equipo, también puedes decirlo.' },
-  { id: '3970bd03-6fd4-4efa-b156-24ffe974179d', q: '¿A qué correo podemos contactarte?', type: 'email' },
-  { id: 'e5afe441-5d69-4346-a581-93d2ad01e931', q: '¿A quién está dirigido y cuántas personas imaginas?', help: '¿A quién te gustaría convocar? ¿Necesitarían conocimientos previos?' },
-  { id: 'e88bc491-a273-44c0-b34b-9016b9b55ad8', q: '¿Cuál es el cambio que quieres generar?', help: '¿Qué te gustaría que las personas entendieran, hicieran o pudieran hacer después del evento? ¿Qué señal concreta te diría que valió la pena?' },
-  { id: '78386b68-c05f-458d-8be3-9e062f3c8c73', q: '¿Por qué ahora?', help: '¿Hay una oportunidad, necesidad o conversación que haga especialmente útil este encuentro en este momento?' },
-  { id: 'cd876887-b69e-416f-a9a6-1e52a93a77d0', q: '¿Cuándo te gustaría hacerlo y cuánto duraría?', help: 'Puedes proponer fechas o un rango aproximado. Si eres flexible, cuéntanos.' },
-  { id: '069c31f0-371c-4bb3-80c4-e8468b2ed474', q: '¿Qué necesitas para hacerlo posible?', help: 'Además del espacio: materiales, equipamiento, difusión, apoyo de otras personas o presupuesto estimado. Distingue qué puedes aportar tú y qué apoyo estás buscando; lo conversaremos, sin asumir que esté disponible.' },
-  { id: '88d2c0ce-a8a5-48b9-b672-1b1c99af3533', q: '¿Hay algo más que debamos saber?', help: 'Puedes incluir enlaces, necesidades de accesibilidad o cualquier consideración importante para recibir al grupo.', optional: true },
+  { id: '181b35f0-d053-4b6c-b47b-36a85ea16ac4', q: '¿Qué quieres proponer?', help: 'Nombre, formato y cómo se conecta con AI safety.' },
+  { id: '0f5dea29-68d1-4d9a-b47d-c7fe1e8e08b8', q: '¿Quién lo organiza?', help: 'Tú y quién más, con su rol. Si buscas equipo, dilo.' },
+  { id: '3970bd03-6fd4-4efa-b156-24ffe974179d', q: 'Tu correo', type: 'email' },
+  { id: 'e5afe441-5d69-4346-a581-93d2ad01e931', q: '¿Para quién es y cuántas personas?', help: '¿Hace falta saber algo antes?' },
+  { id: 'e88bc491-a273-44c0-b34b-9016b9b55ad8', q: '¿Qué cambio quieres generar?', help: '¿Qué debería poder hacer la gente después? ¿Cómo sabrías que valió la pena?' },
+  { id: '78386b68-c05f-458d-8be3-9e062f3c8c73', q: '¿Por qué ahora?' },
+  { id: 'cd876887-b69e-416f-a9a6-1e52a93a77d0', q: '¿Cuándo y cuánto dura?', help: 'Fechas o un rango. Si eres flexible, dilo.' },
+  { id: '069c31f0-371c-4bb3-80c4-e8468b2ed474', q: '¿Qué necesitas?', help: 'Materiales, difusión, gente o presupuesto. Qué pones tú y qué buscas.' },
+  { id: '88d2c0ce-a8a5-48b9-b672-1b1c99af3533', q: '¿Algo más?', help: 'Links, accesibilidad o lo que debamos saber.', optional: true },
 ];
 const DRAFT_KEY = 'estocolmo-proponer-draft';
 
@@ -120,7 +113,7 @@ form.innerHTML = FIELDS.map((f, i) => `
     ${f.type === 'email'
       ? `<input id="q${i}" name="${f.id}" type="email" autocomplete="email" inputmode="email" ${f.optional ? '' : 'required'}>`
       : `<textarea id="q${i}" name="${f.id}" rows="1" ${f.help ? `aria-describedby="h${i}"` : ''} ${f.optional ? '' : 'required'}></textarea>`}
-    <div class="err">${f.type === 'email' ? 'Escribe un correo válido.' : 'Esta pregunta es obligatoria.'}</div>
+    <div class="err">${f.type === 'email' ? 'Escribe un correo válido.' : 'Falta esta respuesta.'}</div>
   </div>`).join('') + `
   <div class="actions">
     <button type="submit">Enviar propuesta</button>
