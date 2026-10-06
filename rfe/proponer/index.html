@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#030303">
+<title>Proponer un evento — Estocolmo House</title>
+<meta name="description" content="Propón un evento de AI safety en la terraza de Estocolmo House.">
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://natochi.cv/rfe/proponer">
+<meta property="og:title" content="Propón un evento — Estocolmo House">
+<meta property="og:description" content="Propón un evento de AI safety en la terraza.">
+<meta property="og:image" content="https://natochi.cv/estocolmo/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://natochi.cv/estocolmo/img/og.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #030303; }
+  body {
+    color: #d8d8d8;
+    font-family: 'Newsreader', Georgia, 'Times New Roman', serif; font-weight: 300;
+    display: flex; justify-content: center;
+    padding: clamp(28px, 8vh, 80px) 20px clamp(56px, 12vh, 120px);
+  }
+  ::selection { background: #fff; color: #030303; }
+  .col { width: min(520px, 100%); }
+  a { color: inherit; text-decoration: underline; text-decoration-color: #555; text-underline-offset: 3px; }
+  a:hover { text-decoration-color: #d8d8d8; }
+  .back { font-size: .95rem; color: #8a8a8a; text-decoration: none; display: inline-block; margin-bottom: 2.2rem; }
+  .back:hover { color: #d8d8d8; }
+  h1 { font-weight: 400; font-style: italic; font-size: 1.6rem; line-height: 1.25; margin: 0 0 1.2rem; }
+  h2 { font-weight: 400; font-style: italic; font-size: 1.15rem; margin: 2.6rem 0 .8rem; color: #bdbdbd; }
+  p { margin: 0 0 1em; font-size: 1.02rem; line-height: 1.65; }
+  .muted { color: #8a8a8a; }
+
+  form { margin-top: 2.4rem; }
+  .field { margin: 0 0 2.2rem; }
+  label { display: block; font-weight: 400; font-size: 1.08rem; line-height: 1.4; margin-bottom: .35rem; }
+  label .req { color: #6a6a6a; font-weight: 300; }
+  .help { font-size: .95rem; line-height: 1.55; color: #8a8a8a; margin: 0 0 .7rem; }
+  textarea, input[type=email] {
+    width: 100%; display: block;
+    font: inherit; font-size: 1.02rem; line-height: 1.6; color: #e8e8e8;
+    background: transparent; border: 0; border-bottom: 1px solid #333;
+    padding: .35rem 0 .45rem; border-radius: 0; resize: none; overflow: hidden;
+    transition: border-color .2s ease;
+  }
+  textarea { min-height: 2.6em; }
+  textarea:focus, input:focus { outline: none; border-bottom-color: #d8d8d8; }
+  .field.invalid textarea, .field.invalid input { border-bottom-color: #e0644f; }
+  .err { display: none; font-size: .9rem; color: #e0644f; margin-top: .4rem; }
+  .field.invalid .err { display: block; }
+
+  .actions { display: flex; align-items: baseline; gap: 1.2rem; flex-wrap: wrap; margin-top: 2.6rem; }
+  button[type=submit] {
+    font: inherit; font-size: 1.05rem; color: #030303; background: #e8e8e8;
+    border: 0; padding: .55rem 1.2rem; cursor: pointer; transition: background .2s ease, opacity .2s ease;
+  }
+  button[type=submit]:hover { background: #fff; }
+  button[type=submit][disabled] { opacity: .5; cursor: progress; }
+  .status { font-size: .95rem; color: #8a8a8a; }
+  .status.bad { color: #e0644f; }
+  .saved { font-size: .85rem; color: #555; }
+
+  .thanks { display: none; }
+  .done .thanks { display: block; }
+  .done form, .done .intro { display: none; }
+</style>
+</head>
+<body>
+<div class="col" id="root">
+  <a class="back" href="/rfe/">&larr; request for events</a>
+
+  <div class="intro">
+    <h1>Propón un evento de AI safety en la terraza</h1>
+    <p>Queremos abrir la terraza a encuentros para aprender, conectar y trabajar en AI safety en Chile: un club de lectura, un taller, una charla, una sesión de trabajo o algo nuevo. No necesitas tenerlo todo resuelto.</p>
+    <p class="muted">Toma unos 5 minutos. Frases cortas están bien.</p>
+  </div>
+
+  <form id="f" novalidate></form>
+
+  <div class="thanks">
+    <h1>¡Gracias!</h1>
+    <p>Te escribimos al correo que dejaste para conversar la propuesta.</p>
+    <p><a href="/rfe/">volver &rarr;</a></p>
+  </div>
+</div>
+
+<script>
+// Same questions as the Tally form (tally.so/r/obX4rb); answers are sent to Tally, keyed by its field ids.
+const TALLY_FORM = 'obX4rb';
+const FIELDS = [
+  { id: '181b35f0-d053-4b6c-b47b-36a85ea16ac4', q: '¿Qué quieres proponer?', help: 'Nombre, formato y cómo se conecta con AI safety.' },
+  { id: '0f5dea29-68d1-4d9a-b47d-c7fe1e8e08b8', q: '¿Quién lo organiza?', help: 'Tú y quién más, con su rol. Si buscas equipo, dilo.' },
+  { id: '3970bd03-6fd4-4efa-b156-24ffe974179d', q: 'Tu correo', type: 'email' },
+  { id: 'e5afe441-5d69-4346-a581-93d2ad01e931', q: '¿Para quién es y cuántas personas?', help: '¿Hace falta saber algo antes?' },
+  { id: 'e88bc491-a273-44c0-b34b-9016b9b55ad8', q: '¿Qué cambio quieres generar?', help: '¿Qué debería poder hacer la gente después? ¿Cómo sabrías que valió la pena?' },
+  { id: '78386b68-c05f-458d-8be3-9e062f3c8c73', q: '¿Por qué ahora?' },
+  { id: 'cd876887-b69e-416f-a9a6-1e52a93a77d0', q: '¿Cuándo y cuánto dura?', help: 'Fechas o un rango. Si eres flexible, dilo.' },
+  { id: '069c31f0-371c-4bb3-80c4-e8468b2ed474', q: '¿Qué necesitas?', help: 'Materiales, difusión, gente o presupuesto. Qué pones tú y qué buscas.' },
+  { id: '88d2c0ce-a8a5-48b9-b672-1b1c99af3533', q: '¿Algo más?', help: 'Links, accesibilidad o lo que debamos saber.', optional: true },
+];
+const DRAFT_KEY = 'rfe-proponer-draft';
+
+const form = document.getElementById('f');
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+form.innerHTML = FIELDS.map((f, i) => `
+  <div class="field" data-id="${f.id}">
+    <label for="q${i}">${i + 1}. ${esc(f.q)}${f.optional ? ' <span class="req">(opcional)</span>' : ''}</label>
+    ${f.help ? `<p class="help" id="h${i}">${esc(f.help)}</p>` : ''}
+    ${f.type === 'email'
+      ? `<input id="q${i}" name="${f.id}" type="email" autocomplete="email" inputmode="email" ${f.optional ? '' : 'required'}>`
+      : `<textarea id="q${i}" name="${f.id}" rows="1" ${f.help ? `aria-describedby="h${i}"` : ''} ${f.optional ? '' : 'required'}></textarea>`}
+    <div class="err">${f.type === 'email' ? 'Escribe un correo válido.' : 'Falta esta respuesta.'}</div>
+  </div>`).join('') + `
+  <div class="actions">
+    <button type="submit">Enviar propuesta</button>
+    <span class="status" id="status" role="status"></span>
+    <span class="saved" id="saved"></span>
+  </div>`;
+
+const grow = (t) => { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; };
+const inputs = [...form.querySelectorAll('textarea, input')];
+
+// restore draft (per browser only)
+try {
+  const d = JSON.parse(localStorage.getItem(DRAFT_KEY) || '{}');
+  for (const el of inputs) if (d[el.name]) el.value = d[el.name];
+} catch (e) {}
+inputs.forEach((el) => { if (el.tagName === 'TEXTAREA') grow(el); });
+
+let saveT;
+form.addEventListener('input', (e) => {
+  if (e.target.tagName === 'TEXTAREA') grow(e.target);
+  e.target.closest('.field')?.classList.remove('invalid');
+  clearTimeout(saveT);
+  saveT = setTimeout(() => {
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(Object.fromEntries(inputs.map((el) => [el.name, el.value]))));
+      document.getElementById('saved').textContent = 'borrador guardado';
+    } catch (e) {}
+  }, 500);
+});
+window.addEventListener('resize', () => inputs.forEach((el) => el.tagName === 'TEXTAREA' && grow(el)));
+
+const uuid = () => (crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16); }));
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const status = document.getElementById('status');
+  let firstBad = null;
+  for (const el of inputs) {
+    const f = FIELDS.find((x) => x.id === el.name);
+    const v = el.value.trim();
+    const bad = (!f.optional && !v) || (f.type === 'email' && v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v));
+    el.closest('.field').classList.toggle('invalid', bad);
+    if (bad && !firstBad) firstBad = el;
+  }
+  if (firstBad) { firstBad.focus(); status.className = 'status bad'; status.textContent = 'faltan algunas respuestas.'; return; }
+
+  const btn = form.querySelector('button[type=submit]');
+  btn.disabled = true; status.className = 'status'; status.textContent = 'enviando…';
+  const responses = Object.fromEntries(inputs.map((el) => [el.name, el.value.trim()]));
+  try {
+    const r = await fetch(`https://api.tally.so/forms/${TALLY_FORM}/respond`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionUuid: uuid(), respondentUuid: uuid(), responses, captchas: {}, isCompleted: true }),
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+    document.getElementById('root').classList.add('done');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (err) {
+    btn.disabled = false;
+    status.className = 'status bad';
+    status.innerHTML = 'no se pudo enviar. tus respuestas quedaron guardadas acá; prueba de nuevo o usa <a href="https://tally.so/r/obX4rb">el formulario en tally</a>.';
+  }
+});
+</script>
+</body>
+</html>
