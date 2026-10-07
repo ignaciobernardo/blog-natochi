@@ -25,3 +25,14 @@
 - Root cause: an existing visitor can receive the new HTML with the cached script from the first release.
 - Fix: version the script and stylesheet URLs in the HTML so the browser requests the current assets.
 - Verification: repeat the live poster edit after deployment with the versioned URLs.
+
+## 2026-10-07 — Roots
+
+- Product goal: a 1:1 reproduction of the Root Toy effect (nicolino.zip/root-toy): vines that cling to a word's outline, wrap around the letters passing in front and behind, and grow leaves and flowers.
+- Method: reverse-engineered from the public production bundle. Same algorithm and constants: exact signed distance field of the text mask (Felzenszwalb EDT); one seed per letter at its lowest edge with a budget proportional to its perimeter; fixed-step particles that grip the contour at dTarget, follow the tangent, seek, wander with 1D noise, repel their own trail through a spatial hash, wrap across the glyph and are held by a leash; branches every branchEvery, alternating behind and in front; regrowth from the last anchor when a stem strays; "capital" mode with per-letter boxes and a 6×6 coverage navigator. Same seeds give the same stems as the original.
+- Visible output: paper, optional letter boxes, back stems, back foliage, outlined glyph, front stems, front foliage. Stems are outlined, toned by depth, and tapered at the growing tip; leaves pop and sway in the wind; flowers go through three bud frames before opening.
+- Art: leaves and flowers are redrawn as original vector paths in the same style; the original sprites are not copied.
+- Controls: text (4 lines, 48 chars), system/Google/uploaded font, weight, alignment, size, tracking, line height, branches, leaves, flowers, stem width, seed, grow and duration, wind and breeze, format, letter boxes, monotone, transparent, visibility, paper/box/ink colors.
+- Export: PNG at up to 2×, SVG (stems, foliage and live text), and MP4/WebM recordings of the growth and of one wind loop.
+- Integration: static module app under `tools/roots/` (`engine.js`, `sprites.js`, `app.js`), linked from `tools/index.html`.
+- Verification: side-by-side render against the live original with the same word and seed, growth frames, letter-box mode, PNG/SVG/video downloads, no console errors, no horizontal overflow at 390 px.
