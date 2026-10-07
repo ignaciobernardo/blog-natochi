@@ -1,0 +1,1 @@
+import{r as e,t}from"./grid.Cq0CTVvy.js";var n=e();document.querySelectorAll(`[data-noise]`).forEach(e=>e.style.backgroundImage=`url(${n})`);var r=document.querySelector(`[data-hero-ceiling]`);r&&t(r,{floor:!1,ceiling:!0,horizon:.96,gap:.2,columns:30,period:6,curve:0});
