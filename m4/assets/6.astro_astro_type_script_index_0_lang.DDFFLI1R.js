@@ -1,0 +1,1 @@
+import{t as e}from"./grid.Cq0CTVvy.js";var t=document.querySelector(`[data-hero-ceiling]`);t&&e(t,{floor:!1,ceiling:!0,horizon:.96,gap:.2,columns:30,period:6,curve:0});
