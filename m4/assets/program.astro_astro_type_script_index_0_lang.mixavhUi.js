@@ -1,1 +1,0 @@
-import{b as e,t}from"./fellows.aqPWOHsL.js";t().accordion(document.querySelector(`[data-acc]`),{single:!0});var n=e(),r=[...document.querySelectorAll(`.ff-phase`)],i=r.find((e,t)=>n>=e.dataset.from&&n<=e.dataset.to&&!(t===3&&n<=r[2].dataset.to));i&&(i.classList.add(`now`),i.setAttribute(`aria-current`,`step`),i.querySelector(`.ff-now-tag`).hidden=!1);
