@@ -1,0 +1,1 @@
+import{t as e}from"./grid.DlMd5AdM.js";import"./login-1.CdHPTHIi.js";var t=document.querySelector(`[data-v1-ceiling]`);t&&e(t,{floor:!1,ceiling:!0,horizon:.98,gap:.16,columns:26,period:6,curve:0});
