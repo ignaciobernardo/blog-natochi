@@ -1,0 +1,1 @@
+import{t as e}from"./grid.DlMd5AdM.js";import{t}from"./grain.-Ms25o3J.js";t();var n=document.querySelector(`[data-pv-floor]`);n&&e(n,{floor:!0,ceiling:!1,horizon:.42,gap:.04,columns:40,period:9,curve:0});
