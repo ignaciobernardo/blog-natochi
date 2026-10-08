@@ -1,1 +1,0 @@
-import{t as e}from"./grid.Cq0CTVvy.js";var t=document.querySelector(`.b-close [data-grid-floor]`);t&&e(t,{gap:.06,ceiling:!1,columns:48,period:6,horizon:.56,curve:0});
