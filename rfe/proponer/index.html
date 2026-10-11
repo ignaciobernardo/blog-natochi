@@ -1,16 +1,16 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#030303">
-<title>Proponer un evento — Estocolmo House</title>
-<meta name="description" content="Propón un evento de AI safety en la terraza de Estocolmo House.">
+<title>Propose an event — Estocolmo House</title>
+<meta name="description" content="Propose an AI safety event on the Estocolmo House terrace.">
 <link rel="icon" type="image/png" href="/favicon.png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://natochi.cv/rfe/proponer">
-<meta property="og:title" content="Propón un evento — Estocolmo House">
-<meta property="og:description" content="Propón un evento de AI safety en la terraza.">
+<meta property="og:title" content="Propose an event — Estocolmo House">
+<meta property="og:description" content="Propose an AI safety event on the terrace.">
 <meta property="og:image" content="https://natochi.cv/estocolmo/img/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -78,17 +78,17 @@
   <a class="back" href="/rfe/">&larr; request for events</a>
 
   <div class="intro">
-    <h1>Propón un evento de AI safety en la terraza</h1>
-    <p>Queremos abrir la terraza a encuentros para aprender, conectar y trabajar en AI safety en Chile: un club de lectura, un taller, una charla, una sesión de trabajo o algo nuevo.</p>
-    <p class="muted">Toma unos 5 minutos. Frases cortas están bien. NO AI</p>
+    <h1>Propose an AI safety event on the terrace</h1>
+    <p>We want to open the terrace to gatherings for learning, connecting and working on AI safety in Chile: a reading group, a workshop, a talk, a work session or something new.</p>
+    <p class="muted">Takes about 5 minutes. Short sentences are fine. NO AI</p>
   </div>
 
   <form id="f" novalidate></form>
 
   <div class="thanks">
-    <h1>¡Gracias!</h1>
-    <p>Te escribimos al correo que dejaste para conversar la propuesta.</p>
-    <p><a href="/rfe/">volver &rarr;</a></p>
+    <h1>Thanks!</h1>
+    <p>We'll email you at the address you left to talk about the proposal.</p>
+    <p><a href="/rfe/">back &rarr;</a></p>
   </div>
 </div>
 
@@ -96,15 +96,15 @@
 // Same questions as the Tally form (tally.so/r/obX4rb); answers are sent to Tally, keyed by its field ids.
 const TALLY_FORM = 'obX4rb';
 const FIELDS = [
-  { id: '181b35f0-d053-4b6c-b47b-36a85ea16ac4', q: '¿Qué quieres proponer?', help: 'Nombre, formato y cómo se conecta con AI safety.' },
-  { id: '0f5dea29-68d1-4d9a-b47d-c7fe1e8e08b8', q: '¿Quién lo organiza?', help: 'Tú y quién más, con su rol. Si buscas equipo, dilo.' },
-  { id: '3970bd03-6fd4-4efa-b156-24ffe974179d', q: 'Tu correo', type: 'email' },
-  { id: 'e5afe441-5d69-4346-a581-93d2ad01e931', q: '¿Para quién es y cuántas personas?', help: '¿Hace falta saber algo antes?' },
-  { id: 'e88bc491-a273-44c0-b34b-9016b9b55ad8', q: '¿Qué cambio quieres generar?', help: '¿Qué debería poder hacer la gente después? ¿Cómo sabrías que valió la pena?' },
-  { id: '78386b68-c05f-458d-8be3-9e062f3c8c73', q: '¿Por qué ahora?' },
-  { id: 'cd876887-b69e-416f-a9a6-1e52a93a77d0', q: '¿Cuándo y cuánto dura?', help: 'Fechas o un rango. Si eres flexible, dilo.' },
-  { id: '069c31f0-371c-4bb3-80c4-e8468b2ed474', q: '¿Qué necesitas?', help: 'Materiales, difusión, gente o presupuesto. Qué pones tú y qué buscas.' },
-  { id: '88d2c0ce-a8a5-48b9-b672-1b1c99af3533', q: '¿Algo más?', help: 'Links, accesibilidad o lo que debamos saber.', optional: true },
+  { id: '181b35f0-d053-4b6c-b47b-36a85ea16ac4', q: 'What do you want to propose?', help: 'Name, format and how it connects to AI safety.' },
+  { id: '0f5dea29-68d1-4d9a-b47d-c7fe1e8e08b8', q: 'Who is organizing it?', help: 'You and who else, with their roles. If you are looking for a team, say so.' },
+  { id: '3970bd03-6fd4-4efa-b156-24ffe974179d', q: 'Your email', type: 'email' },
+  { id: 'e5afe441-5d69-4346-a581-93d2ad01e931', q: 'Who is it for and how many people?', help: 'Do people need to know anything beforehand?' },
+  { id: 'e88bc491-a273-44c0-b34b-9016b9b55ad8', q: 'What change do you want to create?', help: 'What should people be able to do afterwards? How would you know it was worth it?' },
+  { id: '78386b68-c05f-458d-8be3-9e062f3c8c73', q: 'Why now?' },
+  { id: 'cd876887-b69e-416f-a9a6-1e52a93a77d0', q: 'When, and how long?', help: 'Dates or a range. If you are flexible, say so.' },
+  { id: '069c31f0-371c-4bb3-80c4-e8468b2ed474', q: 'What do you need?', help: 'Materials, promotion, people or budget. What you bring and what you are looking for.' },
+  { id: '88d2c0ce-a8a5-48b9-b672-1b1c99af3533', q: 'Anything else?', help: 'Links, accessibility or anything we should know.', optional: true },
 ];
 const DRAFT_KEY = 'rfe-proponer-draft';
 
@@ -112,15 +112,15 @@ const form = document.getElementById('f');
 const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 form.innerHTML = FIELDS.map((f, i) => `
   <div class="field" data-id="${f.id}">
-    <label for="q${i}">${i + 1}. ${esc(f.q)}${f.optional ? ' <span class="req">(opcional)</span>' : ''}</label>
+    <label for="q${i}">${i + 1}. ${esc(f.q)}${f.optional ? ' <span class="req">(optional)</span>' : ''}</label>
     ${f.help ? `<p class="help" id="h${i}">${esc(f.help)}</p>` : ''}
     ${f.type === 'email'
       ? `<input id="q${i}" name="${f.id}" type="email" autocomplete="email" inputmode="email" ${f.optional ? '' : 'required'}>`
       : `<textarea id="q${i}" name="${f.id}" rows="1" ${f.help ? `aria-describedby="h${i}"` : ''} ${f.optional ? '' : 'required'}></textarea>`}
-    <div class="err">${f.type === 'email' ? 'Escribe un correo válido.' : 'Falta esta respuesta.'}</div>
+    <div class="err">${f.type === 'email' ? 'Enter a valid email.' : 'This answer is missing.'}</div>
   </div>`).join('') + `
   <div class="actions">
-    <button type="submit">Enviar propuesta</button>
+    <button type="submit">Send proposal</button>
     <span class="status" id="status" role="status"></span>
     <span class="saved" id="saved"></span>
   </div>`;
@@ -143,7 +143,7 @@ form.addEventListener('input', (e) => {
   saveT = setTimeout(() => {
     try {
       localStorage.setItem(DRAFT_KEY, JSON.stringify(Object.fromEntries(inputs.map((el) => [el.name, el.value]))));
-      document.getElementById('saved').textContent = 'borrador guardado';
+      document.getElementById('saved').textContent = 'draft saved';
     } catch (e) {}
   }, 500);
 });
@@ -162,10 +162,10 @@ form.addEventListener('submit', async (e) => {
     el.closest('.field').classList.toggle('invalid', bad);
     if (bad && !firstBad) firstBad = el;
   }
-  if (firstBad) { firstBad.focus(); status.className = 'status bad'; status.textContent = 'faltan algunas respuestas.'; return; }
+  if (firstBad) { firstBad.focus(); status.className = 'status bad'; status.textContent = 'some answers are missing.'; return; }
 
   const btn = form.querySelector('button[type=submit]');
-  btn.disabled = true; status.className = 'status'; status.textContent = 'enviando…';
+  btn.disabled = true; status.className = 'status'; status.textContent = 'sending…';
   const responses = Object.fromEntries(inputs.map((el) => [el.name, el.value.trim()]));
   try {
     const r = await fetch(`https://api.tally.so/forms/${TALLY_FORM}/respond`, {
@@ -180,7 +180,7 @@ form.addEventListener('submit', async (e) => {
   } catch (err) {
     btn.disabled = false;
     status.className = 'status bad';
-    status.innerHTML = 'no se pudo enviar. tus respuestas quedaron guardadas acá; prueba de nuevo o usa <a href="https://tally.so/r/obX4rb">el formulario en tally</a>.';
+    status.innerHTML = 'couldn\'t send. your answers are saved here; try again or use <a href="https://tally.so/r/obX4rb">the tally form</a>.';
   }
 });
 </script>
