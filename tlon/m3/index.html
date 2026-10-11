@@ -262,7 +262,7 @@
 
   // the bundle's own source for the four pieces: pulled from the file, not pasted
   const cuts = { grid: ['  /* ───────── PerspectiveGrid', '  /* ───────── Mark'], burst: ['  // ── TileBurst', '  // ── CRTScan'], scan: ['  // ── CRTScan', '\n  GS.'], grain: ['  /* ───────── Grain', '  /* ───────── PerspectiveGrid'] };
-  fetch('m3/ds/bundle.js').then(r => r.text()).then(js => {
+  fetch(location.pathname.replace(/\/m3\/?$/, '') + '/m3/ds/bundle.js').then(r => r.text()).then(js => {
     for (const [k, [a, b]] of Object.entries(cuts)) {
       const i = js.indexOf(a); if (i < 0) continue;
       let j = js.indexOf(b, i + a.length); if (j < 0) j = i + 6000;
