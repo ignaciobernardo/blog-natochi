@@ -1,6 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-40 -279 1218 1218" role="img" aria-label="tlon"><rect x="-40" y="-279" width="1218" height="1218" rx="220" fill="#141a0a"/>
-<g transform="translate(0.000000,660.000000) scale(0.100000,-0.100000)"
-fill="#c6d65a" stroke="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+<rect width="180" height="180" rx="54" fill="#c6d65a"/>
+<g stroke="#141a0a" stroke-opacity=".45" stroke-width="1.2" fill="none">
+<path d="M14 6V174M166 6V174M6 14H174M6 166H174"/>
+</g>
+<path d="M14 46 Q14 14 46 14" stroke="#141a0a" stroke-width="2.4" fill="none"/>
+<circle cx="14" cy="46" r="3.6" fill="#141a0a"/><circle cx="46" cy="14" r="3.6" fill="#141a0a"/>
+<g transform="translate(36 62) scale(0.0949)"><g transform="translate(0.000000,660.000000) scale(0.100000,-0.100000)"
+fill="#141a0a" stroke="none">
 <path d="M9770 6471 c-163 -53 -273 -223 -241 -371 59 -274 369 -373 568 -182
 74 72 88 107 88 232 0 99 -2 108 -31 160 -36 63 -116 134 -171 150 -49 15
 -181 22 -213 11z M5780 6281 c-195 -63 -295 -280 -211 -457 102 -215 367 -265
@@ -45,5 +51,5 @@ fill="#c6d65a" stroke="none">
 242 -331 522 -203 830 75 181 235 248 424 177z M2404 5312 c-105 -37 -181
 -126 -209 -246 -37 -161 63 -324 232 -376 81 -25 111 -25 191 0 175 55 262
 198 232 382 -30 188 -252 307 -446 240z"/>
-</g>
+</g></g>
 </svg>
