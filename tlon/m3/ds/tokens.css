@@ -1,0 +1,65 @@
+/* Tokens for the local harness, extracted from the synced gs.css. */
+:root {
+  --bg-base: #0b0b0c;
+  --bg-panel: #111213;
+  --bg-raised: #18191b;
+  --bg-hover: #1e2022;
+  --border-primary: #26282a;
+  --border-subtle: #1b1c1e;
+  --border-strong: #4a4d4f;
+  --grid-line: #151617;
+  --fg-primary: #e8e9e6;
+  --fg-secondary: #a4a8a5;
+  --fg-tertiary: #808583;
+  --accent-50: #e2fbf3;
+  --accent-100: #b8f5e2;
+  --accent-300: #8eeed3;
+  --accent-400: #5fe3c0;
+  --accent-500: #3fbf9f;
+  --accent-600: #2f8f7a;
+  --accent-700: #1f5f52;
+  --accent-800: #14302a;
+  --accent-900: #0e1d19;
+  --chart-glow: rgba(95, 227, 192, 0.55);
+  --chart-fill-from: rgba(95, 227, 192, 0.42);
+  --chart-fill-to: rgba(95, 227, 192, 0);
+  --chart-cell: #1f2123;
+  --land: #2a2c2e;
+  --land-edge: #3d4042;
+  --graticule: #25272a;
+  --status-ok: var(--accent-400);
+  --status-warn: #e8b44a;
+  --status-err: #ef6a5a;
+  --on-accent: #062a21;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --grid-page: 48px;
+  --grid-cell: 52px;
+  --icon-cell: 24px;
+  --radius-none: 0;
+  --radius-sm: 2px;
+  --radius-full: 9999px;
+  --shadow-glow: 0 0 12px rgba(95, 227, 192, 0.55);
+  --shadow-panel: inset 0 0 0 1px #26282a;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-serif: "Newsreader", Georgia, serif;
+}
+[data-theme="blue"] {
+  --accent-50: #e8f0fb;
+  --accent-100: #c6d9f4;
+  --accent-300: #9cbeee;
+  --accent-400: #5b92dd;
+  --accent-500: #4a80cb;
+  --accent-600: #3a68a8;
+  --accent-700: #2b4f80;
+  --accent-800: #172a45;
+  --accent-900: #0f1b2d;
+  --chart-glow: rgba(91, 146, 221, 0.55);
+  --chart-fill-from: rgba(91, 146, 221, 0.42);
+  --chart-fill-to: rgba(91, 146, 221, 0);
+  --on-accent: #06142a;
+}
+[data-theme="station"] { --accent-rgb: 95, 227, 192; --accent-hue: 115deg; --grid-glow-rgb: var(--accent-rgb); }
+[data-theme="blue"] { --accent-rgb: 91, 146, 221; --accent-hue: 185deg; }

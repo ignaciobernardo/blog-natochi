@@ -1,0 +1,153 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Kairos · tlon</title><meta name="description" content="Case study: the Kairos marketing site, its program sub-brands, the hero motion and Kairos Labs."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet"><style>:root:root{--bg-color: #141a0a;--text-color: #c6d65a;--border-color: rgba(198, 214, 90, .2);--pill-bg: #5f5434;--pill-fg: #d3df6a}
+</style>
+<link rel="stylesheet" href="/tlon/_astro/kairos.BFD8aXAu.css"></head> <body> <script>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add("embed");</script> <div class="noise-wrap" aria-hidden="true"><div class="noise" id="noise"></div></div> <div class="scan" aria-hidden="true"></div> <div class="wrap"> <header class="top"> <a href="/tlon/" class="sm" style="font-weight:600">tlon</a> <nav class="sm"><a class="o70 hov" href="/tlon/">Work</a><a class="o70 hov" href="https://kairos-project.org/" target="_blank" rel="noopener">Kairos live ↗</a></nav> </header> <h1>Kairos: Accelerating AI safety talent at scale.</h1> <figure> <div class="frame wide live" data-demo="fanout"> <span class="live-tag"><i></i>LIVE</span> <div class="bar"><button type="button" data-replay>RESEED</button><button type="button" data-toggle>CODE</button></div> <div class="code"><pre></pre></div> </div> <figcaption><span>The hero signal: one tube, five channels. Particles enter white and pick up a colour as they branch. Move the mouse to bend the field.</span><span>canvas 2d</span></figcaption> </figure> <p class="lede sm">Kairos is a nonprofit building talent infrastructure for AI safety. We rebuilt their marketing site from an And-Now Figma file, then kept going: one site per program, a generator for the line graphics, and a lab for motion.</p> <div class="scope sm"> <div><span>Website</span><span>Landing, About, Work with us, from Figma to Astro</span></div> <div><span>Program sub-brands</span><span>SPAR, Pathfinder, Global Challenges Project</span></div> <div><span>Motion</span><span>Hero signal, card transitions, hover systems</span></div> <div><span>Tooling</span><span>Procedural graphic generator, options board, Kairos Labs</span></div> </div> <hr> <div class="stream"> <figure> <div class="frame wide light"><img src="/tlon/img/kairos/landing.jpg" alt="Kairos landing" loading="lazy"></div> <figcaption><span>The landing. Pixel staircase, one serif headline, nothing in the way.</span><span>kairos-project.org</span></figcaption> </figure> <div class="grid3"> <figure> <div class="frame sq light"><video src="/tlon/kairos/media/animation-1.mp4" poster="/tlon/img/kairos/hero-option-1.jpg" autoplay muted loop playsinline preload="metadata"></video></div> <figcaption><span>Option 1</span><span>soft branches</span></figcaption> </figure> <figure> <div class="frame sq light"><video src="/tlon/kairos/media/animation-2.mp4" poster="/tlon/img/kairos/hero-option-2.jpg" autoplay muted loop playsinline preload="metadata"></video></div> <figcaption><span>Option 2</span><span>braided</span></figcaption> </figure> <figure> <div class="frame sq light"><video src="/tlon/kairos/media/signal-fanout.mp4" poster="/tlon/img/kairos/signal-fanout.jpg" autoplay muted loop playsinline preload="metadata"></video></div> <figcaption><span>Signal fanout</span><span>shipped</span></figcaption> </figure> </div> <figure> <div class="frame wide light"><img src="/tlon/img/kairos/options.jpg" alt="Options in review board" loading="lazy"></div> <figcaption><span>Every open decision on one page the team could click through: fluid vs. centred column, grid rules, OG and favicon sets.</span><span>/options</span></figcaption> </figure> <div class="grid3"> <figure> <div class="frame sq light"><img src="/tlon/img/kairos/spar.jpg" alt="SPAR" loading="lazy" style="object-position:left top"></div> <figcaption><span>SPAR</span><span>blue</span></figcaption> </figure> <figure> <div class="frame sq light"><img src="/tlon/img/kairos/pathfinder.jpg" alt="Pathfinder" loading="lazy" style="object-position:left top"></div> <figcaption><span>Pathfinder</span><span>red</span></figcaption> </figure> <figure> <div class="frame sq light"><img src="/tlon/img/kairos/gcp.jpg" alt="Global Challenges Project" loading="lazy" style="object-position:left top"></div> <figcaption><span>Global Challenges Project</span><span>green</span></figcaption> </figure> </div> <div class="grid2"> <figure> <div class="frame sq live" data-demo="lines"> <span class="live-tag"><i></i>LIVE</span> <div class="bar"><button type="button" data-replay>RESEED</button><button type="button" data-toggle>CODE</button></div> <div class="code"><pre></pre></div> </div> <figcaption><span>The line graphic behind every sub-brand, procedural. Reseed for a new one.</span><span>generator</span></figcaption> </figure> <figure> <div class="frame sq fit light"><img src="/tlon/img/kairos/og.jpg" alt="Kairos share image" loading="lazy"></div> <figcaption><span>Share image.</span><span>OG · 1200×630</span></figcaption> </figure> </div> </div> <p class="fancy">KAIROS LABS</p> <p class="sm credits">An oscilloscope intro that wanders through patterns before resolving into the Kairos mark. WebGL, filmed-CRT look at 15fps, stereo audio rendered from the beam itself (left = X, right = Y). Sequences are JSON: oscillators, Fourier logos, a reel. Not public yet.</p> <p class="fancy">MORE WORK</p> <div class="more sm"><a href="/tlon/m3">M3 <span class="o50">AI security fellowship</span></a><a href="/tlon/">All work <span class="o50">↗</span></a></div> <footer><span style="font-weight:600">2026</span><a class="hov" href="/tlon/">tlon</a></footer> </div> <!-- ───────── live demos ─────────
+     Each block is a complete page. It is written into an iframe as-is
+     and printed, verbatim, behind the CODE button. --> <script type="text/plain" data-demo-src="fanout">
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; height: 100%; background: #f1f0fb; overflow: hidden; }
+  canvas { display: block; width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+  // One tube on the left, five channels fanning out to the right.
+  // Particles are born white inside the tube and take the channel's
+  // colour as they cross the mouth. The pointer bends the whole field.
+  const cv = document.getElementById("c"), ctx = cv.getContext("2d");
+  const INK = "#342a9c", TINTS = ["#e3413b", "#2f8fdc", "#1f9d6a", "#f2a61a", "#8f7bff"];
+  const N = 5; let W, H, seed = 1, mouse = { x: .5, y: .5 };
+  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  let lanes = [], dots = [];
+
+  function build() {
+    seed = Math.floor(Math.random() * 1e6) + 1;
+    lanes = []; dots = [];
+    for (let i = 0; i < N; i++) {
+      // each channel ends at its own height on the right edge
+      lanes.push({ y1: .18 + (i / (N - 1)) * .64 + (rnd() - .5) * .06, wob: rnd() * Math.PI * 2, tint: TINTS[i] });
+      for (let k = 0; k < 6; k++) dots.push({ lane: i, t: rnd(), v: .0025 + rnd() * .003 });
+    }
+  }
+  function fit() { const d = devicePixelRatio || 1; W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
+
+  // channel i as a cubic from the tube mouth to its exit
+  function path(i, t, time) {
+    const L = lanes[i], x0 = .22 * W, y0 = H * .5, x1 = W, y1 = L.y1 * H;
+    const bend = (mouse.y - .5) * H * .35, bx = (mouse.x - .5) * W * .25;
+    const c1x = x0 + (x1 - x0) * .45 + bx, c1y = y0 + Math.sin(time * .6 + L.wob) * 12;
+    const c2x = x0 + (x1 - x0) * .55 + bx, c2y = y1 + bend;
+    const u = 1 - t;
+    return [u*u*u*x0 + 3*u*u*t*c1x + 3*u*t*t*c2x + t*t*t*x1, u*u*u*y0 + 3*u*u*t*c1y + 3*u*t*t*c2y + t*t*t*y1];
+  }
+
+  function frame(now) {
+    const time = now / 1000; ctx.clearRect(0, 0, W, H);
+    // tube
+    ctx.fillStyle = INK; ctx.fillRect(0, H * .5 - 14, .22 * W, 28);
+    // channels, faint then strong
+    for (let i = 0; i < N; i++) {
+      ctx.beginPath(); for (let s = 0; s <= 40; s++) { const [x, y] = path(i, s / 40, time); s ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+      ctx.lineWidth = 3; ctx.strokeStyle = "rgba(52,42,156,.28)"; ctx.stroke();
+    }
+    // particles
+    for (const d of dots) {
+      d.t += d.v; if (d.t > 1.05) d.t = -.3;
+      let x, y;
+      if (d.t < 0) { x = .22 * W * (1 + d.t / .3) - 8; y = H * .5 + Math.sin(d.t * 40 + d.lane) * 4; }
+      else [x, y] = path(d.lane, Math.min(1, d.t), time);
+      ctx.fillStyle = d.t < 0 ? "#fff" : lanes[d.lane].tint;
+      ctx.fillRect(x - 3, y - 3, 6, 6);
+    }
+    requestAnimationFrame(frame);
+  }
+  addEventListener("pointermove", e => { mouse = { x: e.clientX / W, y: e.clientY / H }; });
+  addEventListener("message", e => { if (e.data === "replay") build(); });
+  addEventListener("resize", fit);
+  fit(); build(); requestAnimationFrame(frame);
+<\/script>
+</body>
+</html>
+</script> <script type="text/plain" data-demo-src="lines">
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; height: 100%; background: #f6f3ee; overflow: hidden; }
+  canvas { display: block; width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+  // The sub-brand line graphic: a bundle of long curves that share a
+  // slow flow field, drawn thin in one hue. Each page tints it its own
+  // colour; the shape is procedural so it is never exported by hand.
+  const cv = document.getElementById("c"), ctx = cv.getContext("2d");
+  const HUES = ["#2f8fdc", "#e3413b", "#1f9d6a", "#342a9c"];
+  let W, H, seed = 7, hue = HUES[0], t0 = 0;
+  const rnd = () => (seed = (seed * 48271) % 2147483647) / 2147483647;
+  let curves = [];
+
+  function build() {
+    seed = Math.floor(Math.random() * 1e6) + 1;
+    hue = HUES[Math.floor(rnd() * HUES.length)];
+    curves = [];
+    const n = 28 + Math.floor(rnd() * 20), base = rnd() * Math.PI * 2;
+    for (let i = 0; i < n; i++) curves.push({ off: i / n, ph: base + rnd() * .6, amp: .25 + rnd() * .35, k: 1 + rnd() * 2 });
+  }
+  function fit() { const d = devicePixelRatio || 1; W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
+
+  function frame(now) {
+    const t = now / 1000; ctx.clearRect(0, 0, W, H);
+    ctx.strokeStyle = hue; ctx.globalAlpha = .55; ctx.lineWidth = 1;
+    for (const c of curves) {
+      ctx.beginPath();
+      for (let s = 0; s <= 120; s++) {
+        const u = s / 120;
+        // a slow sine field; neighbouring curves share phase so they bundle
+        const x = u * W * 1.2 - W * .1;
+        const y = H * (.5 + c.off * .9 - .45) + Math.sin(u * c.k * 3 + c.ph + t * .25) * H * c.amp * Math.sin(u * Math.PI);
+        s ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+      }
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(frame);
+  }
+  addEventListener("message", e => { if (e.data === "replay") build(); });
+  addEventListener("resize", fit);
+  fit(); build(); requestAnimationFrame(frame);
+<\/script>
+</body>
+</html>
+</script> <script>
+(() => {
+  const c = document.createElement('canvas'); c.width = c.height = 160;
+  const ctx = c.getContext('2d'), img = ctx.createImageData(160, 160);
+  for (let i = 0; i < img.data.length; i += 4) { const v = (Math.random() * 255) | 0; img.data[i] = img.data[i + 1] = img.data[i + 2] = v; img.data[i + 3] = 255; }
+  ctx.putImageData(img, 0, 0);
+  document.getElementById('noise').style.backgroundImage = `url(${c.toDataURL('image/png')})`;
+
+  const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const hi = s => esc(s).replace(/(\/\/[^\n]*|\/\*[\s\S]*?\*\/|&lt;!--[\s\S]*?--&gt;)|("(?:[^"\\\n]|\\.)*")|\b(ctx\.[\w.]+|requestAnimationFrame)|(&lt;\/?[a-z][\w-]*)/g,
+    (m, cm, str, k, t) => cm ? `<span class="c">${cm}</span>` : str ? `<span class="s">${str}</span>` : k ? `<span class="k">${k}</span>` : `<span class="t">${t}</span>`);
+
+  document.querySelectorAll('.live[data-demo]').forEach(box => {
+    const src = document.querySelector(`script[data-demo-src="${box.dataset.demo}"]`).textContent.replace(/<\\\/script>/g, '<' + '/script>').trim();
+    const f = document.createElement('iframe'); f.title = box.dataset.demo + ' demo'; f.loading = 'lazy';
+    f.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+    box.prepend(f);
+    box.querySelector('pre').innerHTML = hi(src);
+    const io = new IntersectionObserver(es => { if (es[0].isIntersecting) { f.srcdoc = src; io.disconnect(); } }, { rootMargin: '200px' });
+    io.observe(box);
+    box.querySelector('[data-toggle]').onclick = e => { const on = box.classList.toggle('show-code'); e.currentTarget.classList.toggle('on', on); e.currentTarget.textContent = on ? 'CLOSE' : 'CODE'; };
+    const r = box.querySelector('[data-replay]'); if (r) r.onclick = () => f.contentWindow && f.contentWindow.postMessage('replay', '*');
+  });
+})();
+</script> </body> </html>
