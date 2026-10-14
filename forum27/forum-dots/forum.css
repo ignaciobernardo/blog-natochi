@@ -1,0 +1,53 @@
+/* Tema "Forum": la landing con la paleta de week.wild.plus/athens-26 (piedra clara + azul eléctrico).
+   Es el tema por defecto de forum.platan.us (html[data-theme="forum"]); ?theme=dark vuelve al oscuro. Solo reasigna los tokens del design system y los pocos
+   colores fijos que quedaban; nada cambia sin el atributo. */
+html[data-theme="forum"] {
+  --ground: #dcdbd5;      /* panel de piedra */
+  --dot-off: #cfcec7;     /* puntos apagados: apenas más oscuros que el fondo */
+  --dot-dim: #98b0cd;     /* azul al 32% */
+  --dot-amber: #5284c4;   /* azul medio */
+  --dot-lit: #0755bb;     /* el azul eléctrico de la referencia */
+  --ink: #0755bb;
+  --ink-muted: #345c9a;
+  --marker: #0755bb;
+  --marker-soft: #e8e8e8; /* las tarjetas claras de la referencia */
+  --line: #bebdb7;
+  color-scheme: light;
+}
+html[data-theme="forum"], html[data-theme="forum"] body { background: var(--ground); color: var(--ink); }
+html[data-theme="forum"] ::selection { background: #0755bb; color: #dcdbd5; }
+html[data-theme="forum"] .ex-title { color: #0755bb; }
+html[data-theme="forum"] .ex-title i { color: #5284c4; }
+html[data-theme="forum"] .ex-10 .ex-procession-art { background: transparent; }
+html[data-theme="forum"] .ex-footer { background: transparent; }
+html[data-theme="forum"] .ex-versions { background: #e8e8e8; }
+html[data-theme="forum"] .fx-marker--soft { color: #0755bb; }
+html[data-theme="forum"] .fx-button:hover { color: #dcdbd5; }
+html[data-theme="forum"] .ex-sponsors img { filter: none; }
+
+/* Colores que estaban fijos en negro/blanco en las hojas de las páginas elige, sponsors y agendas */
+html[data-theme="forum"] .ex-photos { scrollbar-color: var(--dot-dim) var(--ground); }
+html[data-theme="forum"] .ex-skip, html[data-theme="forum"] .sp-skip { color: var(--ground) !important; }
+html[data-theme="forum"] .ex-agenda--table .ex-session:hover { background: #d2d1cb; }
+html[data-theme="forum"] .ex-agenda--contact .is-break { background: transparent; }
+html[data-theme="forum"] .sp { background: var(--ground); }
+html[data-theme="forum"] .sp-footer { background: transparent; }
+html[data-theme="forum"] .sp-hero h1, html[data-theme="forum"] .sp-package-name h3, html[data-theme="forum"] .sp-contact h2 { color: #0755bb; }
+html[data-theme="forum"] .sp-stats li:nth-child(3) strong { color: var(--ink-muted); }
+
+/* Sin rebote al pasar el final del scroll (las enredaderas van en un lienzo fijo y no deben despegarse del texto).
+   Solo con puntero fino: en táctil no se toca, así sigue funcionando el pull-to-refresh. */
+@media (pointer: fine) { html, body { overscroll-behavior: none; } }
+
+/* Agenda cerrada por ahora, con cursor de "no permitido". */
+.ex-agenda--procession .ex-calendar summary { cursor: not-allowed; }
+.ex-agenda--procession .ex-calendar[data-locked] .ex-calendar-toggle { opacity: .35; }
+
+/* Enredaderas de los títulos (vines.js, motor de roots/): canvas detrás y delante del texto. */
+.fd-roots { position: absolute; pointer-events: none; }
+.fd-roots--back { z-index: -1; }
+.fd-roots--front { z-index: 1; }
+.fd-roots-host { isolation: isolate; }
+
+/* Lugar por confirmar: texto falso difuminado (el nombre real no viaja en el HTML). */
+.fd-venue-tba { display: inline-block; filter: blur(4px); user-select: none; pointer-events: none; color: var(--ink); padding: 0 2px; }

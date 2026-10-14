@@ -1,0 +1,149 @@
+/* Versión 08 "Inscripción": una estela de piedra tallada. Todo centrado y en silencio.
+   Usa los tokens del tema "forum" (forum.css). Los puntos van en canvas (stele.js); las reglas punteadas con máscara SVG. */
+
+.st {
+  --p: 6px;                                   /* pitch de la estela; stele.js lo ajusta (6 escritorio, 4 móvil) */
+  --st-light: #ecebe6;                        /* labio iluminado del tallado: la misma piedra, más clara */
+  --st-shade: #bdbcb5;                        /* sombra del canal del tallado */
+  --st-dots: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'><rect x='2' y='2' width='6' height='6'/></svg>");
+  font-family: var(--font-sans);
+}
+.st a:focus-visible { outline: 2px solid var(--dot-lit); outline-offset: 4px; }
+.st-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.st-skip { position: absolute; left: 16px; top: -60px; z-index: 20; padding: 8px 12px; background: var(--dot-lit); color: var(--ground) !important; font: 12px/16px var(--font-mono); letter-spacing: .2em; text-transform: uppercase; text-decoration: none; }
+.st-skip:focus { top: 16px; }
+
+/* Regla punteada (puntos cuadrados): la línea guía que el lapicida traza antes de tallar */
+.st-incise, .st-numeral::before, .st-numeral::after, .st-blank__ruling i {
+  background: var(--dot-dim);
+  -webkit-mask: var(--st-dots) 0 0 / var(--rule-pitch, 6px) var(--rule-pitch, 6px) repeat-x;
+  mask: var(--st-dots) 0 0 / var(--rule-pitch, 6px) var(--rule-pitch, 6px) repeat-x;
+}
+
+/* ---------------------------------------------------------------- Hero: la estela */
+.st-hero { min-height: 100vh; min-height: 100svh; box-sizing: border-box; padding: 32px 16px; display: flex; align-items: center; justify-content: center; }
+.stele { position: relative; width: min(720px, 100%); margin: 0; display: flex; flex-direction: column; align-items: center; }
+.stele canvas.st-dots { display: block; }
+.stele__pediment, .stele__base { line-height: 0; display: flex; justify-content: center; }
+.stele__pediment { width: 100%; }
+.stele__base { width: calc(100% + var(--p) * var(--base-extra, 8)); }
+.stele__face { position: relative; width: 100%; box-sizing: border-box; padding: calc(var(--p) * 11) calc(var(--p) * 8) calc(var(--p) * 9); display: flex; flex-direction: column; align-items: center; text-align: center; }
+.stele__face > canvas.st-dots { position: absolute; left: 0; top: 0; pointer-events: none; }
+.stele__face > :not(canvas) { position: relative; z-index: 1; }
+
+/* Líneas talladas: VCR OSD Mono con tracking ancho, letras pintadas en azul con el labio claro debajo, como el relleno de las inscripciones antiguas */
+.st-title, .st-date, .st-big, .st-blank__note {
+  font-family: var(--font-display); font-weight: 400; text-transform: uppercase; color: var(--dot-lit);
+  text-shadow: 0 -1px 0 var(--st-shade), 0 2px 0 var(--st-light);
+}
+.st-title { --fs: clamp(40px, 12.4vw, 80px); margin: 0; font-size: var(--fs); line-height: 1; letter-spacing: .2em; display: flex; flex-direction: column; align-items: center; gap: calc(var(--fs) * .18); }
+.st-title__line { display: block; padding-left: .2em; white-space: nowrap; }  /* compensa el tracking final para centrar */
+
+/* Interpuncto: un punto cuadrado, como los separadores de las inscripciones */
+.st-punct { display: inline-block; width: .13em; height: .13em; margin: 0 .2em 0 0; vertical-align: .34em; background: var(--dot-amber); color: transparent; text-shadow: none; overflow: hidden; line-height: 0; font-size: inherit; }
+
+.st-incise { width: calc(var(--p) * 34); max-width: 80%; height: 6px; --rule-pitch: 6px; margin: calc(var(--p) * 5) 0 calc(var(--p) * 4); }
+.st-tagline { margin: 0; max-width: 31em; font: 13px/24px var(--font-mono); letter-spacing: .32em; padding-left: .32em; text-transform: uppercase; color: var(--ink-muted); text-wrap: balance; }
+.st-date { margin: calc(var(--p) * 5) 0 0; font-size: clamp(22px, 6.4vw, 34px); line-height: 1; letter-spacing: .22em; padding-left: .22em; white-space: nowrap; }
+.st-date .st-punct { margin: 0 .22em 0 0; }
+.st-gloss { margin: calc(var(--p) * 3) 0 0; font: italic 400 15px/24px var(--font-sans); color: var(--ink-muted); }
+.st-gloss__venue { display: block; }
+.st-gloss a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.st-gloss a:hover { color: var(--dot-lit); }
+
+/* CTA: un rótulo tallado con dos puntos de interpuncto a los lados */
+.st-cta { margin-top: calc(var(--p) * 6); white-space: nowrap; display: inline-flex; align-items: center; gap: 14px; padding: 13px 20px 13px 24px; border: 1px solid var(--dot-lit); color: var(--dot-lit); text-decoration: none; font: 13px/16px var(--font-mono); letter-spacing: .32em; text-transform: uppercase; transition: background-color .2s, color .2s; }
+.st-cta::before, .st-cta::after { content: ''; width: 6px; height: 6px; background: currentColor; flex: none; }
+.st-cta::after { margin-left: -.32em; }
+.st-cta:hover { background: var(--dot-lit); color: var(--ground); }
+
+/* ---------------------------------------------------------------- Secciones */
+.st-sec { box-sizing: border-box; padding: 112px 16px 0; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.st-numeral { margin: 0 0 42px; display: flex; align-items: center; gap: 22px; font: 400 24px/1 var(--font-display); letter-spacing: .2em; padding-left: .2em; color: var(--dot-amber); }
+.st-numeral::before, .st-numeral::after { content: ''; width: 66px; height: 6px; }
+.st-label { margin: 0; font: 400 13px/20px var(--font-mono); letter-spacing: .32em; padding-left: .32em; text-transform: uppercase; color: var(--ink-muted); }
+.st-label span { letter-spacing: .12em; }
+
+/* I. Dedicatoria */
+.st-prose { max-width: 33em; display: flex; flex-direction: column; gap: 18px; font-size: 18px; line-height: 31px; color: var(--ink); text-wrap: pretty; }
+.st-prose p { margin: 0; }
+.st-prose strong { font-weight: 500; color: var(--dot-lit); }
+
+/* II. Agenda: una tabla rayada que todavía no se talla */
+.st-blank { --bp: 6px; --ansa: 10; position: relative; box-sizing: border-box; width: min(624px, 100%); margin-top: 36px; padding: calc(var(--bp) * 7) calc(var(--bp) * (var(--ansa) + 7)); }
+.st-blank > canvas.st-dots { position: absolute; left: 0; top: 0; pointer-events: none; }
+.st-blank > :not(canvas) { position: relative; }
+.st-blank__ruling { display: flex; flex-direction: column; gap: 14px; }
+.st-blank__ruling i { display: block; height: 4px; --rule-pitch: 8px; opacity: .75; }
+.st-blank__ruling:first-child i:nth-child(1), .st-blank__ruling:last-child i:nth-child(3) { opacity: .35; }
+.st-blank__ruling:first-child i:nth-child(2), .st-blank__ruling:last-child i:nth-child(2) { opacity: .55; }
+.st-blank__note { margin: 30px 0 0; font-size: 26px; line-height: 1; letter-spacing: .36em; padding-left: .36em; color: var(--dot-amber); }
+.st-blank__hours { margin: 14px 0 30px; font: 13px/20px var(--font-mono); letter-spacing: .32em; padding-left: .32em; color: var(--ink-muted); }
+
+/* III. El año pasado */
+.st-big { margin: 30px 0 26px; font-size: clamp(56px, 15vw, 112px); line-height: 1; letter-spacing: .16em; padding-left: .16em; }
+.st-census__copy { margin: 0; max-width: 30em; font-size: 17px; line-height: 28px; color: var(--ink); }
+.st-tally { margin-top: 34px; line-height: 0; display: flex; justify-content: center; }
+.st-split { list-style: none; margin: 28px 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 40px; }
+.st-split li { display: flex; align-items: center; gap: 10px; font: 12px/20px var(--font-mono); letter-spacing: .24em; color: var(--ink-muted); }
+.st-split strong { font: 400 20px/1 var(--font-display); letter-spacing: .08em; color: var(--dot-lit); }
+.st-key { width: 8px; height: 8px; flex: none; }
+.st-key--lit { background: var(--dot-lit); }
+.st-key--amber { background: var(--dot-amber); }
+.st-key--dim { background: var(--dot-dim); }
+
+/* IV. Cierre */
+.st-close { padding-bottom: 112px; }
+.st-offering { line-height: 0; margin-bottom: 30px; }
+.st-offering svg { display: block; }
+.st-date--small { margin: 0; font-size: 22px; }
+.st-close .st-gloss { margin-top: 14px; }
+.st-close .st-cta { margin-top: 34px; }
+.st-sponsor { margin: 42px 0 0; font-size: 15px; line-height: 24px; color: var(--ink-muted); }
+.st-sponsor a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.st-sponsor a:hover { color: var(--dot-lit); }
+
+/* ---------------------------------------------------------------- Footer: el plinto */
+.st-footer { padding: 0 16px 56px; display: flex; flex-direction: column; align-items: center; gap: 28px; }
+.st-plinth { width: min(1120px, 100%); }
+.st-footer__mark img { display: block; width: 130px; height: auto; }
+.st-footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 32px; }
+.st-footer nav a { font: 12px/16px var(--font-mono); letter-spacing: .28em; text-transform: uppercase; color: var(--ink-muted); text-decoration: none; }
+.st-footer nav a:hover { color: var(--dot-lit); }
+
+/* ---------------------------------------------------------------- Tallado letra a letra (solo con movimiento) */
+.st-motion [data-carve].is-split .ch { display: inline-block; clip-path: inset(0 0 100% 0); }
+.st-motion [data-carve].is-split .ch.st-punct { display: inline-block; }
+.st-motion [data-carve].is-carved .ch { animation: st-chisel 360ms steps(4, end) forwards; animation-delay: calc(var(--i) * 70ms); }
+@keyframes st-chisel { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(-20% -20% -20% -20%); } }
+
+@media (max-width: 640px) {
+  .stele__face { padding: calc(var(--p) * 11) calc(var(--p) * 6) calc(var(--p) * 9); }
+  .st-gloss__sep { display: none; }
+  .st-gloss__part { display: block; }
+  .st-title { letter-spacing: .14em; }
+  .st-title__line { padding-left: .14em; }
+  .st-tagline { font-size: 12px; line-height: 22px; letter-spacing: .24em; padding-left: .24em; }
+  .st-date { letter-spacing: .16em; padding-left: .16em; }
+  .st-cta { padding: 12px 16px 12px 20px; letter-spacing: .26em; }
+  .st-sec { padding-top: 84px; }
+  .st-numeral { margin-bottom: 32px; }
+  .st-numeral::before, .st-numeral::after { width: 48px; }
+  .st-prose { font-size: 17px; line-height: 28px; }
+  .st-blank { padding-inline: calc(var(--bp) * (var(--ansa) + 4)); }
+  .st-blank__note { font-size: 20px; letter-spacing: .24em; padding-left: .24em; }
+  .st-blank__hours { letter-spacing: .24em; padding-left: .24em; }
+  .st-split { gap: 12px 26px; }
+  .st-close { padding-bottom: 84px; }
+}
+
+@media (max-width: 370px) {
+  .st-cta { gap: 10px; padding: 12px 12px 12px 14px; letter-spacing: .16em; }
+  .st-cta::after { margin-left: -.16em; }
+  .st-tagline { letter-spacing: .18em; padding-left: .18em; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .st-cta { transition: none; }
+  [data-carve] .ch { clip-path: none !important; animation: none !important; }
+}

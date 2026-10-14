@@ -1,0 +1,129 @@
+/* Forum '26 · 06 "Vasija". Tema "forum" (piedra clara + azules). Todo cuadrado, sin cards ni degradados. */
+
+.v6 { overflow-x: hidden; }
+.v6 a { color: inherit; }
+.v6-skip { position: absolute; left: -9999px; top: 12px; z-index: 20; padding: 6px 10px; background: var(--dot-lit); color: var(--ground) !important; font: 12px/18px var(--font-mono); letter-spacing: 1px; text-transform: uppercase; text-decoration: none; }
+.v6-skip:focus { left: 16px; }
+.v6-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.v6 :focus-visible { outline: 2px solid var(--dot-lit); outline-offset: 3px; }
+
+/* Header */
+.v6-top { max-width: 1176px; margin: 0 auto; padding: 0 28px; }
+.v6-nav { display: flex; align-items: center; gap: 28px; padding: 24px 0 18px; font: 12px/18px var(--font-mono); letter-spacing: 1px; text-transform: uppercase; }
+.v6-nav__home { margin-right: auto; display: flex; }
+.v6-nav__home img { height: 28px; width: auto; }
+.v6-nav a { text-decoration: none; color: var(--ink); }
+.v6-nav .v6-nav__cta { color: var(--dot-lit); }
+.v6-nav a:hover { color: var(--dot-amber); }
+.v6-rule { line-height: 0; }
+
+/* Hero: el nombre arriba de la vasija */
+.v6-hero { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 64px 16px 8px; text-align: center; }
+.v6-title { margin: 0; font: 400 clamp(38px, 7.2vw, 100px)/1 var(--font-display); letter-spacing: 1px; text-transform: uppercase; color: var(--dot-lit); }
+.v6-title > span { display: inline-block; white-space: nowrap; }
+.v6-title i { font-style: normal; color: var(--dot-amber); }
+.v6-tagline { margin: 4px 0 0; max-width: 40ch; font: 13px/20px var(--font-mono); letter-spacing: 1px; text-transform: uppercase; color: var(--ink-muted); }
+.v6-when { margin: 0; font: 13px/20px var(--font-mono); letter-spacing: 1px; text-transform: uppercase; color: var(--ink); }
+.v6-when > * { white-space: nowrap; }
+.v6-when > .v6-dot { white-space: normal; }
+.v6-hero__cta { margin-top: 10px; }
+
+/* La vasija */
+.v6-story { position: relative; }
+.v6-story.is-pinned { height: calc(var(--v6-stage-h, 100vh) + var(--v6-turns, 3) * 70vh); }
+.v6-stage { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; padding: 28px 0 32px; box-sizing: border-box; }
+.is-pinned .v6-stage { position: sticky; top: var(--v6-top, 0px); padding-block: 20px 24px; overflow: hidden; }
+.v6-vase { position: relative; width: 100%; }
+.v6-canvas { display: block; margin: 0 auto; }
+
+/* Leyendas: sin JS son una lista; con JS giran debajo de su panel */
+.v6-captions { list-style: none; margin: 0 auto; padding: 0 16px; max-width: 600px; box-sizing: border-box; }
+.v6-cap { margin: 0 0 28px; text-align: center; }
+.v6-captions.is-live { position: relative; width: 100%; max-width: none; padding: 0; }
+.v6-captions.is-live .v6-cap { position: absolute; left: 0; top: 0; width: var(--cap-w, 520px); margin: 0; transform-origin: 50% 0; will-change: transform, opacity; }
+.v6-cap__label { display: flex; justify-content: center; align-items: baseline; flex-wrap: wrap; gap: 6px 14px; margin: 0 0 10px; font: 13px/20px var(--font-mono); letter-spacing: 1px; text-transform: uppercase; color: var(--ink-muted); }
+.v6-cap__n { color: var(--dot-amber); }
+.v6-cap__place { font-size: 24px; line-height: 26px; color: var(--dot-lit); }
+.v6-cap__text { margin: 0 auto; max-width: 30em; font: 17px/28px var(--font-sans); color: var(--ink); text-wrap: balance; }
+.v6-cap__text strong { font-weight: 500; color: var(--dot-lit); }
+
+.v6-turn { display: flex; gap: 4px; }
+.v6-turn button { min-width: 48px; padding: 10px 10px 0; border: 0; border-top: 3px solid var(--line); background: none; font: 12px/1 var(--font-mono); letter-spacing: 1px; color: var(--ink-muted); cursor: pointer; }
+.v6-turn button:hover { color: var(--dot-amber); }
+.v6-turn button[aria-current="true"] { color: var(--dot-lit); border-top-color: var(--dot-lit); }
+
+/* Sin movimiento: la banda desenrollada, con scroll lateral propio */
+.is-flat .v6-vase { overflow-x: auto; overscroll-behavior-x: contain; padding-bottom: 14px; scrollbar-color: var(--dot-dim) var(--ground); }
+.is-flat .v6-canvas { margin: 0; }
+.is-flat .v6-captions.is-live { margin-top: 22px; }
+.is-flat .v6-stage { overflow: hidden; }
+
+/* Remate */
+.v6-close { display: flex; flex-direction: column; gap: 42px; max-width: 600px; margin: 0 auto; padding: 72px 16px 96px; }
+.v6-prose p { margin: 0; font: 17px/28px var(--font-sans); color: var(--ink); }
+.v6-invite { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; }
+.v6-meta { margin: 0; font: 13px/22px var(--font-mono); letter-spacing: 1px; text-transform: uppercase; color: var(--ink-muted); }
+.v6-meta a { color: var(--ink); text-underline-offset: 3px; }
+.v6-meta a:hover { color: var(--dot-amber); }
+.v6 .v6-button:hover { color: var(--ground); }
+
+
+/* Secciones */
+.v6-agenda, .v6-last { max-width: 1120px; margin: 0 auto; padding: 88px 28px; }
+.v6-head { max-width: 600px; margin: 0 auto 40px; }
+.v6-label { margin: 0 0 12px; font: 400 13px/20px var(--font-mono); letter-spacing: 1px; text-transform: uppercase; color: var(--ink-muted); }
+.v6-label::before { content: '< '; }
+.v6-label::after { content: ' />'; }
+.v6-soon { margin: 0; font: italic 17px/28px var(--font-sans); color: var(--dot-lit); }
+
+.v6-blank { margin: 0; }
+.v6-blank__art { line-height: 0; }
+.v6-blank__art canvas { display: block; margin: 0 auto; }
+.v6-blank__hours { display: flex; justify-content: space-between; gap: 14px; width: var(--blank-w, 100%); max-width: 100%; box-sizing: border-box; padding-inline: var(--blank-pad, 0px); margin: 12px auto 0; font: 12px/18px var(--font-mono); letter-spacing: 1px; text-transform: uppercase; color: var(--ink-muted); }
+.v6-blank__hours span:nth-child(2) { color: var(--dot-lit); }
+
+.v6-last__copy { margin: 0; font: 17px/28px var(--font-sans); color: var(--ink); }
+.v6-crowd { line-height: 0; }
+.v6-crowd canvas { display: block; margin: 0 auto; }
+.v6-stats { display: flex; justify-content: center; gap: 56px; margin: 36px 0 0; padding: 0; list-style: none; }
+.v6-stats li { display: grid; grid-template-columns: 10px auto; align-items: center; gap: 6px 10px; }
+.v6-key { width: 10px; height: 10px; background: var(--dot-lit); }
+.v6-stats li[data-tone="1"] .v6-key { background: var(--dot-amber); }
+.v6-stats li[data-tone="2"] .v6-key { background: var(--dot-dim); }
+.v6-stats strong { font: 400 32px/1 var(--font-display); color: var(--dot-lit); }
+.v6-stats li > span:last-child { grid-column: 2; font: 12px/18px var(--font-mono); letter-spacing: 1px; text-transform: uppercase; color: var(--ink-muted); }
+
+.v6-sponsors { padding: 8px 16px 24px; text-align: center; font: 13px/22px var(--font-mono); letter-spacing: 1px; text-transform: uppercase; }
+.v6-sponsors p { margin: 0; }
+.v6-sponsors a { color: var(--dot-lit); text-underline-offset: 4px; }
+.v6-sponsors a:hover { color: var(--dot-amber); }
+
+.v6-end { display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 56px 16px 104px; text-align: center; }
+.v6-rule--short { width: min(328px, 100%); margin-bottom: 8px; }
+
+/* Footer */
+.v6-footer__row { display: flex; justify-content: space-between; align-items: center; gap: 28px; max-width: 1176px; margin: 0 auto; padding: 0 28px 28px; }
+.v6-footer__mark img { display: block; height: 26px; width: auto; }
+.v6-footer nav { display: flex; gap: 28px; font: 12px/18px var(--font-mono); letter-spacing: 1px; text-transform: uppercase; }
+.v6-footer nav a { color: var(--ink); text-decoration: none; }
+.v6-footer nav a:hover { color: var(--dot-amber); text-decoration: underline; text-underline-offset: 4px; }
+.v6-footer__field { line-height: 0; }
+
+@media (min-width: 721px) { .v6-tagline { max-width: none; } }
+
+@media (max-width: 720px) {
+  .v6-top { padding: 0 16px; }
+  .v6-nav { gap: 16px; padding: 18px 0 14px; font-size: 11px; letter-spacing: .5px; }
+  .v6-hero { padding: 44px 16px 4px; gap: 14px; }
+  .v6-when { font-size: 12px; }
+  .v6-stage { gap: 18px; }
+  .v6-cap__place { font-size: 20px; line-height: 22px; }
+  .v6-cap__text { font-size: 16px; line-height: 26px; }
+  .v6-close { padding: 56px 16px 72px; gap: 32px; }
+  .v6-agenda, .v6-last { padding: 64px 16px; }
+  .v6-head { margin-bottom: 28px; }
+  .v6-stats { gap: 24px; justify-content: space-between; max-width: 340px; margin-inline: auto; }
+  .v6-stats strong { font-size: 26px; }
+  .v6-footer__row { flex-direction: column; align-items: flex-start; gap: 18px; padding: 0 16px 24px; }
+  .v6-footer nav { gap: 20px; }
+}
