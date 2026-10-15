@@ -487,6 +487,11 @@ p {
    Blog Page Layout
    ============================================ */
 
+/* zoom: 0.9 shrinks the body's 100vh min-height, so html shows below it */
+html:has(body.blog-page) {
+    background-color: #1e1e1e;
+}
+
 body.blog-page {
     display: block;
     overflow-y: auto;
