@@ -1,0 +1,1 @@
+import{n as e,t}from"./preview.AZxYW-4i.js";var n=document.querySelector(`[data-mb-loop]`);n&&e(n,{threshold:.5}),document.querySelectorAll(`[data-mb-tile]`).forEach(n=>{let r=e(n.querySelector(`[data-mb-thumb]`),{active:!1,threshold:.1});r&&t(n,e=>r.active(e))});

@@ -1,0 +1,1 @@
+function e(){let e=document.querySelector(`header.bar`);if(!e)return;let t=()=>document.body.style.setProperty(`--bar-h`,`${e.offsetHeight}px`);t(),new ResizeObserver(t).observe(e)}export{e as t};
