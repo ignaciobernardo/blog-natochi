@@ -1,0 +1,1 @@
+import{t as e}from"./grain.DgJOyrJq.js";e();var t=()=>{let e=location.hash&&document.getElementById(location.hash.slice(1)),t=e&&e.closest(`details`);t&&(t.open=!0,e.scrollIntoView())};addEventListener(`hashchange`,t),t();
