@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>borde</title>
+<style>
+  html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+  }
+  .borde {
+    position: fixed;
+    inset: 0;
+    box-sizing: border-box;
+    border: var(--w, 12px) solid var(--c, #F2FF00);
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div class="borde"></div>
+<script>
+  // ?w=20 cambia el grosor en px, ?c=ff0000 el color
+  const p = new URLSearchParams(location.search);
+  const s = document.documentElement.style;
+  if (/^\d+$/.test(p.get("w") || "")) s.setProperty("--w", p.get("w") + "px");
+  if (/^[0-9a-f]{3,8}$/i.test(p.get("c") || "")) s.setProperty("--c", "#" + p.get("c"));
+</script>
+</body>
+</html>
