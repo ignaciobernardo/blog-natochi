@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>natochi</title>
+<meta name="description" content="natochi — growth levers for startups, ventures and cool things. Santiago de Chile.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f1;
+  --paper:#fcfcfa;
+  --ink:#141613;
+  --body:#5d605b;
+  --muted:#8b8e88;
+  --rule:#d4d7d2;
+  --hole:#dcdfd9;
+  --stroke:#b4b8b1;
+  --accent:#2438d6;
+
+  /* area colors, sampled from the stamps themselves */
+  --c-all:#5d605b;
+  --c-communities:#8a8d1f; /* olive: beaver / lemon / bicycle borders */
+  --c-hackathons:#e2432e;  /* coral: tomato + stuttgart frames */
+  --c-funding:#d2a313;     /* mustard: norge / melbourne / eire */
+  --c-tools:#3c8794;       /* teal: otter sea, penguin sky deepened */
+  --c-aisafety:#55377f;    /* plum: the little cape on eire */
+
+  --sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --mono:"Space Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{
+  margin:0;background:var(--bg);color:var(--body);
+  font-family:var(--sans);font-size:15px;line-height:25px;letter-spacing:.003em;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  font-feature-settings:"cv11","ss01";
+}
+a{color:inherit}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;cursor:pointer}
+.mono{font-family:var(--mono)}
+:focus-visible{outline:1.5px solid var(--accent);outline-offset:2px}
+
+/* ---------- shell + rule ---------- */
+.shell{
+  position:relative;
+  display:grid;grid-template-columns:120px minmax(0,720px);column-gap:57px;
+  padding:72px 44px 56px;
+}
+.shell::before{
+  content:"";position:absolute;top:0;bottom:0;left:180px;width:1px;background:var(--rule);z-index:0;
+}
+
+/* ---------- sidebar ---------- */
+.side{position:sticky;top:72px;align-self:start;z-index:2}
+.mark{
+  display:inline-block;font-weight:800;font-size:16px;line-height:20px;letter-spacing:.01em;
+  color:var(--ink);text-decoration:none;margin-top:2px;
+}
+.nav{display:flex;flex-direction:column;align-items:flex-start;gap:10px;margin-top:25px}
+.nav a{
+  position:relative;display:block;font-size:13px;line-height:20px;color:var(--ink);
+  text-decoration:none;padding:0 6px;margin-left:-6px;transition:background-color .12s,color .12s;
+}
+.nav a::after{content:"";position:absolute;inset:-5px -14px -5px -8px}
+.nav a:hover{background:var(--accent);color:#fff}
+.nav a[aria-current="page"]{color:var(--accent)}
+.nav a[aria-current="page"]:hover{color:#fff}
+.nav a[aria-current="page"]::before{
+  content:"";position:absolute;left:-7px;top:0;bottom:0;width:2px;background:var(--accent);
+}
+
+.otp{
+  position:relative;z-index:3;margin:35px 0 0 -13px;width:150px;
+  background:var(--bg);border:1px solid var(--rule);border-right:0;
+  padding:15px 0 16px 13px;
+}
+.otp-tick{position:absolute;top:-2px;left:13px;width:15px;height:2px;background:var(--accent)}
+.otp-tick::after{content:"";position:absolute;inset:-8px -6px}
+.otp-label{font-size:11px;line-height:16px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.otp a{
+  position:relative;display:block;width:max-content;font-size:13px;line-height:20px;
+  color:var(--muted);text-decoration:none;margin-top:10px;transition:color .12s;
+}
+.otp-label + a{margin-top:16px}
+.otp a:hover{color:var(--ink)}
+.otp a.is-active{color:var(--accent)}
+.otp a.is-active::before{content:"";position:absolute;left:-14px;top:0;bottom:0;width:2px;background:var(--accent)}
+
+/* ---------- main column ---------- */
+.main{position:relative;z-index:1;min-width:0}
+.main > section{max-width:620px}
+h1{font-weight:400;font-size:20px;line-height:28px;color:var(--ink);margin:0 0 27px;letter-spacing:-.003em}
+h2{font-weight:400;font-size:16px;line-height:24px;color:var(--ink);margin:0 0 16px;letter-spacing:-.002em}
+p{margin:0 0 22px}
+section + section{margin-top:52px}
+section#stamps{margin-top:0}
+.ink{color:var(--ink)}
+
+/* ---------- figure ---------- */
+.fig{
+  margin:36px 0 0;border:1px solid var(--rule);padding:21px 20px 20px;
+  background:transparent;
+}
+.fig-title{font-size:12px;line-height:16px;color:var(--body);letter-spacing:.01em}
+.fig-desc{margin:8px 0 0;color:var(--ink);opacity:.86}
+.chips{display:flex;flex-wrap:wrap;gap:8px 6px;margin:14px 0 0}
+.chip{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:var(--mono);font-size:11px;line-height:16px;color:var(--body);
+  padding:5px 8px;border:1px solid transparent;transition:background-color .12s,border-color .12s,color .12s;
+}
+.chip i{width:6px;height:6px;background:var(--c);flex:none}
+.chip:hover{color:var(--ink)}
+.chip.is-active{
+  color:var(--ink);
+  background:color-mix(in srgb,var(--c) 11%,var(--bg));
+  border-color:color-mix(in srgb,var(--c) 42%,var(--bg));
+}
+.chip[data-area="all"]{--c:var(--c-all)}
+.chip[data-area="all"].is-active{background:#e6e8e4;border-color:#c3c7c0}
+
+.viz{position:relative;margin-top:16px}
+.dock{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:14px}
+.card{
+  display:flex;width:372px;max-width:100%;height:118px;
+  border:1px solid var(--rule);background:var(--paper);
+}
+.card-img{
+  position:relative;flex:none;width:116px;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  border-right:1px solid var(--rule);background:#f6f7f3;
+}
+.badge{
+  position:absolute;top:7px;left:7px;z-index:2;
+  font-family:var(--mono);font-size:10px;line-height:14px;color:var(--accent);
+  border:1px solid var(--accent);background:var(--paper);padding:1px 4px 0;
+}
+.card-cap{
+  min-width:0;flex:1;padding:10px 12px 10px;font-family:var(--mono);font-size:11px;line-height:16px;
+  display:flex;flex-direction:column;
+}
+.cap-name{font-size:12px;line-height:17px;color:var(--ink);font-weight:700;letter-spacing:-.01em}
+.cap-area{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:10px;margin-top:1px}
+.cap-area i{width:6px;height:6px;background:var(--c)}
+.cap-line{color:var(--body);margin-top:5px}
+.cap-link{
+  margin-top:auto;color:var(--accent);text-decoration:underline;text-underline-offset:2px;
+  text-decoration-thickness:1px;display:inline-flex;align-items:center;gap:4px;width:max-content;max-width:100%;
+}
+.cap-link[hidden]{display:none}
+.hint{font-size:10px;line-height:14px;color:var(--muted);text-align:right;padding-bottom:2px}
+.hint b{font-weight:400;color:var(--body)}
+
+/* crop wrapper: shows only the stamp's own bounds */
+.crop{position:relative;display:block;overflow:hidden;flex:none}
+.crop img{position:absolute;max-width:none;display:block;user-select:none;-webkit-user-drag:none;pointer-events:none}
+
+/* the sheet */
+.sheet{
+  position:relative;background:var(--paper);
+  border:1px solid #dfe2dc;box-shadow:0 1px 0 rgba(20,22,19,.03),0 8px 24px -18px rgba(20,22,19,.25);
+  padding:30px 24px 32px;
+}
+.selv{
+  position:absolute;left:24px;right:24px;display:flex;align-items:center;justify-content:space-between;
+  font-family:var(--mono);font-size:9px;line-height:12px;letter-spacing:.06em;color:#a3a69f;
+  pointer-events:none;
+}
+.selv.top{top:9px}
+.selv.bot{bottom:9px}
+.bars{display:flex;gap:3px}
+.bars i{width:7px;height:7px;background:var(--c);opacity:.9}
+.imprint{letter-spacing:.02em}
+
+.grid{position:relative;display:grid;grid-template-columns:repeat(6,minmax(0,1fr))}
+.cell{
+  position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:.92;
+  padding:0;touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+}
+.cell:focus-visible{outline-offset:-4px}
+.num{
+  position:absolute;top:5px;left:5px;z-index:2;
+  font-family:var(--mono);font-size:9px;line-height:12px;color:#9fa29b;
+  border:1px solid transparent;padding:0 3px;transition:color .12s,border-color .12s,opacity .12s;
+}
+.lift{
+  display:block;margin-top:10%;
+  transition:transform .15s ease,filter .15s ease;
+}
+.crop img{transition:filter .15s ease,opacity .15s ease}
+.cell:hover .lift,.cell.is-hot .lift,.cell.is-sel .lift{
+  transform:translateY(-2px) rotate(var(--rot));
+  filter:drop-shadow(0 1.5px 1px rgba(20,22,19,.16)) drop-shadow(0 5px 6px rgba(20,22,19,.10));
+}
+.cell.is-sel .num{color:var(--accent);border-color:var(--accent);background:var(--paper)}
+.cell.is-dim .crop img{filter:grayscale(1) contrast(.9);opacity:.26}
+.cell.is-dim .num{opacity:.45}
+.cell.is-dim:hover .crop img{opacity:.5}
+
+.perf{position:absolute;pointer-events:none;z-index:1}
+.perf.v{width:4px;margin-left:-2px;top:-11px;bottom:-11px;
+  background:radial-gradient(circle,var(--hole) 1.15px,transparent 1.55px) 50% 0/4px 6px repeat-y}
+.perf.h{height:4px;margin-top:-2px;left:-11px;right:-11px;
+  background:radial-gradient(circle,var(--hole) 1.15px,transparent 1.55px) 0 50%/6px 4px repeat-x}
+
+/* ---------- loop diagram ---------- */
+.flow{margin:34px 0 8px}
+.flow svg{display:block;width:100%;height:auto;overflow:visible}
+.flow text{font-family:var(--mono);font-size:11px;fill:#5d605b}
+.flow .lab{fill:#4a4d48}
+.flow .box{fill:var(--paper);stroke:var(--rule);stroke-width:1}
+.flow .ln{fill:none;stroke:var(--stroke);stroke-width:1}
+.flow .lbg{fill:var(--bg)}
+.flow .flow-m{display:none}
+
+/* ---------- writing ---------- */
+.lists{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin:4px 0 30px}
+.list-h{font-family:var(--mono);font-size:11px;line-height:16px;color:var(--muted);padding-bottom:8px;border-bottom:1px solid var(--rule)}
+.list{list-style:none;margin:0;padding:0}
+.list li{border-bottom:1px solid var(--rule)}
+.list a{
+  display:flex;align-items:baseline;gap:12px;padding:7px 0 6px;color:var(--ink);text-decoration:none;
+  transition:color .12s;
+}
+.list a:hover{color:var(--accent)}
+.list .n{font-family:var(--mono);font-size:11px;color:var(--muted);min-width:22px}
+.list a:hover .n{color:var(--accent)}
+.list .meta{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--muted)}
+.out{
+  color:var(--accent);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;
+  display:inline-flex;align-items:center;gap:7px;
+}
+.out svg{flex:none}
+.out:hover{text-decoration-thickness:2px}
+.sig{font-size:11px;line-height:18px;color:var(--muted);margin:22px 0 0;letter-spacing:.01em}
+em{font-style:italic;color:var(--ink)}
+
+/* ---------- footer ---------- */
+.foot{
+  margin-left:180px;border-top:1px solid var(--rule);padding:16px 0 20px;
+  display:flex;flex-wrap:wrap;gap:8px 36px;
+  font-family:var(--mono);font-size:11px;line-height:16px;color:var(--muted);
+}
+.foot a{text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:color .12s}
+.foot a:hover{color:var(--accent)}
+
+/* ---------- mobile ---------- */
+@media (max-width:760px){
+  .shell{display:block;padding:0 20px 44px}
+  .shell::before{display:none}
+  .side{position:static;margin:0 -20px;padding:20px 20px 12px;border-bottom:1px solid var(--rule)}
+  .mark{font-size:16px;margin-top:0}
+  .nav{flex-direction:row;gap:22px;margin-top:17px}
+  .nav a{font-size:14px;padding:0 0 5px;margin:0;border-bottom:1.5px solid transparent}
+  .nav a::after{inset:-8px -8px 0}
+  .nav a:hover{background:none;color:var(--accent)}
+  .nav a[aria-current="page"]{border-bottom-color:var(--accent)}
+  .nav a[aria-current="page"]:hover{color:var(--accent)}
+  .nav a[aria-current="page"]::before{display:none}
+  .otp{display:none}
+  .main{padding-top:30px}
+  h1{margin-bottom:22px}
+  .fig{border:0;padding:0;margin-top:30px}
+  .chips{gap:6px 2px}
+  .dock{display:block}
+  .card{width:100%}
+  .hint{display:none}
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .sheet{padding:30px 16px 32px}
+  .selv{left:16px;right:16px}
+  .flow .flow-d{display:none}
+  .flow .flow-m{display:block}
+  .flow{margin:28px 0 4px}
+  .lists{grid-template-columns:1fr;gap:24px}
+  .foot{margin-left:0;padding:16px 20px 22px;gap:8px 24px}
+}
+@media (max-width:360px){.card-img{width:96px}}
+</style>
+<style>:root{--fx-line:#a9b0c9;--fx-handle:#2438d6;--fx-ink:#2438d6;--fx-cursor-a:#2438d6;--fx-cursor-a-edge:#fff;--fx-cursor-b:#0b0b0b;--fx-cursor-b-edge:#fff;--fx-hint-bg:#f2f3f1;--fx-hint-ink:#5e5e5e}</style>
+</head>
+<body id="top">
+
+<div class="shell">
+  <aside class="side">
+    <a class="mark" href="/" aria-label="natochi, home">NATOCHI</a>
+    <nav class="nav" aria-label="primary">
+      <a href="/" aria-current="page">home</a>
+      <a href="/posts">blog</a>
+      <a href="/cv">cv</a>
+      <a href="/projects">projects</a>
+      <a href="/updates/2026-06-13">updates</a>
+    </nav>
+    <div class="otp" aria-label="on this page">
+      <a class="otp-tick" href="#top" aria-label="back to top"></a>
+      <div class="otp-label">this page</div>
+      <a href="#intro" data-spy="intro">intro</a>
+      <a href="#stamps" data-spy="stamps">sheet-0</a>
+      <a href="#loop" data-spy="loop">the loop</a>
+      <a href="#writing" data-spy="writing">writing</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <section id="intro">
+      <h1>Growth levers for startups, ventures and cool things.</h1>
+      <p>I'm Ernesto Bernardo, natochi for short: a dropout based in Santiago de Chile. Over the last 6 years I've built businesses, communities and fun stuff at the places I've worked.</p>
+      <p>Right now I'm a generalist at <a class="ink" href="https://platan.us">Platanus</a>, contracting for Kairos and the M3 Fellowship, and helping run Gen Stream. On the side I think about AI safety, cognitive science, venture capital, community stuff, and anything Borges related.</p>
+    </section>
+
+    <section id="stamps">
+      <p>Eighteen projects across communities, hackathons, funding, tools and AI safety, each paired with one of my hand-drawn stamps, all on a single sheet. Hover or tap a stamp to read the back of it, or pick an area and the rest of the sheet fades out.</p>
+
+      <figure class="fig" aria-labelledby="fig-title">
+        <div class="fig-title mono" id="fig-title">sheet-0</div>
+        <p class="fig-desc">Eighteen projects, one stamp each, sorted into five areas.</p>
+        <div class="chips" role="group" aria-label="filter by area">
+          <button class="chip is-active" data-area="all" aria-pressed="true"><i></i>all areas</button>
+          <button class="chip" data-area="communities" aria-pressed="false" style="--c:var(--c-communities)"><i></i>communities</button>
+          <button class="chip" data-area="hackathons" aria-pressed="false" style="--c:var(--c-hackathons)"><i></i>hackathons</button>
+          <button class="chip" data-area="funding" aria-pressed="false" style="--c:var(--c-funding)"><i></i>funding</button>
+          <button class="chip" data-area="tools" aria-pressed="false" style="--c:var(--c-tools)"><i></i>tools</button>
+          <button class="chip" data-area="ai safety" aria-pressed="false" style="--c:var(--c-aisafety)"><i></i>ai safety</button>
+        </div>
+
+        <div class="viz">
+          <div class="dock">
+            <div class="card" id="card" aria-live="polite">
+              <div class="card-img"><span class="badge" id="card-num">09</span><span id="card-stamp"></span></div>
+              <div class="card-cap">
+                <div class="cap-name" id="card-name">Amigos Fund</div>
+                <div class="cap-area" id="card-area" style="--c:var(--c-funding)"><i></i><span>funding</span></div>
+                <div class="cap-line" id="card-line">micro-grants for young people solving important problems</div>
+                <a class="cap-link" id="card-link" href="https://amigos.sh"><span>amigos.sh</span><svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><path d="M1.5 6.5 6.5 1.5M2.5 1.5h4v4" fill="none" stroke="currentColor" stroke-width="1.1"/></svg></a>
+              </div>
+            </div>
+            <div class="hint mono" id="hint">hover or tap a stamp<br><b id="hint-count">18 of 18 in color</b></div>
+          </div>
+
+          <div class="sheet">
+            <div class="selv top" aria-hidden="true">
+              <span>sheet 0 · 18 stamps · santiago</span>
+              <span class="bars">
+                <i style="--c:var(--c-communities)"></i><i style="--c:var(--c-hackathons)"></i><i style="--c:var(--c-funding)"></i><i style="--c:var(--c-tools)"></i><i style="--c:var(--c-aisafety)"></i>
+              </span>
+            </div>
+            <div class="grid" id="grid" role="group" aria-label="18 project stamps"></div>
+            <div class="selv bot" aria-hidden="true">
+              <span>01–18</span>
+              <span class="imprint">natochi (╬`益´)</span>
+            </div>
+          </div>
+        </div>
+      </figure>
+    </section>
+
+    <section id="loop">
+      <h2>The loop</h2>
+      <p>Most of it is one loop, run over and over. Meet people, gather them into communities and meetups, put them through 36-hour hackathons, ship projects and startups, then back the ones that come out with grants and angel checks. Whoever goes around once comes back as a friend, and friends bring the next people in.</p>
+
+      <div class="flow" role="img" aria-label="meet people, gather in communities and meetups, hack in 36-hour hackathons, ship startups and tools, back them with grants and angel checks; friends loop back to meet">
+        <svg class="flow-d" viewBox="0 0 620 160" aria-hidden="true">
+          <defs>
+            <marker id="ah" viewBox="0 0 6 6" refX="5.4" refY="3" markerWidth="6" markerHeight="6" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+              <path d="M.6 .6 5.4 3 .6 5.4" fill="none" stroke="#a7aba4" stroke-width="1"/>
+            </marker>
+          </defs>
+          <!-- stage labels -->
+          <g text-anchor="middle">
+            <text class="lab" x="56" y="16">meet</text>
+            <text class="lab" x="184" y="16">gather</text>
+            <text class="lab" x="312" y="16">hack</text>
+            <text class="lab" x="440" y="16">ship</text>
+            <text class="lab" x="568" y="16">back</text>
+          </g>
+          <!-- boxes -->
+          <rect class="box" x="6.5" y="56.5" width="99" height="39"/>
+          <rect class="box" x="134.5" y="56.5" width="99" height="39"/>
+          <rect class="box" x="262.5" y="56.5" width="99" height="39"/>
+          <rect class="box" x="390.5" y="36.5" width="99" height="31"/>
+          <rect class="box" x="390.5" y="84.5" width="99" height="31"/>
+          <rect class="box" x="518.5" y="56.5" width="99" height="39"/>
+          <g text-anchor="middle">
+            <text x="56" y="80">people</text>
+            <text x="184" y="73">communities</text><text x="184" y="87">&amp; meetups</text>
+            <text x="312" y="73">36-hour</text><text x="312" y="87">hackathons</text>
+            <text x="440" y="56">startups</text>
+            <text x="440" y="104">tools</text>
+            <text x="568" y="73">grants &amp;</text><text x="568" y="87">angel checks</text>
+          </g>
+          <!-- arrows -->
+          <path class="ln" d="M106 76H133" marker-end="url(#ah)"/>
+          <path class="ln" d="M234 76H261" marker-end="url(#ah)"/>
+          <path class="ln" d="M362 76H376"/>
+          <path class="ln" d="M380 52H389" marker-end="url(#ah)"/>
+          <path class="ln" d="M380 100H389" marker-end="url(#ah)"/>
+          <path class="ln" d="M376 76V56Q376 52 380 52M376 76V96Q376 100 380 100"/>
+          <path class="ln" d="M490 52H500Q504 52 504 56V96Q504 100 500 100H490"/>
+          <path class="ln" d="M504 76H517" marker-end="url(#ah)"/>
+          <!-- return loop -->
+          <path class="ln" d="M568 96V138Q568 146 560 146H64Q56 146 56 138V97" marker-end="url(#ah)"/>
+          <rect class="lbg" x="280" y="139" width="64" height="14"/>
+          <text x="312" y="150" text-anchor="middle">friends</text>
+        </svg>
+
+        <svg class="flow-m" viewBox="0 0 350 360" aria-hidden="true">
+          <defs>
+            <marker id="ahm" viewBox="0 0 6 6" refX="5.4" refY="3" markerWidth="6" markerHeight="6" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+              <path d="M.6 .6 5.4 3 .6 5.4" fill="none" stroke="#a7aba4" stroke-width="1"/>
+            </marker>
+          </defs>
+          <g text-anchor="end">
+            <text class="lab" x="56" y="28">meet</text>
+            <text class="lab" x="56" y="98">gather</text>
+            <text class="lab" x="56" y="168">hack</text>
+            <text class="lab" x="56" y="238">ship</text>
+            <text class="lab" x="56" y="316">back</text>
+          </g>
+          <rect class="box" x="72.5" y="4.5" width="200" height="35"/>
+          <rect class="box" x="72.5" y="74.5" width="200" height="35"/>
+          <rect class="box" x="72.5" y="144.5" width="200" height="35"/>
+          <rect class="box" x="72.5" y="214.5" width="96" height="35"/>
+          <rect class="box" x="176.5" y="214.5" width="96" height="35"/>
+          <rect class="box" x="72.5" y="292.5" width="200" height="35"/>
+          <g text-anchor="middle">
+            <text x="173" y="26">people</text>
+            <text x="173" y="96">communities &amp; meetups</text>
+            <text x="173" y="166">36-hour hackathons</text>
+            <text x="121" y="236">startups</text>
+            <text x="225" y="236">tools</text>
+            <text x="173" y="314">grants &amp; angel checks</text>
+          </g>
+          <path class="ln" d="M173 40V73" marker-end="url(#ahm)"/>
+          <path class="ln" d="M173 110V143" marker-end="url(#ahm)"/>
+          <path class="ln" d="M173 180V196M121 213V200Q121 196 125 196H221Q225 196 225 200V213" />
+          <path class="ln" d="M121 213V213.5" marker-end="url(#ahm)"/>
+          <path class="ln" d="M225 213V213.5" marker-end="url(#ahm)"/>
+          <path class="ln" d="M121 250V266Q121 270 125 270H221Q225 270 225 266V250M173 270V291" marker-end="url(#ahm)"/>
+          <path class="ln" d="M273 310H306Q314 310 314 302V30Q314 22 306 22H274" marker-end="url(#ahm)"/>
+          <rect class="lbg" x="300" y="138" width="28" height="64"/>
+          <text x="0" y="0" text-anchor="middle" transform="translate(318 170) rotate(-90)">friends</text>
+        </svg>
+      </div>
+    </section>
+
+    <section id="writing">
+      <h2>Writing</h2>
+      <p>Posts when something is worth saying, and a newsletter, natochi updates, when enough has happened. Lately I'm reading <em>In Search of Lost Time</em> (Marcel Proust) and watching <em>Sōsō no Frieren</em> (Kanehito Yamada).</p>
+
+      <div class="lists">
+        <div>
+          <div class="list-h">posts</div>
+          <ul class="list">
+            <li><a href="/blog/seguir-adelante/"><span class="n">02</span>seguir adelante</a></li>
+            <li><a href="/blog/angelsquad-for-latam/"><span class="n">04</span>angelsquad for latam</a></li>
+            <li><a href="/blog/spomenik/"><span class="n">05</span>spomenik</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="list-h">natochi updates</div>
+          <ul class="list">
+            <li><a href="/updates/2026-06-13/">jun 13<span class="meta">2026-06-13</span></a></li>
+            <li><a href="/updates/2026-05-10/">may 10<span class="meta">2026-05-10</span></a></li>
+            <li><a href="/updates/2026-04-28/">apr 28<span class="meta">2026-04-28</span></a></li>
+          </ul>
+        </div>
+      </div>
+
+      <p>The long version, with every number, lives on the CV.</p>
+      <a class="out" href="/cv">natochi's CV: what got built, and with whom<svg width="9" height="9" viewBox="0 0 8 8" aria-hidden="true"><path d="M1.5 6.5 6.5 1.5M2.5 1.5h4v4" fill="none" stroke="currentColor" stroke-width="1.1"/></svg></a>
+      <p class="sig">— natochi, with friends from Platanus, Indies, Kairos, M3, Gen Stream and Amigos</p>
+    </section>
+  </main>
+</div>
+
+<footer class="foot">
+  <span>Santiago de Chile</span>
+  <a href="https://x.com/natochi_">natochi on X<svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><path d="M1.5 6.5 6.5 1.5M2.5 1.5h4v4" fill="none" stroke="currentColor" stroke-width="1.1"/></svg></a>
+  <a href="https://linkedin.com/in/natochi">LinkedIn<svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><path d="M1.5 6.5 6.5 1.5M2.5 1.5h4v4" fill="none" stroke="currentColor" stroke-width="1.1"/></svg></a>
+  <a href="https://cal.com/natochi">book 30 min<svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><path d="M1.5 6.5 6.5 1.5M2.5 1.5h4v4" fill="none" stroke="currentColor" stroke-width="1.1"/></svg></a>
+</footer>
+
+<script>
+(() => {
+  const P = [
+    [1,'Indies','communities',"LatAm's largest builder community, 3k+ members",'https://indies.la'],
+    [2,'traction.cl','communities','best growth community in Chile','https://traction.cl'],
+    [3,'meetups','communities','"u cannot imagine the money i spent on pizzas"',''],
+    [4,'Platanus Hack','hackathons','biggest IRL hackathon in LatAm, 5 countries, 36 hrs','https://hack.platan.us'],
+    [5,'hack@latam','hackathons','hack against corruption, 1.4k+ applicants, 5 countries at once',''],
+    [6,'build night','hackathons','12-hour hack, agent-only registration (a captcha for humans)',''],
+    [7,'asadi.to','hackathons','event in Buenos Aires, registration by CLI',''],
+    [8,'la clase','communities','a YC/Stanford-style class for 150 people, IRL','/laclase2'],
+    [9,'Amigos Fund','funding','micro-grants for young people solving important problems','https://amigos.sh'],
+    [10,'Kernel','funding','angel squad for LatAm, 42k USD in 6 days',''],
+    [11,'3x10','funding','4k USD in grants for young technical builders',''],
+    [12,'LatAm Opportunity Index','funding','grants, programs & fellowships found on the internet','/loi'],
+    [13,'themis.lat','tools',"find corruption in Chile's government contracting",'https://themis.lat'],
+    [14,'southcone.co','tools','full-stack AI outbound agency for LatAm','https://southcone.co'],
+    [15,'.org dashboard','tools','terminal-style dashboard for all indies projects','/org'],
+    [16,'Gen Stream','ai safety','selected (3% acceptance), helping run the next cohort',''],
+    [17,'AGI Strategy at home','ai safety','ran his own BlueDot-style course + Request for Events','/rfe'],
+    [18,'Kairos / M3','ai safety','site, brand and tools for AI safety & security orgs','']
+  ];
+  // natural size + alpha bounds (fractions) of each stamp png
+  const CROP = {1:[640,485,.1062,.1546,.8594,.8639],2:[640,475,.0703,.1116,.9531,.8863],3:[640,640,.1031,.0484,.8812,.9484],4:[640,640,.1359,.0734,.8609,.9094],5:[640,640,.1594,.0141,.8281,.9484],6:[640,640,.2141,.1703,.7672,.9234],7:[640,640,.0297,.0969,.9734,.9016],8:[514,640,.0136,.0156,.9533,.9734],9:[640,640,.0297,.1266,.9797,.8734],10:[480,640,.0583,.0656,.9792,.9469],11:[640,452,.1047,.0774,.9578,.9226],12:[640,640,.1203,.0141,.8875,.9906],13:[480,640,.1271,.1656,.8708,.8406],14:[640,605,.1359,.0661,.8359,.9603],15:[640,640,.1031,.0266,.9328,.9766],16:[640,640,.1281,.0547,.8719,.9547],17:[640,640,.1594,.0141,.8281,.9484],18:[640,640,.0031,.1297,.9938,.8672]};
+  const COLOR = {'communities':'--c-communities','hackathons':'--c-hackathons','funding':'--c-funding','tools':'--c-tools','ai safety':'--c-aisafety'};
+  const pad = n => String(n).padStart(2,'0');
+
+  function crop(n){
+    const [W,H,x0,y0,x1,y1] = CROP[n], bw = x1-x0, bh = y1-y0;
+    const s = document.createElement('span'); s.className = 'crop';
+    const im = new Image();
+    im.src = `stamps/stamp${n}.webp`; im.alt = ''; im.draggable = false;
+    im.style.cssText = `width:${100/bw}%;height:${100/bh}%;left:${-x0/bw*100}%;top:${-y0/bh*100}%`;
+    s.appendChild(im); s.dataset.r = (bw*W)/(bh*H);
+    return s;
+  }
+  function fit(el, bw, bh){
+    const r = +el.dataset.r; let w = bw, h = w / r;
+    if (h > bh){ h = bh; w = h * r; }
+    el.style.width = w.toFixed(1)+'px'; el.style.height = h.toFixed(1)+'px';
+  }
+
+  const grid = document.getElementById('grid');
+  const cells = P.map(([n,name,area]) => {
+    const b = document.createElement('button');
+    b.className = 'cell'; b.type = 'button'; b.dataset.n = n; b.dataset.area = area;
+    b.setAttribute('aria-label', `${pad(n)} ${name}, ${area}`);
+    b.style.setProperty('--rot', (n % 2 ? -1.6 : 1.3) + 'deg');
+    const num = document.createElement('span'); num.className = 'num'; num.textContent = pad(n);
+    const lift = document.createElement('span'); lift.className = 'lift';
+    const c = crop(n); lift.appendChild(c);
+    b.append(num, lift); grid.appendChild(b);
+    return b;
+  });
+
+  // perforations, rebuilt per column count
+  const mq = matchMedia('(max-width:760px)');
+  function perfs(){
+    grid.querySelectorAll('.perf').forEach(p => p.remove());
+    const cols = mq.matches ? 3 : 6, rows = 18 / cols;
+    for (let i = 0; i <= cols; i++){
+      const d = document.createElement('i'); d.className = 'perf v'; d.style.left = (i/cols*100)+'%'; grid.appendChild(d);
+    }
+    for (let j = 0; j <= rows; j++){
+      const d = document.createElement('i'); d.className = 'perf h'; d.style.top = (j/rows*100)+'%'; grid.appendChild(d);
+    }
+  }
+  function layout(){
+    const c = cells[0]; const cw = c.clientWidth, ch = c.clientHeight;
+    const bw = cw * 0.80, bh = ch * 0.68;
+    cells.forEach(cell => fit(cell.querySelector('.crop'), bw, bh));
+  }
+  perfs(); layout();
+  mq.addEventListener('change', perfs);
+  new ResizeObserver(layout).observe(grid);
+
+  // preview card
+  const $ = id => document.getElementById(id);
+  const cardStamp = $('card-stamp');
+  function show(n){
+    const [,name,area,line,link] = P[n-1];
+    $('card-num').textContent = pad(n);
+    cardStamp.replaceChildren(); const c = crop(n); cardStamp.appendChild(c);
+    const box = innerWidth <= 360 ? [74,88] : [88,92];
+    fit(c, box[0], box[1]);
+    $('card-name').textContent = name;
+    const a = $('card-area'); a.style.setProperty('--c', `var(${COLOR[area]})`); a.querySelector('span').textContent = area;
+    $('card-line').textContent = line;
+    const L = $('card-link');
+    if (link){
+      L.hidden = false; L.href = link;
+      L.querySelector('span').textContent = link.startsWith('http') ? link.replace(/^https?:\/\//,'') : 'natochi.cv' + link;
+    } else L.hidden = true;
+  }
+
+  let sel = 9, area = 'all';
+  function paint(){
+    cells.forEach(c => {
+      const n = +c.dataset.n;
+      c.classList.toggle('is-sel', n === sel);
+      c.setAttribute('aria-pressed', n === sel);
+      c.classList.toggle('is-dim', area !== 'all' && c.dataset.area !== area);
+    });
+    const k = area === 'all' ? 18 : P.filter(p => p[2] === area).length;
+    $('hint-count').textContent = `${k} of 18 in color`;
+  }
+  cells.forEach(c => {
+    const n = +c.dataset.n;
+    c.addEventListener('mouseenter', () => show(n));
+    c.addEventListener('focus', () => show(n));
+    c.addEventListener('click', () => { sel = n; paint(); show(n); });
+  });
+  grid.addEventListener('mouseleave', () => show(sel));
+  grid.addEventListener('focusout', e => { if (!grid.contains(e.relatedTarget)) show(sel); });
+
+  document.querySelectorAll('.chip').forEach(ch => ch.addEventListener('click', () => {
+    area = ch.dataset.area;
+    document.querySelectorAll('.chip').forEach(o => {
+      const on = o === ch; o.classList.toggle('is-active', on); o.setAttribute('aria-pressed', on);
+    });
+    if (area !== 'all' && P[sel-1][2] !== area) sel = P.find(p => p[2] === area)[0];
+    paint(); show(sel);
+  }));
+
+  paint(); show(sel);
+
+  // scrollspy for the on-this-page box
+  const links = [...document.querySelectorAll('.otp a[data-spy]')];
+  const secs = links.map(l => document.getElementById(l.dataset.spy));
+  function spy(){
+    const y = Math.min(innerHeight * 0.25, 260); let cur = secs[0];
+    for (const s of secs) if (s.getBoundingClientRect().top <= y) cur = s;
+    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 2) cur = secs[secs.length-1];
+    links.forEach(l => l.classList.toggle('is-active', l.dataset.spy === cur.id));
+  }
+  addEventListener('scroll', spy, {passive:true}); addEventListener('resize', spy); spy();
+})();
+</script>
+<script src="frames.js" defer></script>
+</body>
+</html>
