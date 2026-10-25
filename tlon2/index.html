@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en" data-ink="2" data-head="c">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tlon</title>
+<meta name="description" content="tlon is a small design studio of friends. Brands, sites and tools for research labs, fellowships and nonprofits.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fonts/tlon-thermal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+  @font-face {
+    font-family: "Tlon Thermal";
+    src: url("fonts/tlon-thermal.woff2") format("woff2"), url("fonts/tlon-thermal.otf") format("opentype");
+    font-display: block;
+  }
+  @font-face {
+    font-family: "Tlon Dots";
+    src: url("fonts/tlon-dots.woff2") format("woff2"), url("fonts/tlon-dots.otf") format("opentype");
+    font-display: block;
+  }
+
+  /* Every measurement below comes from the reference receipt photo:
+     paper 725px wide = 23.74em, so 1em = 2 columns = 24 print-head dots = 30.54 photo px. */
+  :root {
+    --black: #000;
+    --paper: #f3f3f3;
+    --ink: #000;
+    --fs: min(26.1px, calc((100vw - 32px) / 23.74));
+    --line: 0.937em;   /* body line pitch: 28.6px */
+    --tight: 0.851em;  /* footer pitch: 26px */
+    --art: 0.8415em;   /* ASCII art pitch: 25.7px */
+  }
+
+  * { box-sizing: border-box; }
+  html { background: var(--black); -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--black);
+    display: flex;
+    padding: max(4.5vh, 20px) 16px;
+  }
+
+  .desk { margin: auto; font-size: var(--fs); }
+  .receipt { position: relative; width: 23.74em; }
+
+  .paper {
+    position: relative;
+    padding: 3.505em 0 3.3em 1.054em;
+    background:
+      linear-gradient(to top right, rgb(0 0 0 / 0.035), rgb(0 0 0 / 0) 55%),
+      url("img/paper.webp") var(--gx, 0) var(--gy, 0) / 256px 256px,
+      var(--paper);
+    -webkit-mask:
+      url("img/edge-top.svg") var(--tx, 0) 0 / 7.611em 0.2947em repeat-x,
+      linear-gradient(#000 0 0) 0 0.28em / 100% calc(100% - 0.28em - 0.09em) no-repeat,
+      url("img/edge-bottom.svg") 0 100% / 9.82em 0.098em repeat-x;
+            mask:
+      url("img/edge-top.svg") var(--tx, 0) 0 / 7.611em 0.2947em repeat-x,
+      linear-gradient(#000 0 0) 0 0.28em / 100% calc(100% - 0.28em - 0.09em) no-repeat,
+      url("img/edge-bottom.svg") 0 100% / 9.82em 0.098em repeat-x;
+  }
+
+  /* a loose fibre left by the tear */
+  .fibre {
+    position: absolute;
+    left: 17.6%;
+    top: -0.27em;
+    width: 0.32em;
+    height: 0.42em;
+    color: var(--paper);
+  }
+
+  /* the printed layer: ink.js masks it on the head's dot grid, #thermal roughens and spreads it.
+     The padding keeps every dot inside the masked box. */
+  .print {
+    --cols: 43;
+    width: calc(var(--cols) * 1ch + 0.5em);
+    padding: 0.25em;
+    margin: -0.25em;
+    font-family: "Tlon Thermal", ui-monospace, monospace;
+    line-height: var(--line);
+    color: var(--ink);
+    filter: url(#thermal);
+    font-kerning: none;
+    font-variant-ligatures: none;
+  }
+  [data-ink="4"] .print { font-family: "Tlon Dots", "Tlon Thermal", ui-monospace, monospace; }
+  /* burnt paper: the head heats the whole roll and the type is what stays unprinted. The print layer
+     grows to the paper's edges and fills with ink, so the head's columns and specks show in the black */
+  [data-paper="k"] .print {
+    width: 23.74em;
+    margin: -3.505em 0 -3.3em -1.054em;
+    padding: 3.505em 1.186em 3.3em 1.054em;
+    background: var(--ink);
+    color: var(--paper);
+  }
+  [data-paper="k"] .hd img { filter: invert(1); }
+  [data-paper="k"] .band { background: var(--paper); color: var(--ink); }
+  [data-paper="k"] .print a:not(.qr):hover, [data-paper="k"] .print a:not(.qr):focus-visible { background: var(--paper); color: var(--ink); }
+  [data-paper="k"] .print a.qr:focus-visible { outline-color: var(--paper); }
+  [data-paper="k"] ::selection { background: var(--paper); color: var(--ink); }
+  .print h1, .print h2, .print p, .print ol, .print pre { margin: 0; padding: 0; font: inherit; }
+  .print ol { list-style: none; }
+  .main li { padding-left: 0.46ch; }
+  /* the reference sets its centred headings ~0.55 column right of the rules */
+  .main .head, .main h2.c { padding-left: 1.1ch; }
+  .print :is(p, h2, li, .rule, .stars) { white-space: pre; }
+  .c { text-align: center; }
+
+  /* ---- header variants (ESC/POS-style sizes: double width, double and quad size, reverse) ---- */
+  .hd > div { display: none; }
+  [data-head="a"] .hd-a, [data-head="b"] .hd-b, [data-head="c"] .hd-c, [data-head="d"] .hd-d { display: block; }
+  [data-head="e"] .hd-e { display: flex; }
+  .hd img { display: block; height: auto; }
+  .hd-a img { width: 16em; margin: 0 0 0 2.82em; }
+  .hd-c img { width: 9.583em; margin: 0 auto 0.55em; }
+  .hd-e { align-items: center; justify-content: center; gap: 0.75em; }
+  .hd-e img { width: 5.167em; }
+  .print .hd-e .dbl { line-height: 0.8; }
+  .hd-e p { margin-top: 0.2em; }
+  .print .quad { font-size: 4em; line-height: 0.82; letter-spacing: 0; }
+  .print .dbl { font-size: 2em; line-height: 0.9; }
+  .dw span { display: inline-block; transform: scaleX(2); }
+  .hd-b .dw, .hd-d .dw { margin-top: 0.35em; }
+  .band { background: var(--ink); color: var(--paper); text-align: center; padding: 0.42em 0 0.12em; }
+
+  .print .head { margin-top: 0.925em; }
+  .print .stamp { display: flex; justify-content: space-between; margin-top: 0.206em; }
+  .rule { overflow: hidden; }
+  .print .stars { margin-top: calc(var(--line) + 0.12em); }
+  .print .art {
+    width: max-content;
+    margin: -0.478em auto 0;
+    line-height: var(--art);
+  }
+  .print .stars + .art + .stars { margin-top: 0.455em; }
+  .print .foot { margin-top: 1.333em; line-height: var(--tight); white-space: normal; }
+
+  .print a { color: inherit; text-decoration: none; }
+  /* reverse print, like ESC/POS white-on-black mode */
+  .print a:not(.qr):hover, .print a:not(.qr):focus-visible { background: var(--ink); color: var(--paper); outline: none; }
+  .print a.qr:focus-visible { outline: 0.1em solid var(--ink); outline-offset: 0.2em; }
+  ::selection { background: var(--ink); color: var(--paper); }
+
+  /* ---- review panel, only with ?lab ---- */
+  .lab {
+    position: fixed;
+    left: 12px;
+    bottom: 12px;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 6px 10px;
+    align-items: center;
+    padding: 10px 12px;
+    background: #0b0b0b;
+    border: 1px solid #2a2a2a;
+    color: #cfcfcf;
+    font: 12px/1 "Tlon Thermal", ui-monospace, monospace;
+  }
+  .lab[hidden] { display: none; }
+  .lab span:first-child, .lab .k { color: #7a7a7a; }
+  .lab div { display: flex; gap: 4px; }
+  .lab button {
+    min-width: 24px;
+    height: 24px;
+    padding: 0 4px;
+    border: 1px solid #3a3a3a;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+  .lab button[aria-pressed="true"] { background: #f3f3f3; color: #000; border-color: #f3f3f3; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <!-- ragged dot edges and a little ink spread; ink.js scales these with the type size -->
+  <filter id="thermal" x="-2%" y="-1%" width="104%" height="102%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" result="grain"/>
+    <feDisplacementMap in="SourceGraphic" in2="grain" scale="1.1" xChannelSelector="R" yChannelSelector="G"/>
+    <feGaussianBlur stdDeviation="0.6"/>
+    <feComponentTransfer><feFuncA type="linear" slope="1.25"/></feComponentTransfer>
+  </filter>
+</svg>
+
+<main class="desk">
+  <article class="receipt main">
+    <div class="paper">
+      <svg class="fibre" viewBox="0 0 10 13" aria-hidden="true"><path d="M3.6 13C3.2 10.4 4.9 9.3 5.6 7.6 6.2 6 4.4 4.7 5 3.1 5.4 2 6.4 1.6 6.9.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+
+      <div class="print">
+        <header class="hd">
+          <div class="hd-a"><h1><img src="img/head-a.svg" width="384" height="66" alt="tlon, design studio"></h1></div>
+          <div class="hd-b"><h1 class="quad c">TLON</h1><p class="dw c"><span>DESIGN STUDIO</span></p></div>
+          <div class="hd-c"><h1><img src="img/head-c.svg" width="230" height="132" alt="tlon"></h1><p class="dw c"><span>TLON DESIGN STUDIO</span></p></div>
+          <div class="hd-d"><h1 class="band"><span class="quad">TLON</span></h1><p class="dw c"><span>DESIGN STUDIO</span></p></div>
+          <div class="hd-e"><img src="img/head-e.svg" width="124" height="82" alt=""><div><h1 class="dbl">TLON</h1><p>DESIGN STUDIO.</p></div></div>
+        </header>
+
+        <p class="head c">A SMALL STUDIO OF FRIENDS
+WORKING ONLY ON AI SAFETY
+BRANDS, SITES &amp; TOOLS
+BASED IN SAN FRANCISCO, CA</p>
+        <p class="stamp"><time id="date" datetime="2026-10-24">10/24/2026</time><span id="time">09:30 PM</span></p>
+
+        <div class="rule" aria-hidden="true">-------------------------------------------</div>
+        <h2 class="c">Now Taking Projects</h2>
+        <div class="rule" aria-hidden="true">-------------------------------------------</div>
+        <h2>Product/Service</h2>
+        <div class="rule" aria-hidden="true">-------------------------------------------</div>
+        <ol>
+<li>  01. Brand Identity</li>
+<li>  02. Program Sub-brands</li>
+<li>  03. Websites &amp; Landings</li>
+<li>  04. Design Systems</li>
+<li>  05. Motion</li>
+<li>  06. Internal Tools</li>
+        </ol>
+        <div class="rule" aria-hidden="true">-------------------------------------------</div>
+        <h2 class="c">How To Work With Us</h2>
+        <div class="rule" aria-hidden="true">-------------------------------------------</div>
+        <ol>
+<li>  01. Reach Out
+      Via [<a href="mailto:hello@tlon.studio">hello@tlon.studio</a>]</li>
+<li>  02. The Problem
+      What does your lab need to explain?</li>
+<li>  03. Timeline
+      Days rather than months</li>
+<li>  04. Handoff
+      Clean code anyone can pick up</li>
+<li>  05. Budget</li>
+        </ol>
+        <div class="rule" aria-hidden="true">-------------------------------------------</div>
+
+        <div class="stars c" aria-hidden="true">******************************************</div>
+        <pre class="art" role="img" aria-label="TLON">
+ ______  __       _____   __  __
+/\__  _\/\ \     /\  __`\/\ \/\ \
+\/_/\ \/\ \ \    \ \ \/\ \ \ `\\ \
+   \ \ \ \ \ \  __\ \ \ \ \ \ , ` \
+    \ \ \ \ \ \L\ \\ \ \_\ \ \ \`\ \
+     \ \_\ \ \____/ \ \_____\ \_\ \_\
+      \/_/  \/___/   \/_____/\/_/\/_/</pre>
+        <div class="stars c" aria-hidden="true">******************************************</div>
+
+        <p class="foot c">For more information or if you have<br>questions, please send a mail to<br><a href="mailto:hello@tlon.studio">hello@tlon.studio</a> or see our work<br>for <a href="https://kairos-project.org/">Kairos</a> and the <a href="https://natochi.cv/m4">M3 fellowship</a></p>
+      </div>
+    </div>
+  </article>
+</main>
+
+<nav class="lab" aria-label="Versions" hidden>
+  <span>TINTA</span>
+  <div><button name="ink" value="1">1</button><button name="ink" value="2">2</button><button name="ink" value="3">3</button><button name="ink" value="4">4</button><button name="ink" value="5">5</button></div>
+  <span data-ink-name></span>
+  <span>HEADER</span>
+  <div><button name="head" value="a">A</button><button name="head" value="b">B</button><button name="head" value="c">C</button><button name="head" value="d">D</button><button name="head" value="e">E</button></div>
+  <span data-head-name></span>
+  <span>PAPEL</span>
+  <div><button name="paper" value="w">W</button><button name="paper" value="k">K</button></div>
+  <span data-paper-name></span>
+</nav>
+
+<script>
+  // stamp the receipt with the visitor's own date and time, like a fresh print
+  (() => {
+    const now = new Date(), p = (n) => String(n).padStart(2, "0");
+    const d = document.getElementById("date"), t = document.getElementById("time");
+    d.textContent = `${p(now.getMonth() + 1)}/${p(now.getDate())}/${now.getFullYear()}`;
+    d.dateTime = now.toISOString().slice(0, 10);
+    const h = now.getHours() % 12 || 12;
+    t.textContent = `${p(h)}:${p(now.getMinutes())} ${now.getHours() < 12 ? "AM" : "PM"}`;
+  })();
+</script>
+<script src="ink.js"></script>
+</body>
+</html>
