@@ -1,0 +1,158 @@
+/* Quorum components. Every value comes from tokens.css; nothing here redeclares a token. */
+
+body { margin: 0; font-family: var(--font-sans); background: var(--ground); color: var(--ink); -webkit-font-smoothing: antialiased; }
+
+/* Brand */
+.q-mark { display: inline-block; flex: none; vertical-align: middle; overflow: visible; }
+.q-mark-solid { fill: var(--ink); }
+.q-mark-outline { fill: var(--fill-strong); stroke: var(--ink); stroke-linejoin: miter; }
+.q-mark-handle { fill: var(--canvas); stroke: var(--ink); }
+
+.q-logo { display: inline-flex; align-items: center; gap: .32em; color: var(--ink); line-height: 1; }
+.q-logo-word { font-family: var(--font-sans); font-weight: 400; letter-spacing: -.02em; }
+
+.q-icon { display: inline-block; flex: none; vertical-align: middle; color: inherit; }
+
+/* Button */
+.q-btn {
+  appearance: none; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; gap: var(--space-3);
+  font-family: var(--font-sans); font-weight: 500; color: var(--ink); text-decoration: none; white-space: nowrap;
+  background: var(--fill); border: var(--stroke-frame) solid var(--line); border-radius: var(--radius-none); cursor: pointer;
+  transition: background-color .15s cubic-bezier(.4, 0, .2, 1), border-color .15s cubic-bezier(.4, 0, .2, 1);
+}
+.q-btn-md { height: var(--control-md); padding: 0 var(--space-5); font-size: 16px; line-height: 20px; }
+.q-btn-lg { height: var(--control-lg); padding: 0 var(--space-6); font-size: 19px; line-height: 24px; }
+.q-btn:hover { background: var(--fill-strong); }
+.q-btn:active { border-color: var(--ink); }
+.q-btn:focus-visible { outline: var(--stroke-frame) solid var(--focus); outline-offset: 2px; }
+.q-btn:disabled, .q-btn[aria-disabled="true"] { color: var(--ink-muted); background: var(--ground); cursor: not-allowed; }
+.q-btn-icon { display: inline-flex; }
+
+.q-btn-mark { justify-content: flex-start; gap: 0; padding: var(--space-2); }
+.q-btn-mark.q-btn-md { height: var(--control-lg); min-width: 248px; }
+.q-btn-mark.q-btn-lg { height: var(--control-xl); min-width: 336px; padding: 10px; }
+.q-btn-cell {
+  box-sizing: border-box; height: 100%; aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center;
+  border: var(--stroke-frame) solid var(--line); background: var(--fill); transition: inherit;
+}
+.q-btn-mark .q-btn-label { flex: 1; text-align: center; padding: 0 var(--space-6); }
+.q-btn-mark:hover .q-btn-cell { background: var(--fill-strong); }
+
+.q-btn-text { height: auto; padding: 2px 0; background: none; border: 0; gap: var(--space-2); }
+.q-btn-text .q-btn-label { text-decoration: underline; text-decoration-thickness: var(--stroke-rule); text-underline-offset: 5px; text-decoration-color: var(--line-strong); }
+.q-btn-text:hover { background: none; }
+.q-btn-text:hover .q-btn-label { text-decoration-color: var(--ink); }
+.q-btn-text .q-icon { transition: transform .15s cubic-bezier(.4, 0, .2, 1); }
+.q-btn-text:hover .q-icon { transform: translateX(2px); }
+
+/* Tag */
+.q-tag {
+  box-sizing: border-box; display: inline-flex; align-items: center; gap: var(--space-2); white-space: nowrap;
+  font-family: var(--font-mono); font-size: 13px; line-height: 16px; letter-spacing: .06em; text-transform: uppercase;
+  padding: 6px 12px; border: var(--stroke-frame) solid var(--ink-line); color: var(--ink-line); background: var(--q-surface, var(--ground));
+}
+.q-tag-quiet { border-color: var(--line); color: var(--ink-muted); }
+.q-tag-sm { font-size: 11px; line-height: 14px; padding: 3px 8px; }
+
+/* Section label */
+.q-section-label {
+  display: flex; align-items: center; gap: var(--space-3); margin: 0;
+  font-family: var(--font-mono); font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--ink);
+}
+.q-section-label-node { box-sizing: border-box; flex: none; width: 10px; height: 10px; border: var(--stroke-frame) solid var(--ink); }
+.q-section-label-rule { flex: 1; min-width: var(--space-6); height: var(--stroke-hair); background: var(--line); }
+.q-section-label-meta { color: var(--ink-muted); font-weight: 400; }
+
+/* Panel */
+.q-panel {
+  --q-surface: var(--fill);
+  box-sizing: border-box; min-width: 0; display: flex; flex-direction: column; gap: var(--space-6);
+  padding: var(--space-5); background: var(--fill); border: var(--stroke-frame) solid var(--line); color: var(--ink);
+}
+.q-panel-canvas { --q-surface: var(--canvas); background: var(--canvas); }
+.q-panel-ground { --q-surface: var(--ground); background: var(--ground); }
+.q-panel-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-4); }
+.q-panel-icon { display: inline-flex; color: var(--ink); }
+.q-panel-body { margin-top: auto; display: flex; flex-direction: column; gap: var(--space-3); }
+.q-panel-title { margin: 0; font-family: var(--font-sans); font-size: 24px; line-height: 30px; font-weight: 400; letter-spacing: -.01em; text-wrap: balance; }
+.q-panel-text { margin: 0; font-size: 19px; line-height: 28px; max-width: 34em; }
+.q-panel-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-2); }
+
+/* Field */
+.q-field { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
+.q-field-label { font-family: var(--font-mono); font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-muted); }
+.q-field-input {
+  appearance: none; box-sizing: border-box; width: 100%; min-height: var(--control-md); margin: 0; padding: var(--space-3) 0;
+  font-family: var(--font-sans); font-size: 19px; line-height: 28px; color: var(--ink);
+  background: transparent; border: 0; border-bottom: var(--stroke-frame) solid var(--line-strong); border-radius: var(--radius-none);
+}
+textarea.q-field-input { min-height: 132px; resize: vertical; }
+.q-field-input::placeholder { color: var(--ink-muted); opacity: 1; }
+.q-field-input:hover { border-bottom-color: var(--ink-muted); }
+.q-field-input:focus { outline: none; border-bottom-color: var(--focus); box-shadow: 0 var(--stroke-frame) 0 0 var(--focus); }
+.q-field-msg { margin: 0; font-size: 14px; line-height: 20px; color: var(--ink-muted); }
+.q-field-invalid .q-field-input { border-bottom-color: var(--signal); }
+.q-field-invalid .q-field-msg { color: var(--signal); }
+
+/* Diagrams */
+.q-tone-line { color: var(--line); }
+.q-tone-ink { color: var(--ink-line); }
+
+.q-nodegrid { --q-surface: var(--ground); position: relative; overflow: hidden; background: var(--ground); }
+.q-nodegrid-svg { position: absolute; inset: 0; display: block; }
+.q-nodegrid-tex { fill: var(--fill-strong); }
+.q-nodegrid-line { fill: none; stroke: var(--line); stroke-width: var(--stroke-rule); }
+.q-nodegrid-node { fill: none; stroke: var(--line); }
+.q-nodegrid-content { position: relative; height: 100%; display: flex; align-items: center; justify-content: center; padding: 0 var(--space-4); }
+
+.q-globe { position: relative; aspect-ratio: 1 / 1; max-width: 100%; overflow: hidden; }
+.q-globe > svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.q-globe-lines, .q-globe-back { fill: none; stroke: currentColor; stroke-width: var(--stroke-hair); }
+.q-globe-back { stroke-dasharray: 2 4; }
+.q-globe-dots { fill: currentColor; }
+.q-globe-ring, .q-globe-ticks { fill: none; stroke: currentColor; }
+.q-globe-content { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: var(--space-5); }
+
+.q-orbits { position: relative; aspect-ratio: 4 / 3; max-width: 100%; overflow: hidden; color: var(--ink-line); }
+.q-orbits > svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.q-orbits-sun { fill: none; stroke: currentColor; stroke-width: var(--stroke-frame); }
+.q-orbits-path { fill: none; stroke: currentColor; stroke-width: .75px; }
+.q-orbits-dots { fill: currentColor; }
+.q-orbits-label { position: absolute; transform: translate(-50%, -50%); }
+.q-orbits-content { position: absolute; left: 0; right: 0; bottom: 0; padding: var(--space-5); }
+
+/* Frames: cells registered to a 12-column grid, ruled in line, with a hollow node wherever rules cross.
+   Markup: an optional .q-frame-ticks row of 12 empty spans, then .q-frame holding .q-frame-cell children
+   (each sets its own grid-column span). The page around a frame is canvas; cells are ground. Nodes are knocked out
+   in canvas, so they cut the rules cleanly on the page and notch the corners of the blocks they sit on. */
+.q-frame-ticks { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--stroke-frame); padding: 0 var(--stroke-frame); height: 12px; }
+.q-frame-ticks > span { border-left: var(--stroke-frame) solid var(--line); margin-left: calc(-1 * var(--stroke-frame)); }
+.q-frame { position: relative; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--stroke-frame); padding: var(--stroke-frame); background: var(--line); }
+.q-frame-cell { --q-surface: var(--ground); position: relative; min-width: 0; box-sizing: border-box; background: var(--ground); }
+.q-frame::before, .q-frame::after, .q-frame-cell::before, .q-frame-cell::after {
+  content: ""; position: absolute; z-index: 2; box-sizing: border-box; width: var(--node); height: var(--node);
+  border: 3px solid var(--line); background: var(--canvas); outline: 6px solid var(--canvas); pointer-events: none;
+}
+.q-frame-cell::before { left: -9px; top: -9px; }
+.q-frame-cell::after { right: -9px; bottom: -9px; }
+.q-frame::before { right: -7px; top: -7px; }
+.q-frame::after { left: -7px; bottom: -7px; }
+.q-frame-cell.q-frame-empty { background: var(--canvas); }
+@media (max-width: 899px) { .q-frame > .q-frame-cell { grid-column: span 12 !important; } }
+
+/* Schematic: the drafting kit. Strokes and type come from the tokens, so every theme applies. */
+.q-schematic { --q-surface: var(--ground); color: var(--ink-line); }
+.q-schematic > svg { display: block; width: 100%; height: auto; overflow: visible; }
+.q-sx-hair { fill: none; stroke: var(--line-strong); stroke-width: .75px; }
+.q-sx-solid { fill: none; stroke: var(--ink-line); stroke-width: 1.25px; }
+.q-sx-dashed { fill: none; stroke: var(--ink-line); stroke-width: 1px; stroke-dasharray: 6 5; }
+.q-sx-construction { fill: none; stroke: var(--line-strong); stroke-width: 1px; stroke-dasharray: 5 4; }
+.q-sx-ink { fill: var(--ink-line); stroke: none; }
+.q-sx-hollow, .q-sx-tagbox { fill: var(--q-surface); stroke: var(--ink-line); stroke-width: 1.25px; }
+.q-sx-legendbox { fill: var(--q-surface); stroke: var(--ink-line); stroke-width: 1px; }
+.q-sx-hatch { fill: none; stroke: var(--ink-line); stroke-width: .75px; }
+.q-sx-text { font-family: var(--font-mono); font-size: 12px; letter-spacing: .06em; fill: var(--ink); }
+.q-sx-note { font-family: var(--font-mono); font-size: 11px; fill: var(--ink-muted); }
+.q-sx-ref { font-family: var(--font-mono); font-size: 10px; fill: var(--ink-muted); }
+.q-sx-big { font-family: var(--font-mono); font-size: 22px; fill: var(--ink); }
+.q-sx-halo { paint-order: stroke; stroke: var(--q-surface); stroke-width: 5px; stroke-linejoin: round; }
