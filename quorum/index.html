@@ -54,12 +54,25 @@ a{color:var(--ink)}a:hover{color:var(--ink-muted)}
 .qhz-summit{--hz-s1:#b9a1d8;--hz-s2:#6c4caa;--hz-s3:#3c2377;--hz-s4:#24134b;--hz-s5:#120824;--hz-c1:#0b0410;--hz-c2:#160819;--hz-b1:#4a1a3c;--hz-b2:#b4487a;--hz-b3:#e08ba6;--hz-rim:#fbe9e4;--hz-haze:#dacbf0;--hz-rot:13deg;--hz-cta:#3c2377}
 .qhz-counsel{--hz-s1:#93c9ba;--hz-s2:#2f7e70;--hz-s3:#13534b;--hz-s4:#0a3631;--hz-s5:#041a17;--hz-c1:#020c0a;--hz-c2:#04140f;--hz-b1:#0f3d2c;--hz-b2:#3c9868;--hz-b3:#90d7a2;--hz-rim:#f2f8e8;--hz-haze:#c1e7d5;--hz-rot:0deg;--hz-top:48%;--hz-cta:#13534b}
 .qhz-survey{--hz-s1:#a3abbd;--hz-s2:#4d5774;--hz-s3:#272d47;--hz-s4:#171b2e;--hz-s5:#0a0c17;--hz-c1:#0b0905;--hz-c2:#15100a;--hz-b1:#4a3410;--hz-b2:#c6942a;--hz-b3:#ecc45a;--hz-rim:#fbf3dc;--hz-haze:#dad3ba;--hz-rot:-6deg;--hz-cta:#272d47}
+/* People: hovering a portrait cell brings the photo's colour back and fills the cell with the photo's own colours */
+.qf-person{isolation:isolate}
+.qf-person-bg{position:absolute;inset:0;z-index:-1;overflow:hidden;opacity:0;pointer-events:none;transition:opacity .6s cubic-bezier(.22,1,.36,1)}
+.qf-people-blur .qf-person-bg::before{content:"";position:absolute;inset:-25%;background:var(--photo) center 35%/cover;filter:blur(48px) saturate(1.6) brightness(.6)}
+.qf-people-palette .qf-person-bg{background:radial-gradient(100% 70% at 0 0,var(--c1),transparent 72%),radial-gradient(100% 70% at 100% 0,var(--c2),transparent 72%),radial-gradient(100% 70% at 0 100%,var(--c3),transparent 72%),radial-gradient(100% 70% at 100% 100%,var(--c4),transparent 72%),var(--c0)}
+.qf-person-bg::after{content:"";position:absolute;inset:0;background:url(media/grain.svg) repeat;background-size:180px;opacity:.3;mix-blend-mode:overlay}
+.qf-person .qf-portrait{transition:filter .6s cubic-bezier(.22,1,.36,1),border-color .6s}
+.qf-person :is(h3,p){transition:color .4s}
+:is(.qf-people-blur,.qf-people-palette) .qf-person:hover{z-index:1}
+:is(.qf-people-blur,.qf-people-palette) .qf-person:hover .qf-person-bg{opacity:1}
+:is(.qf-people-blur,.qf-people-palette) .qf-person:hover .qf-portrait{filter:none;border-color:transparent;background-color:transparent !important}
+:is(.qf-people-blur,.qf-people-palette) .qf-person:hover :is(h3,p){color:#fff !important}
+@media (prefers-reduced-motion:reduce){.qf-person-bg,.qf-person .qf-portrait,.qf-person :is(h3,p){transition:none}}
 @media (max-width:759px){.qf-hero-panel{height:auto !important;min-height:364px;padding:28px !important}.qf-hero-panel h1{font-size:40px;line-height:44px}}
 @media (prefers-reduced-motion:reduce){.qhz-glow::before{transition:none;transform:translateY(0) rotate(var(--hz-rot))}.qhz:hover>.qhz-glow::before,.qhz:focus-within>.qhz-glow::before{animation:none}}
 </style>
 </head>
 <body>
-<div data-theme="light" class="qf qf-mono" style="background: var(--ground); color: var(--ink); font-family: var(--font-sans); display: flex; flex-direction: column;">
+<div data-theme="light" class="qf qf-mono qf-people-blur" style="background: var(--ground); color: var(--ink); font-family: var(--font-sans); display: flex; flex-direction: column;">
   <span data-q="Highlight" data-props='{}' style="display: contents;"></span>
 
   <header id="top" style="width: 100%; max-width: 1440px; margin: 0 auto; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px 32px; padding: 28px clamp(16px, 5vw, 72px);">
@@ -255,28 +268,32 @@ a{color:var(--ink)}a:hover{color:var(--ink-muted)}
             <span style="border-left: 2px solid var(--line); margin-left: -2px;"></span><span style="border-left: 2px solid var(--line); margin-left: -2px;"></span><span style="border-left: 2px solid var(--line); margin-left: -2px;"></span><span style="border-left: 2px solid var(--line); margin-left: -2px;"></span><span style="border-left: 2px solid var(--line); margin-left: -2px;"></span><span style="border-left: 2px solid var(--line); margin-left: -2px;"></span><span style="border-left: 2px solid var(--line); margin-left: -2px;"></span><span style="border-left: 2px solid var(--line); margin-left: -2px;"></span><span style="border-left: 2px solid var(--line); margin-left: -2px;"></span><span style="border-left: 2px solid var(--line); margin-left: -2px;"></span><span style="border-left: 2px solid var(--line); margin-left: -2px;"></span><span style="border-left: 2px solid var(--line); border-right: 2px solid var(--line); margin: 0 -2px;"></span>
           </div>
           <div class="qf-bento" style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 2px; padding: 2px; background: var(--line);">
-            <div class="qf-cell qf-half" style="grid-column: span 3; background: var(--ground); box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; gap: 20px;">
+            <div class="qf-cell qf-half qf-person" style="grid-column: span 3; background: var(--ground); box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; gap: 20px; --photo: url(media/amy-labenz.jpg); --c0: #2e2a19; --c1: #536334; --c2: #556134; --c3: #363219; --c4: #1e1b0d;">
+              <span class="qf-person-bg" aria-hidden="true"></span>
               <img class="qf-portrait" src="media/amy-labenz.jpg" alt="Amy Labenz" width="480" height="480" loading="lazy" style="display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; box-sizing: border-box; border: 2px solid var(--line); background: var(--fill);">
               <div style="display: flex; flex-direction: column; gap: 4px;">
                 <h3 class="title" style="margin: 0;">Amy Labenz</h3>
                 <p class="small" style="margin: 0; color: var(--ink-muted);">Executive Director</p>
               </div>
             </div>
-            <div class="qf-cell qf-half" style="grid-column: span 3; background: var(--ground); box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; gap: 20px;">
+            <div class="qf-cell qf-half qf-person" style="grid-column: span 3; background: var(--ground); box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; gap: 20px; --photo: url(media/ollie-rodriguez.jpg); --c0: #2f2a1f; --c1: #2a2b0e; --c2: #4e4e35; --c3: #434734; --c4: #393f33;">
+              <span class="qf-person-bg" aria-hidden="true"></span>
               <img class="qf-portrait" src="media/ollie-rodriguez.jpg" alt="Ollie Rodriguez" width="480" height="480" loading="lazy" style="display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; box-sizing: border-box; border: 2px solid var(--line); background: var(--fill);">
               <div style="display: flex; flex-direction: column; gap: 4px;">
                 <h3 class="title" style="margin: 0;">Ollie Rodriguez</h3>
                 <p class="small" style="margin: 0; color: var(--ink-muted);">Managing Director</p>
               </div>
             </div>
-            <div class="qf-cell qf-half" style="grid-column: span 3; background: var(--ground); box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; gap: 20px;">
+            <div class="qf-cell qf-half qf-person" style="grid-column: span 3; background: var(--ground); box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; gap: 20px; --photo: url(media/niko-bjork.jpg); --c0: #382f27; --c1: #353c1e; --c2: #6b6950; --c3: #5c473e; --c4: #543c35;">
+              <span class="qf-person-bg" aria-hidden="true"></span>
               <img class="qf-portrait" src="media/niko-bjork.jpg" alt="Niko Bjork" width="480" height="480" loading="lazy" style="display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; box-sizing: border-box; border: 2px solid var(--line); background: var(--fill);">
               <div style="display: flex; flex-direction: column; gap: 4px;">
                 <h3 class="title" style="margin: 0;">Niko Bjork</h3>
                 <p class="small" style="margin: 0; color: var(--ink-muted);">Senior Project Manager</p>
               </div>
             </div>
-            <div class="qf-cell qf-half" style="grid-column: span 3; background: var(--ground); box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; gap: 20px;">
+            <div class="qf-cell qf-half qf-person" style="grid-column: span 3; background: var(--ground); box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; gap: 20px; --photo: url(media/jemima-jones.jpg); --c0: #3c3728; --c1: #56683b; --c2: #8f9666; --c3: #433e28; --c4: #544633;">
+              <span class="qf-person-bg" aria-hidden="true"></span>
               <img class="qf-portrait" src="media/jemima-jones.jpg" alt="Jemima Jones" width="480" height="480" loading="lazy" style="display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; box-sizing: border-box; border: 2px solid var(--line); background: var(--fill);">
               <div style="display: flex; flex-direction: column; gap: 4px;">
                 <h3 class="title" style="margin: 0;">Jemima Jones</h3>
