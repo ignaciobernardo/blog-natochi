@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quorum · Sparse map</title>
+<meta name="description" content="A design concept for Quorum's new identity: the Sparse map landing.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="media/quorum-q.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/bundle.css">
+<style>
+html,body{background:var(--canvas)}
+.qlogo-word,.qlogo-q{display:block;flex:none;background:var(--ink)}.qlogo-word{aspect-ratio:3125/715;transform:translateY(18%);-webkit-mask:url(media/quorum-wordmark.svg) center/contain no-repeat;mask:url(media/quorum-wordmark.svg) center/contain no-repeat}.qlogo-q{-webkit-mask:url(media/quorum-q.svg) center/contain no-repeat;mask:url(media/quorum-q.svg) center/contain no-repeat}
+body{margin:0}
+a{color:var(--ink)}a:hover{color:var(--ink-muted)}
+.qm-mono .qm-portrait{filter:grayscale(1)}
+.qm .q-frame.qm-map::before,.qm .q-frame.qm-map::after,.qm .qm-map>.q-frame-cell::before,.qm .qm-map>.q-frame-cell::after{background:var(--canvas);outline-color:var(--canvas)}
+.qm .qm-cta .q-btn{min-width:min(336px,100%)}
+@media (max-width:899px){
+.qm .qm-map{grid-template-rows:none !important}
+.qm .qm-map>.q-frame-cell{grid-row:auto !important}
+.qm .qm-map>.q-frame-empty{display:none}
+.qm .qm-map>.q-frame-empty.qm-keep{display:block;min-height:40px}
+}
+</style>
+</head>
+<body>
+<div id="top" data-theme="light" class="qm qm-mono" style="--q-surface: var(--canvas); background: var(--canvas); color: var(--ink); font-family: var(--font-sans); display: flex; flex-direction: column;">
+
+  <header style="width: 100%; max-width: 1440px; margin: 0 auto; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px 32px; padding: 24px clamp(16px, 5vw, 72px);">
+    <a href="#top" style="display: inline-flex; text-decoration: none;"><span class="qlogo-word" role="img" aria-label="Quorum" style="height: 26px;"></span></a>
+    <nav aria-label="Main" style="display: flex; flex-wrap: wrap; gap: 8px 28px; font-size: 15px; line-height: 20px;">
+      <a href="#events" style="text-decoration: none;">Events</a>
+      <a href="#team" style="text-decoration: none;">Team</a>
+      <a href="#careers" style="text-decoration: none;">Careers</a>
+      <a href="#research" style="text-decoration: none;">Research</a>
+      <a href="#contact" style="text-decoration: none;">Contact</a>
+    </nav>
+  </header>
+
+  <main style="width: 100%; max-width: 1440px; margin: 0 auto; box-sizing: border-box; padding: 8px clamp(16px, 5vw, 72px) 0;">
+    <div class="q-frame-ticks" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="q-frame qm-map" style="grid-template-rows: minmax(64px, auto) minmax(420px, auto) minmax(200px, auto) minmax(96px, auto) minmax(140px, auto) minmax(260px, auto) minmax(140px, auto) minmax(96px, auto) minmax(300px, auto) minmax(96px, auto) minmax(380px, auto) minmax(96px, auto) minmax(520px, auto) minmax(64px, auto);">
+
+      <!-- Top: the statement, with the one action docked under its right edge -->
+      <div class="q-frame-cell q-frame-empty" style="grid-column: 1 / 3; grid-row: 1 / 5;"></div>
+      <div class="q-frame-cell q-frame-empty qm-keep" style="grid-column: 3 / 10; grid-row: 1 / 2;"></div>
+      <div class="q-frame-cell q-frame-empty" style="grid-column: 10 / 13; grid-row: 1 / 3;"></div>
+
+      <section class="q-frame-cell" aria-labelledby="qm-title" style="grid-column: 3 / 10; grid-row: 2 / 3; padding: clamp(24px, 3.4vw, 48px); display: flex; flex-direction: column; justify-content: space-between; gap: 48px;">
+        <h1 id="qm-title" class="display-xl" style="margin: 0; max-width: 10em; font-size: clamp(44px, 5vw, 72px); line-height: 1; text-wrap: balance;">Helping the world navigate AI risk.</h1>
+        <p class="body-lg" style="margin: 0 0 0 auto; max-width: 25em; color: var(--ink-muted);">Quorum advances research and public understanding of the safety and societal implications of AI and other emerging technologies.</p>
+      </section>
+
+      <div class="q-frame-cell q-frame-empty" style="grid-column: 3 / 6; grid-row: 3 / 5;"></div>
+      <div class="q-frame-cell q-frame-empty qm-keep" style="grid-column: 6 / 9; grid-row: 3 / 4;"></div>
+
+      <div class="q-frame-cell qm-cta" style="grid-column: 9 / 13; grid-row: 3 / 4; padding: 24px; display: flex; align-items: center; justify-content: center;">
+        <span data-q="Button" data-props='{"size":"lg","href":"#contact"}' style="display: contents;">Get in touch</span>
+      </div>
+
+      <div class="q-frame-cell q-frame-empty" style="grid-column: 6 / 8; grid-row: 4 / 8;"></div>
+      <div class="q-frame-cell q-frame-empty qm-keep" style="grid-column: 8 / 13; grid-row: 4 / 6;"></div>
+
+      <!-- Events: two points, offset by one row -->
+      <div class="q-frame-cell q-frame-empty" style="grid-column: 1 / 2; grid-row: 5 / 8;"></div>
+
+      <article id="events" class="q-frame-cell" aria-labelledby="qm-forum" style="grid-column: 2 / 6; grid-row: 5 / 7; padding: clamp(24px, 2.8vw, 40px); display: flex; flex-direction: column; justify-content: space-between; gap: 40px;">
+        <span class="label" style="color: var(--ink-muted); text-transform: uppercase;">Upcoming</span>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <span class="data" style="color: var(--ink-muted);">Dec 12–13, 2026 · San Francisco</span>
+          <h2 id="qm-forum" class="heading" style="margin: 0; text-wrap: balance;">AI Horizons Forum</h2>
+          <p class="body" style="margin: 0; max-width: 22em; color: var(--ink-muted);">Two days, more than 750 people working to ensure transformative AI leads to good futures.</p>
+          <div style="padding-top: 8px;">
+            <span data-q="Button" data-props='{"variant":"text","href":"https://www.aihorizonsforum.org","external":true}' style="display: contents;">Learn more</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="q-frame-cell" aria-labelledby="qm-summit" style="grid-column: 8 / 12; grid-row: 6 / 8; padding: clamp(24px, 2.8vw, 40px); display: flex; flex-direction: column; justify-content: space-between; gap: 40px;">
+        <span class="label" style="color: var(--ink-muted); text-transform: uppercase;">Invitation only</span>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <span class="data" style="color: var(--ink-muted);">Annual · 2023–present · US and UK</span>
+          <h2 id="qm-summit" class="heading" style="margin: 0; text-wrap: balance;">Summit on Existential Security</h2>
+          <p class="body" style="margin: 0; max-width: 22em; color: var(--ink-muted);">A retreat for 100–250 researchers, policymakers, funders, and leaders from AI companies and nonprofits.</p>
+        </div>
+      </article>
+
+      <div class="q-frame-cell q-frame-empty" style="grid-column: 12 / 13; grid-row: 6 / 10;"></div>
+      <div class="q-frame-cell q-frame-empty" style="grid-column: 2 / 6; grid-row: 7 / 8;"></div>
+
+      <!-- Research -->
+      <div class="q-frame-cell q-frame-empty" style="grid-column: 1 / 3; grid-row: 8 / 11;"></div>
+      <div class="q-frame-cell q-frame-empty qm-keep" style="grid-column: 3 / 12; grid-row: 8 / 9;"></div>
+
+      <article id="research" class="q-frame-cell" aria-labelledby="qm-report" style="grid-column: 3 / 8; grid-row: 9 / 10; padding: clamp(24px, 2.8vw, 40px); display: flex; flex-direction: column; justify-content: space-between; gap: 40px;">
+        <span class="label" style="color: var(--ink-muted); text-transform: uppercase;">Research</span>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <span class="data" style="color: var(--ink-muted);">Survey report · February 2026</span>
+          <h2 id="qm-report" class="title" style="margin: 0; max-width: 22em; text-wrap: balance;">Survey of AI safety leaders on AI risk, AGI timelines, and resource allocation</h2>
+          <div style="padding-top: 8px;">
+            <span data-q="Button" data-props='{"variant":"text","href":"https://www.quorumai.org/research/download?report=survey-ai-safety-leaders-2026","external":true}' style="display: contents;">Read report (PDF)</span>
+          </div>
+        </div>
+      </article>
+
+      <div class="q-frame-cell q-frame-empty" style="grid-column: 8 / 12; grid-row: 9 / 10;"></div>
+
+      <!-- Team -->
+      <div class="q-frame-cell q-frame-empty" style="grid-column: 3 / 6; grid-row: 10 / 12;"></div>
+      <div class="q-frame-cell q-frame-empty qm-keep" style="grid-column: 6 / 13; grid-row: 10 / 11;"></div>
+      <div class="q-frame-cell q-frame-empty" style="grid-column: 1 / 3; grid-row: 11 / 13;"></div>
+
+      <section id="team" class="q-frame-cell" aria-labelledby="qm-team" style="grid-column: 6 / 13; grid-row: 11 / 12; padding: clamp(24px, 2.8vw, 40px); display: flex; flex-direction: column; justify-content: space-between; gap: 32px;">
+        <h2 id="qm-team" class="label" style="margin: 0; color: var(--ink-muted); text-transform: uppercase;">Team</h2>
+        <ul style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 24px 16px;">
+          <li style="display: flex; flex-direction: column; gap: 12px;">
+            <img class="qm-portrait" src="media/amy-labenz.jpg" alt="Amy Labenz" width="480" height="480" loading="lazy" style="display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; box-sizing: border-box; border: 2px solid var(--line); background: var(--fill);">
+            <div style="display: flex; flex-direction: column; gap: 2px;">
+              <h3 class="body" style="margin: 0;">Amy Labenz</h3>
+              <p class="small" style="margin: 0; color: var(--ink-muted);">Executive Director</p>
+            </div>
+          </li>
+          <li style="display: flex; flex-direction: column; gap: 12px;">
+            <img class="qm-portrait" src="media/ollie-rodriguez.jpg" alt="Ollie Rodriguez" width="480" height="480" loading="lazy" style="display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; box-sizing: border-box; border: 2px solid var(--line); background: var(--fill);">
+            <div style="display: flex; flex-direction: column; gap: 2px;">
+              <h3 class="body" style="margin: 0;">Ollie Rodriguez</h3>
+              <p class="small" style="margin: 0; color: var(--ink-muted);">Managing Director</p>
+            </div>
+          </li>
+          <li style="display: flex; flex-direction: column; gap: 12px;">
+            <img class="qm-portrait" src="media/niko-bjork.jpg" alt="Niko Bjork" width="480" height="480" loading="lazy" style="display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; box-sizing: border-box; border: 2px solid var(--line); background: var(--fill);">
+            <div style="display: flex; flex-direction: column; gap: 2px;">
+              <h3 class="body" style="margin: 0;">Niko Bjork</h3>
+              <p class="small" style="margin: 0; color: var(--ink-muted);">Senior Project Manager</p>
+            </div>
+          </li>
+          <li style="display: flex; flex-direction: column; gap: 12px;">
+            <img class="qm-portrait" src="media/jemima-jones.jpg" alt="Jemima Jones" width="480" height="480" loading="lazy" style="display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; box-sizing: border-box; border: 2px solid var(--line); background: var(--fill);">
+            <div style="display: flex; flex-direction: column; gap: 2px;">
+              <h3 class="body" style="margin: 0;">Jemima Jones</h3>
+              <p class="small" style="margin: 0; color: var(--ink-muted);">Program Manager</p>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Contact -->
+      <div class="q-frame-cell q-frame-empty qm-keep" style="grid-column: 3 / 9; grid-row: 12 / 13;"></div>
+      <div class="q-frame-cell q-frame-empty" style="grid-column: 9 / 13; grid-row: 12 / 15;"></div>
+      <div class="q-frame-cell q-frame-empty" style="grid-column: 1 / 2; grid-row: 13 / 15;"></div>
+
+      <section id="contact" class="q-frame-cell" aria-labelledby="qm-contact" style="grid-column: 2 / 9; grid-row: 13 / 14; padding: clamp(24px, 2.8vw, 40px); display: flex; flex-direction: column; justify-content: space-between; gap: 40px;">
+        <div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px;">
+          <h2 id="qm-contact" class="label" style="margin: 0; color: var(--ink-muted); text-transform: uppercase;">Contact</h2>
+          <p id="careers" class="data" style="margin: 0; color: var(--ink-muted);">Careers · <a href="mailto:jobs@quorumai.org">jobs@quorumai.org</a></p>
+        </div>
+        
+          <form data-q-form aria-label="Contact" style="display: flex; flex-direction: column; gap: 28px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px 24px;">
+              <span data-q="Field" data-props='{"id":"qm-name","label":"Name","name":"name","autoComplete":"name"}' style="display: contents;"></span>
+              <span data-q="Field" data-props='{"id":"qm-email","label":"Email","name":"email","type":"email","autoComplete":"email","placeholder":"you@example.org","required":true}' style="display: contents;"></span>
+            </div>
+            <span data-q="Field" data-props='{"id":"qm-message","label":"Message","name":"message","multiline":true,"placeholder":"How can we help?","required":true}' style="display: contents;"></span>
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px;">
+              <span data-q="Button" data-props='{"type":"submit"}' style="display: contents;">Submit</span>
+              <span class="small" style="color: var(--ink-muted);">or email <a href="mailto:team@quorumai.org" class="data">team@quorumai.org</a></span>
+            </div>
+          </form>
+        
+        
+      </section>
+
+      <div class="q-frame-cell q-frame-empty qm-keep" style="grid-column: 2 / 9; grid-row: 14 / 15;"></div>
+    </div>
+  </main>
+
+  <footer style="width: 100%; max-width: 1440px; margin: 0 auto; box-sizing: border-box; padding: 48px clamp(16px, 5vw, 72px) 40px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px;">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px;">
+      <span class="qlogo-word" role="img" aria-label="Quorum" style="height: 18px;"></span>
+      <span class="small" style="color: var(--ink-muted);">Quorum is a nonprofit organization. © 2026 Quorum.</span>
+    </div>
+    <nav aria-label="Footer" style="display: flex; flex-wrap: wrap; gap: 8px 24px;">
+      <a href="#events" class="small" style="text-decoration: none;">Events</a>
+      <a href="#team" class="small" style="text-decoration: none;">Team</a>
+      <a href="#careers" class="small" style="text-decoration: none;">Careers</a>
+      <a href="#research" class="small" style="text-decoration: none;">Research</a>
+      <a href="#contact" class="small" style="text-decoration: none;">Contact</a>
+    </nav>
+  </footer>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="assets/bundle.js"></script>
+<script>
+(function () {
+  var h = React.createElement;
+  document.querySelectorAll('[data-q]').forEach(function (el) {
+    var Comp = window.Quorum[el.getAttribute('data-q')];
+    var props = JSON.parse(el.getAttribute('data-props') || '{}');
+    var html = el.innerHTML.trim(), children;
+    if (html) children = /</.test(html) ? h('span', { style: { display: 'contents' }, dangerouslySetInnerHTML: { __html: html } }) : el.textContent.trim();
+    ReactDOM.createRoot(el).render(h(Comp, props, children));
+  });
+  // The form opens the visitor's mail app with the message, addressed to Quorum's public inbox.
+  var form = document.querySelector('[data-q-form]');
+  if (form) form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var f = new FormData(form), name = f.get('name') || '', email = f.get('email') || '';
+    var body = (f.get('message') || '') + '\n\n' + name + (email ? ' <' + email + '>' : '');
+    location.href = 'mailto:team@quorumai.org?subject=' + encodeURIComponent(name ? 'Message from ' + name : 'Message') + '&body=' + encodeURIComponent(body);
+  });
+})();
+</script>
+</body>
+</html>
