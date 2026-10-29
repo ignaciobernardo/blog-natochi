@@ -104,6 +104,9 @@ textarea.q-field-input { min-height: 132px; resize: vertical; }
 .q-nodegrid-line { fill: none; stroke: var(--line); stroke-width: var(--stroke-rule); }
 .q-nodegrid-node { fill: none; stroke: var(--line); }
 .q-nodegrid-content { position: relative; height: 100%; display: flex; align-items: center; justify-content: center; padding: 0 var(--space-4); }
+.q-nodegrid[data-intro="wait"] > .q-nodegrid-content { opacity: 0; }
+.q-nodegrid[data-intro="play"] > .q-nodegrid-content { animation: q-rise .9s cubic-bezier(.16, 1, .3, 1) 1.5s both; }
+@keyframes q-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
 .q-globe { position: relative; aspect-ratio: 1 / 1; max-width: 100%; overflow: hidden; }
 .q-globe > svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
@@ -156,3 +159,18 @@ textarea.q-field-input { min-height: 132px; resize: vertical; }
 .q-sx-ref { font-family: var(--font-mono); font-size: 10px; fill: var(--ink-muted); }
 .q-sx-big { font-family: var(--font-mono); font-size: 22px; fill: var(--ink); }
 .q-sx-halo { paint-order: stroke; stroke: var(--q-surface); stroke-width: 5px; stroke-linejoin: round; }
+
+/* Highlight: the browser's selection goes transparent and each selected line is painted underneath the words */
+[data-q-highlight] ::selection { background: transparent; color: #ffffff; }
+[data-q-highlight] :is(input, textarea)::selection { background: var(--q-hl-a, #1d3c9c); color: #ffffff; }
+.q-hl-layer { position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: -1; pointer-events: none; }
+.q-hl-line { position: absolute; overflow: hidden; transition: left .09s linear, width .09s linear; }
+.q-hl-flow { background: linear-gradient(100deg, var(--q-hl-a, #1d3c9c), var(--q-hl-b, #4d4fb0), var(--q-hl-c, #c4582a), var(--q-hl-d, #7a3f93), var(--q-hl-a, #1d3c9c)) fixed; background-size: 70vw 100%; animation: q-hl-flow 7s linear infinite; }
+.q-hl-line-grad { background: linear-gradient(90deg, var(--q-hl-a, #1d3c9c), var(--q-hl-b, #4d4fb0) 52%, var(--q-hl-c, #c4582a)); }
+.q-hl-field { background: radial-gradient(130% 95% at 88% 118%, #22080a 0 36%, #7c2810 46%, #c4582a 54%, #d98a4e 59%, #5a6fc0 67%, rgba(42, 79, 174, 0) 76%) fixed, linear-gradient(172deg, #4e6fc2 0%, #1f3d9e 34%, #0f2a7a 66%, #081646 100%) fixed; }
+.q-hl-grain::after { content: ""; position: absolute; inset: 0; opacity: .38; mix-blend-mode: overlay; background-size: 160px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.q-hl-wipe { animation: q-hl-wipe .36s cubic-bezier(.22, 1, .36, 1); }
+.q-hl-flow.q-hl-wipe { animation: q-hl-wipe .36s cubic-bezier(.22, 1, .36, 1), q-hl-flow 7s linear infinite; }
+@keyframes q-hl-wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
+@keyframes q-hl-flow { from { background-position: 0 0; } to { background-position: 70vw 0; } }
+@media (prefers-reduced-motion: reduce) { .q-hl-line { transition: none; animation: none !important; } .q-nodegrid[data-intro] > .q-nodegrid-content { animation: none; opacity: 1; } }

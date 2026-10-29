@@ -1,4 +1,4 @@
-/* @ds-bundle: {"format":4,"namespace":"Quorum","components":[{"name":"Mark"},{"name":"Logo"},{"name":"Icon"},{"name":"Button"},{"name":"Tag"},{"name":"SectionLabel"},{"name":"Panel"},{"name":"Field"},{"name":"NodeGrid"},{"name":"Globe"},{"name":"Orbits"},{"name":"Schematic"}]} */
+/* @ds-bundle: {"format":4,"namespace":"Quorum","components":[{"name":"Mark"},{"name":"Logo"},{"name":"Icon"},{"name":"Button"},{"name":"Tag"},{"name":"SectionLabel"},{"name":"Panel"},{"name":"Field"},{"name":"NodeGrid"},{"name":"Globe"},{"name":"Orbits"},{"name":"Schematic"},{"name":"Highlight"}]} */
 (function () {
 /* Quorum geometry: pure functions shared by the components and the static SVG exports. */
 
@@ -587,6 +587,22 @@ function useSize(ref) {
   return s[0];
 }
 
+// True once the element has been at least a fifth on screen; stays true.
+function useSeen(ref, on) {
+  var r = Rx(), s = r.useState(false);
+  r.useEffect(function () {
+    if (!on || s[0]) return;
+    var el = ref.current;
+    if (!el || typeof IntersectionObserver === 'undefined') { s[1](true); return; }
+    var io = new IntersectionObserver(function (es) {
+      if (es.some(function (e) { return e.isIntersecting; })) { s[1](true); io.disconnect(); }
+    }, { threshold: 0.2 });
+    io.observe(el);
+    return function () { io.disconnect(); };
+  }, [on, s[0]]);
+  return s[0];
+}
+
 /* ---------- Brand ---------- */
 
 function Mark(p) {
@@ -736,13 +752,17 @@ function NodeGrid(p) {
   var o = { cellW: p.cellWidth || 240, cellH: p.cellHeight || 200, node: p.node || 16, gap: p.gap == null ? 10 : p.gap };
   var g = size[0] ? nodeGridGeometry(size[0], size[1], o) : null;
   var sw = Math.max(1, o.node * 0.19), inset = sw / 2;
-  // intro="assemble": the grid draws itself once from the centre node outward, then holds still
+  // intro="assemble": once the grid is on screen it draws itself from the centre node outward, then holds still;
+  // until then it stays empty, and its content rises in after the lines
   var reduce = useReducedMotion(), doneState = Rx().useState(false), END = 3.6;
-  var playing = p.intro === 'assemble' && !reduce && !doneState[0] && !!g;
+  var intro = p.intro === 'assemble' && !reduce && !doneState[0];
+  var seen = useSeen(ref, intro);
+  var playing = intro && seen && !!g;
   var t = useTicker(playing);
   Rx().useEffect(function () { if (playing && t > END) doneState[1](true); }, [playing, t > END]);
   var easeOut = function (x) { x = x < 0 ? 0 : x > 1 ? 1 : x; return 1 - Math.pow(1 - x, 3); };
   var maxD = 1, lines = g ? g.d : '', nodeAt = function () { return 1; }, texture = 1;
+  if (intro && !playing) { lines = ''; nodeAt = function () { return 0; }; texture = 0; }
   if (playing && g) {
     g.nodes.forEach(function (n) { if (n[2] > maxD) maxD = n[2]; });
     var grow = 2.4;
@@ -754,7 +774,7 @@ function NodeGrid(p) {
     nodeAt = function (n) { return easeOut((t - (n[2] / maxD) * grow) / 0.45); };
     texture = Math.max(0, Math.min(1, (t - 2.0) / 1.0));
   }
-  return h('div', { ref: ref, className: cls('q-nodegrid', p.className), style: Object.assign({ height: p.height == null ? 320 : p.height }, p.style) },
+  return h('div', { ref: ref, className: cls('q-nodegrid', p.className), 'data-intro': intro ? (playing ? 'play' : 'wait') : undefined, style: Object.assign({ height: p.height == null ? 320 : p.height }, p.style) },
     h('svg', { className: 'q-nodegrid-svg', width: '100%', height: '100%', 'aria-hidden': true },
       p.texture === false ? null : h('defs', null,
         h('pattern', { id: pid, width: 28, height: 28, patternUnits: 'userSpaceOnUse' },
@@ -818,9 +838,121 @@ function Schematic(p) {
   });
 }
 
+/* ---------- Behaviour ---------- */
+
+// Paints the text selection underneath the words, one block per line, so it can carry a gradient, grain and a
+// wipe. Renders nothing visible; mount one per page and it works inside the nearest themed root. Each block goes
+// into the nearest ancestor that paints a background (a cell, a panel, the page), which is made a stacking
+// context only while it holds a selection.
+function Highlight(p) {
+  var ref = Rx().useRef(null), reduce = useReducedMotion();
+  var variant = p.variant || 'flow', grain = p.grain !== false, wipe = p.wipe !== false && !reduce;
+  Rx().useEffect(function () {
+    var anchor = ref.current;
+    var scope = (anchor && anchor.closest('[data-theme]')) || document.body;
+    scope.setAttribute('data-q-highlight', '');
+    var held = new Map(), raf = 0;
+
+    function clear(c) { return c === 'transparent' || /,\s*0\)$/.test(c) || /\/\s*0\)$/.test(c); }
+    function surfaceOf(el, memo) {
+      if (memo.has(el)) return memo.get(el);
+      var s = scope;
+      for (var n = el; n && n !== scope; n = n.parentElement) {
+        var cs = getComputedStyle(n);
+        if (cs.backgroundImage !== 'none' || !clear(cs.backgroundColor)) { s = n; break; }
+      }
+      memo.set(el, s);
+      return s;
+    }
+    // Selected text, as line boxes grouped by the surface each line sits on.
+    function collect() {
+      var sel = document.getSelection(), groups = new Map(), memo = new Map();
+      if (!sel || sel.isCollapsed || !sel.rangeCount) return groups;
+      var sub = document.createRange();
+      for (var r = 0; r < sel.rangeCount; r++) {
+        var range = sel.getRangeAt(r);
+        if (!range.intersectsNode(scope)) continue;
+        var root = range.commonAncestorContainer;
+        if (root.nodeType === 3) root = root.parentNode;
+        var walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+        for (var t = walk.nextNode(); t; t = walk.nextNode()) {
+          if (!range.intersectsNode(t) || !scope.contains(t) || !t.parentElement || t.parentElement.closest('.q-hl-layer')) continue;
+          var a = t === range.startContainer ? range.startOffset : 0, b = t === range.endContainer ? range.endOffset : t.length;
+          if (a >= b || !/\S/.test(t.data.slice(a, b))) continue;
+          sub.setStart(t, a); sub.setEnd(t, b);
+          var surf = surfaceOf(t.parentElement, memo), lines = groups.get(surf);
+          if (!lines) groups.set(surf, lines = []);
+          var rects = sub.getClientRects();
+          for (var i = 0; i < rects.length; i++) {
+            var q = rects[i];
+            if (q.width < 1 || q.height < 4) continue;
+            var hit = null;
+            for (var k = 0; k < lines.length; k++) if (Math.abs(lines[k].top - q.top) < 4 && Math.abs(lines[k].bottom - q.bottom) < 6) { hit = lines[k]; break; }
+            if (hit) { hit.left = Math.min(hit.left, q.left); hit.right = Math.max(hit.right, q.right); }
+            else lines.push({ left: q.left, right: q.right, top: q.top, bottom: q.bottom });
+          }
+        }
+      }
+      return groups;
+    }
+    function hold(el) {
+      var cs = getComputedStyle(el), st = el.style;
+      var s = { layer: document.createElement('span'), pool: [], keys: {}, iso: st.isolation, z: st.zIndex };
+      if (cs.isolation !== 'isolate' && cs.zIndex === 'auto') {
+        if (cs.position === 'static') st.isolation = 'isolate'; else st.zIndex = '1';
+      }
+      s.layer.className = 'q-hl-layer';
+      s.layer.setAttribute('aria-hidden', 'true');
+      el.appendChild(s.layer);
+      held.set(el, s);
+      return s;
+    }
+    function release(el) {
+      var s = held.get(el);
+      s.layer.remove(); el.style.isolation = s.iso; el.style.zIndex = s.z;
+      held.delete(el);
+    }
+    function render() {
+      raf = 0;
+      var groups = collect();
+      held.forEach(function (s, el) { if (!groups.has(el)) release(el); });
+      groups.forEach(function (lines, el) {
+        var s = held.get(el) || hold(el), o = s.layer.getBoundingClientRect(), keys = {};
+        lines.forEach(function (L, i) {
+          var d = s.pool[i];
+          if (!d) { d = document.createElement('span'); s.pool.push(d); s.layer.appendChild(d); }
+          var key = Math.round(L.top - o.top);
+          keys[key] = 1;
+          var on = wipe && (!s.keys[key] || d.classList.contains('q-hl-wipe'));
+          d.className = 'q-hl-line q-hl-' + (variant === 'line' ? 'line-grad' : variant) + (grain ? ' q-hl-grain' : '') + (on ? ' q-hl-wipe' : '');
+          d.style.left = (L.left - o.left - 3) + 'px';
+          d.style.top = (L.top - o.top - 1) + 'px';
+          d.style.width = (L.right - L.left + 6) + 'px';
+          d.style.height = (L.bottom - L.top + 2) + 'px';
+          d.hidden = false;
+        });
+        for (var j = lines.length; j < s.pool.length; j++) { s.pool[j].hidden = true; s.pool[j].className = 'q-hl-line'; }
+        s.keys = keys;
+      });
+    }
+    function schedule() { if (!raf) raf = requestAnimationFrame(render); }
+    document.addEventListener('selectionchange', schedule);
+    window.addEventListener('resize', schedule);
+    schedule();
+    return function () {
+      document.removeEventListener('selectionchange', schedule);
+      window.removeEventListener('resize', schedule);
+      if (raf) cancelAnimationFrame(raf);
+      Array.from(held.keys()).forEach(release);
+      scope.removeAttribute('data-q-highlight');
+    };
+  }, [variant, grain, wipe]);
+  return h('span', { ref: ref, hidden: true });
+}
+
 var Quorum = {
   Mark: Mark, Logo: Logo, Icon: Icon, Button: Button, Tag: Tag, SectionLabel: SectionLabel,
-  Panel: Panel, Field: Field, NodeGrid: NodeGrid, Globe: Globe, Orbits: Orbits, Schematic: Schematic,
+  Panel: Panel, Field: Field, NodeGrid: NodeGrid, Globe: Globe, Orbits: Orbits, Schematic: Schematic, Highlight: Highlight,
   geometry: { MARK: MARK, globe: globeGeometry, orbits: orbitsGeometry, nodeGrid: nodeGridGeometry, dotsPath: dotsPath, schematic: schematic }
 };
 
