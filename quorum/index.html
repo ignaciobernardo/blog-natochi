@@ -35,8 +35,9 @@ a{color:var(--ink)}a:hover{color:var(--ink-muted)}
 @media (max-width:899px){.qf-bento>.qf-cell{grid-column:span 12 !important}.qf-bento>.qf-half{grid-column:span 6 !important}}
 @media (max-width:559px){.qf-bento>.qf-half{grid-column:span 12 !important}.qf-globe{width:360px !important;right:-140px !important;bottom:-200px !important}}
 /* Hover horizons: a block reveals its own gradient horizon (the AI Horizons Forum look), rising on a long ease */
-.qhz{isolation:isolate}
-.qhz-glow{position:absolute;inset:0;z-index:-1;overflow:hidden;opacity:0;pointer-events:none;transition:opacity .8s cubic-bezier(.22,1,.36,1);background:linear-gradient(168deg,var(--hz-s1) 0%,var(--hz-s2) 20%,var(--hz-s3) 46%,var(--hz-s4) 70%,var(--hz-s5) 100%)}
+/* No stacking context on the card, so the corner squares of every cell stay on top; the glow is the first child and the content is positioned after it */
+.qhz>:not(.qhz-glow){position:relative}
+.qhz-glow{position:absolute;inset:0;overflow:hidden;opacity:0;pointer-events:none;transition:opacity .8s cubic-bezier(.22,1,.36,1);background:linear-gradient(168deg,var(--hz-s1) 0%,var(--hz-s2) 20%,var(--hz-s3) 46%,var(--hz-s4) 70%,var(--hz-s5) 100%)}
 .qhz-glow::before{content:"";position:absolute;left:-30%;width:180%;top:var(--hz-top,40%);height:180%;border-radius:50%;background:radial-gradient(closest-side,var(--hz-c1) 0,var(--hz-c2) 60%,var(--hz-b1) 68%,var(--hz-b2) 75%,var(--hz-b3) 79%,var(--hz-rim) 85%,var(--hz-haze) 90%,transparent 100%);filter:blur(18px);transform:translateY(36%) rotate(var(--hz-rot));transform-origin:50% 0;transition:transform 1.6s cubic-bezier(.16,1,.3,1)}
 .qhz-glow::after{content:"";position:absolute;inset:0;background:url(media/grain.svg) repeat;background-size:180px;opacity:.34;mix-blend-mode:overlay}
 .qhz:hover>.qhz-glow,.qhz:focus-within>.qhz-glow{opacity:1}
@@ -55,14 +56,13 @@ a{color:var(--ink)}a:hover{color:var(--ink-muted)}
 .qhz-counsel{--hz-s1:#93c9ba;--hz-s2:#2f7e70;--hz-s3:#13534b;--hz-s4:#0a3631;--hz-s5:#041a17;--hz-c1:#020c0a;--hz-c2:#04140f;--hz-b1:#0f3d2c;--hz-b2:#3c9868;--hz-b3:#90d7a2;--hz-rim:#f2f8e8;--hz-haze:#c1e7d5;--hz-rot:0deg;--hz-top:48%;--hz-cta:#13534b}
 .qhz-survey{--hz-s1:#a3abbd;--hz-s2:#4d5774;--hz-s3:#272d47;--hz-s4:#171b2e;--hz-s5:#0a0c17;--hz-c1:#0b0905;--hz-c2:#15100a;--hz-b1:#4a3410;--hz-b2:#c6942a;--hz-b3:#ecc45a;--hz-rim:#fbf3dc;--hz-haze:#dad3ba;--hz-rot:-6deg;--hz-cta:#272d47}
 /* People: hovering a portrait cell brings the photo's colour back and fills the cell with the photo's own colours */
-.qf-person{isolation:isolate}
-.qf-person-bg{position:absolute;inset:0;z-index:-1;overflow:hidden;opacity:0;pointer-events:none;transition:opacity .6s cubic-bezier(.22,1,.36,1)}
+.qf-person>:not(.qf-person-bg){position:relative}
+.qf-person-bg{position:absolute;inset:0;overflow:hidden;opacity:0;pointer-events:none;transition:opacity .6s cubic-bezier(.22,1,.36,1)}
 .qf-people-blur .qf-person-bg::before{content:"";position:absolute;inset:-25%;background:var(--photo) center 35%/cover;filter:blur(48px) saturate(1.6) brightness(.6)}
 .qf-people-palette .qf-person-bg{background:radial-gradient(100% 70% at 0 0,var(--c1),transparent 72%),radial-gradient(100% 70% at 100% 0,var(--c2),transparent 72%),radial-gradient(100% 70% at 0 100%,var(--c3),transparent 72%),radial-gradient(100% 70% at 100% 100%,var(--c4),transparent 72%),var(--c0)}
 .qf-person-bg::after{content:"";position:absolute;inset:0;background:url(media/grain.svg) repeat;background-size:180px;opacity:.3;mix-blend-mode:overlay}
 .qf-person .qf-portrait{transition:filter .6s cubic-bezier(.22,1,.36,1),border-color .6s}
 .qf-person :is(h3,p){transition:color .4s}
-:is(.qf-people-blur,.qf-people-palette) .qf-person:hover{z-index:1}
 :is(.qf-people-blur,.qf-people-palette) .qf-person:hover .qf-person-bg{opacity:1}
 :is(.qf-people-blur,.qf-people-palette) .qf-person:hover .qf-portrait{filter:none;border-color:transparent;background-color:transparent !important}
 :is(.qf-people-blur,.qf-people-palette) .qf-person:hover :is(h3,p){color:#fff !important}
