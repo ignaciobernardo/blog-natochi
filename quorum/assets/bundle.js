@@ -756,9 +756,9 @@ function NodeGrid(p) {
   // until then it stays empty, and its content rises in after the lines
   var reduce = useReducedMotion(), doneState = Rx().useState(false), END = 3.6;
   var intro = p.intro === 'assemble' && !reduce && !doneState[0];
-  var seen = useSeen(ref, intro);
+  var seen = useSeen(ref, intro), speed = +p.introSpeed > 0 ? +p.introSpeed : 1;
   var playing = intro && seen && !!g;
-  var t = useTicker(playing);
+  var t = useTicker(playing) * speed;
   Rx().useEffect(function () { if (playing && t > END) doneState[1](true); }, [playing, t > END]);
   var easeOut = function (x) { x = x < 0 ? 0 : x > 1 ? 1 : x; return 1 - Math.pow(1 - x, 3); };
   var maxD = 1, lines = g ? g.d : '', nodeAt = function () { return 1; }, texture = 1;
@@ -774,7 +774,7 @@ function NodeGrid(p) {
     nodeAt = function (n) { return easeOut((t - (n[2] / maxD) * grow) / 0.45); };
     texture = Math.max(0, Math.min(1, (t - 2.0) / 1.0));
   }
-  return h('div', { ref: ref, className: cls('q-nodegrid', p.className), 'data-intro': intro ? (playing ? 'play' : 'wait') : undefined, style: Object.assign({ height: p.height == null ? 320 : p.height }, p.style) },
+  return h('div', { ref: ref, className: cls('q-nodegrid', p.className), 'data-intro': intro ? (playing ? 'play' : 'wait') : undefined, style: Object.assign({ height: p.height == null ? 320 : p.height }, intro ? { '--q-intro-delay': (1.5 / speed) + 's' } : null, p.style) },
     h('svg', { className: 'q-nodegrid-svg', width: '100%', height: '100%', 'aria-hidden': true },
       p.texture === false ? null : h('defs', null,
         h('pattern', { id: pid, width: 28, height: 28, patternUnits: 'userSpaceOnUse' },

@@ -105,7 +105,7 @@ textarea.q-field-input { min-height: 132px; resize: vertical; }
 .q-nodegrid-node { fill: none; stroke: var(--line); }
 .q-nodegrid-content { position: relative; height: 100%; display: flex; align-items: center; justify-content: center; padding: 0 var(--space-4); }
 .q-nodegrid[data-intro="wait"] > .q-nodegrid-content { opacity: 0; }
-.q-nodegrid[data-intro="play"] > .q-nodegrid-content { animation: q-rise .9s cubic-bezier(.16, 1, .3, 1) 1.5s both; }
+.q-nodegrid[data-intro="play"] > .q-nodegrid-content { animation: q-rise .9s cubic-bezier(.16, 1, .3, 1) var(--q-intro-delay, 1.5s) both; }
 @keyframes q-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
 .q-globe { position: relative; aspect-ratio: 1 / 1; max-width: 100%; overflow: hidden; }

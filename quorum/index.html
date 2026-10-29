@@ -54,11 +54,7 @@ a{color:var(--ink)}a:hover{color:var(--ink-muted)}
 .qhz-summit{--hz-s1:#b9a1d8;--hz-s2:#6c4caa;--hz-s3:#3c2377;--hz-s4:#24134b;--hz-s5:#120824;--hz-c1:#0b0410;--hz-c2:#160819;--hz-b1:#4a1a3c;--hz-b2:#b4487a;--hz-b3:#e08ba6;--hz-rim:#fbe9e4;--hz-haze:#dacbf0;--hz-rot:13deg;--hz-cta:#3c2377}
 .qhz-counsel{--hz-s1:#93c9ba;--hz-s2:#2f7e70;--hz-s3:#13534b;--hz-s4:#0a3631;--hz-s5:#041a17;--hz-c1:#020c0a;--hz-c2:#04140f;--hz-b1:#0f3d2c;--hz-b2:#3c9868;--hz-b3:#90d7a2;--hz-rim:#f2f8e8;--hz-haze:#c1e7d5;--hz-rot:0deg;--hz-top:48%;--hz-cta:#13534b}
 .qhz-survey{--hz-s1:#a3abbd;--hz-s2:#4d5774;--hz-s3:#272d47;--hz-s4:#171b2e;--hz-s5:#0a0c17;--hz-c1:#0b0905;--hz-c2:#15100a;--hz-b1:#4a3410;--hz-b2:#c6942a;--hz-b3:#ecc45a;--hz-rim:#fbf3dc;--hz-haze:#dad3ba;--hz-rot:-6deg;--hz-cta:#272d47}
-/* Hero: the statement panel rises in once the grid has drawn itself */
-@keyframes qf-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.qf-after{animation:qf-rise .9s cubic-bezier(.16,1,.3,1) 1.5s both}
 @media (max-width:759px){.qf-hero-panel{height:auto !important;min-height:364px;padding:28px !important}.qf-hero-panel h1{font-size:40px;line-height:44px}}
-@media (prefers-reduced-motion:reduce){.qf-after{animation:none}}
 @media (prefers-reduced-motion:reduce){.qhz-glow::before{transition:none;transform:translateY(0) rotate(var(--hz-rot))}.qhz:hover>.qhz-glow::before,.qhz:focus-within>.qhz-glow::before{animation:none}}
 </style>
 </head>
@@ -79,10 +75,10 @@ a{color:var(--ink)}a:hover{color:var(--ink-muted)}
 
   <main style="display: flex; flex-direction: column;">
 
-    <!-- Hero: the node grid assembles, then one opening in it, two cells wide, holds the statement -->
+    <!-- Hero: the statement sits in an opening two cells wide while the node grid assembles around it -->
     <section aria-labelledby="qf-title" style="position: relative; height: 600px; overflow: hidden;">
-      <span data-q="NodeGrid" data-props='{"height":600,"texture":true,"intro":"assemble"}' style="display: block; width: 100%;"></span>
-      <div class="qf-hero-panel qf-after" style="position: absolute; top: 118px; left: max(16px, calc(50% - 462px)); width: min(684px, calc(100% - 32px)); height: 364px; box-sizing: border-box; padding: 40px; background: var(--canvas); border: 2px solid var(--line); display: flex; flex-direction: column; justify-content: space-between; gap: 24px;">
+      <span data-q="NodeGrid" data-props='{"height":600,"texture":true,"intro":"assemble","introSpeed":"2"}' style="display: block; width: 100%;"></span>
+      <div class="qf-hero-panel" style="position: absolute; top: 118px; left: max(16px, calc(50% - 462px)); width: min(684px, calc(100% - 32px)); height: 364px; box-sizing: border-box; padding: 40px; background: var(--canvas); border: 2px solid var(--line); display: flex; flex-direction: column; justify-content: space-between; gap: 24px;">
         <span class="label" style="text-transform: uppercase; color: var(--ink-muted);">Quorum · Nonprofit</span>
         <div style="display: flex; flex-direction: column; gap: 16px;">
           <h1 id="qf-title" class="display" style="margin: 0; text-wrap: balance;">Helping the world navigate AI risk.</h1>
