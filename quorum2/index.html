@@ -23,6 +23,27 @@ a{color:var(--ink)}a:hover{color:var(--ink-muted)}
 .qm .qm-map>.q-frame-empty{display:none}
 .qm .qm-map>.q-frame-empty.qm-keep{display:block;min-height:40px}
 }
+/* Hover horizons: a block reveals its own gradient horizon (the AI Horizons Forum look), rising on a long ease */
+.qhz{isolation:isolate}
+.qhz-glow{position:absolute;inset:0;z-index:-1;overflow:hidden;opacity:0;pointer-events:none;transition:opacity .8s cubic-bezier(.22,1,.36,1);background:linear-gradient(168deg,var(--hz-s1) 0%,var(--hz-s2) 20%,var(--hz-s3) 46%,var(--hz-s4) 70%,var(--hz-s5) 100%)}
+.qhz-glow::before{content:"";position:absolute;left:-30%;width:180%;top:var(--hz-top,40%);height:180%;border-radius:50%;background:radial-gradient(closest-side,var(--hz-c1) 0,var(--hz-c2) 60%,var(--hz-b1) 68%,var(--hz-b2) 75%,var(--hz-b3) 79%,var(--hz-rim) 85%,var(--hz-haze) 90%,transparent 100%);filter:blur(18px);transform:translateY(36%) rotate(var(--hz-rot));transform-origin:50% 0;transition:transform 1.6s cubic-bezier(.16,1,.3,1)}
+.qhz-glow::after{content:"";position:absolute;inset:0;background:url(media/grain.svg) repeat;background-size:180px;opacity:.34;mix-blend-mode:overlay}
+.qhz:hover>.qhz-glow,.qhz:focus-within>.qhz-glow{opacity:1}
+.qhz:hover>.qhz-glow::before,.qhz:focus-within>.qhz-glow::before{transform:translateY(0) rotate(var(--hz-rot));animation:qhz-drift 11s ease-in-out 1.6s infinite alternate}
+@keyframes qhz-drift{from{transform:translateY(0) rotate(var(--hz-rot))}to{transform:translate(-4%,-3%) rotate(calc(var(--hz-rot) + 4deg))}}
+.qhz :is(h2,h3,p,span,a,li),.qhz .q-tag,.qhz .q-btn,.qhz .qf-globe{transition:color .5s,border-color .5s,background-color .5s,opacity .7s}
+.qhz:hover :is(h2,h3,p,span,a,li),.qhz:focus-within :is(h2,h3,p,span,a,li){color:#fff !important;text-shadow:0 1px 14px rgba(0,0,0,.3)}
+.qhz:hover .q-tag,.qhz:focus-within .q-tag{border-color:rgba(255,255,255,.8);background:transparent}
+.qhz:hover .q-icon,.qhz:focus-within .q-icon{color:#fff}
+.qhz:hover .q-btn-text .q-btn-label,.qhz:focus-within .q-btn-text .q-btn-label{text-decoration-color:rgba(255,255,255,.85)}
+.qhz:hover .q-btn:not(.q-btn-text),.qhz:focus-within .q-btn:not(.q-btn-text){background:#fff;border-color:#fff}
+.qhz:hover .q-btn:not(.q-btn-text) :is(span,.q-btn-label),.qhz:focus-within .q-btn:not(.q-btn-text) :is(span,.q-btn-label){color:var(--hz-cta) !important;text-shadow:none}
+.qhz:hover .qf-globe,.qhz:focus-within .qf-globe{opacity:.16}
+.qhz-forum{--hz-s1:#7393cc;--hz-s2:#2a4fae;--hz-s3:#0f2d84;--hz-s4:#091d59;--hz-s5:#050c26;--hz-c1:#0a0305;--hz-c2:#120406;--hz-b1:#4d1409;--hz-b2:#c85a22;--hz-b3:#ee8a3c;--hz-rim:#f8efe2;--hz-haze:#b9c9ec;--hz-rot:-13deg;--hz-cta:#0f2d84}
+.qhz-summit{--hz-s1:#b9a1d8;--hz-s2:#6c4caa;--hz-s3:#3c2377;--hz-s4:#24134b;--hz-s5:#120824;--hz-c1:#0b0410;--hz-c2:#160819;--hz-b1:#4a1a3c;--hz-b2:#b4487a;--hz-b3:#e08ba6;--hz-rim:#fbe9e4;--hz-haze:#dacbf0;--hz-rot:13deg;--hz-cta:#3c2377}
+.qhz-counsel{--hz-s1:#93c9ba;--hz-s2:#2f7e70;--hz-s3:#13534b;--hz-s4:#0a3631;--hz-s5:#041a17;--hz-c1:#020c0a;--hz-c2:#04140f;--hz-b1:#0f3d2c;--hz-b2:#3c9868;--hz-b3:#90d7a2;--hz-rim:#f2f8e8;--hz-haze:#c1e7d5;--hz-rot:0deg;--hz-top:48%;--hz-cta:#13534b}
+.qhz-survey{--hz-s1:#a3abbd;--hz-s2:#4d5774;--hz-s3:#272d47;--hz-s4:#171b2e;--hz-s5:#0a0c17;--hz-c1:#0b0905;--hz-c2:#15100a;--hz-b1:#4a3410;--hz-b2:#c6942a;--hz-b3:#ecc45a;--hz-rim:#fbf3dc;--hz-haze:#dad3ba;--hz-rot:-6deg;--hz-cta:#272d47}
+@media (prefers-reduced-motion:reduce){.qhz-glow::before{transition:none;transform:translateY(0) rotate(var(--hz-rot))}.qhz:hover>.qhz-glow::before,.qhz:focus-within>.qhz-glow::before{animation:none}}
 </style>
 </head>
 <body>
@@ -66,7 +87,8 @@ a{color:var(--ink)}a:hover{color:var(--ink-muted)}
       <!-- Events: two points, offset by one row -->
       <div class="q-frame-cell q-frame-empty" style="grid-column: 1 / 2; grid-row: 5 / 8;"></div>
 
-      <article id="events" class="q-frame-cell" aria-labelledby="qm-forum" style="grid-column: 2 / 6; grid-row: 5 / 7; padding: clamp(24px, 2.8vw, 40px); display: flex; flex-direction: column; justify-content: space-between; gap: 40px;">
+      <article id="events" class="q-frame-cell qhz qhz-forum" aria-labelledby="qm-forum" style="grid-column: 2 / 6; grid-row: 5 / 7; padding: clamp(24px, 2.8vw, 40px); display: flex; flex-direction: column; justify-content: space-between; gap: 40px;">
+        <span class="qhz-glow" aria-hidden="true"></span>
         <span class="label" style="color: var(--ink-muted); text-transform: uppercase;">Upcoming</span>
         <div style="display: flex; flex-direction: column; gap: 12px;">
           <span class="data" style="color: var(--ink-muted);">Dec 12–13, 2026 · San Francisco</span>
@@ -78,7 +100,8 @@ a{color:var(--ink)}a:hover{color:var(--ink-muted)}
         </div>
       </article>
 
-      <article class="q-frame-cell" aria-labelledby="qm-summit" style="grid-column: 8 / 12; grid-row: 6 / 8; padding: clamp(24px, 2.8vw, 40px); display: flex; flex-direction: column; justify-content: space-between; gap: 40px;">
+      <article class="q-frame-cell qhz qhz-summit" aria-labelledby="qm-summit" style="grid-column: 8 / 12; grid-row: 6 / 8; padding: clamp(24px, 2.8vw, 40px); display: flex; flex-direction: column; justify-content: space-between; gap: 40px;">
+        <span class="qhz-glow" aria-hidden="true"></span>
         <span class="label" style="color: var(--ink-muted); text-transform: uppercase;">Invitation only</span>
         <div style="display: flex; flex-direction: column; gap: 12px;">
           <span class="data" style="color: var(--ink-muted);">Annual · 2023–present · US and UK</span>
@@ -94,7 +117,8 @@ a{color:var(--ink)}a:hover{color:var(--ink-muted)}
       <div class="q-frame-cell q-frame-empty" style="grid-column: 1 / 3; grid-row: 8 / 11;"></div>
       <div class="q-frame-cell q-frame-empty qm-keep" style="grid-column: 3 / 12; grid-row: 8 / 9;"></div>
 
-      <article id="research" class="q-frame-cell" aria-labelledby="qm-report" style="grid-column: 3 / 8; grid-row: 9 / 10; padding: clamp(24px, 2.8vw, 40px); display: flex; flex-direction: column; justify-content: space-between; gap: 40px;">
+      <article id="research" class="q-frame-cell qhz qhz-survey" aria-labelledby="qm-report" style="grid-column: 3 / 8; grid-row: 9 / 10; padding: clamp(24px, 2.8vw, 40px); display: flex; flex-direction: column; justify-content: space-between; gap: 40px;">
+        <span class="qhz-glow" aria-hidden="true"></span>
         <span class="label" style="color: var(--ink-muted); text-transform: uppercase;">Research</span>
         <div style="display: flex; flex-direction: column; gap: 12px;">
           <span class="data" style="color: var(--ink-muted);">Survey report · February 2026</span>

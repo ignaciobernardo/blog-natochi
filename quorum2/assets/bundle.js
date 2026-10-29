@@ -151,11 +151,24 @@ function nodeGridGeometry(w, h, o) {
   var xs = [], ys = [], i, j;
   for (i = -ci; i <= ci; i++) xs.push(x0 + i * cw);
   for (j = -cj; j <= cj; j++) ys.push(y0 + j * ch);
-  var d = '', nodes = [], e = s / 2 + g;
-  for (j = 0; j < ys.length; j++) for (i = 0; i < xs.length - 1; i++) d += 'M' + rnd(xs[i] + e) + ' ' + rnd(ys[j]) + 'H' + rnd(xs[i + 1] - e);
-  for (i = 0; i < xs.length; i++) for (j = 0; j < ys.length - 1; j++) d += 'M' + rnd(xs[i]) + ' ' + rnd(ys[j] + e) + 'V' + rnd(ys[j + 1] - e);
-  for (i = 0; i < xs.length; i++) for (j = 0; j < ys.length; j++) nodes.push([xs[i], ys[j]]);
-  return { d: d, nodes: nodes };
+  var d = '', nodes = [], segs = [], e = s / 2 + g;
+  var dist = function (x, y) { return Math.hypot(x - x0, y - y0); };
+  // segs run from the end nearer the centre outward, with that end's distance, for draw-in animations
+  var seg = function (ax, ay, bx, by, ux, uy) {
+    var da = dist(ax, ay), db = dist(bx, by);
+    if (db < da) segs.push([bx - ux * e, by - uy * e, ax + ux * e, ay + uy * e, db]);
+    else segs.push([ax + ux * e, ay + uy * e, bx - ux * e, by - uy * e, da]);
+  };
+  for (j = 0; j < ys.length; j++) for (i = 0; i < xs.length - 1; i++) {
+    d += 'M' + rnd(xs[i] + e) + ' ' + rnd(ys[j]) + 'H' + rnd(xs[i + 1] - e);
+    seg(xs[i], ys[j], xs[i + 1], ys[j], 1, 0);
+  }
+  for (i = 0; i < xs.length; i++) for (j = 0; j < ys.length - 1; j++) {
+    d += 'M' + rnd(xs[i]) + ' ' + rnd(ys[j] + e) + 'V' + rnd(ys[j + 1] - e);
+    seg(xs[i], ys[j], xs[i], ys[j + 1], 0, 1);
+  }
+  for (i = 0; i < xs.length; i++) for (j = 0; j < ys.length; j++) nodes.push([xs[i], ys[j], dist(xs[i], ys[j])]);
+  return { d: d, nodes: nodes, segs: segs };
 }
 
 /* Quorum drafting kit: the technical-drawing grammar as data → SVG.
@@ -723,15 +736,36 @@ function NodeGrid(p) {
   var o = { cellW: p.cellWidth || 240, cellH: p.cellHeight || 200, node: p.node || 16, gap: p.gap == null ? 10 : p.gap };
   var g = size[0] ? nodeGridGeometry(size[0], size[1], o) : null;
   var sw = Math.max(1, o.node * 0.19), inset = sw / 2;
+  // intro="assemble": the grid draws itself once from the centre node outward, then holds still
+  var reduce = useReducedMotion(), doneState = Rx().useState(false), END = 3.6;
+  var playing = p.intro === 'assemble' && !reduce && !doneState[0] && !!g;
+  var t = useTicker(playing);
+  Rx().useEffect(function () { if (playing && t > END) doneState[1](true); }, [playing, t > END]);
+  var easeOut = function (x) { x = x < 0 ? 0 : x > 1 ? 1 : x; return 1 - Math.pow(1 - x, 3); };
+  var maxD = 1, lines = g ? g.d : '', nodeAt = function () { return 1; }, texture = 1;
+  if (playing && g) {
+    g.nodes.forEach(function (n) { if (n[2] > maxD) maxD = n[2]; });
+    var grow = 2.4;
+    lines = '';
+    g.segs.forEach(function (sg) {
+      var q = easeOut((t - (sg[4] / maxD) * grow - 0.25) / 0.55);
+      if (q > 0) lines += 'M' + sg[0] + ' ' + sg[1] + 'L' + (sg[0] + (sg[2] - sg[0]) * q) + ' ' + (sg[1] + (sg[3] - sg[1]) * q);
+    });
+    nodeAt = function (n) { return easeOut((t - (n[2] / maxD) * grow) / 0.45); };
+    texture = Math.max(0, Math.min(1, (t - 2.0) / 1.0));
+  }
   return h('div', { ref: ref, className: cls('q-nodegrid', p.className), style: Object.assign({ height: p.height == null ? 320 : p.height }, p.style) },
     h('svg', { className: 'q-nodegrid-svg', width: '100%', height: '100%', 'aria-hidden': true },
       p.texture === false ? null : h('defs', null,
         h('pattern', { id: pid, width: 28, height: 28, patternUnits: 'userSpaceOnUse' },
           h('path', { d: MARK.path, transform: 'translate(14 14) scale(0.0075)', className: 'q-nodegrid-tex' }))),
-      p.texture === false ? null : h('rect', { width: '100%', height: '100%', fill: 'url(#' + pid + ')' }),
-      g ? h('path', { d: g.d, className: 'q-nodegrid-line' }) : null,
+      p.texture === false ? null : h('rect', { width: '100%', height: '100%', fill: 'url(#' + pid + ')', style: texture < 1 ? { opacity: texture } : undefined }),
+      g ? h('path', { d: lines, className: 'q-nodegrid-line' }) : null,
       g ? g.nodes.map(function (n, i) {
-        return h('rect', { key: i, x: n[0] - o.node / 2 + inset, y: n[1] - o.node / 2 + inset, width: o.node - sw, height: o.node - sw, strokeWidth: sw, className: 'q-nodegrid-node' });
+        var a = nodeAt(n);
+        if (a <= 0) return null;
+        var rect = h('rect', { x: -o.node / 2 + inset, y: -o.node / 2 + inset, width: o.node - sw, height: o.node - sw, strokeWidth: sw, className: 'q-nodegrid-node' });
+        return h('g', { key: i, transform: 'translate(' + n[0] + ' ' + n[1] + ')' + (a < 1 ? ' rotate(' + ((1 - a) * 45) + ') scale(' + a + ')' : '') }, rect);
       }) : null),
     p.children ? h('div', { className: 'q-nodegrid-content' }, p.children) : null);
 }
