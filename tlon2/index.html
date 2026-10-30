@@ -117,6 +117,7 @@
   [data-head="e"] .hd-e { display: flex; }
   .hd img { display: block; height: auto; }
   .hd-a img { width: 16em; margin: 0 0 0 2.82em; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
   .hd-c img { width: 9.583em; margin: 0 auto 0.55em; }
   .hd-e { align-items: center; justify-content: center; gap: 0.75em; }
   .hd-e img { width: 5.167em; }
@@ -129,7 +130,7 @@
   .band { background: var(--ink); color: var(--paper); text-align: center; padding: 0.42em 0 0.12em; }
 
   .print .head { margin-top: 0.925em; }
-  .print .stamp { display: flex; justify-content: space-between; margin-top: 0.206em; }
+  .print .stamp { display: flex; justify-content: space-between; margin-top: calc(var(--line) * 0.9); }
   .rule { overflow: hidden; }
   .print .stars { margin-top: calc(var(--line) + 0.12em); }
   .print .art {
@@ -198,14 +199,14 @@
         <header class="hd">
           <div class="hd-a"><h1><img src="img/head-a.svg" width="384" height="66" alt="tlon, design studio"></h1></div>
           <div class="hd-b"><h1 class="quad c">TLON</h1><p class="dw c"><span>DESIGN STUDIO</span></p></div>
-          <div class="hd-c"><h1><img src="img/head-c.svg" width="230" height="132" alt="tlon"></h1><p class="dw c"><span>TLON DESIGN STUDIO</span></p></div>
+          <div class="hd-c"><h1 class="sr">tlon</h1><p class="dw c"><span>TLON DESIGN STUDIO</span></p></div>
           <div class="hd-d"><h1 class="band"><span class="quad">TLON</span></h1><p class="dw c"><span>DESIGN STUDIO</span></p></div>
           <div class="hd-e"><img src="img/head-e.svg" width="124" height="82" alt=""><div><h1 class="dbl">TLON</h1><p>DESIGN STUDIO.</p></div></div>
         </header>
 
         <p class="head c">A SMALL STUDIO OF FRIENDS
 WORKING ONLY ON AI SAFETY
-BRANDS, SITES &amp; TOOLS
+
 BASED IN SAN FRANCISCO, CA</p>
         <p class="stamp"><time id="date" datetime="2026-10-24">10/24/2026</time><span id="time">09:30 PM</span></p>
 
@@ -227,14 +228,23 @@ BASED IN SAN FRANCISCO, CA</p>
         <div class="rule" aria-hidden="true">-------------------------------------------</div>
         <ol>
 <li>  01. Reach Out
-      Via [<a href="mailto:hello@tlon.studio">hello@tlon.studio</a>]</li>
+      Via [<a href="mailto:tlon@natochi.cv">tlon@natochi.cv</a>]</li>
 <li>  02. The Problem
-      What does your lab need to explain?</li>
+      What does your org need to explain?</li>
 <li>  03. Timeline
       Days rather than months</li>
 <li>  04. Handoff
       Clean code anyone can pick up</li>
 <li>  05. Budget</li>
+        </ol>
+        <div class="rule" aria-hidden="true">-------------------------------------------</div>
+        <h2 class="c">Orgs We Work With</h2>
+        <div class="rule" aria-hidden="true">-------------------------------------------</div>
+        <ol>
+<li>  01. <a href="https://kairos-project.org/">Kairos</a></li>
+<li>  02. <a href="https://m3fellowship.com/">M3</a></li>
+<li>  03. <a href="https://www.quorumai.org/">Quorum</a></li>
+<li>  04. <a href="https://leaf.courses/">Leaf</a></li>
         </ol>
         <div class="rule" aria-hidden="true">-------------------------------------------</div>
 
@@ -249,7 +259,7 @@ BASED IN SAN FRANCISCO, CA</p>
       \/_/  \/___/   \/_____/\/_/\/_/</pre>
         <div class="stars c" aria-hidden="true">******************************************</div>
 
-        <p class="foot c">For more information or if you have<br>questions, please send a mail to<br><a href="mailto:hello@tlon.studio">hello@tlon.studio</a> or see our work<br>for <a href="https://kairos-project.org/">Kairos</a> and the <a href="https://natochi.cv/m4">M3 fellowship</a></p>
+        <p class="foot c">For more information or if you have<br>questions, please send a mail to<br><a href="mailto:tlon@natochi.cv">tlon@natochi.cv</a> or see our work<br>for <a href="https://kairos-project.org/">Kairos</a> and the <a href="https://m3fellowship.com/">M3 fellowship</a></p>
       </div>
     </div>
   </article>
