@@ -1,0 +1,65 @@
+/* Quorum · structures: the clean landing (quorum3) in Quorum's navy palette, shared by the ten structures */
+html,body{background:var(--canvas)}
+body{margin:0}
+[hidden]{display:none !important}
+a{color:var(--ink)}a:hover{color:var(--ink-muted)}
+.qlogo-word{display:block;flex:none;background:var(--ink);aspect-ratio:3125/715;transform:translateY(18%);-webkit-mask:url(/quorum4/media/quorum-wordmark.svg) center/contain no-repeat;mask:url(/quorum4/media/quorum-wordmark.svg) center/contain no-repeat}
+.qc{background:var(--canvas);color:var(--ink);font-family:var(--font-sans);min-height:100svh;display:flex;flex-direction:column}
+.qc :is(.display-xl,.display,.heading,.title){letter-spacing:0}
+.qc-mono .qc-portrait{filter:grayscale(1)}
+.qc-wrap{width:100%;max-width:1440px;margin:0 auto;box-sizing:border-box;padding-left:max(16px,clamp(16px,5vw,72px));padding-right:max(16px,clamp(16px,5vw,72px))}
+.qc-grid{position:relative;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}
+.qc-corners .qc-grid:not(.qc-open){gap:2px;background:var(--line)}
+.qc-corners .qc-grid>.qc-block{position:relative}
+.qc-corners .qc-block.n-tl::before,.qc-corners .qc-block.n-br::after{content:"";position:absolute;z-index:2;box-sizing:border-box;width:16px;height:16px;border:3px solid var(--line);background:var(--ground);outline:6px solid var(--ground);pointer-events:none}
+.qc-corners .qc-block.n-tl::before{left:-9px;top:-9px}
+.qc-corners .qc-block.n-br::after{right:-9px;bottom:-9px}
+.qc-block{background:var(--ground);box-sizing:border-box;padding:40px;min-width:0}
+.s3{grid-column:span 3}.s4{grid-column:span 4}.s5{grid-column:span 5}.s6{grid-column:span 6}.s7{grid-column:span 7}.s8{grid-column:span 8}.s12{grid-column:span 12}
+.qc-meta{margin:0;font-size:16px;line-height:24px;color:var(--ink-muted)}
+.qc-btn{display:inline-flex;align-items:center;height:56px;padding:0 28px;box-sizing:border-box;background:var(--ink);color:var(--canvas);font:500 17px/24px var(--font-sans);text-decoration:none;border:0;border-radius:0;cursor:pointer;white-space:nowrap}
+.qc-btn:hover{color:var(--canvas);text-decoration:underline;text-underline-offset:4px}
+.qc-btn:focus-visible,.q4 :is(a,button,summary):focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.qc-btn-line{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--line-strong)}
+.qc-btn-line:hover{color:var(--ink)}
+.qc-link{font-size:17px;line-height:24px;text-underline-offset:4px}
+.qc .q-field-label{font-family:var(--font-sans);font-size:15px;line-height:20px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--ink)}
+.qc-dl{margin:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:32px 24px}
+.qc-dl dt{font-size:16px;line-height:24px;color:var(--ink-muted)}
+.qc-dl dd{margin:6px 0 0;font-size:16px;line-height:24px}
+.qc-dl.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.qc-dl.c1{grid-template-columns:minmax(0,1fr)}
+.qc-hero{position:relative;height:600px;overflow:hidden}
+.qc-hero-panel{position:absolute;top:118px;left:max(16px,calc(50% - 462px));width:min(684px,calc(100% - 32px));height:364px;box-sizing:border-box;padding:40px;background:var(--canvas);display:flex;flex-direction:column;justify-content:flex-end;gap:20px}
+.q4-label{margin:0;color:var(--ink-muted)}
+.q4-row{display:flex;flex-wrap:wrap;align-items:center;gap:16px 24px}
+.q4-stack{display:flex;flex-direction:column;gap:20px;min-width:0}
+.q4-dates{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:20px}
+.q4-dates li{display:grid;grid-template-columns:112px minmax(0,1fr);gap:16px}
+.q4-speakers{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:20px 24px}
+.q4-speakers li{display:flex;flex-direction:column}
+.q4-status{display:inline-flex;align-items:center;gap:10px}
+.q4-status::before{content:"";width:10px;height:10px;flex:none;background:var(--accent)}
+.q4-status.off::before{background:transparent;box-shadow:inset 0 0 0 2px var(--line-strong)}
+/* A hollow node, used as a marker and as the open/close glyph */
+.q4-node{display:inline-block;flex:none;width:16px;height:16px;box-sizing:border-box;border:3px solid var(--line-strong);transition:background-color .25s,border-color .25s}
+/* People: hovering a portrait brings its colour back and spreads the photo's own colours behind the card */
+.qc-person{position:relative;isolation:isolate}
+.qc-person-bg{position:absolute;inset:-16px;z-index:-1;overflow:hidden;opacity:0;pointer-events:none;transition:opacity .6s cubic-bezier(.22,1,.36,1)}
+.qc-people-blur .qc-person-bg::before{content:"";position:absolute;inset:-25%;background:var(--photo) center 35%/cover;filter:blur(48px) saturate(1.6) brightness(.6)}
+.qc-person-bg::after{content:"";position:absolute;inset:0;background:url(/quorum4/media/grain.svg) repeat;background-size:180px;opacity:.3;mix-blend-mode:overlay}
+.qc-portrait{transition:filter .6s cubic-bezier(.22,1,.36,1)}
+.qc-person :is(h3,p){transition:color .4s}
+.qc-people-blur .qc-person:hover{z-index:1}
+.qc-people-blur .qc-person:hover .qc-person-bg{opacity:1}
+.qc-people-blur .qc-person:hover .qc-portrait{filter:none}
+.qc-people-blur .qc-person:hover :is(h3,p){color:#fff !important}
+/* Moving between the ten structures: a thin strip above the page, outside the design */
+.q4-switch{display:flex;align-items:stretch;justify-content:space-between;background:var(--ground);box-shadow:inset 0 -2px 0 var(--line);font-size:14px;line-height:20px}
+.q4-switch a{display:flex;align-items:center;gap:8px;padding:8px max(16px,clamp(16px,5vw,72px));text-decoration:none;color:var(--ink-muted)}
+.q4-switch a:hover{color:var(--ink)}
+.q4-switch .q4-switch-mid{flex:1;justify-content:center;padding-inline:16px;color:var(--ink)}
+@media (prefers-reduced-motion:reduce){.qc-person-bg,.qc-portrait,.qc-person :is(h3,p){transition:none}}
+@media (max-width:899px){.qc-grid>*{grid-column:1/-1}.qc-corners .qc-block::before,.qc-corners .qc-block::after{display:none}.qc-dl{grid-template-columns:repeat(2,minmax(0,1fr))}.qc-team{grid-template-columns:repeat(2,minmax(0,1fr)) !important}}
+@media (max-width:759px){.qc-hero-panel{height:auto;min-height:364px;padding:28px}.qc-hero-panel :is(h1,h2){font-size:40px;line-height:44px}.qc-block{padding:28px}.qc .display{font-size:40px;line-height:44px}.qc .heading{font-size:28px;line-height:34px}}
+@media (max-width:479px){.qc-dl,.qc-dl.c2{grid-template-columns:minmax(0,1fr)}}
