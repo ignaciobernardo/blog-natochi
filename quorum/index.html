@@ -69,7 +69,21 @@ a{color:var(--ink)}a:hover{color:var(--ink-muted)}
 @media (prefers-reduced-motion:reduce){.qf-person-bg,.qf-person .qf-portrait,.qf-person :is(h3,p){transition:none}}
 @media (max-width:759px){.qf-hero-panel{height:auto !important;min-height:364px;padding:28px !important}.qf-hero-panel h1{font-size:40px;line-height:44px}}
 @media (prefers-reduced-motion:reduce){.qhz-glow::before{transition:none;transform:translateY(0) rotate(var(--hz-rot))}.qhz:hover>.qhz-glow::before,.qhz:focus-within>.qhz-glow::before{animation:none}}
+/* Blueprint build: each bento draws itself as it comes on screen. Its lines sweep left to right, the ticks above rise as the
+   line passes, every corner node turns in when the line reaches it, and the content rises once its cell is drawn. */
+.qfb-on .qf-bento{background-color:transparent !important;background-image:linear-gradient(var(--line),var(--line)) !important;background-repeat:no-repeat !important;background-size:var(--qw,0%) 100% !important}
+.qfb-on .qf-bento:not(.qfb-run)::before,.qfb-on .qf-bento:not(.qfb-run)::after,.qfb-on .qf-bento:not(.qfb-run)>.qf-cell::before,.qfb-on .qf-bento:not(.qfb-run)>.qf-cell::after{opacity:0;transform:rotate(45deg) scale(0);transition:none !important}
+.qfb-on .qf-bento:not(.qfb-run)>.qf-cell>*:not(.qhz-glow),.qfb-on .qf-bento:not(.qfb-run)>.qf-cell>span[data-q]>*{opacity:0;transform:translateY(14px);transition:none !important}
+.qfb-on div[aria-hidden="true"]:has(+ .qf-bento:not(.qfb-run))>span{transform:scaleY(0);transition:none !important}
+.qfb-on div[aria-hidden="true"]:has(+ .qf-bento)>span{transform-origin:50% 100%}
+.qfb-anim::before{transition:transform .5s cubic-bezier(.22,1,.36,1) var(--qd1,0s),opacity .25s ease var(--qd1,0s)}
+.qfb-anim::after{transition:transform .5s cubic-bezier(.22,1,.36,1) var(--qd2,0s),opacity .25s ease var(--qd2,0s)}
+.qfb-anim>.qf-cell::before{transition:transform .5s cubic-bezier(.22,1,.36,1) var(--qd1,0s),opacity .25s ease var(--qd1,0s)}
+.qfb-anim>.qf-cell::after{transition:transform .5s cubic-bezier(.22,1,.36,1) var(--qd2,0s),opacity .25s ease var(--qd2,0s)}
+.qfb-anim>.qf-cell>*:not(.qhz-glow),.qfb-anim>.qf-cell>span[data-q]>*{transition:opacity .6s ease var(--qc,0s),transform .9s cubic-bezier(.22,1,.36,1) var(--qc,0s)}
+.qfb-tick>span{transition:transform .4s cubic-bezier(.22,1,.36,1) var(--qt,0s)}
 </style>
+<script>/* hide the bentos from the first paint so they can draw themselves; if the build never runs, show everything after 5 s */if(!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('qfb-on');setTimeout(function(){if(!window.qfbRan)document.documentElement.classList.remove('qfb-on')},5000)}</script>
 </head>
 <body>
 <div data-theme="quorum" class="qf qf-mono qf-people-blur" style="background: var(--ground); color: var(--ink); font-family: var(--font-sans); display: flex; flex-direction: column;">
@@ -477,6 +491,43 @@ a{color:var(--ink)}a:hover{color:var(--ink-muted)}
     var f = new FormData(form), name = f.get('name') || '', email = f.get('email') || '';
     var body = (f.get('message') || '') + '\n\n' + name + (email ? ' <' + email + '>' : '');
     location.href = 'mailto:team@quorumai.org?subject=' + encodeURIComponent(name ? 'Message from ' + name : 'Message') + '&body=' + encodeURIComponent(body);
+  });
+})();
+</script>
+<script>
+(function () {
+  var root = document.documentElement;
+  if (!root.classList.contains('qfb-on')) return;
+  window.qfbRan = true;
+  var T = 1.2, P = 0.1, sec = function (v) { return v.toFixed(2) + 's'; };
+  [].slice.call(document.querySelectorAll('.qf-bento')).forEach(function (b) {
+    var ticks = b.previousElementSibling && b.previousElementSibling.matches('div[aria-hidden="true"]') ? b.previousElementSibling : null;
+    var setup = function () {
+      var r = b.getBoundingClientRect(), at = function (x) { return P + T * Math.min(1, Math.max(0, (x - r.left) / r.width)); };
+      b.classList.add('qfb-anim'); b.style.setProperty('--qd1', sec(at(r.right))); b.style.setProperty('--qd2', sec(at(r.left)));
+      [].slice.call(b.children).forEach(function (c) {
+        if (!c.classList.contains('qf-cell')) return;
+        var q = c.getBoundingClientRect();
+        c.style.setProperty('--qd1', sec(at(q.left))); c.style.setProperty('--qd2', sec(at(q.right))); c.style.setProperty('--qc', sec(at(q.right) + 0.05));
+      });
+      if (ticks) { ticks.classList.add('qfb-tick'); [].slice.call(ticks.children).forEach(function (t) { t.style.setProperty('--qt', sec(at(t.getBoundingClientRect().left))); }); }
+    };
+    var run = function () {
+      setup();
+      requestAnimationFrame(function () {
+        b.classList.add('qfb-run');
+        var t0 = 0, frame = function (now) {
+          if (!t0) t0 = now;
+          var t = (now - t0) / 1000 - P, w = Math.min(100, Math.max(0, t / T * 100));
+          b.style.setProperty('--qw', w.toFixed(2) + '%');
+          if (t < T) requestAnimationFrame(frame);
+          else setTimeout(function () { b.classList.remove('qfb-anim'); }, 1600);
+        };
+        requestAnimationFrame(frame);
+      });
+    };
+    var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { io.disconnect(); run(); } }, { threshold: 0.2 });
+    io.observe(b);
   });
 })();
 </script>
