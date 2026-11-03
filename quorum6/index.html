@@ -4,134 +4,73 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Quorum · Current site, refined</title>
-<meta name="description" content="A design concept for quorumai.org: the current navy site with a hero of points that connect into a quorum, and an events section that shows what is next and what has already happened.">
+<meta name="description" content="A design concept for quorumai.org: the current navy site, simplified, with a hero of points that connect into a quorum and events that show what is next and what has already happened.">
 <meta name="robots" content="noindex">
 <link rel="icon" href="media/quorum-q.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=Public+Sans:wght@400;500&display=swap">
 <style>
-/* quorumai.org's own palette and type: navy surfaces, cream ink, terracotta accent; EB Garamond with Public Sans */
-:root{--surface:#12293f;--deep:#0e2133;--rule:#2a4058;--ink:#f4efe4;--soft:#c9d1db;--muted:#93a3b5;--accent:#a6563a;--accent-2:#e0906f;
+/* Four colours from quorumai.org: navy ground, cream ink, one quiet blue-grey for secondary text, terracotta for the one button.
+   No borders, dividers, tags or containers: space and type do the work. */
+:root{--bg:#12293f;--ink:#f4efe4;--muted:#93a3b5;--accent:#a6563a;
   --serif:"EB Garamond",Garamond,"Times New Roman",serif;--sans:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:dark}
-html{background:var(--surface);scroll-behavior:smooth}
-body{margin:0;background:var(--surface);color:var(--ink);font:400 16px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+html{background:var(--bg);scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
 a{color:var(--ink);text-underline-offset:4px;text-decoration-thickness:1px}
-a:hover{color:var(--soft)}
-:focus-visible{outline:2px solid var(--accent-2);outline-offset:3px}
-.wrap{max-width:1280px;margin:0 auto;box-sizing:border-box;padding-left:max(16px,clamp(20px,4vw,56px));padding-right:max(16px,clamp(20px,4vw,56px))}
+a:hover{color:var(--muted)}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+h1,h2,h3{font-family:var(--serif);font-weight:400;letter-spacing:0;margin:0;text-wrap:balance}
+p{margin:0}
+.muted{color:var(--muted)}
+.wrap{max-width:1200px;margin:0 auto;box-sizing:border-box;padding-left:max(20px,clamp(20px,5vw,64px));padding-right:max(20px,clamp(20px,5vw,64px))}
 .logo{display:block;height:28px;aspect-ratio:3125/715;background:var(--ink);transform:translateY(16%);-webkit-mask:url(media/quorum-wordmark.svg) center/contain no-repeat;mask:url(media/quorum-wordmark.svg) center/contain no-repeat}
-.serif{font-family:var(--serif);font-weight:400;letter-spacing:0}
-.eyebrow{margin:0;font:500 12px/1.5 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-.muted{color:var(--muted)}.soft{color:var(--soft)}
-.btn{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 22px;box-sizing:border-box;border-radius:2px;background:var(--accent);color:var(--ink);font:500 15px/1 var(--sans);text-decoration:none;border:0;cursor:pointer;white-space:nowrap}
-.btn:hover{background:#b8613f;color:var(--ink)}
-.arrow{display:inline-flex;align-items:center;gap:8px;font:500 15px/1.4 var(--sans);text-decoration:none}
-.arrow::after{content:"→";color:var(--accent-2);transition:transform .25s}
-.arrow:hover::after{transform:translateX(3px)}
-/* The node: a small hollow square, the site's thread. Lines stop short of it. */
-.nd{flex:none;display:inline-block;width:10px;height:10px;box-sizing:border-box;border:2px solid var(--accent-2)}
+.btn{display:inline-flex;align-items:center;height:48px;padding:0 24px;box-sizing:border-box;border-radius:2px;background:var(--accent);color:var(--ink);font:500 16px/1 var(--sans);text-decoration:none;white-space:nowrap}
+.btn:hover{color:var(--ink);background:#b5603f}
 
-/* Header */
-.hdr{border-bottom:1px solid var(--rule)}
-.hdr .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px 32px;flex-wrap:wrap;padding-block:26px}
-.hdr nav{display:flex;flex-wrap:wrap;gap:8px 32px;font:500 14px/20px var(--sans)}
-.hdr nav a{text-decoration:none}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px 32px;flex-wrap:wrap;padding-block:32px}
+header nav{display:flex;flex-wrap:wrap;gap:8px 32px;font-size:15px}
+header nav a,footer nav a{text-decoration:none}
 
-/* Hero */
-.hero .wrap{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,6fr);gap:40px 56px;align-items:center;padding-block:56px 48px}
-.hero h1{margin:0;font-size:clamp(40px,5vw,64px);line-height:1.06;text-wrap:balance}
+/* Hero: the statement on the left, the points on the right */
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px 64px;align-items:center;padding-block:48px 72px}
+.hero h1{font-size:clamp(42px,5vw,64px);line-height:1.08}
 .hero-copy{display:flex;flex-direction:column;gap:28px;min-width:0}
-.hero-copy p{margin:0;max-width:34em;font-size:18px;line-height:1.6;color:var(--soft)}
-.hero-cta{display:flex;flex-wrap:wrap;align-items:center;gap:16px 28px}
-.net{position:relative;width:100%;max-width:600px;aspect-ratio:1;justify-self:end;touch-action:pan-y;cursor:grab}
+.hero-copy>p{max-width:32em;font-size:19px;line-height:1.55;color:var(--muted)}
+.cta{display:flex;flex-wrap:wrap;align-items:center;gap:12px 28px}
+.net{position:relative;width:100%;max-width:560px;aspect-ratio:1;justify-self:end;touch-action:pan-y;cursor:grab}
 .net:active{cursor:grabbing}
 .net canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-.next{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
-.next .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:12px 28px;padding-block:20px}
-.next .what{font-family:var(--serif);font-size:22px;line-height:1.2}
-.next .arrow{margin-left:auto}
 
-/* Sections */
-.sec{padding-block:120px 0}
-.lbl{display:flex;align-items:center;gap:14px;margin:0 0 48px}
-.lbl h2{margin:0;font:500 15px/1 var(--serif);letter-spacing:.16em;text-transform:uppercase}
-.lbl .rl{flex:1;height:1px;background:var(--rule);margin-left:10px}
-.lead{margin:0 0 56px;max-width:22em;font-size:clamp(28px,3vw,38px);line-height:1.2;text-wrap:balance}
-
-/* Featured event: framed, with a node at each corner where the frame lines meet */
-.feat{position:relative;border:1px solid var(--rule);background:var(--deep);padding:clamp(28px,4vw,56px);display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:40px 56px}
-.feat>.c{position:absolute;width:12px;height:12px;box-sizing:border-box;border:2px solid var(--soft);background:var(--deep);outline:5px solid var(--surface)}
-.feat>.c1{left:-6px;top:-6px}.feat>.c2{right:-6px;top:-6px}.feat>.c3{left:-6px;bottom:-6px}.feat>.c4{right:-6px;bottom:-6px}
-.feat h3{margin:14px 0 18px;font-size:clamp(36px,4vw,52px);line-height:1.05}
-.feat p{margin:0;max-width:28em;color:var(--soft);font-size:17px}
-.feat .hero-cta{margin-top:32px}
-.facts{margin:0;display:grid;grid-template-columns:1fr 1fr;gap:28px 24px;align-content:center;border-left:1px solid var(--rule);padding-left:clamp(24px,3vw,48px)}
-.facts dt{font:500 12px/1.5 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-.facts dd{margin:6px 0 0;font-family:var(--serif);font-size:26px;line-height:1.15}
-
-/* Track record: what has already happened, as nodes on one line */
-.rec{margin-top:96px;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:40px 64px;align-items:start}
-.rec h3{margin:12px 0 16px;font-size:clamp(30px,3vw,40px);line-height:1.1;text-wrap:balance}
-.rec-copy p{margin:0;color:var(--soft);max-width:30em}
-.stats{margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
-.stats div{border-top:1px solid var(--rule);padding-top:16px}
-.stats dt{font:500 12px/1.5 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-.stats dd{margin:8px 0 0;font-family:var(--serif);font-size:30px;line-height:1.15}
-.stats dd.small{font:400 15px/1.5 var(--sans);color:var(--soft);margin-top:10px}
-.tl{list-style:none;margin:56px 0 0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:relative;grid-column:1/-1}
-.tl::before{content:"";position:absolute;left:7px;right:7px;top:7px;height:1px;background:var(--rule)}
-.tl li{position:relative;display:flex;flex-direction:column;gap:10px;padding-right:16px}
-.tl .n{position:relative;width:15px;height:15px;box-sizing:border-box;border:2px solid var(--soft);background:var(--surface);outline:6px solid var(--surface)}
-.tl .done .n{background:var(--soft)}
-.tl .up .n{border-color:var(--accent-2)}
-.tl .y{margin-top:12px;font-family:var(--serif);font-size:26px;line-height:1}
-.tl .t{font-size:14px;line-height:1.5;color:var(--soft)}
-.tl .up .y{color:var(--accent-2)}
-.special{margin-top:96px;padding-block:28px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);display:flex;flex-wrap:wrap;align-items:baseline;gap:12px 32px}
-.special h3{margin:0;font-family:var(--serif);font-weight:400;font-size:24px}
-.special p{margin:0;flex:1 1 28em;color:var(--soft)}
-
-/* Team */
+/* Sections: a serif heading, then content; only space between them */
+section.sec{padding-block:112px 0}
+.sec>.wrap>h2{font-size:clamp(34px,3.6vw,44px);line-height:1.1;margin-bottom:20px}
+.intro{max-width:34em;font-size:19px;line-height:1.55;color:var(--muted);margin-bottom:64px}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px 72px;align-items:start}
+.event{display:flex;flex-direction:column;gap:14px;min-width:0}
+.event h3{font-size:clamp(28px,2.8vw,34px);line-height:1.15}
+.event .when{color:var(--muted)}
+.event .cta{margin-top:14px}
+.note{margin-top:72px;max-width:44em;color:var(--muted)}
 .team{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:40px 28px}
-.team img{display:block;width:100%;max-width:100%;height:auto;aspect-ratio:1;object-fit:cover;background:var(--deep)}
-.team h3{margin:16px 0 2px;font-family:var(--serif);font-weight:400;font-size:24px;line-height:1.2}
-.team p{margin:0;color:var(--muted);font-size:15px}
+.team img{display:block;width:100%;max-width:100%;height:auto;aspect-ratio:1;object-fit:cover}
+.team h3{margin-top:16px;font-size:22px;line-height:1.25}
+.team p{font-size:15px;color:var(--muted)}
+.big{font-family:var(--serif);font-size:clamp(26px,2.6vw,32px);line-height:1.25;max-width:24em;text-wrap:balance}
+footer .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 32px;padding-block:120px 48px;font-size:14px}
+footer nav{display:flex;flex-wrap:wrap;gap:8px 24px}
 
-/* Careers, research, contact */
-.two{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,6fr);gap:40px 64px;align-items:start}
-.two h3.serif{margin:0;font-size:clamp(28px,3vw,38px);line-height:1.2;text-wrap:balance}
-.role{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:22px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
-.role b{display:block;font-weight:500}
-.report{border:1px solid var(--rule);padding:clamp(28px,4vw,48px);display:flex;flex-direction:column;gap:16px;background:var(--deep)}
-.report h3{margin:0;font-size:clamp(26px,2.6vw,34px);line-height:1.2;max-width:24em;text-wrap:balance}
-.report p{margin:0;color:var(--soft);max-width:40em}
-form{display:flex;flex-direction:column;gap:28px}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:28px 24px}
-label{display:flex;flex-direction:column;gap:8px;font:500 12px/1.5 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-input,textarea{font:400 17px/1.5 var(--sans);color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--muted);padding:6px 0 10px;border-radius:0;letter-spacing:0;text-transform:none}
-input::placeholder,textarea::placeholder{color:var(--muted)}
-input:focus,textarea:focus{outline:none;border-bottom-color:var(--ink)}
-textarea{min-height:120px;resize:vertical}
-.ftr{margin-top:120px;border-top:1px solid var(--rule)}
-.ftr .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 32px;padding-block:32px 48px}
-.ftr nav{display:flex;flex-wrap:wrap;gap:8px 24px;font-size:14px}.ftr nav a{text-decoration:none}
-
-@media (max-width:959px){
-  .hero .wrap,.feat,.rec,.two{grid-template-columns:minmax(0,1fr)}
+@media (max-width:899px){
+  .hero .wrap,.cols{grid-template-columns:minmax(0,1fr)}
   .net{justify-self:center}
-  .facts{border-left:0;padding-left:0;border-top:1px solid var(--rule);padding-top:28px}
   .team{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .tl{grid-template-columns:minmax(0,1fr);gap:28px}
-  .tl::before{left:7px;right:auto;top:7px;bottom:7px;width:1px;height:auto}
-  .tl li{display:grid;grid-template-columns:15px minmax(0,1fr);column-gap:20px;row-gap:4px;padding:0}
-  .tl .n{grid-row:1/span 2}.tl .y{margin-top:-2px}
+  section.sec{padding-block:88px 0}
+  .intro{margin-bottom:48px}
 }
-@media (max-width:599px){.stats{grid-template-columns:minmax(0,1fr)}.row{grid-template-columns:minmax(0,1fr)}.next .arrow{margin-left:0}.facts dd{font-size:22px}}
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.arrow::after{transition:none}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
-<header class="hdr"><div class="wrap">
+<header><div class="wrap">
   <a href="#top" id="top" aria-label="Quorum, home"><span class="logo" role="img" aria-label="Quorum"></span></a>
   <nav aria-label="Main"><a href="#events">Events</a><a href="#team">Team</a><a href="#careers">Careers</a><a href="#research">Research</a><a href="#contact">Contact</a></nav>
 </div></header>
@@ -140,70 +79,37 @@ textarea{min-height:120px;resize:vertical}
   <section class="hero" aria-labelledby="hero-title">
     <div class="wrap">
       <div class="hero-copy">
-        <h1 id="hero-title" class="serif">Convening the people best placed to help the world navigate AI risk.</h1>
+        <h1 id="hero-title">Convening the people best placed to help the world navigate AI risk.</h1>
         <p>Quorum advances research and public understanding of the safety and societal implications of AI and other emerging technologies.</p>
-        <div class="hero-cta"><a class="btn" href="https://www.aihorizonsforum.org" target="_blank" rel="noopener noreferrer">Apply to the AI Horizons Forum</a><a class="arrow" href="#events">Our events</a></div>
+        <div class="cta"><a class="btn" href="https://www.aihorizonsforum.org" target="_blank" rel="noopener noreferrer">Apply to the AI Horizons Forum</a><span class="muted">Dec 12–13, San Francisco</span></div>
       </div>
-      <div class="net" data-hero-net role="img" aria-label="Sixty points drift apart, then gather and connect into one network; moving over them pulls them together" style="--net-link:#93a3b5;--net-node:#f4efe4;--net-held:#e0906f"><canvas aria-hidden="true"></canvas></div>
+      <div class="net" data-hero-net role="img" aria-label="Sixty points drift apart, then gather and connect into one network; moving over them pulls them together" style="--net-link:#93a3b5;--net-node:#f4efe4;--net-held:#f4efe4"><canvas aria-hidden="true"></canvas></div>
     </div>
-    <div class="next"><div class="wrap">
-      <span class="eyebrow" style="display:inline-flex;align-items:center;gap:10px"><span class="nd" aria-hidden="true"></span>Next</span>
-      <span class="what">AI Horizons Forum</span>
-      <span class="soft">Dec 12–13, 2026 · San Francisco · Applications close Nov 30</span>
-      <a class="arrow" href="https://www.aihorizonsforum.org" target="_blank" rel="noopener noreferrer">Learn more</a>
-    </div></div>
   </section>
 
   <section id="events" class="sec" aria-labelledby="events-h"><div class="wrap">
-    <div class="lbl"><span class="nd" aria-hidden="true"></span><h2 id="events-h">Events</h2><span class="rl" aria-hidden="true"></span></div>
-    <p class="lead serif">Quorum convenes the people best-positioned to help the world navigate AI risk. We run both invitation-only and open-application events.</p>
-
-    <article class="feat" aria-labelledby="forum-h">
-      <span class="c c1" aria-hidden="true"></span><span class="c c2" aria-hidden="true"></span><span class="c c3" aria-hidden="true"></span><span class="c c4" aria-hidden="true"></span>
-      <div>
-        <p class="eyebrow" style="color:var(--accent-2)">Upcoming · Open application</p>
-        <h3 id="forum-h" class="serif">AI Horizons Forum</h3>
-        <p>Over two days, the AI Horizons Forum will bring together more than 750 people working to ensure transformative AI leads to good futures.</p>
-        <div class="hero-cta"><a class="btn" href="https://www.aihorizonsforum.org" target="_blank" rel="noopener noreferrer">Apply</a><a class="arrow" href="https://www.aihorizonsforum.org" target="_blank" rel="noopener noreferrer">Programme, speakers and venue</a></div>
-      </div>
-      <dl class="facts">
-        <div><dt>Dates</dt><dd>Dec 12–13, 2026</dd></div>
-        <div><dt>City</dt><dd>San Francisco</dd></div>
-        <div><dt>People</dt><dd>750+</dd></div>
-        <div><dt>Applications close</dt><dd>Nov 30</dd></div>
-      </dl>
-    </article>
-
-    <div class="rec">
-      <div class="rec-copy">
-        <p class="eyebrow">Annual · Invitation only</p>
-        <h3 class="serif">Summit on Existential Security</h3>
-        <p>An invitation-only retreat for thinkers and decision-makers working to safely navigate existential risks from AI, with several days of talks, discussions, and private meetings.</p>
-      </div>
-      <dl class="stats">
-        <div><dt>Every year since</dt><dd>2023</dd></div>
-        <div><dt>People per Summit</dt><dd>100–250</dd></div>
-        <div><dt>Who attends</dt><dd class="small">Researchers, policymakers, funders, and leaders from AI companies and nonprofits</dd></div>
-      </dl>
-      <ol class="tl" aria-label="Quorum events by year">
-        <li class="done"><span class="n" aria-hidden="true"></span><span class="y">2023</span><span class="t">First Summit on Existential Security</span></li>
-        <li class="done"><span class="n" aria-hidden="true"></span><span class="y">2024</span><span class="t">Summit on Existential Security</span></li>
-        <li class="done"><span class="n" aria-hidden="true"></span><span class="y">2025</span><span class="t">Summit on Existential Security</span></li>
-        <li class="done"><span class="n" aria-hidden="true"></span><span class="y">2026</span><span class="t">Summit on Existential Security, and <a href="#research">the attendee survey</a></span></li>
-        <li class="up"><span class="n" aria-hidden="true"></span><span class="y">Dec 2026</span><span class="t">AI Horizons Forum, San Francisco</span></li>
-      </ol>
+    <h2 id="events-h">Events</h2>
+    <p class="intro">Quorum convenes the people best-positioned to help the world navigate AI risk. We run both invitation-only and open-application events.</p>
+    <div class="cols">
+      <article class="event" aria-labelledby="forum-h">
+        <h3 id="forum-h">AI Horizons Forum</h3>
+        <p class="when">Dec 12–13, 2026, San Francisco</p>
+        <p>Over two days, the AI Horizons Forum will bring together more than 750 people working to ensure transformative AI leads to good futures. Applications close on Nov 30.</p>
+        <div class="cta"><a class="btn" href="https://www.aihorizonsforum.org" target="_blank" rel="noopener noreferrer">Apply</a><a href="https://www.aihorizonsforum.org" target="_blank" rel="noopener noreferrer">Programme and speakers</a></div>
+      </article>
+      <article class="event" aria-labelledby="summit-h">
+        <h3 id="summit-h">Summit on Existential Security</h3>
+        <p class="when">Every year since 2023, by invitation</p>
+        <p>A retreat for 100 to 250 researchers, policymakers, funders, and leaders from AI companies and nonprofits, with several days of talks, discussions, and private meetings. Held in the United States and the United Kingdom in 2023, 2024, 2025 and 2026.</p>
+        <p><a href="#research">Read what the 2026 attendees forecast</a></p>
+      </article>
     </div>
-
-    <div class="special">
-      <h3>Special Projects</h3>
-      <p>We take on a limited number of high-impact opportunities. If you have an event idea but don’t have the capacity to run it, we would like to hear from you.</p>
-      <a class="arrow" href="https://tally.so/r/810bLr" target="_blank" rel="noopener noreferrer">Contact us</a>
-    </div>
+    <p class="note">Our Special Projects team takes on a limited number of high-impact opportunities. If you have an event idea but don’t have the capacity to run it, <a href="https://tally.so/r/810bLr" target="_blank" rel="noopener noreferrer">tell us about it</a>.</p>
   </div></section>
 
   <section id="team" class="sec" aria-labelledby="team-h"><div class="wrap">
-    <div class="lbl"><span class="nd" aria-hidden="true"></span><h2 id="team-h">Team</h2><span class="rl" aria-hidden="true"></span></div>
-    <p class="lead serif">Quorum will become an independent organization in 2027, spinning out of the Centre for Effective Altruism.</p>
+    <h2 id="team-h">Team</h2>
+    <p class="intro">Quorum will become an independent organization in 2027, spinning out of the Centre for Effective Altruism.</p>
     <ul class="team">
       <li><img src="media/amy-labenz.jpg" alt="Amy Labenz" width="480" height="480" loading="lazy"><h3>Amy Labenz</h3><p>Executive Director</p></li>
       <li><img src="media/ollie-rodriguez.jpg" alt="Ollie Rodriguez" width="480" height="480" loading="lazy"><h3>Ollie Rodriguez</h3><p>Managing Director</p></li>
@@ -213,49 +119,35 @@ textarea{min-height:120px;resize:vertical}
   </div></section>
 
   <section id="careers" class="sec" aria-labelledby="careers-h"><div class="wrap">
-    <div class="lbl"><span class="nd" aria-hidden="true"></span><h2 id="careers-h">Careers</h2><span class="rl" aria-hidden="true"></span></div>
-    <div class="two">
-      <div style="display:flex;flex-direction:column;gap:20px"><h3 class="serif">We’re expanding our program and operations teams over the coming year.</h3><p class="soft" style="margin:0">If you would like to work with us but don’t see an advertised role that fits, get in touch at <a href="mailto:jobs@quorumai.org">jobs@quorumai.org</a>.</p></div>
-      <div class="role"><span><b>General Counsel</b><span class="muted">Remote</span></span><a class="arrow" href="https://airtable.com/appUWJgmduM3nRHKS/pagFAylnDZKmHia81/form" target="_blank" rel="noopener noreferrer">Apply</a></div>
+    <h2 id="careers-h">Careers</h2>
+    <p class="intro">We’re expanding our program and operations teams over the coming year.</p>
+    <div class="cols">
+      <div class="event"><h3>General Counsel</h3><p class="when">Remote</p><p><a href="https://airtable.com/appUWJgmduM3nRHKS/pagFAylnDZKmHia81/form" target="_blank" rel="noopener noreferrer">Apply for this role</a></p></div>
+      <p class="muted">If you would like to work with us but don’t see an advertised role that fits, get in touch at <a href="mailto:jobs@quorumai.org">jobs@quorumai.org</a>.</p>
     </div>
   </div></section>
 
   <section id="research" class="sec" aria-labelledby="research-h"><div class="wrap">
-    <div class="lbl"><span class="nd" aria-hidden="true"></span><h2 id="research-h">Research</h2><span class="rl" aria-hidden="true"></span></div>
-    <article class="report">
-      <p class="eyebrow">Survey report · February 2026</p>
-      <h3 class="serif">Survey of AI safety leaders on AI risk, AGI timelines, and resource allocation</h3>
-      <p>Forecasts and views from attendees of the 2026 Summit on Existential Security on catastrophic risks from advanced AI, AGI timelines, and how the field should allocate its resources.</p>
-      <div><a class="arrow" href="https://www.quorumai.org/research" target="_blank" rel="noopener noreferrer">Read the report</a></div>
-    </article>
+    <h2 id="research-h">Research</h2>
+    <p class="intro">February 2026</p>
+    <p class="big">Survey of AI safety leaders on AI risk, AGI timelines, and resource allocation</p>
+    <p class="muted" style="margin-top:16px;max-width:40em">Forecasts and views from attendees of the 2026 Summit on Existential Security on catastrophic risks from advanced AI, AGI timelines, and how the field should allocate its resources.</p>
+    <p style="margin-top:20px"><a href="https://www.quorumai.org/research" target="_blank" rel="noopener noreferrer">Read the report</a></p>
   </div></section>
 
   <section id="contact" class="sec" aria-labelledby="contact-h"><div class="wrap">
-    <div class="lbl"><span class="nd" aria-hidden="true"></span><h2 id="contact-h">Contact</h2><span class="rl" aria-hidden="true"></span></div>
-    <div class="two">
-      <div style="display:flex;flex-direction:column;gap:20px"><h3 class="serif">Get in touch</h3><p class="soft" style="margin:0">Or email <a href="mailto:team@quorumai.org">team@quorumai.org</a>.</p></div>
-      <form data-form aria-label="Contact">
-        <div class="row"><label>Name<input name="name" autocomplete="name" placeholder="Your full name"></label><label>Email<input name="email" type="email" autocomplete="email" placeholder="you@example.org" required></label></div>
-        <label>Message<textarea name="message" placeholder="How can we help?" required></textarea></label>
-        <div><button class="btn" type="submit">Submit</button></div>
-      </form>
-    </div>
+    <h2 id="contact-h">Contact</h2>
+    <p class="big" style="margin-top:8px">Write to us at <a href="mailto:team@quorumai.org">team@quorumai.org</a>.</p>
+    <p class="muted" style="margin-top:16px">For roles, <a href="mailto:jobs@quorumai.org">jobs@quorumai.org</a>.</p>
   </div></section>
 </main>
 
-<footer class="ftr"><div class="wrap">
-  <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px"><span class="logo" role="img" aria-label="Quorum" style="height:20px"></span><span class="muted" style="font-size:14px">Quorum is a nonprofit organization. © 2026 Quorum.</span></div>
+<footer><div class="wrap">
+  <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px"><span class="logo" role="img" aria-label="Quorum" style="height:20px"></span><span class="muted">Quorum is a nonprofit organization. © 2026 Quorum.</span></div>
   <nav aria-label="Footer"><a href="#events">Events</a><a href="#team">Team</a><a href="#careers">Careers</a><a href="#research">Research</a><a href="#contact">Contact</a></nav>
 </div></footer>
 
 <script src="assets/mercury-core.js"></script>
 <script src="assets/hero.js"></script>
-<script>
-document.querySelector('[data-form]').addEventListener('submit', function (e) {
-  e.preventDefault();
-  var f = new FormData(this), name = f.get('name') || '', email = f.get('email') || '';
-  location.href = 'mailto:team@quorumai.org?subject=' + encodeURIComponent(name ? 'Message from ' + name : 'Message') + '&body=' + encodeURIComponent((f.get('message') || '') + '\n\n' + name + (email ? ' <' + email + '>' : ''));
-});
-</script>
 </body>
 </html>
