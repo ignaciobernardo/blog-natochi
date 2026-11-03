@@ -55,10 +55,32 @@ a{color:var(--ink)}a:hover{color:var(--ink-muted)}
 @media (max-width:759px){.qc-hero-panel{height:auto;min-height:364px;padding:28px}.qc-hero-panel h1{font-size:40px;line-height:44px}.qc-block{padding:28px}}
 @media (max-width:479px){.qc-dl{grid-template-columns:minmax(0,1fr)}}
 /* Air: every block stands on its own, with space around it; one idea per row */
-.qc-air .qc-grid{gap:24px}
-.qc-air .qc-block{padding:48px}
-.qc-group+.qc-group{margin-top:72px}
-@media (max-width:759px){.qc-air .qc-block{padding:28px}.qc-air .qc-grid{gap:16px}.qc-group+.qc-group{margin-top:48px}}
+.qc-air .qc-grid{gap:40px}
+.qc-air .qc-block{padding:48px;position:relative}
+.qc-group+.qc-group{margin-top:80px}
+/* The node grid's own element as the edge of every block: 1.5px lines that stop 10px short of a hollow 16px node at each corner */
+:root{--qn:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect x='1.5' y='1.5' width='13' height='13' fill='none' stroke='%232a4058' stroke-width='3'/%3E%3C/svg%3E")}
+.qc-air .qc-block::before{content:"";position:absolute;inset:-0.75px;z-index:2;pointer-events:none;background:linear-gradient(var(--line),var(--line)) 50% 0/calc(100% - 36px) 1.5px no-repeat,linear-gradient(var(--line),var(--line)) 50% 100%/calc(100% - 36px) 1.5px no-repeat,linear-gradient(var(--line),var(--line)) 0 50%/1.5px calc(100% - 36px) no-repeat,linear-gradient(var(--line),var(--line)) 100% 50%/1.5px calc(100% - 36px) no-repeat}
+.qc-air .qc-block::after{content:"";position:absolute;inset:-8px;z-index:2;pointer-events:none;background:var(--qn) 0 0/16px 16px no-repeat,var(--qn) 100% 0/16px 16px no-repeat,var(--qn) 0 100%/16px 16px no-repeat,var(--qn) 100% 100%/16px 16px no-repeat}
+/* Forum: the text on the left, the speakers' photos running on the right, the button floating over them on a blur */
+.qc-forum{padding:0 !important;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);min-height:440px}
+.qc-forum-copy{padding:48px;display:flex;flex-direction:column;justify-content:flex-end;gap:20px;min-width:0}
+.qc-reel{position:relative;overflow:hidden;min-height:440px}
+.qc-reel-track{position:absolute;top:0;bottom:0;left:0;display:flex;gap:16px;padding-block:40px;box-sizing:border-box;animation:qc-reel 42s linear infinite;will-change:transform}
+.qc-reel img{display:block;height:100%;width:auto;aspect-ratio:4/5;object-fit:cover;filter:grayscale(1);transition:filter .6s}
+.qc-reel:hover img{filter:none}
+.qc-reel:hover .qc-reel-track{animation-play-state:paused}
+@keyframes qc-reel{from{transform:translateX(0)}to{transform:translateX(calc(-50% - 8px))}}
+.qc-reel-cta{position:absolute;left:50%;bottom:40px;transform:translateX(-50%);z-index:1;padding:14px;background:color-mix(in srgb,var(--canvas) 45%,transparent);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.qc-speakers{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:24px}
+.qc-speakers li{display:flex;align-items:center;gap:16px;min-width:0}
+.qc-speakers img{flex:none;width:56px;height:56px;object-fit:cover;object-position:50% 25%;filter:grayscale(1)}
+.qc-speakers li:hover img{filter:none}
+@media (max-width:899px){.qc-forum{grid-template-columns:minmax(0,1fr)}.qc-reel{min-height:340px}}
+@media (max-width:759px){.qc-air .qc-block{padding:28px}.qc-forum-copy{padding:28px}.qc-air .qc-grid{gap:28px}.qc-group+.qc-group{margin-top:56px}}
+@media (prefers-reduced-motion:reduce){.qc-reel-track{animation:none}}
+.qc-air .qc-dl-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:479px){.qc-air .qc-dl-2{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
 <body>
@@ -98,31 +120,28 @@ a{color:var(--ink)}a:hover{color:var(--ink-muted)}
         </div>
 
         <div class="qc-group qc-grid">
-          <article class="qc-block s12" style="min-height: 360px; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 40px 48px;">
-            <div style="display: flex; flex-direction: column; gap: 20px; max-width: 40em; min-width: 0;">
+          <article class="qc-block qc-forum s12" aria-labelledby="qc-forum-h">
+            <div class="qc-forum-copy">
               <p class="qc-meta">Upcoming · Dec 12–13, 2026 · San Francisco</p>
-              <h3 class="display" style="margin: 0; text-wrap: balance;">AI Horizons Forum</h3>
-              <p class="body-lg" style="margin: 0; max-width: 30em; color: var(--ink-muted);">Over two days, the AI Horizons Forum will bring together more than 750 people working to ensure transformative AI leads to good futures.</p>
+              <h3 id="qc-forum-h" class="display" style="margin: 0; text-wrap: balance;">AI Horizons Forum</h3>
+              <p class="body-lg" style="margin: 0; max-width: 26em; color: var(--ink-muted);">Over two days, the AI Horizons Forum will bring together more than 750 people working to ensure transformative AI leads to good futures.</p>
             </div>
-            <a class="qc-btn" href="https://www.aihorizonsforum.org" target="_blank" rel="noopener noreferrer">Learn more</a>
+            <div class="qc-reel" aria-label="Some of the Forum's speakers">
+              <div class="qc-reel-track" aria-hidden="true"><img src="media/speakers/amy-labenz.jpg" alt="" width="480" height="600" loading="lazy"><img src="media/speakers/holden-karnofsky.jpg" alt="" width="480" height="600" loading="lazy"><img src="media/speakers/will-macaskill.jpg" alt="" width="480" height="600" loading="lazy"><img src="media/speakers/peter-wildeford.jpg" alt="" width="480" height="600" loading="lazy"><img src="media/speakers/sam-bowman.jpg" alt="" width="480" height="600" loading="lazy"><img src="media/speakers/amy-labenz.jpg" alt="" width="480" height="600" loading="lazy"><img src="media/speakers/holden-karnofsky.jpg" alt="" width="480" height="600" loading="lazy"><img src="media/speakers/will-macaskill.jpg" alt="" width="480" height="600" loading="lazy"><img src="media/speakers/peter-wildeford.jpg" alt="" width="480" height="600" loading="lazy"><img src="media/speakers/sam-bowman.jpg" alt="" width="480" height="600" loading="lazy"></div>
+              <div class="qc-reel-cta"><a class="qc-btn" href="https://www.aihorizonsforum.org" target="_blank" rel="noopener noreferrer">Learn more</a></div>
+            </div>
           </article>
-          <div class="qc-block s7" style="display: flex; flex-direction: column; gap: 32px;">
+          <div class="qc-block s5" style="display: flex; flex-direction: column; gap: 28px;">
             <h3 class="title" style="margin: 0;">Key dates</h3>
-            <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 20px;">
+            <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 16px;">
               <li style="display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 16px;"><span class="body" style="color: var(--ink-muted);">Nov 13</span><span class="body">Travel support due</span></li>
               <li style="display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 16px;"><span class="body" style="color: var(--ink-muted);">Nov 30</span><span class="body">Applications close</span></li>
-              <li style="display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 16px;"><span class="body" style="color: var(--ink-muted);">Dec 12–13</span><span class="body">AI Horizons Forum, San Francisco</span></li>
+              <li style="display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 16px;"><span class="body" style="color: var(--ink-muted);">Dec 12–13</span><span class="body">AI Horizons Forum</span></li>
             </ul>
+            <p class="body" style="margin: 0; color: var(--ink-muted);">Standard ticket $500, with all sessions and meals. Applications are reviewed on a rolling basis.</p>
           </div>
-          <div class="qc-block s5" style="display: flex; flex-direction: column; gap: 32px;">
-            <h3 class="title" style="margin: 0;">Tickets</h3>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <p class="body" style="margin: 0;">Standard ticket $500, includes all sessions and meals.</p>
-              <p class="body" style="margin: 0; color: var(--ink-muted);">Applications are reviewed on a rolling basis.</p>
-            </div>
-          </div>
-          <div class="qc-block s12">
-            <dl class="qc-dl">
+          <div class="qc-block s7">
+            <dl class="qc-dl qc-dl-2">
               <div><dt>Venue</dt><dd>San Francisco Marriott Marquis<br>780 Mission Street, San Francisco</dd></div>
               <div><dt>Format</dt><dd>Two days of talks, 1:1s, small-group conversations, and structured networking.</dd></div>
               <div><dt>Sessions</dt><dd>Alignment, control, and effective governance.</dd></div>
@@ -130,15 +149,8 @@ a{color:var(--ink)}a:hover{color:var(--ink-muted)}
             </dl>
           </div>
           <div class="qc-block s12" style="display: flex; flex-direction: column; gap: 28px;">
-            <h3 class="title" style="margin: 0;">Speakers</h3>
-            <ul style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px 24px;">
-              <li style="display: flex; flex-direction: column;"><span class="body">Amy Labenz</span><span class="body" style="color: var(--ink-muted);">Quorum</span></li>
-              <li style="display: flex; flex-direction: column;"><span class="body">Holden Karnofsky</span><span class="body" style="color: var(--ink-muted);">Anthropic</span></li>
-              <li style="display: flex; flex-direction: column;"><span class="body">Will MacAskill</span><span class="body" style="color: var(--ink-muted);">Forethought</span></li>
-              <li style="display: flex; flex-direction: column;"><span class="body">Peter Wildeford</span><span class="body" style="color: var(--ink-muted);">The AI Policy Network</span></li>
-              <li style="display: flex; flex-direction: column;"><span class="body">Sam Bowman</span><span class="body" style="color: var(--ink-muted);">Anthropic</span></li>
-            </ul>
-            <p class="body" style="margin: 0; color: var(--ink-muted);">More speakers to be announced.</p>
+            <div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px;"><h3 class="title" style="margin: 0;">Speakers</h3><p class="body" style="margin: 0; color: var(--ink-muted);">More speakers to be announced.</p></div>
+            <ul class="qc-speakers"><li><img src="media/speakers/amy-labenz.jpg" alt="" width="56" height="56" loading="lazy"><span style="display: flex; flex-direction: column; min-width: 0;"><span class="body">Amy Labenz</span><span class="body" style="color: var(--ink-muted);">Quorum</span></span></li><li><img src="media/speakers/holden-karnofsky.jpg" alt="" width="56" height="56" loading="lazy"><span style="display: flex; flex-direction: column; min-width: 0;"><span class="body">Holden Karnofsky</span><span class="body" style="color: var(--ink-muted);">Anthropic</span></span></li><li><img src="media/speakers/will-macaskill.jpg" alt="" width="56" height="56" loading="lazy"><span style="display: flex; flex-direction: column; min-width: 0;"><span class="body">Will MacAskill</span><span class="body" style="color: var(--ink-muted);">Forethought</span></span></li><li><img src="media/speakers/peter-wildeford.jpg" alt="" width="56" height="56" loading="lazy"><span style="display: flex; flex-direction: column; min-width: 0;"><span class="body">Peter Wildeford</span><span class="body" style="color: var(--ink-muted);">The AI Policy Network</span></span></li><li><img src="media/speakers/sam-bowman.jpg" alt="" width="56" height="56" loading="lazy"><span style="display: flex; flex-direction: column; min-width: 0;"><span class="body">Sam Bowman</span><span class="body" style="color: var(--ink-muted);">Anthropic</span></span></li></ul>
           </div>
         </div>
 
@@ -189,7 +201,7 @@ a{color:var(--ink)}a:hover{color:var(--ink-muted)}
       <section id="careers" aria-labelledby="qc-careers" style="display: flex; flex-direction: column; gap: 40px;">
         <h2 id="qc-careers" class="title" style="margin: 0; color: var(--ink-muted);">Careers</h2>
         <div class="qc-grid">
-          <div class="qc-block s7" style="min-height: 280px; display: flex; flex-direction: column; justify-content: flex-end;">
+          <div class="qc-block s7" style="display: flex; flex-direction: column; justify-content: flex-end;">
             <p class="heading" style="margin: 0; text-wrap: balance;">We’re expanding our program and operations teams over the coming year.</p>
           </div>
           <article class="qc-block s5" style="display: flex; flex-direction: column; justify-content: space-between; gap: 40px;">
