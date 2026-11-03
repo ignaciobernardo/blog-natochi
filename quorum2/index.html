@@ -44,7 +44,19 @@ a{color:var(--ink)}a:hover{color:var(--ink-muted)}
 .qhz-counsel{--hz-s1:#93c9ba;--hz-s2:#2f7e70;--hz-s3:#13534b;--hz-s4:#0a3631;--hz-s5:#041a17;--hz-c1:#020c0a;--hz-c2:#04140f;--hz-b1:#0f3d2c;--hz-b2:#3c9868;--hz-b3:#90d7a2;--hz-rim:#f2f8e8;--hz-haze:#c1e7d5;--hz-rot:0deg;--hz-top:48%;--hz-cta:#13534b}
 .qhz-survey{--hz-s1:#a3abbd;--hz-s2:#4d5774;--hz-s3:#272d47;--hz-s4:#171b2e;--hz-s5:#0a0c17;--hz-c1:#0b0905;--hz-c2:#15100a;--hz-b1:#4a3410;--hz-b2:#c6942a;--hz-b3:#ecc45a;--hz-rim:#fbf3dc;--hz-haze:#dad3ba;--hz-rot:-6deg;--hz-cta:#272d47}
 @media (prefers-reduced-motion:reduce){.qhz-glow::before{transition:none;transform:translateY(0) rotate(var(--hz-rot))}.qhz:hover>.qhz-glow::before,.qhz:focus-within>.qhz-glow::before{animation:none}}
+/* Intro: the map's lines draw down the page, each corner node turns in as the line reaches it, then each block fills and its content rises */
+.qm-intro .qm-map{background:linear-gradient(var(--line),var(--line)) 0 0/100% 0 no-repeat}
+.qm-intro .qm-map>.q-frame-cell{transition:background-color .6s ease var(--d,0s)}
+.qm-intro .qm-map>.q-frame-cell>*:not(.qhz-glow),.qm-intro .qm-map>.q-frame-cell>span[data-q]>*{transition:opacity .6s ease calc(var(--d,0s) + .12s),transform .9s cubic-bezier(.22,1,.36,1) calc(var(--d,0s) + .12s)}
+.qm-intro .qm-map>.q-frame-cell::before{transition:transform .55s cubic-bezier(.22,1,.36,1) var(--dn1,0s),opacity .25s ease var(--dn1,0s)}
+.qm-intro .qm-map>.q-frame-cell::after{transition:transform .55s cubic-bezier(.22,1,.36,1) var(--dn2,0s),opacity .25s ease var(--dn2,0s)}
+.qm-wait .qm-map{background-size:100% 0 !important}
+.qm-wait .qm-map>.q-frame-cell,.qm-wait .qm-map>.q-frame-cell>*,.qm-wait .qm-map>.q-frame-cell>span[data-q]>*,.qm-wait .qm-map>.q-frame-cell::before,.qm-wait .qm-map>.q-frame-cell::after{transition:none !important}
+.qm-wait .qm-map>.q-frame-cell:not(.q-frame-empty){background:var(--canvas)}
+.qm-wait .qm-map>.q-frame-cell>*:not(.qhz-glow),.qm-wait .qm-map>.q-frame-cell>span[data-q]>*{opacity:0;transform:translateY(14px)}
+.qm-wait .qm-map>.q-frame-cell::before,.qm-wait .qm-map>.q-frame-cell::after{opacity:0;transform:rotate(45deg) scale(0)}
 </style>
+<script>/* start the map intro hidden from the first paint; if the intro never runs, show everything after 5 s */if(!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('qm-intro','qm-wait');setTimeout(function(){if(!window.qmIntroRan)document.documentElement.classList.remove('qm-intro','qm-wait')},5000)}</script>
 </head>
 <body>
 <div id="top" data-theme="quorum" class="qm qm-mono" style="--q-surface: var(--canvas); background: var(--canvas); color: var(--ink); font-family: var(--font-sans); display: flex; flex-direction: column;">
@@ -235,6 +247,28 @@ a{color:var(--ink)}a:hover{color:var(--ink-muted)}
     var body = (f.get('message') || '') + '\n\n' + name + (email ? ' <' + email + '>' : '');
     location.href = 'mailto:team@quorumai.org?subject=' + encodeURIComponent(name ? 'Message from ' + name : 'Message') + '&body=' + encodeURIComponent(body);
   });
+})();
+</script>
+<script>
+/* Intro for the map: after a short pause the lines draw over the first screen in 2.2 s and over the rest in 1 s.
+   Each corner node turns in when the line reaches it; a block fills once the line has closed its frame. */
+(function () {
+  var root = document.documentElement, map = document.querySelector('.qm-map');
+  if (!map || !root.classList.contains('qm-intro')) return;
+  window.qmIntroRan = true;
+  var cells = [].slice.call(map.children).filter(function (c) { return c.classList.contains('q-frame-cell'); });
+  var H = map.offsetHeight, V = Math.max(1, Math.min(H, innerHeight - map.getBoundingClientRect().top)), T1 = 2.2, T2 = 1, P = 0.3;
+  var at = function (y) { return P + (y <= V ? T1 * y / V : T1 + T2 * (y - V) / Math.max(1, H - V)); };
+  cells.forEach(function (c) { var a = at(c.offsetTop), b = at(c.offsetTop + c.offsetHeight); c.style.setProperty('--dn1', a.toFixed(2) + 's'); c.style.setProperty('--dn2', b.toFixed(2) + 's'); c.style.setProperty('--d', (b + 0.05).toFixed(2) + 's'); });
+  var t0 = 0;
+  var frame = function (now) {
+    if (!t0) t0 = now;
+    var t = (now - t0) / 1000 - P, y = t < 0 ? 0 : t < T1 ? V * t / T1 : V + (H - V) * Math.min(1, (t - T1) / T2);
+    map.style.backgroundSize = '100% ' + y.toFixed(1) + 'px';
+    if (t < T1 + T2) requestAnimationFrame(frame);
+    else setTimeout(function () { root.classList.remove('qm-intro'); map.style.backgroundSize = ''; cells.forEach(function (c) { ['--d', '--dn1', '--dn2'].forEach(function (k) { c.style.removeProperty(k); }); }); }, 1500);
+  };
+  requestAnimationFrame(function () { requestAnimationFrame(function () { root.classList.remove('qm-wait'); requestAnimationFrame(frame); }); });
 })();
 </script>
 </body>
