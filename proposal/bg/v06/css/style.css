@@ -1,0 +1,126 @@
+/* Jgs (Adel Faure, SIL OFL 1.1): jgs9 para múltiplos de 18px, jgs7 para múltiplos de 14px */
+@font-face {
+  font-family: "jgs9";
+  src: url(../../fonts/jgs9.ttf);
+}
+@font-face {
+  font-family: "jgs7";
+  src: url(../../fonts/jgs7.ttf);
+}
+
+:root {
+  --bg: #f5f3ec;
+  --ink: #161513;
+  --muted: #6b675e;
+}
+:root[data-theme="dark"] {
+  --bg: #0a0a0d;
+  --ink: #ebe7da;
+  --muted: #8d8a80;
+}
+
+/* Solo html lleva fondo: si body lo tuviera, taparía al <pre> con z-index -1 */
+html {
+  background: var(--bg);
+  color: var(--ink);
+}
+body {
+  margin: 0;
+  overflow-x: hidden;
+}
+
+/* El lienzo: pegado al viewport y detrás del contenido */
+#city {
+  position: sticky;
+  top: 0;
+  z-index: -1;
+  margin: 0;
+  height: 100vh;
+  height: 100lvh;
+  overflow: hidden;
+  font-family: "jgs9", monospace;
+  font-size: 18px;
+  line-height: 18px;
+  white-space: pre;
+  color: var(--ink);
+  user-select: none;
+  -webkit-font-smoothing: none;
+}
+@media (max-width: 767px) {
+  #city {
+    font-family: "jgs7", monospace;
+    font-size: 14px;
+    line-height: 14px;
+  }
+}
+
+/* Largo del descenso: main.js lo ajusta según la altura del edificio */
+#scroller {
+  height: 6000px;
+}
+
+#content {
+  position: relative;
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 0 16px;
+  text-align: center;
+  font-family: "jgs9", monospace;
+}
+.hero h1 {
+  margin: 0;
+  font-family: "jgs9", monospace;
+  font-weight: 400;
+  font-size: 72px;
+  line-height: 72px;
+  letter-spacing: 0.06em;
+}
+.hero p {
+  margin: 0;
+  font-size: 18px;
+  line-height: 18px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.hero a {
+  font-size: 18px;
+  line-height: 18px;
+  color: var(--ink);
+}
+@media (max-width: 767px) {
+  .hero,
+  .hero h1 {
+    font-family: "jgs7", monospace;
+  }
+  .hero h1 {
+    font-size: 56px;
+    line-height: 56px;
+  }
+  .hero p,
+  .hero a {
+    font-size: 14px;
+    line-height: 14px;
+  }
+}
+
+/* --- HUD (?debug) --- */
+#debug {
+  position: fixed;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  max-width: calc(100vw - 32px);
+  padding: 8px 10px;
+  background: var(--bg);
+  border: 1px solid var(--ink);
+  font: 12px/1.5 ui-monospace, Menlo, monospace;
+}
