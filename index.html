@@ -27,6 +27,11 @@
     </script>
     <link rel="stylesheet" href="style.css">
 
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js">
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/loaders/GLTFLoader.js">
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/utils/BufferGeometryUtils.js">
+    <link rel="preload" href="kosmaj.glb" as="fetch" crossorigin>
     <script type="importmap">
     {
         "imports": {
@@ -385,6 +390,17 @@
             // Now compute true center from baked geometry and translate vertices
             var box = new THREE.Box3().setFromObject(model);
             var center = box.getCenter(new THREE.Vector3());
+            // Spin around the monument's true vertical axis (vertex centroid in X/Z),
+            // not the bbox center, which is skewed by the entrance that sticks out on one side.
+            var sx = 0, sz = 0, cnt = 0;
+            model.traverse(function (child) {
+                if (child.isMesh) {
+                    var pos = child.geometry.attributes.position;
+                    for (var i = 0; i < pos.count; i++) { sx += pos.getX(i); sz += pos.getZ(i); cnt++; }
+                }
+            });
+            center.x = sx / cnt;
+            center.z = sz / cnt;
             model.traverse(function (child) {
                 if (child.isMesh) {
                     child.geometry.translate(-center.x, -center.y, -center.z);
