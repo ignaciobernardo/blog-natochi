@@ -1,4 +1,4 @@
-// Generado por tools/v20-songs.py (vistas previas de Apple). No editar a mano.
+// Generado por tools/v20-songs.py (vistas previas de Apple y Spotify). No editar a mano.
 export const PLAYLIST = {
  "name": "natochi",
  "href": "",
@@ -31,6 +31,13 @@ export const PLAYLIST = {
    "ms": 728480,
    "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/0d/bc/37/0dbc3719-5641-8a0a-8c4d-ff173e3c8d09/mzaf_7295063566537335461.plus.aac.p.m4a",
    "href": "https://music.apple.com/us/album/emily/204051949"
+  },
+  {
+   "title": "snowing, all at once",
+   "artist": "racing mount pleasant",
+   "ms": 273898,
+   "preview": "https://p.scdn.co/mp3-preview/763c7d5f0e1e2bb3777f83f4129635df7bde04e2",
+   "href": "https://open.spotify.com/track/1zpw77lp8XG99GXbgLEXoc"
   }
  ]
 };
