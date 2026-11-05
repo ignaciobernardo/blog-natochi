@@ -1,33 +1,5 @@
 // Generado por tools/v20-posts.py desde el repo del blog. No editar a mano.
 export const POSTS = {
- "/blog/spomenik/": {
-  "title": "spomenik",
-  "date": "2026-03-18",
-  "blocks": [
-   {
-    "t": "p",
-    "runs": [
-     {
-      "s": "!!"
-     }
-    ]
-   }
-  ]
- },
- "/blog/angelsquad-for-latam/": {
-  "title": "angelsquad for latam",
-  "date": "2026-03-17",
-  "blocks": [
-   {
-    "t": "p",
-    "runs": [
-     {
-      "s": "in venture capital"
-     }
-    ]
-   }
-  ]
- },
  "/blog/seguir-adelante/": {
   "title": "keep going",
   "date": "2026-01-01",
@@ -707,6 +679,861 @@ export const POSTS = {
     "runs": [
      {
       "s": "Judge > i'm going to ask everyone to let me be a judge for stuff."
+     }
+    ]
+   }
+  ]
+ },
+ "/updates/2026-04-23/": {
+  "title": "apr 23",
+  "date": "2026-04-23",
+  "blocks": [
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "didn't do much. platanus work stuff."
+     }
+    ]
+   },
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "woke up suuuper late dude"
+     }
+    ]
+   },
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "we went out to eat at a really nice place."
+     }
+    ]
+   },
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "indies post for mentors / judges"
+     }
+    ]
+   },
+   {
+    "t": "img",
+    "src": "posts/img/updates-2026-04-23-1.jpg",
+    "w": 760,
+    "h": 950
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "low key epic."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "so far so good."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "nothing else."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "see you next time."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "kisses kisses bye bye."
+     }
+    ]
+   }
+  ]
+ },
+ "/updates/2026-04-22/": {
+  "title": "apr 22",
+  "date": "2026-04-22",
+  "blocks": [
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "dude the hack@latam landing turned out way too fire."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "i think i cooked, guys."
+     }
+    ]
+   },
+   {
+    "t": "img",
+    "src": "posts/img/updates-2026-04-22-1.jpg",
+    "w": 760,
+    "h": 443
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "you can see it "
+     },
+     {
+      "s": "right here",
+      "href": "https://natochi.cv/hack"
+     },
+     {
+      "s": " or at "
+     },
+     {
+      "s": "https://hack.indies.la/",
+      "href": "https://hack.indies.la/"
+     },
+     {
+      "s": " :DD"
+     }
+    ]
+   },
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "we found a place to do ai+frnds with sidd!"
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "Crecimiento",
+      "href": "https://www.crecimiento.build/"
+     },
+     {
+      "s": " is going to lend us a room for about 25-30 people in buenos aires."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "epic shit, this is what the place looks like:"
+     }
+    ]
+   },
+   {
+    "t": "img",
+    "src": "posts/img/updates-2026-04-22-2.jpg",
+    "w": 760,
+    "h": 428
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "chill place tbh, it's not 100% what we were looking for but we can make something of it idk idk."
+     }
+    ]
+   },
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "in 2 days 400 people joined hack@latam. that's insaneeee !!"
+     }
+    ]
+   },
+   {
+    "t": "img",
+    "src": "posts/img/updates-2026-04-22-3.jpg",
+    "w": 760,
+    "h": 705
+   },
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "we went with the platanus team to some hot springs nearby."
+     }
+    ]
+   },
+   {
+    "t": "img",
+    "src": "posts/img/updates-2026-04-22-4.jpg",
+    "w": 760,
+    "h": 1013
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "photos by: raimundo herrera"
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "so far so good."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "nothing else."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "see you next time."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "kisses kisses bye bye."
+     }
+    ]
+   }
+  ]
+ },
+ "/updates/2026-04-21/": {
+  "title": "apr 21",
+  "date": "2026-04-21",
+  "blocks": [
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "first meeting we had with runway."
+     }
+    ]
+   },
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "i recommended "
+     },
+     {
+      "s": "reno",
+      "href": "https://www.linkedin.com/in/pup/"
+     },
+     {
+      "s": " to boe.cl, their whole thing is getting medicine to people, he tries to run away but the medicine follows him. but it didn't go great. they want in-person and he is a remote man."
+     }
+    ]
+   },
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "we're closing mentors/judges for "
+     },
+     {
+      "s": "platanushack buenos aires",
+      "href": "https://hack.platan.us/26-ar"
+     },
+     {
+      "s": ". but the design is really cool. shout out puch studio."
+     }
+    ]
+   },
+   {
+    "t": "img",
+    "src": "posts/img/updates-2026-04-21-1.jpg",
+    "w": 760,
+    "h": 950
+   },
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "i had the idea that besides making LOI an index so latinos can find grant opportunities, i could use it to get closer to the founders of those funds and ask them for help and advice :D."
+     }
+    ]
+   },
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "today i'm torn between improving the copy for amigos and applying to generator. i can't decide."
+     }
+    ]
+   },
+   {
+    "t": "img",
+    "src": "posts/img/updates-2026-04-21-2.jpg",
+    "w": 614,
+    "h": 616
+   },
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "i'm going to put together the indies branding for the hack and for the talks. so far we've raised almost 10k usd in cash and 25k in credits. good stuff."
+     }
+    ]
+   },
+   {
+    "t": "img",
+    "src": "posts/img/updates-2026-04-21-3.jpg",
+    "w": 760,
+    "h": 494
+   },
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "the argentina office... ummm. not good. what are we going to do? i truly have no idea. idk idk"
+     }
+    ]
+   },
+   {
+    "t": "img",
+    "src": "posts/img/updates-2026-04-21-4.jpg",
+    "w": 760,
+    "h": 314
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "so far so good."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "nothing else."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "see you next time."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "kisses kisses bye bye."
+     }
+    ]
+   }
+  ]
+ },
+ "/updates/2026-04-20/": {
+  "title": "apr 20",
+  "date": "2026-04-20",
+  "blocks": [
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "my biggest inspiration for these daily letters is this talk by the great "
+     },
+     {
+      "s": "farza",
+      "href": "https://x.com/FarzaTV"
+     },
+     {
+      "s": " where he talks about how he reached these amazing people who later shaped his career."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "how did he do it?: by having a newsletter where he shared his wins and problems while building his startups."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "that's where he found comfort and consistency. besides being a good way to reflect on the day, it's good for reaching more people who might want to help you."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "maybe i'll start doing it in english so that happens with farza!"
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "this happened a long time ago. i honestly didn't have to ask him, i just wanted an answer. and i got it hehe."
+     }
+    ]
+   },
+   {
+    "t": "img",
+    "src": "posts/img/updates-2026-04-20-1.jpg",
+    "w": 760,
+    "h": 391
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "but whatever, i'm here to talk about my life, what i'm doing and what challenges i'm going through. so, let's start."
+     }
+    ]
+   },
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "we pivoted 3x10."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "literally one of the hardest decisions we've had to make. letting go of an idea you fell in love with is never easy."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "we changed the branding "
+     },
+     {
+      "s": "(i cooked)",
+      "href": "https://amigos.sh/"
+     },
+     {
+      "s": ", and we're going to do micro-grants of $100 to $500 usd (for now, later we'll raise them to $1000) + credits and perks, plus interviews and stuff."
+     }
+    ]
+   },
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "a startup offered me a cofounder role right as they got into 500 latam."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "nothing to say. saying no was one of the hardest decisions of my life, tbh. i love the team and i'd feel really at home there. but i feel like i still haven't explored 100% (well, not even 30%) of the opportunities out there. now with the platanus hackathons i'm going to grow my luck surface area a lot more."
+     }
+    ]
+   },
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "i easily had 3 job opportunities that were way too exciting."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "on top of tripling my salary. they're really fun."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "all 3 mean going to work in the us. 🦅🇺🇸 RAHHH."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "i'm not very sure about any of them, tho."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "one is going to grind at a startup that got into yc this year, 996 and shit. the other is a nonprofit foundation that opens doors for me from generalist into roles closer to ea and ai safety, not 996 btw."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "either way, very cool."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "the last one is less likely, but just as cool: living 3 months in berkeley and working on my own project. sounds more than nice."
+     }
+    ]
+   },
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "we added venezuela to the "
+     },
+     {
+      "s": "platanus hack",
+      "href": "https://hack.platan.us/"
+     },
+     {
+      "s": " countries."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "what can i say? i'm the only one on the team who doesn't need a visa because i'm argentinian. 🇦🇷🧉 VAMOUU."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "it means i travel to buenos aires, cdmx, bogotá, caracas and finally san francisco."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "it's funny, i have to get a passport, i'm locked in on that. i'm going to argentina a week early so i can sort everything out."
+     }
+    ]
+   },
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "hack@latam",
+      "href": "https://hack.indies.la/"
+     },
+     {
+      "s": " reached 814 applicants."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "the kind of problem people call a \"happy problem\". for now i'm trying to cope with having to leave such good profiles out. but we haven't reviewed them yet, so idk, maybe it's anxiety."
+     }
+    ]
+   },
+   {
+    "t": "img",
+    "src": "posts/img/updates-2026-04-20-2.jpg",
+    "w": 760,
+    "h": 722
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "with the prize pool we were able to buy the long-awaited indies camera. i'm recording a lot of content so we can start getting better at how we promote stuff."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "plus having lots of countries: meaning lots of pizza."
+     }
+    ]
+   },
+   {
+    "t": "img",
+    "src": "posts/img/updates-2026-04-20-3.jpg",
+    "w": 760,
+    "h": 369
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "nothing else to say. just too many. stop this. send help."
+     }
+    ]
+   },
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "la clase is rolling."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "we had the first meetings with "
+     },
+     {
+      "s": "felipe mandiola",
+      "href": "https://felipemandiola.com/en"
+     },
+     {
+      "s": ", who gave the first talk we ever had at indies hehe."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "and we're making a lot of progress on storytelling. i'd love to put out a really cool launch video. but for that i'm practicing my editing and cinematography skills, my g."
+     }
+    ]
+   },
+   {
+    "t": "img",
+    "src": "posts/img/updates-2026-04-20-4.jpg",
+    "w": 760,
+    "h": 995
+   },
+   {
+    "t": "img",
+    "src": "posts/img/updates-2026-04-20-5.jpg",
+    "w": 760,
+    "h": 775
+   },
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "we're with the platanus team at a cabin in the south."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "recording a bit. i'll put out a video, hopefully i'll drop the link in the next update."
+     }
+    ]
+   },
+   {
+    "t": "img",
+    "src": "posts/img/updates-2026-04-20-6.jpg",
+    "w": 720,
+    "h": 1280
+   },
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "we put out the design for the hack with platanus."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "it took us a while but it's out, and it pretty much nails my vision of it feeling \"airport-y\", travel-related. cool, right?"
+     }
+    ]
+   },
+   {
+    "t": "img",
+    "src": "posts/img/updates-2026-04-20-7.jpg",
+    "w": 760,
+    "h": 327
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "small sneak peek for those paying attention."
+     }
+    ]
+   },
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "ai+frnds: from a cold message to doing an event in buenos aires."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "this really is the weirdest one of all. the guy on the left is sidd, and he's building ai+frnds."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "i really like what he does, and in a conversation with fernando smith, he came up with the idea of doing claude code classes for business people. that's when i thought: "
+     },
+     {
+      "s": "\"mmm, it'd be really cool to do it for everyone\"",
+      "href": "https://luma.com/u1azetih"
+     },
+     {
+      "s": ", stripping every possible commercial motive from an already good idea."
+     }
+    ]
+   },
+   {
+    "t": "img",
+    "src": "posts/img/updates-2026-04-20-8.jpg",
+    "w": 760,
+    "h": 582
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "the crazy part is that i'm going to end up doing an event with sidd in buenos aires, from the 1st to the 3rd. we're still looking for a venue at the moment. but it's looking super good, hahaha."
+     }
+    ]
+   },
+   {
+    "t": "img",
+    "src": "posts/img/updates-2026-04-20-9.jpg",
+    "w": 752,
+    "h": 1466
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "really fucking cool if u ask me."
+     }
+    ]
+   },
+   {
+    "t": "li",
+    "runs": [
+     {
+      "s": "i'm going to launch "
+     },
+     {
+      "s": "kernel",
+      "href": "https://kernel.platan.us/"
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "platanus' first internal project. and i've already gotten like $30k committed to the fund. hehe."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "this week at the cabin i really want to get things done, but mainly to get the platform working perfectly, kernel."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "so far so good."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "nothing else."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "see you next time."
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "runs": [
+     {
+      "s": "kisses kisses bye bye."
      }
     ]
    }

@@ -50,8 +50,7 @@ export const TREE = {
     {
       name: 'writing',
       kids: [
-        { name: 'spomenik', href: '/blog/spomenik/', note: 'mar 18' },
-        { name: 'angelsquad for latam', href: '/blog/angelsquad-for-latam/', note: 'mar 17' },
+        // spomenik y angelsquad for latam están sin terminar: fuera del árbol
         { name: 'keep going', href: '/blog/seguir-adelante/', note: 'jan 1' },
       ],
     },
@@ -61,6 +60,10 @@ export const TREE = {
         { name: 'jun 13', href: '/updates/2026-06-13/' },
         { name: 'may 10', href: '/updates/2026-05-10/' },
         { name: 'apr 28', href: '/updates/2026-04-28/' },
+        { name: 'apr 23', href: '/updates/2026-04-23/' },
+        { name: 'apr 22', href: '/updates/2026-04-22/' },
+        { name: 'apr 21', href: '/updates/2026-04-21/' },
+        { name: 'apr 20', href: '/updates/2026-04-20/' },
       ],
     },
     {

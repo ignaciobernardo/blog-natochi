@@ -473,11 +473,17 @@ export function start(renderer, canvas) {
     const occ = occupancy(node);
     const widest = Math.max(...node.kids.map((k) => textW(k.name + '.')));
     const narrow = vw < 700;
-    const maxLen = narrow ? Math.max(120, vw - widest - 70) : 440;
+    // una rama con muchos ítems (todas las updates) puede crecer bastante: en
+    // pantalla ancha hasta casi el alto de la pantalla; en el teléfono, si no
+    // entra a lo ancho, sube
+    const maxLen = narrow ? Math.max(120, vw - widest - 70, Math.min(vh * 0.6, 150 + 42 * node.kids.length)) : Math.max(440, Math.min(vh * 0.9, 780));
     // en pantalla ancha la rama sale más larga, para que sus ítems respiren
     const len = Math.min(maxLen, narrow ? 150 + 42 * node.kids.length : 200 + 56 * node.kids.length);
     const origin = renderer.childOrigin ? renderer.childOrigin(node) : node.anchor;
-    layoutBranch(node, origin, node.twig.angle, len, occ, node.rect, narrow ? vw - 40 : 0);
+    // en el teléfono, los ítems tienen que entrar en el ancho que de verdad
+    // queda: sin el marco ni los márgenes de la cámara
+    const usable = vw - 2 * (Math.min(48, vw * 0.06) + INS()) - 6;
+    layoutBranch(node, origin, node.twig.angle, len, occ, node.rect, narrow ? usable : 0);
   }
 
   function relayoutAll() {
