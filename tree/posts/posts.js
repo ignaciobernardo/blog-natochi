@@ -22,21 +22,21 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "en venture capital"
+      "s": "in venture capital"
      }
     ]
    }
   ]
  },
  "/blog/seguir-adelante/": {
-  "title": "seguir adelante",
+  "title": "keep going",
   "date": "2026-01-01",
   "blocks": [
    {
     "t": "p",
     "runs": [
      {
-      "s": "para admirar se necesita grandeza."
+      "s": "to admire, you need greatness."
      }
     ]
    },
@@ -44,7 +44,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "para seguir adelante (ademas de talento o de genio) necesitaras otros atributos espirituales."
+      "s": "to keep going (besides talent or genius) you'll need other spiritual attributes."
      }
     ]
    },
@@ -52,7 +52,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "el coraje para decir tu verdad"
+      "s": "the courage to tell your truth"
      }
     ]
    },
@@ -60,7 +60,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "la tenacidad para seguir adelante"
+      "s": "the tenacity to keep going"
      }
     ]
    },
@@ -68,7 +68,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "fé en lo que tenes que decir"
+      "s": "faith in what you have to say"
      }
     ]
    },
@@ -76,7 +76,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "descreimiento de tus fuerzas"
+      "s": "disbelief in your own strength"
      }
     ]
    },
@@ -84,7 +84,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "modestia ante los gigantes"
+      "s": "modesty before the giants"
      }
     ]
    },
@@ -92,7 +92,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "arrogancia ante los imbeciles"
+      "s": "arrogance before the idiots"
      }
     ]
    },
@@ -100,7 +100,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "afecto y valentia al estar solo (rehuir a grupitos o galarias de cristales)."
+      "s": "affection and bravery in being alone (steering clear of little cliques and glass galleries)."
      }
     ]
    },
@@ -108,7 +108,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "en esos instantes lo unico que te puede ayudar es el recuerdo de los que escribieron solos."
+      "s": "in those moments the only thing that can help you is the memory of those who wrote alone."
      }
     ]
    },
@@ -116,7 +116,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "si estas dispuesto a sufrir, a desgarrarte, a soportar la malevolencia, y la mezquindad, la incomprensión y la estupidez, el resentimiento y la infinita soledad, entonces sí. estas listo para dar testimonio."
+      "s": "if you're willing to suffer, to tear yourself apart, to put up with malice and pettiness, incomprehension and stupidity, resentment and infinite loneliness, then yes. you're ready to bear witness."
      }
     ]
    },
@@ -124,7 +124,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "pero para colmo, nada te garantiza el por-venir."
+      "s": "but to top it all off, nothing guarantees you the future."
      }
     ]
    }
@@ -146,7 +146,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "he hecho demasiada shit. pero voy a intentar recordar todo."
+      "s": "i've done way too much shit. but i'm going to try to remember everything."
      }
     ]
    },
@@ -154,7 +154,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "venezuela estuvo extremadamente amaze amaze amaze. fue kinda raro sentirte en un pais que acababa de ser bombardeado, pero it is what it is."
+      "s": "venezuela was extremely amaze amaze amaze. it was kinda weird being in a country that had just been bombed, but it is what it is."
      }
     ]
    },
@@ -168,7 +168,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "2 post, uno en linkedin y otro en twitter: los dos se volvieron virales!! gracias a eso puede conocer mucha gente interesante y bacan. estoy muy agradecido de que todo salio bien."
+      "s": "2 posts, one on linkedin and one on twitter: both went viral!! thanks to that i got to meet a lot of interesting and cool people. i'm really grateful everything went well."
      }
     ]
    },
@@ -188,7 +188,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "fue mucho mucho viaje. entre medio, me perdi 2 vuelos y me tuve que quedar 12 horas extra en panama, me perdieron la maleta, pero pude llegar a chile para la hack.indies.la."
+      "s": "it was a lot a lot of travel. along the way, i missed 2 flights and had to stay 12 extra hours in panama, they lost my suitcase, but i made it to chile for hack.indies.la."
      }
     ]
    },
@@ -202,7 +202,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "y llegue para el dia de la piscola… glup."
+      "s": "and i got there for piscola day… glup."
      }
     ]
    },
@@ -216,7 +216,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "hice otro evento con vicente de growth. se anoto mas gente que la chucha. como +400 personas. (teniamos tremendos speakers tbh). no tengo fotos rn. pero tengo foto de las pizzas."
+      "s": "i did another event with vicente from growth. way more people signed up than we expected. like +400 people. (we had amazing speakers tbh). i don't have photos rn. but i have a photo of the pizzas."
      }
     ]
    },
@@ -230,7 +230,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "llegue de mexico, comí muchos taquitos con rafa, alex y fer."
+      "s": "back from mexico, i ate a lot of tacos with rafa, alex and fer."
      }
     ]
    },
@@ -244,7 +244,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "la buildnight estuvo chistosa, sigo con muchas ideas de como cambiar el branding. podría echarle una vuelta después de la hack mx 26."
+      "s": "the buildnight was fun, i still have a lot of ideas on how to change the branding. i could take another pass at it after hack mx 26."
      }
     ]
    },
@@ -258,7 +258,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "finally nos mudamos con agus y fer!"
+      "s": "finally moved in with agus and fer!"
      }
     ]
    },
@@ -272,7 +272,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "al evento de ai+frnds le fue bien. llegaron 150 personitas y después unas 40 a una sesión de cowork que tuvimos."
+      "s": "the ai+frnds event went well. 150 lovely people showed up and then about 40 came to a cowork session we had."
      }
     ]
    },
@@ -286,7 +286,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "festeje mi cumpleaños con gente que quiero mucho."
+      "s": "i celebrated my birthday with people i love a lot."
      }
     ]
    },
@@ -300,7 +300,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "ahora viajo a mexico el lunes a las... 8:30am."
+      "s": "now i fly to mexico on monday at... 8:30am."
      }
     ]
    },
@@ -308,7 +308,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "estoy terminando la postulacion para blue dot, tengo varios planes con eso. y ademas, vamos a lanzar el video de amigos.sh que grabo mañana con darinka!"
+      "s": "i'm finishing my application for blue dot, i have several plans with that. and also, we're launching the amigos.sh video that i'm shooting tomorrow with darinka!"
      }
     ]
    },
@@ -324,7 +324,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "nada mas."
+      "s": "nothing else."
      }
     ]
    },
@@ -332,7 +332,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "nos vemos la proxima vez."
+      "s": "see you next time."
      }
     ]
    },
@@ -340,7 +340,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "besitos besitos chau chau."
+      "s": "kisses kisses bye bye."
      }
     ]
    },
@@ -368,7 +368,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "escribiendo esto desde un avion que casi pierdo de panama -> venezuela."
+      "s": "writing this from a plane i almost missed, panama -> venezuela."
      }
     ]
    },
@@ -382,7 +382,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "hace bastante que no hago esto. espero no olvidarme nada."
+      "s": "it's been a while since i did this. hope i don't forget anything."
      }
     ]
    },
@@ -390,7 +390,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "conocí a sid la semana pasada. me cayo muy bien. lo lleve a guerrin, vimos un raton muerto y se dio cuenta que me encanta el queso."
+      "s": "i met sid last week. i really liked him. i took him to güerrín, we saw a dead rat and he realized i love cheese."
      }
     ]
    },
@@ -404,7 +404,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "asi que ahora me dice \"la rata\"."
+      "s": "so now he calls me \"the rat\"."
      }
     ]
    },
@@ -412,7 +412,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "por que siempre que conozco gringos me ponen apodos?"
+      "s": "why is it that every time i meet gringos they give me nicknames?"
      }
     ]
    },
@@ -428,7 +428,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "en otras noticias. vinieron los chicos. juan y bruno. me caen super, una pena que mac no puedo venir antes."
+      "s": "in other news. the guys came. juan and bruno. i like them a lot, too bad mac couldn't come earlier."
      }
     ]
    },
@@ -442,7 +442,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "lo mismo. fuimos a un bar notable. comimos pizzita y pasta. todo un 10."
+      "s": "same deal. we went to one of the old historic bars. had pizza and pasta. a perfect 10."
      }
     ]
    },
@@ -450,7 +450,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "vi la estrella de piazzolla del brodway argentino. recomended listen de piazzolla? mmm todo."
+      "s": "i saw piazzolla's star on the argentine broadway. recommended piazzolla listen? mmm all of it."
      }
     ]
    },
@@ -464,7 +464,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "mas cuando vas caminando por este buenos aires querido."
+      "s": "especially when you're walking through this beloved buenos aires."
      }
     ]
    },
@@ -472,7 +472,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "fuimos a una fiesta y conocimos muchos gringos que estaban en el mismo hostel de sid."
+      "s": "we went to a party and met a lot of gringos who were staying at sid's hostel."
      }
     ]
    },
@@ -486,7 +486,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "pude sacar el pasaporte y sacar un par de fotos muy buenas."
+      "s": "i got my passport and took a couple of really good photos."
      }
     ]
    },
@@ -500,7 +500,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "el evento de ai plus frnds le fue bien. sid quedo super hyped despues de hacerlo, note mucha sinceridad de su parte."
+      "s": "the ai plus frnds event went well. sid was super hyped after doing it, i felt a lot of sincerity from him."
      }
     ]
    },
@@ -508,7 +508,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "despues martes, cayo la platanus banda. salimos a comer algo con juan y bruno, y rafa y rai ya estaban modo locked in. sofi se quedo a dormir."
+      "s": "then on tuesday, the platanus crew showed up. we went out to eat with juan and bruno, and rafa and rai were already in locked-in mode. sofi stayed over."
      }
     ]
    },
@@ -522,7 +522,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "al otro dia, fully locked in. armamos todo para la hack. y yo modo context switch, preparando para la buildnight de venezuela (tengo buenas ideas para el diseño de la misma jeje tysm puch)."
+      "s": "the next day, fully locked in. we set everything up for the hack. and me in context-switch mode, getting ready for the venezuela buildnight (i have good ideas for its design hehe tysm puch)."
      }
     ]
    },
@@ -536,7 +536,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "pude conocer a mi sobrino finally. es muy copado como quiere escalar todo, y me cayo bien tbh."
+      "s": "i finally got to meet my nephew. it's really cool how he wants to climb everything, and i liked him tbh."
      }
     ]
    },
@@ -544,7 +544,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "bueno. ahora bajando a venezuela, lock and ready para este nuevo desafio."
+      "s": "ok. now landing in venezuela, locked and ready for this new challenge."
      }
     ]
    },
@@ -552,7 +552,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "nos vemos la proxima."
+      "s": "see you next time."
      }
     ]
    },
@@ -560,7 +560,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "acabo de llegar al hotel. esta ok. no pude ir a un asado+padel, sadly, no tenia muchas ganas de ir. (mas que nada por el padel jeje)"
+      "s": "just got to the hotel. it's ok. i couldn't go to an asado+padel, sadly, i didn't really feel like going. (mostly because of the padel hehe)"
      }
     ]
    },
@@ -568,7 +568,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "canción del día: "
+      "s": "song of the day: "
      },
      {
       "s": "https://open.spotify.com/intl-es/track/79TkZmpXpNxLDi1RL0AXhP?si=7931e23f842d496e",
@@ -586,7 +586,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "llegue a argentina dude"
+      "s": "made it to argentina dude"
      }
     ]
    },
@@ -594,7 +594,7 @@ export const POSTS = {
     "t": "p",
     "runs": [
      {
-      "s": "ahora estoy sufriendo con lo necesario para sacar o1a"
+      "s": "now i'm suffering through what it takes to get an o1a"
      }
     ]
    },
@@ -602,7 +602,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "Premios o reconocimientos nacionales/internacionales"
+      "s": "National/international prizes or awards"
      }
     ]
    },
@@ -610,7 +610,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "Membresía en asociaciones que exigen logros excepcionales"
+      "s": "Membership in associations that require outstanding achievements"
      }
     ]
    },
@@ -618,7 +618,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "Cobertura mediática sobre ti en publicaciones importantes"
+      "s": "Media coverage about you in major publications"
      }
     ]
    },
@@ -626,7 +626,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "Haber sido juez/evaluador del trabajo de otros en tu campo"
+      "s": "Having judged/evaluated the work of others in your field"
      }
     ]
    },
@@ -634,7 +634,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "Contribuciones originales de importancia mayor"
+      "s": "Original contributions of major significance"
      }
     ]
    },
@@ -642,7 +642,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "Publicaciones académicas o profesionales de tu autoría"
+      "s": "Academic or professional publications you've authored"
      }
     ]
    },
@@ -650,7 +650,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "Rol crítico o esencial en organizaciones distinguidas"
+      "s": "Critical or essential role in distinguished organizations"
      }
     ]
    },
@@ -658,7 +658,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "Salario alto comparado con otros en tu campo"
+      "s": "High salary compared to others in your field"
      }
     ]
    },
@@ -674,7 +674,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "Premios o reconocimientos nacionales/internacionales? > Puede serr. Deberia meterme a concursos de cosas, o pedir ser ciudadano ilustre de mi ciudad natal."
+      "s": "National/international prizes or awards? > Maybeee. I should enter contests for stuff, or ask to be named an illustrious citizen of my hometown."
      }
     ]
    },
@@ -682,7 +682,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "Cobertura mediática sobre ti en publicaciones importantes > esto podria lograrlo a final de año con amigos/laclase. necesario hacerlo con hack@latam ya."
+      "s": "Media coverage about you in major publications > i could get this by the end of the year with amigos/laclase. need to do it with hack@latam now."
      }
     ]
    },
@@ -690,7 +690,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "Rol crítico o esencial en organizaciones distinguidas > pedir cartas de que mi rol fue critico a victor/paula/agustin/etc."
+      "s": "Critical or essential role in distinguished organizations > ask victor/paula/agustin/etc. for letters saying my role was critical."
      }
     ]
    },
@@ -698,7 +698,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "Contribuciones originales > seguramente con indies y con amigos lo logro."
+      "s": "Original contributions > i'll probably get it with indies and with amigos."
      }
     ]
    },
@@ -706,7 +706,7 @@ export const POSTS = {
     "t": "li",
     "runs": [
      {
-      "s": "Juez > voy a pedir a todo el mundo ser jurado de cosas."
+      "s": "Judge > i'm going to ask everyone to let me be a judge for stuff."
      }
     ]
    }

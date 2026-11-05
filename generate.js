@@ -164,7 +164,8 @@ function processPostFile(file, index, totalFiles) {
     // Extraer metadatos
     const title = attributes.title || path.basename(file, '.md');
     const date = formatDate(attributes.date || new Date());
-    const postNumber = totalFiles - index;
+    // el número del post puede fijarse en el front matter (number: 2); si no, se cuenta
+    const postNumber = attributes.number || totalFiles - index;
     const slug = attributes.slug || slugify(title);
 
     // Crear directorio para el post y guardar HTML

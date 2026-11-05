@@ -362,7 +362,8 @@ export function start(renderer, canvas) {
     const gap = kids.length > 1 ? (hi - lo) / (kids.length - 1) : 0;
     for (let i = 0; i < kids.length; i++) {
       const k = kids[i];
-      const t0 = kids.length === 1 ? (k.para ? 0.9 : 0.6) : lo + gap * i;
+      // un hijo solo (un texto o un único link) va en la punta de la rama
+      const t0 = kids.length === 1 ? (k.para ? 0.9 : 0.93) : lo + gap * i;
       const jit = (rand() - 0.5) * gap * 0.3;
       const spread = rand();
       const twA = node.root ? P.rootTwig : P.childTwig;

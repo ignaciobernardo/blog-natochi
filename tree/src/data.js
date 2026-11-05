@@ -52,7 +52,7 @@ export const TREE = {
       kids: [
         { name: 'spomenik', href: '/blog/spomenik/', note: 'mar 18' },
         { name: 'angelsquad for latam', href: '/blog/angelsquad-for-latam/', note: 'mar 17' },
-        { name: 'seguir adelante', href: '/blog/seguir-adelante/', note: 'jan 1' },
+        { name: 'keep going', href: '/blog/seguir-adelante/', note: 'jan 1' },
       ],
     },
     {
@@ -65,10 +65,8 @@ export const TREE = {
     },
     {
       name: 'work with me',
-      kids: [
-        { name: 'book a call', href: 'https://cal.com/natochi' },
-        { name: 'cv', href: '/cv' },
-      ],
+      // sólo el link para agendar, en la punta de la rama (el cv sigue en /cv)
+      kids: [{ name: 'book a call', href: 'https://cal.com/natochi' }],
     },
   ],
 };
