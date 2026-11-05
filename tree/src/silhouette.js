@@ -65,14 +65,16 @@ const BACK = (() => {
   return BACKS.includes(b) ? b : 'rama';
 })();
 
-// Marco de la página: ?frame=marco | rasgado | pliego (la tecla f los recorre)
+// Marco de la página: ?frame=marco (por defecto) | rasgado | pliego | ninguno
+// (la tecla f los recorre)
 //   marco    un marco negro alrededor del papel, como las láminas de la referencia
 //   rasgado  el pliego tiene el borde rasgado y se apoya sobre algo más oscuro
 //   pliego   prueba de imprenta: marcas de corte y de registro en las esquinas
 const FRAMES = ['ninguno', 'marco', 'rasgado', 'pliego'];
 const FRAME = (() => {
   const f = new URLSearchParams(location.search).get('frame');
-  return FRAMES.includes(f) ? f : 'ninguno';
+  // por defecto, el marco negro (lo pidió el usuario); ?frame=ninguno lo saca
+  return FRAMES.includes(f) ? f : 'marco';
 })();
 const frameW = (vw) => (FRAME === 'marco' ? (vw < 700 ? 9 : 16) : FRAME === 'rasgado' ? (vw < 700 ? 8 : 15) : FRAME === 'pliego' ? (vw < 700 ? 12 : 18) : 0);
 const frameInset = (vw) => (FRAME === 'marco' ? frameW(vw) + 4 : FRAME === 'rasgado' ? frameW(vw) + 12 : FRAME === 'pliego' ? frameW(vw) + 4 : 0);
@@ -985,7 +987,9 @@ export function createSilhouette() {
   // canción al azar.
   // (una playlist de prueba no se publica: tools/v20-deploy.py la deja vacía)
   const tracks = (PLAYLIST && PLAYLIST.tracks) || [];
-  const music = { i: tracks.length ? Math.floor(Math.random() * tracks.length) : 0, audio: null, started: false, errors: 0 };
+  // una lista armada a mano (order: 'fixed') arranca por la primera; una
+  // playlist larga, por una al azar
+  const music = { i: tracks.length && PLAYLIST.order !== 'fixed' ? Math.floor(Math.random() * tracks.length) : 0, audio: null, started: false, errors: 0 };
   function player() {
     if (music.audio) return music.audio;
     const a = new Audio();
