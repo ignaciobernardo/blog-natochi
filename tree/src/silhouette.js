@@ -1123,8 +1123,7 @@ export function createSilhouette() {
 
   // ---------------------------------------------------------------- fondo
   // Con el mouse, el papel se corre apenas (hasta PAR px) para el lado
-  // contrario; la tinta queda quieta. En pantallas táctiles y con movimiento
-  // reducido no se mueve.
+  // contrario; la tinta queda quieta. Con movimiento reducido no se mueve.
   const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const PAR = REDUCED ? 0 : 7;
   const par = { x: 0, y: 0, tx: 0, ty: 0, last: 0 };
@@ -1133,6 +1132,50 @@ export function createSilhouette() {
     par.tx = -((e.clientX / innerWidth) - 0.5) * 2 * PAR;
     par.ty = -((e.clientY / innerHeight) - 0.5) * 2 * PAR * 0.6;
     redraw();
+  });
+  // En el teléfono: el papel sigue al dedo mientras toca y vuelve al centro
+  // al soltar; y si el teléfono informa su inclinación (Android lo hace sin
+  // pedir permiso), inclinarlo también lo corre. La inclinación se mide
+  // contra una posición de reposo que se va acomodando sola, así que
+  // sostenerlo torcido no deja el papel corrido.
+  let touching = false;
+  const tilt = { x: 0, y: 0, b0: null, g0: null };
+  const touchTo = (e) => {
+    par.tx = -((e.clientX / innerWidth) - 0.5) * 2 * PAR;
+    par.ty = -((e.clientY / innerHeight) - 0.5) * 2 * PAR * 0.6;
+    redraw();
+  };
+  const restTarget = () => {
+    par.tx = -tilt.x * PAR;
+    par.ty = -tilt.y * PAR * 0.6;
+    redraw();
+  };
+  addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'mouse' || !PAR) return;
+    touching = true;
+    touchTo(e);
+  });
+  addEventListener('pointermove', (e) => {
+    if (e.pointerType === 'mouse' || !PAR || !touching) return;
+    touchTo(e);
+  });
+  for (const ev of ['pointerup', 'pointercancel'])
+    addEventListener(ev, (e) => {
+      if (e.pointerType === 'mouse' || !PAR) return;
+      touching = false;
+      restTarget();
+    });
+  addEventListener('deviceorientation', (e) => {
+    if (!PAR || e.gamma == null || e.beta == null) return;
+    if (tilt.g0 == null) {
+      tilt.g0 = e.gamma;
+      tilt.b0 = e.beta;
+    }
+    tilt.g0 += (e.gamma - tilt.g0) * 0.01;
+    tilt.b0 += (e.beta - tilt.b0) * 0.01;
+    tilt.x = clamp((e.gamma - tilt.g0) / 18, -1, 1);
+    tilt.y = clamp((e.beta - tilt.b0) / 18, -1, 1);
+    if (!touching) restTarget();
   });
   const parBusy = () => Math.abs(par.tx - par.x) > 0.2 || Math.abs(par.ty - par.y) > 0.2;
   window.__paper = par; // para las pruebas
