@@ -738,8 +738,9 @@ export function start(renderer, canvas) {
     const full = dirty || changed || moving || growing;
     if (full || anim) {
       dirty = false;
+      const t0 = performance.now();
       frame(full);
-      sampleQuality(now, full);
+      sampleQuality(now, full, performance.now() - t0);
     } else lastDraw = 0;
     requestAnimationFrame(step);
   }
@@ -748,27 +749,58 @@ export function start(renderer, canvas) {
   // lenta, o Safari, que sube la tinta a la GPU pasando por la CPU), se baja
   // la resolución interna de a un escalón hasta que el sitio fluya. Nunca por
   // debajo de 1 píxel por píxel CSS. Se recuerda para la próxima visita.
+  // Que los cuadros vengan espaciados no alcanza: Safari en modo de bajo
+  // consumo (y algunos monitores) da 30 cuadros por segundo aunque la página
+  // no cueste nada. Por eso también se mira cuánto trabaja cada cuadro, salvo
+  // que vaya claramente lento (menos de 25 por segundo).
   const QUALITY = [1, 0.8, 0.65, 0.5];
   let qi = 0;
   try {
-    qi = Math.min(QUALITY.length - 1, Math.max(0, parseInt(localStorage.getItem('natochi-quality') || '0', 10) || 0));
+    qi = Math.min(QUALITY.length - 1, Math.max(0, parseInt(localStorage.getItem('natochi-q2') || '0', 10) || 0));
   } catch {}
   if (q.has('quality')) qi = Math.max(0, QUALITY.indexOf(parseFloat(q.get('quality'))));
   let lastDraw = 0;
   let slow = [];
-  function sampleQuality(now, full) {
+  let work = [];
+  let seen = null;
+  let trial = null;
+  let locked = q.has('quality');
+  const median = (v) => v.slice().sort((a, b) => a - b)[v.length >> 1];
+  function sampleQuality(now, full, ms) {
     if (!full) return (lastDraw = 0);
-    if (lastDraw) slow.push(now - lastDraw);
+    if (lastDraw) {
+      slow.push(now - lastDraw);
+      work.push(ms);
+    }
     lastDraw = now;
     if (slow.length < 24) return;
-    const med = slow.slice().sort((a, b) => a - b)[slow.length >> 1];
+    const gap = median(slow), busy = median(work);
+    seen = { gap: Math.round(gap), busy: Math.round(busy * 10) / 10 };
     slow = [];
+    work = [];
+    // ¿sirvió el último escalón? Si los cuadros no quedaron al menos un
+    // cuarto más livianos (o más seguidos), se vuelve a la resolución de antes
+    // y no se prueba más: en Safari, por ejemplo, subir la tinta cuesta casi
+    // lo mismo a cualquier tamaño, y bajar sólo haría la hoja más borrosa.
+    if (trial) {
+      const helped = busy < trial.busy * 0.75 || gap < trial.gap * 0.75;
+      if (helped) {
+        try {
+          localStorage.setItem('natochi-q2', String(qi));
+        } catch {}
+      } else {
+        qi = trial.qi;
+        locked = true;
+        applyQuality();
+      }
+      trial = null;
+      return;
+    }
     const base = Math.min(2, devicePixelRatio || 1);
-    if (med > 24 && qi < QUALITY.length - 1 && base * QUALITY[qi + 1] >= 1) {
+    const tooSlow = gap > 40 || (gap > 24 && busy > 9);
+    if (!locked && tooSlow && qi < QUALITY.length - 1 && base * QUALITY[qi + 1] >= 1) {
+      trial = { qi, gap, busy };
       qi++;
-      try {
-        localStorage.setItem('natochi-quality', String(qi));
-      } catch {}
       applyQuality();
     }
   }
@@ -980,7 +1012,7 @@ export function start(renderer, canvas) {
     },
     // calidad actual (para las pruebas de rendimiento)
     get quality() {
-      return { dpr, level: QUALITY[qi] };
+      return { dpr, level: QUALITY[qi], seen };
     },
     // centro (px) de un link del texto abierto, por su palabra
     link(word) {
