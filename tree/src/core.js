@@ -732,14 +732,58 @@ export function start(renderer, canvas) {
     };
     busy(root);
     const anim = renderer.animating ? renderer.animating(state, time) : false;
-    if (dirty || changed || moving || growing || anim) {
+    // Un cuadro completo redibuja la tinta y la sube a la GPU; si lo único
+    // que cambió es el papel (el fondo que sigue al mouse), alcanza con
+    // volver a pasar el shader sobre la tinta que ya está subida.
+    const full = dirty || changed || moving || growing;
+    if (full || anim) {
       dirty = false;
-      frame();
-    }
+      frame(full);
+      sampleQuality(now, full);
+    } else lastDraw = 0;
     requestAnimationFrame(step);
   }
 
-  function frame() {
+  // Calidad adaptativa: si los cuadros completos tardan mucho (una máquina
+  // lenta, o Safari, que sube la tinta a la GPU pasando por la CPU), se baja
+  // la resolución interna de a un escalón hasta que el sitio fluya. Nunca por
+  // debajo de 1 píxel por píxel CSS. Se recuerda para la próxima visita.
+  const QUALITY = [1, 0.8, 0.65, 0.5];
+  let qi = 0;
+  try {
+    qi = Math.min(QUALITY.length - 1, Math.max(0, parseInt(localStorage.getItem('natochi-quality') || '0', 10) || 0));
+  } catch {}
+  if (q.has('quality')) qi = Math.max(0, QUALITY.indexOf(parseFloat(q.get('quality'))));
+  let lastDraw = 0;
+  let slow = [];
+  function sampleQuality(now, full) {
+    if (!full) return (lastDraw = 0);
+    if (lastDraw) slow.push(now - lastDraw);
+    lastDraw = now;
+    if (slow.length < 24) return;
+    const med = slow.slice().sort((a, b) => a - b)[slow.length >> 1];
+    slow = [];
+    const base = Math.min(2, devicePixelRatio || 1);
+    if (med > 24 && qi < QUALITY.length - 1 && base * QUALITY[qi + 1] >= 1) {
+      qi++;
+      try {
+        localStorage.setItem('natochi-quality', String(qi));
+      } catch {}
+      applyQuality();
+    }
+  }
+  // cambia sólo la resolución de los lienzos: la hoja, la cámara y lo que se
+  // está animando siguen igual
+  function applyQuality() {
+    const base = Math.min(2, devicePixelRatio || 1);
+    dpr = Math.max(1, base * QUALITY[qi]);
+    canvas.width = Math.round(vw * dpr);
+    canvas.height = Math.round(vh * dpr);
+    if (renderer.resize) renderer.resize(vw, vh, dpr, canvas);
+    dirty = true;
+  }
+
+  function frame(full = true) {
     const branches = [];
     const items = [];
     hits = [];
@@ -801,7 +845,7 @@ export function start(renderer, canvas) {
       n.inkLite = false;
       for (const k of n.kids) k.inkLite = false;
     }
-    renderer.frame({ canvas, vw, vh, dpr, cam, time, root, active, branches, items, title, titleAt: tAt, hud, font, fontSize, state, textW, hoverLink, fixed: [titleRect(), ...hudHits].filter((r) => r.w > 0), redraw: () => (dirty = true) });
+    renderer.frame({ full, canvas, vw, vh, dpr, cam, time, root, active, branches, items, title, titleAt: tAt, hud, font, fontSize, state, textW, hoverLink, fixed: [titleRect(), ...hudHits].filter((r) => r.w > 0), redraw: () => (dirty = true) });
   }
 
   // ------------------------------------------------------------------ input
@@ -881,7 +925,7 @@ export function start(renderer, canvas) {
   }
 
   function resize() {
-    dpr = Math.min(2, devicePixelRatio || 1);
+    dpr = Math.max(1, Math.min(2, devicePixelRatio || 1) * QUALITY[qi]);
     vw = innerWidth;
     vh = innerHeight;
     canvas.width = Math.round(vw * dpr);
@@ -933,6 +977,10 @@ export function start(renderer, canvas) {
         .filter((h) => !h.link && h.node.parent === active)
         .filter((h) => h.x < INS() || h.x + h.w > vw - INS() || h.y < INS() || (h.h <= vh - 60 && h.y + h.h > vh - INS()))
         .map((h) => h.node.name);
+    },
+    // calidad actual (para las pruebas de rendimiento)
+    get quality() {
+      return { dpr, level: QUALITY[qi] };
     },
     // centro (px) de un link del texto abierto, por su palabra
     link(word) {

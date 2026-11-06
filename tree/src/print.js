@@ -28,7 +28,6 @@ const FRAG = `
 precision highp float;
 varying vec2 vUv;
 uniform sampler2D uInk;
-uniform sampler2D uLite;
 uniform vec2 uRes;
 uniform float uDpr;
 uniform vec2 uCam;
@@ -72,14 +71,15 @@ float vn(vec2 p) {
   vec2 u = f * f * (3.0 - 2.0 * f);
   return mix(mix(h21(i), h21(i + vec2(1.0, 0.0)), u.x), mix(h21(i + vec2(0.0, 1.0)), h21(i + vec2(1.0, 1.0)), u.x), u.y);
 }
+// tres octavas: los campos que la usan son suaves (la cuarta no se notaba y
+// costaba un cuarto más en cada píxel)
 float fbm(vec2 p) {
-  float s = 0.0, a = 0.5;
-  for (int i = 0; i < 4; i++) {
-    s += a * vn(p);
-    p = p * 2.03 + 7.1;
-    a *= 0.5;
-  }
-  return s;
+  float s = 0.5 * vn(p);
+  p = p * 2.03 + 7.1;
+  s += 0.25 * vn(p);
+  p = p * 2.03 + 7.1;
+  s += 0.125 * vn(p);
+  return s * 1.0667;
 }
 // mota redonda en una celda de lado 'cs', con probabilidad 'prob'
 float speck(vec2 w, float cs, float prob, float r0, float r1, float seed) {
@@ -163,15 +163,6 @@ void main() {
     float dotc = 1.0 - smoothstep(rad - aa, rad + aa, length(f));
     cov = max(cov, dotc);
   }
-
-  // tinta escasa (segunda capa): lo que se puede abrir pero no abriste. Es la
-  // misma tinta, pero la malla deja pasar más o menos la mitad
-  float lite = coverOf(uLite, uv, px, w);
-  if (lite > 0.0) cov = max(cov, lite * step(h21(wp + 41.0), uLiteCov));
-  // el texto en tinta escasa (azul de la segunda capa) carga algo más, para
-  // que siga leyéndose
-  float lt = texture2D(uLite, uv).b;
-  if (lt > 0.0) cov = max(cov, smoothstep(uThresh - uEdge, uThresh + uEdge, lt) * step(h21(wp + 43.0), uLiteText));
 
   // capa fina: zonas grandes donde la tinta cargó menos
   float thin = smoothstep(0.42, 0.78, fbm(w * 0.011 + 9.0));
@@ -278,14 +269,11 @@ export function createPrinter(canvas, look) {
     return t;
   };
   const tex = mkTex();
-  const texLite = mkTex();
-  let liteEmpty = false;
   gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
   const U = {};
-  for (const n of ['uInk', 'uLite', 'uView', 'uPar', 'uRes', 'uDpr', 'uCam', 'uPaper', 'uInkCol', ...KEYS.map(uname)]) U[n] = gl.getUniformLocation(prog, n);
+  for (const n of ['uInk', 'uView', 'uPar', 'uRes', 'uDpr', 'uCam', 'uPaper', 'uInkCol', ...KEYS.map(uname)]) U[n] = gl.getUniformLocation(prog, n);
   gl.uniform1i(U.uInk, 0);
-  gl.uniform1i(U.uLite, 1);
   gl.uniform3fv(U.uPaper, hex(look.paper));
   gl.uniform3fv(U.uInkCol, hex(look.ink));
   for (const k of KEYS) gl.uniform1f(U[uname(k)], look[k]);
@@ -296,28 +284,46 @@ export function createPrinter(canvas, look) {
       gl.useProgram(prog);
       gl.uniform1f(U[uname(k)], v);
     },
+    // ?perf: mide la GPU de verdad (con lectura sincrónica de un píxel).
+    // 'shader': n pasadas del shader con la tinta ya subida; 'upload': n
+    // subidas de la tinta.
+    bench(kind, n, ink) {
+      const px = new Uint8Array(4);
+      gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+      const t0 = performance.now();
+      for (let i = 0; i < n; i++) {
+        if (kind === 'upload') gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, ink);
+        else gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+      }
+      return (performance.now() - t0) / n;
+    },
     // ink: tinta plena (y fotos en el azul); lite: tinta escasa
-    render(ink, cam, dpr, lite, par = { x: 0, y: 0 }) {
+    // ink: la capa de tinta (rojo: trazos, verde: follaje, azul: fotos). Sin
+    // ink (null), se reusa la que ya está subida: así un cambio que sólo toca
+    // el papel no paga la subida, que en Safari pasa por la CPU y es lo más caro
+    render(ink, cam, dpr, _lite, par = { x: 0, y: 0 }) {
       gl.viewport(0, 0, canvas.width, canvas.height);
       gl.uniform2f(U.uPar, par.x, par.y);
-      gl.activeTexture(gl.TEXTURE1);
-      gl.bindTexture(gl.TEXTURE_2D, texLite);
-      // sin capa escasa: una textura vacía de 1 px, que no cuesta subir
-      if (lite) {
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, lite);
-        liteEmpty = false;
-      } else if (!liteEmpty) {
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(4));
-        liteEmpty = true;
-      }
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, tex);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, ink);
+      const P = window.__perf;
+      let t0 = P ? performance.now() : 0;
+      if (ink) gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, ink);
+      if (P) {
+        gl.finish();
+        P.cur.up = performance.now() - t0;
+        t0 = performance.now();
+      }
       gl.uniform2f(U.uRes, canvas.width, canvas.height);
       gl.uniform2f(U.uView, canvas.width / dpr, canvas.height / dpr);
       gl.uniform1f(U.uDpr, dpr);
       gl.uniform2f(U.uCam, cam.x, cam.y);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      if (P) {
+        gl.finish();
+        P.cur.sh = performance.now() - t0;
+      }
     },
   };
 }
@@ -326,10 +332,15 @@ export function createPrinter(canvas, look) {
 function fallback(canvas, look) {
   const ctx = canvas.getContext('2d');
   let tint = null;
+  let last = null;
   return {
     gl: false,
     set() {},
     render(ink, cam, dpr, lite) {
+      // sin tinta nueva, se reusa la última
+      if (!ink) ink = last;
+      if (!ink) return;
+      last = ink;
       if (!tint || tint.width !== ink.width || tint.height !== ink.height) {
         tint = document.createElement('canvas');
         tint.width = ink.width;

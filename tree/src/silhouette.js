@@ -924,16 +924,36 @@ function spot() {
 
 // `only`: qué piezas pintar. 'base' = todo menos las ramitas de los ítems;
 // un nodo = sólo la ramita (y sus hojas) de ese ítem.
-function paintGeo(c, geo, g, only = 'base') {
+// `view` (opcional): rectángulo del mundo que se ve; lo que cae afuera no se
+// arma (las raíces bajo tierra mientras crece el árbol, por ejemplo)
+function paintGeo(c, geo, g, only = 'base', view = null) {
+  const inView = (x0, y0, x1, y1) => !view || (x1 >= view.x0 && x0 <= view.x1 && y1 >= view.y0 && y0 <= view.y1);
   const take = (it) => (only === 'base' ? !it.kid : it.kid === only);
   // ramas y hojas sueltas: tinta plena
   c.globalCompositeOperation = 'source-over';
   c.beginPath();
-  for (const L of geo.limbs) if (take(L)) limbPath(c, L, g);
+  for (const L of geo.limbs) {
+    if (!take(L)) continue;
+    if (view) {
+      if (!L.bb) {
+        let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+        for (let i = 0; i < L.xs.length; i++) {
+          x0 = Math.min(x0, L.xs[i] - L.ws[i]);
+          x1 = Math.max(x1, L.xs[i] + L.ws[i]);
+          y0 = Math.min(y0, L.ys[i] - L.ws[i]);
+          y1 = Math.max(y1, L.ys[i] + L.ws[i]);
+        }
+        L.bb = [x0, y0, x1, y1];
+      }
+      if (!inView(...L.bb)) continue;
+    }
+    limbPath(c, L, g);
+  }
   c.fill('nonzero');
   c.beginPath();
   for (const q of geo.sprays) {
     if (!take(q)) continue;
+    if (!inView(q.x - q.R - 16, q.y - q.R - 16, q.x + q.R + 16, q.y + q.R + 16)) continue;
     const k = pop(g, q.t);
     if (k <= 0) continue;
     const L = q.leaves;
@@ -945,6 +965,7 @@ function paintGeo(c, geo, g, only = 'base') {
   c.globalCompositeOperation = 'lighter';
   const sp = spot();
   for (const q of only === 'base' ? geo.clusters : []) {
+    if (!inView(q.x - q.R * 2.5, q.y - q.R * 2.5, q.x + q.R * 2.5, q.y + q.R * 2.5)) continue;
     const k = clamp((g - q.t) / 0.09, 0, 1);
     if (k <= 0) continue;
     const S = q.subs;
@@ -976,7 +997,7 @@ function bounds(geo) {
 // ---------------------------------------------------------------------------
 
 export function createSilhouette() {
-  let ink, c, lite, cl, printer, D;
+  let ink, c, printer, D;
   let dpr = 1;
   let redraw = () => {};
 
@@ -994,7 +1015,16 @@ export function createSilhouette() {
     if (music.audio) return music.audio;
     const a = new Audio();
     a.preload = 'none';
-    for (const ev of ['play', 'pause', 'timeupdate', 'loadedmetadata']) a.addEventListener(ev, () => redraw());
+    for (const ev of ['play', 'pause', 'loadedmetadata']) a.addEventListener(ev, () => redraw());
+    // la línea de avance se redibuja una vez por segundo, no en cada aviso
+    let sec = -1;
+    a.addEventListener('timeupdate', () => {
+      const t = Math.floor(a.currentTime);
+      if (t !== sec) {
+        sec = t;
+        redraw();
+      }
+    });
     a.addEventListener('playing', () => (music.errors = 0));
     a.addEventListener('ended', () => playTrack(music.i + 1));
     a.addEventListener('error', () => {
@@ -1131,7 +1161,8 @@ export function createSilhouette() {
     if (e.pointerType !== 'mouse' || !PAR) return;
     par.tx = -((e.clientX / innerWidth) - 0.5) * 2 * PAR;
     par.ty = -((e.clientY / innerHeight) - 0.5) * 2 * PAR * 0.6;
-    redraw();
+    // sin redraw(): el núcleo ve que el papel se está moviendo (animating) y
+    // pasa sólo el shader, sin redibujar ni volver a subir la tinta
   });
   // En el teléfono: el papel sigue al dedo mientras toca y vuelve al centro
   // al soltar; y si el teléfono informa su inclinación (Android lo hace sin
@@ -1143,12 +1174,10 @@ export function createSilhouette() {
   const touchTo = (e) => {
     par.tx = -((e.clientX / innerWidth) - 0.5) * 2 * PAR;
     par.ty = -((e.clientY / innerHeight) - 0.5) * 2 * PAR * 0.6;
-    redraw();
   };
   const restTarget = () => {
     par.tx = -tilt.x * PAR;
     par.ty = -tilt.y * PAR * 0.6;
-    redraw();
   };
   addEventListener('pointerdown', (e) => {
     if (e.pointerType === 'mouse' || !PAR) return;
@@ -1178,6 +1207,22 @@ export function createSilhouette() {
     if (!touching) restTarget();
   });
   const parBusy = () => Math.abs(par.tx - par.x) > 0.2 || Math.abs(par.ty - par.y) > 0.2;
+  // el papel se acerca a donde tiene que ir, con suavidad y en píxeles enteros
+  function stepPaper() {
+    const now = performance.now();
+    const dt = Math.min(0.05, (now - (par.last || now)) / 1000);
+    par.last = now;
+    const ease = 1 - Math.exp(-dt * 5);
+    par.x += (par.tx - par.x) * ease;
+    par.y += (par.ty - par.y) * ease;
+    if (!parBusy()) {
+      par.x = par.tx;
+      par.y = par.ty;
+    }
+    return { x: Math.round(par.x * dpr) / dpr, y: Math.round(par.y * dpr) / dpr };
+  }
+  // dónde estaba la cámara en el último cuadro completo (la tinta subida)
+  let lastCam = null;
   window.__paper = par; // para las pruebas
 
   // ---------------------------------------------------------------- volver
@@ -1410,8 +1455,19 @@ export function createSilhouette() {
         const key = 'm' + ix;
         const e = chunk(key, () => meadowChunk(ix, D));
         used.add(key);
-        if (g < 1) paintGeo(cx, e.geo, g * 1.1, 'base');
-        else blit(cx, e);
+        if (g < 1) {
+          // mientras crece, el pasto aparece desde el tronco hacia los
+          // costados: la franja ya pintada se descubre con un recorte que se
+          // abre (antes se armaban miles de briznas por cuadro)
+          const reach = Math.max(300, D.vw * 0.7);
+          const r = clamp((g * 1.1 - 0.01) / 0.12, 0, 1) * reach + 24;
+          cx.save();
+          cx.beginPath();
+          cx.rect(-r, -400, 2 * r, 420);
+          cx.clip();
+          blit(cx, e);
+          cx.restore();
+        } else blit(cx, e);
       }
     if (vy + vh > 0) {
       const iy0 = Math.max(0, Math.floor((vy - 60) / CH)), iy1 = Math.floor((vy + vh + 60) / CH);
@@ -1502,8 +1558,10 @@ export function createSilhouette() {
     const hidden = (y) => fixed.some((r) => y + lh > r.y - 4 && y < r.y + r.h + 4 && it.x < r.x + r.w + 8 && it.x + d.w > r.x - 8);
     cx.textAlign = 'left';
     cx.textBaseline = 'middle';
+    const vhC = cx.canvas.height / dpr;
     for (const ln of d.lines) {
       if (!ln.segs.length || it.chars <= ln.segs[0].c0) continue;
+      if (it.y + ln.y + lh < 0 || it.y + ln.y > vhC) continue;
       if (hidden(it.y + ln.y)) continue;
       cx.font = fontOf(fontSize, ln.kind === 'h' ? 700 : 500);
       const y = it.y + ln.y + lh / 2;
@@ -1523,6 +1581,7 @@ export function createSilhouette() {
     // termina de escribirse
     for (const ln of d.lines) {
       const y = it.y + ln.y + lh / 2;
+      if (y + lh < 0 || y - lh > vhC) continue;
       if (hidden(it.y + ln.y)) continue;
       for (let i = 0; i < ln.segs.length; ) {
         const m = ln.segs[i].mark;
@@ -1540,6 +1599,7 @@ export function createSilhouette() {
     for (const im of d.imgs) {
       const f = clamp((it.chars - im.c0) / (im.c1 - im.c0), 0, 1);
       if (f <= 0) continue;
+      if (it.y + im.y + im.h < 0 || it.y + im.y > vhC) continue;
       const cv = photo(im.src);
       if (!cv) continue;
       const h = im.h * f;
@@ -1579,9 +1639,11 @@ export function createSilhouette() {
     cx.lineWidth = fontSize * 0.7;
     cx.textBaseline = 'middle';
     cx.textAlign = 'left';
+    const vhC = cx.canvas.height / dpr;
     for (const ln of d.lines) {
-      cx.font = fontOf(fontSize, ln.kind === 'h' ? 700 : 500);
       const y = it.y + ln.y + it.lh / 2;
+      if (y + it.lh < 0 || y - it.lh > vhC) continue;
+      cx.font = fontOf(fontSize, ln.kind === 'h' ? 700 : 500);
       for (const sg of ln.segs) cx.strokeText(sg.s, it.x + sg.x, y);
     }
     for (const im of d.imgs) cx.fillRect(it.x + im.x - 6, it.y + im.y - 6, im.w + 12, im.h + 12);
@@ -1605,10 +1667,7 @@ export function createSilhouette() {
       ink.width = Math.round(vw * dpr);
       ink.height = Math.round(vh * dpr);
       c = ink.getContext('2d');
-      lite = document.createElement('canvas');
-      lite.width = ink.width;
-      lite.height = ink.height;
-      cl = lite.getContext('2d');
+      lastCam = null;
       D = dims(vw, vh);
       chunks.clear();
       // celda del ruido de hojas: la hoja mide más o menos 1.5 celdas
@@ -1693,120 +1752,98 @@ export function createSilhouette() {
       return geo;
     },
     frame(F) {
+      // ?perf: mide cada cuadro (dibujo 2D, subida a la GPU, shader)
+      const P = window.__perf;
+      if (P) {
+        if (P.cur) P.frames.push(P.cur);
+        P.cur = { t: performance.now(), full: F.full };
+      }
       const { cam, branches, items, title, titleAt, hud, font, fontSize, textW, hoverLink, fixed } = F;
       dpr = F.dpr;
       redraw = F.redraw;
-      for (const cx of [c, cl]) {
-        cx.setTransform(1, 0, 0, 1, 0, 0);
-        cx.globalCompositeOperation = 'source-over';
-        cx.clearRect(0, 0, ink.width, ink.height);
+      // si sólo se movió el papel, se reusa la tinta que ya está en la GPU
+      if (!F.full && lastCam) {
+        if (P) P.cur.d2 = 0;
+        printer.render(null, lastCam, dpr, null, stepPaper());
+        return;
       }
+      c.setTransform(1, 0, 0, 1, 0, 0);
+      c.globalCompositeOperation = 'source-over';
+      c.clearRect(0, 0, ink.width, ink.height);
       // cámara redondeada al píxel del dispositivo, para calcar sin desenfoque
       const ox = Math.round(cam.x * dpr), oy = Math.round(cam.y * dpr);
-      for (const cx of [c, cl]) {
-        cx.setTransform(dpr, 0, 0, dpr, -ox, -oy);
-        cx.fillStyle = INK;
-        cx.strokeStyle = INK;
-      }
+      c.setTransform(dpr, 0, 0, dpr, -ox, -oy);
+      c.fillStyle = INK;
+      c.strokeStyle = INK;
       // el suelo, debajo de todo
       if (F.root.g > 0) drawGround(c, ox / dpr, oy / dpr, F.vw, F.vh, F.root.g);
       for (const n of branches) {
-        const base = n.inkLite ? cl : c;
         if (n.g >= 1) {
           const k = cached(n.geo);
-          base.globalCompositeOperation = 'source-over';
-          base.drawImage(k.cv, k.x, k.y, k.w, k.h);
-        } else paintGeo(base, n.geo, n.g * 1.1, 'base');
-        // ramitas de los ítems, cada una con su tinta
+          c.globalCompositeOperation = 'source-over';
+          c.drawImage(k.cv, k.x, k.y, k.w, k.h);
+        } else paintGeo(c, n.geo, n.g * 1.1, 'base', { x0: ox / dpr - 40, y0: oy / dpr - 40, x1: ox / dpr + F.vw + 40, y1: oy / dpr + F.vh + 40 });
+        // ramitas de los ítems
         for (const kid of n.kids) {
           if (!kid.twig || kid.fold <= 0.001) continue;
           // una sección recogida: la ramita vuelve a la copa desde la punta
           let g = n.g >= 1 ? 1.2 : n.g * 1.1;
           if (kid.fold < 1) g = Math.min(g, kid.t + (n.root ? 0.06 : 0.04) * kid.fold);
-          paintGeo(kid.inkLite ? cl : c, n.geo, g, kid);
+          paintGeo(c, n.geo, g, kid);
         }
       }
-      for (const cx of [c, cl]) {
-        cx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        cx.globalCompositeOperation = 'source-over';
-      }
+      c.setTransform(dpr, 0, 0, dpr, 0, 0);
+      c.globalCompositeOperation = 'source-over';
 
-      // las etiquetas y los textos se abren paso entre las hojas, en las dos capas
+      // las etiquetas y los textos se abren paso entre las hojas
       const tfont = fontOf(Math.round(fontSize * 1.2));
-      for (const cx of [c, cl]) {
-        cx.globalCompositeOperation = 'destination-out';
-        cx.lineJoin = 'round';
-        cx.textBaseline = 'middle';
-        cx.lineWidth = fontSize * 0.7;
-        for (const it of items) {
-          if (!it.text) continue;
-          if (it.doc) {
-            clearDoc(cx, it, fontSize);
-            continue;
-          }
-          cx.font = fontOf(fontSize, it.st.strong ? 700 : 500);
-          cx.textAlign = it.align;
-          cx.strokeText(it.full, it.x, it.y);
-        }
-        cx.globalCompositeOperation = 'source-over';
-      }
-
-      // y se imprimen: lo abierto y lo que está a mano en tinta plena, el
-      // resto en tinta escasa. Los textos quedan fuera del título y de "back",
-      // que se quedan quietos mientras la hoja se mueve
+      c.globalCompositeOperation = 'destination-out';
+      c.lineJoin = 'round';
+      c.textBaseline = 'middle';
+      c.lineWidth = fontSize * 0.7;
       for (const it of items) {
+        if (!it.text) continue;
         if (it.doc) {
-          drawDoc(c, it, fontSize, hoverLink, fixed);
+          clearDoc(c, it, fontSize);
           continue;
         }
-        if (it.st.lite) {
-          cl.fillStyle = LITE_TEXT;
-          label(cl, it, textW, fontSize);
-          cl.fillStyle = INK;
-        } else label(c, it, textW, fontSize);
+        c.font = fontOf(fontSize, it.st.strong ? 700 : 500);
+        c.textAlign = it.align;
+        c.strokeText(it.full, it.x, it.y);
       }
+      c.globalCompositeOperation = 'source-over';
+
+      // y se imprimen. Los textos quedan fuera de "back", que se queda quieto
+      // mientras la hoja se mueve
       for (const it of items) {
-        if (!it.st.hover || it.doc) continue;
-        const cx = it.st.lite ? cl : c;
-        cx.strokeStyle = it.st.lite ? LITE_TEXT : INK;
-        underline(cx, it.rect.x, it.rect.y + it.rect.h + 1, it.rect.w, it.node.id);
-        cx.strokeStyle = INK;
+        if (it.doc) drawDoc(c, it, fontSize, hoverLink, fixed);
+        else label(c, it, textW, fontSize);
       }
+      for (const it of items) if (it.st.hover && !it.doc) underline(c, it.rect.x, it.rect.y + it.rect.h + 1, it.rect.w, it.node.id);
       // título y controles quedan fijos mientras el árbol pasa por debajo: si
-      // caen sobre el follaje se calan en él (letra al revés, color papel),
-      // como un texto calado en la misma pantalla de serigrafía
-      for (const cx of [cl, c]) {
-        cx.globalCompositeOperation = cx === c ? 'xor' : 'destination-out';
-        cx.font = tfont;
-        cx.textAlign = 'left';
-        if (title) cx.fillText(title, titleAt.x, titleAt.y);
-        cx.font = font();
-        for (const h of hud) {
-          if (!h.text) continue;
-          cx.textAlign = h.align;
-          cx.fillText(h.text, h.x, h.y);
-        }
-        cx.globalCompositeOperation = 'source-over';
+      // caen sobre el follaje se calan en él (letra al revés, color papel)
+      c.globalCompositeOperation = 'xor';
+      c.font = tfont;
+      c.textAlign = 'left';
+      if (title) c.fillText(title, titleAt.x, titleAt.y);
+      c.font = font();
+      for (const h of hud) {
+        if (!h.text) continue;
+        c.textAlign = h.align;
+        c.fillText(h.text, h.x, h.y);
       }
+      c.globalCompositeOperation = 'source-over';
       if (pill && tracks.length) drawPill(c, pill, F.vw);
       const bh = hud.find((h) => h.kind === 'back');
       backG = bh ? { ...bh.box, cy: bh.box.y + bh.box.h / 2 } : null;
       if (backG) drawBack(c, backG);
       if (FRAME === 'pliego') cropMarks(c, F.vw, F.vh, frameW(F.vw));
-      const liteUsed = branches.some((n) => n.inkLite || n.kids.some((k) => k.inkLite)) || items.some((it) => it.st.lite);
-      // fondo: se acerca al mouse con suavidad, en píxeles enteros
-      const now = performance.now();
-      const dt = Math.min(0.05, (now - (par.last || now)) / 1000);
-      par.last = now;
-      const ease = 1 - Math.exp(-dt * 5);
-      par.x += (par.tx - par.x) * ease;
-      par.y += (par.ty - par.y) * ease;
-      if (!parBusy()) {
-        par.x = par.tx;
-        par.y = par.ty;
+      if (P) {
+        P.cur.d2 = performance.now() - P.cur.t;
+        P.bench = (kind, n = 20) => printer.bench(kind, n, ink);
       }
-      const pp = { x: Math.round(par.x * dpr) / dpr, y: Math.round(par.y * dpr) / dpr };
-      printer.render(ink, { x: ox / dpr, y: oy / dpr }, dpr, liteUsed ? lite : null, pp);
+      lastCam = { x: ox / dpr, y: oy / dpr };
+      printer.render(ink, lastCam, dpr, null, stepPaper());
     },
   };
 }
