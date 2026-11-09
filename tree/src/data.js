@@ -43,10 +43,27 @@ const ME_RICH = [
   [{ s: 'into ai safety, cognitive science, venture capital, community stuff and ' }, { s: 'anything borges', mark: true }, { s: '.' }],
 ];
 
+// fotos de "me" (v20), pegadas con cinta. Las arma tools/v20-me-photo.py.
+// En pantalla ancha van en un collage al lado del texto (`beside`: su ancho en
+// px) y se agrandan al pasar el mouse; en el teléfono van después del texto,
+// una por fila. `style`: su marco (ver FOTOS en v20/src/silhouette.js).
+// `note`: unas palabras que aparecen con una flecha al agrandarla (en el
+// teléfono, abajo de la foto); `\n` corta la línea.
+const ME_PHOTOS = {
+  style: 'pegada',
+  beside: 300,
+  items: [
+    { src: 'posts/img/me-1.jpg', w: 760, h: 760, note: 'just a good angle pic of me, hope u blushed' }, // la cara (de reemplazo: pfp.jpg del blog)
+    { src: 'posts/img/me-2.jpg', w: 760, h: 558, note: 'fulfilling my startup-boy dream of going to sf!' },
+    { src: 'posts/img/me-3.jpg', w: 639, h: 760, note: 'taken by my gf while we had nowhere to cowork in cambridge' },
+    { src: 'posts/img/me-4.jpg', w: 760, h: 439, note: 'first meetup of indies!' },
+  ],
+};
+
 export const TREE = {
   name: 'natochi',
   kids: [
-    { name: 'me', text: ME, rich: ME_RICH },
+    { name: 'me', text: ME, rich: ME_RICH, photos: ME_PHOTOS },
     {
       name: 'writing',
       kids: [

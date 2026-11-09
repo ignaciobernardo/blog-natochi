@@ -11,7 +11,7 @@
 // ramitas y texto van en el canal rojo, tinta plena. Todo sale en una sola
 // tinta: plata con grano de arena sobre carbón plano.
 
-import { rng, hash, noise1, lerp, clamp, at } from './core.js';
+import { rng, hash, noise1, lerp, clamp, at, easeInOut, photoZoom } from './core.js';
 import { createPrinter } from './print.js';
 import { PLAYLIST } from '../music/playlist.js';
 
@@ -78,6 +78,21 @@ const FRAME = (() => {
 })();
 const frameW = (vw) => (FRAME === 'marco' ? (vw < 700 ? 9 : 16) : FRAME === 'rasgado' ? (vw < 700 ? 8 : 15) : FRAME === 'pliego' ? (vw < 700 ? 12 : 18) : 0);
 const frameInset = (vw) => (FRAME === 'marco' ? frameW(vw) + 4 : FRAME === 'rasgado' ? frameW(vw) + 12 : FRAME === 'pliego' ? frameW(vw) + 4 : 0);
+
+// Foto de "me": ?foto=estampilla (por defecto, o la de content/tree.js) |
+// camafeo | hoja | pegada | lisa (la tecla p las recorre). Cada estilo
+// recorta la foto a su forma y le pone su marco en la misma tinta; la trama
+// de la foto sigue anclada al papel. Las fotos de las notas no cambian.
+//   estampilla  sello de borde dentado, apenas girado, "natochi" calado abajo
+//   camafeo     óvalo de medallón con doble filete a mano y su argolla
+//   hoja        la foto dentro de una hoja inclinada, con su tallo
+//   pegada      recorte de borde rasgado, girado, con una cinta encima
+//   lisa        el cuadrado tal cual
+const FOTOS = ['estampilla', 'camafeo', 'hoja', 'pegada', 'lisa'];
+const FOTO = (() => {
+  const f = new URLSearchParams(location.search).get('foto');
+  return FOTOS.includes(f) ? f : null;
+})();
 
 const INK = '#ff0000';
 const LITE_TEXT = '#0000ff'; // texto en la capa escasa: canal azul
@@ -1000,6 +1015,13 @@ export function createSilhouette() {
   let ink, c, printer, D;
   let dpr = 1;
   let redraw = () => {};
+  // fotos pegadas: cuánto está agrandada cada una (src → 0..1) y el reloj
+  const zoomT = new Map();
+  // la nota de la foto agrandada: cuánto se dibujó (src → 0..1)
+  const capT = new Map();
+  // ¿quedó algo animándose (zoom, nota, lista)? para __tree.idle()
+  let animBusy = false;
+  let zoomClock = 0;
 
   // ---------------------------------------------------------------- música
   // Reproductor: una pastilla impresa en la misma tinta, abajo a la derecha.
@@ -1055,60 +1077,163 @@ export function createSilhouette() {
   window.__music = {
     get state() {
       const a = music.audio;
-      return { started: music.started, playing: !!a && !a.paused, i: music.i, t: a ? a.currentTime : 0, title: tracks[music.i] && tracks[music.i].title };
+      return { started: music.started, playing: !!a && !a.paused, i: music.i, t: a ? a.currentTime : 0, title: tracks[music.i] && tracks[music.i].title, list: listOpen };
     },
   };
 
   // medidas de la pastilla: a la altura de "back", alineada a la derecha
   let pill = null;
+  let pillM = 0; // el margen del marco con que se midió (para rehacerla al animar)
+  // la lista: abierta o no, y cuánto (0..1, se anima)
+  let listOpen = false;
+  let listT = 0;
   const pillFont = (vw) => `500 ${vw < 700 ? 14 : 15}px "Libre Franklin", "Helvetica Neue", Arial, sans-serif`;
   function pillGeom(vw, vh, m) {
     const fs = vw < 700 ? 14 : 15;
     const H = Math.round(fs * 1.95);
     const padL = Math.round(H * 0.5), gw = Math.round(H * 0.5), gap = Math.round(H * 0.34), nw = Math.round(H * 0.72), padR = Math.round(H * 0.32);
+    // ↗: la canción completa, afuera (la pastilla toca 30 s)
+    const fw = Math.round(H * 0.7);
+    // ▴ después del nombre: abre la lista de canciones
+    const cw = Math.round(H * 0.5);
     const maxW = vw < 700 ? vw - 2 * (16 + m) - 70 : Math.min(380, vw * 0.34);
     const t = tracks[music.i];
     let label = t ? t.title + (t.artist ? ' · ' + t.artist : '') : '';
     const mc = c || document.createElement('canvas').getContext('2d');
     mc.font = pillFont(vw);
-    const room = maxW - (padL + gw + gap + gap + nw + padR);
+    const room = maxW - (padL + gw + gap + cw + gap + fw + nw + padR);
     if (mc.measureText(label).width > room) {
       while (label.length > 1 && mc.measureText(label + '…').width > room) label = label.slice(0, -1);
       label = label.trimEnd() + '…';
     }
     const tw = mc.measureText(label).width;
-    const W = Math.round(padL + gw + gap + tw + gap + nw + padR);
+    const W0 = Math.round(padL + gw + gap + tw + cw + gap + fw + nw + padR);
+    // Abierta, la pastilla crece hacia arriba con todas las canciones adentro
+    // (en la columna del nombre) y un separador sobre la fila de los
+    // controles. En la pantalla ancha se ensancha lo justo para los nombres;
+    // en el teléfono no, porque pisaría "back", y los nombres se cortan.
+    const lead = padL + gw + gap;
+    const maxOpen = vw < 700 ? maxW : Math.min(470, vw * 0.42);
+    const fitRow = (sTxt, room) => {
+      if (mc.measureText(sTxt).width <= room) return sTxt;
+      while (sTxt.length > 1 && mc.measureText(sTxt + '…').width > room) sTxt = sTxt.slice(0, -1);
+      return sTxt.trimEnd() + '…';
+    };
+    const full = tracks.map((tr) => tr.title + (tr.artist ? ' · ' + tr.artist : ''));
+    const widest = Math.max(0, ...full.map((sTxt) => mc.measureText(sTxt).width));
+    // ancho abierto fijo (no depende de la que suena): el de los nombres, como
+    // mínimo el más ancho que puede tener cerrada
+    const W1 = Math.max(W0, Math.round(Math.min(Math.max(lead + widest + padR + 10, maxW), Math.max(maxW, maxOpen))));
+    const rowsTxt = full.map((sTxt) => fitRow(sTxt, W1 - lead - padR - 6));
+    const e = easeInOut(listT);
+    const W = Math.round(lerp(W0, W1, e));
+    const lh = Math.round(fs * 1.72), n = tracks.length;
+    const extra = n * lh + 18; // filas + aire arriba + separador
     const right = vw - Math.max(16, vw * 0.03) - m;
     const cy = vh - Math.max(22, vh * 0.035) - m;
     const x = right - W, y = Math.round(cy - H / 2);
+    const top = Math.round(y - extra * e);
     return {
-      x, y, w: W, h: H, cy, label, padL, gw, gap, nw, padR,
-      body: { x, y, w: W - nw - padR, h: H },
+      x, y, w: W, h: H, cy, label, padL, gw, gap, nw, padR, fw, cw, tw, e, lh,
+      panel: { x, y: top, w: W, h: y + H - top },
+      sepY: y - 4,
+      rows: rowsTxt.map((sTxt, i) => {
+        const rcy = Math.round(y - 10 - (n - i - 0.5) * lh);
+        return { i, s: sTxt, cy: rcy, box: { x, y: rcy - lh / 2, w: W, h: lh } };
+      }),
+      play: { x, y, w: padL + gw + Math.round(gap / 2), h: H },
+      title: { x: x + padL + gw + Math.round(gap / 2), y, w: W - nw - padR - fw - (padL + gw + Math.round(gap / 2)), h: H },
+      full: { x: x + W - nw - padR - fw, y, w: fw, h: H },
       next: { x: x + W - nw - padR, y, w: nw + padR, h: H },
     };
   }
-  function capsule(cx, x, y, w, h) {
-    const r = h / 2;
+  // Nota a mano sobre la pastilla, en la portada y hasta que suena algo: dos líneas alineadas
+  // con el nombre de la canción y una flecha curva que baja al play. Es parte
+  // de los controles (click: suena), así que el texto de las notas no se le
+  // mete abajo.
+  const NOTE = ["maybe you'll know me better", 'if you listen to what i like!'];
+  let noteMc = null;
+  function noteGeom(P, vw) {
+    const fs = vw < 700 ? 13 : 14, lh = Math.round(fs * 1.32);
+    noteMc ||= document.createElement('canvas').getContext('2d');
+    noteMc.font = fontOf(fs, 500);
+    const w = Math.max(...NOTE.map((s) => noteMc.measureText(s).width));
+    const x = P.x + P.padL + P.gw + P.gap;
+    const yb = P.y - 15; // línea de base de la última línea
+    const top = yb - lh * (NOTE.length - 1) - fs;
+    return { x: x - 22, y: top - 4, w: w + 30, h: P.y - top + 2, tx: x, yb, fs, lh, top, gx: P.x + P.padL + P.gw / 2 };
+  }
+  function drawNote(cx, P, vw) {
+    const N = noteGeom(P, vw);
+    // la flecha: sale de la primera línea, se curva y baja al play
+    const pts = [];
+    const ax = N.tx - 7, ay = N.top + N.fs * 0.45, bx = N.gx + 0.5, by = P.y - 6;
+    for (let i = 0; i <= 16; i++) {
+      const u = i / 16;
+      const px = (1 - u) * (1 - u) * ax + 2 * u * (1 - u) * (N.gx - 6) + u * u * bx;
+      const py = (1 - u) * (1 - u) * ay + 2 * u * (1 - u) * (ay + 2) + u * u * by;
+      pts.push([px + noise1(u * 3, 71) * 0.6, py]);
+    }
+    const head = [[bx - 3.6, by - 5.2], [bx, by], [bx + 3.8, by - 4.6]];
+    const path = (k) => {
+      k.beginPath();
+      pts.forEach(([px, py], i) => (i ? k.lineTo(px, py) : k.moveTo(px, py)));
+      k.moveTo(...head[0]);
+      k.lineTo(...head[1]);
+      k.lineTo(...head[2]);
+    };
+    cx.save();
+    cx.font = fontOf(N.fs, 500);
+    cx.textAlign = 'left';
+    cx.textBaseline = 'alphabetic';
+    cx.lineJoin = 'round';
+    cx.lineCap = 'round';
+    // aire alrededor, como las etiquetas sobre el follaje
+    cx.globalCompositeOperation = 'destination-out';
+    cx.lineWidth = N.fs * 0.7;
+    NOTE.forEach((s, i) => cx.strokeText(s, N.tx, N.top + N.fs + i * N.lh));
+    cx.lineWidth = 7;
+    path(cx);
+    cx.stroke();
+    cx.globalCompositeOperation = 'source-over';
+    cx.fillStyle = INK;
+    cx.strokeStyle = INK;
+    NOTE.forEach((s, i) => cx.fillText(s, N.tx, N.top + N.fs + i * N.lh));
+    cx.lineWidth = 1.5;
+    path(cx);
+    cx.stroke();
+    cx.restore();
+  }
+  const capsule = (cx, x, y, w, h) => pillShape(cx, x, y, w, h, h / 2);
+  // cápsula (r = la mitad del alto de la pastilla); más alta, un rectángulo
+  // con esas mismas puntas redondas
+  function pillShape(cx, x, y, w, h, r) {
+    r = Math.min(r, h / 2, w / 2);
     cx.beginPath();
     cx.moveTo(x + r, y);
     cx.lineTo(x + w - r, y);
-    cx.arc(x + w - r, y + r, r, -Math.PI / 2, Math.PI / 2);
+    cx.arc(x + w - r, y + r, r, -Math.PI / 2, 0);
+    cx.lineTo(x + w, y + h - r);
+    cx.arc(x + w - r, y + h - r, r, 0, Math.PI / 2);
     cx.lineTo(x + r, y + h);
-    cx.arc(x + r, y + r, r, Math.PI / 2, (Math.PI * 3) / 2);
+    cx.arc(x + r, y + h - r, r, Math.PI / 2, Math.PI);
+    cx.lineTo(x, y + r);
+    cx.arc(x + r, y + r, r, Math.PI, (Math.PI * 3) / 2);
     cx.closePath();
   }
   // la pastilla: plata llena, con lo de adentro calado (se ve el papel)
-  function drawPill(cx, P, vw) {
+  function drawPill(cx, P, vw, hoverHud) {
     const a = music.audio;
     const playing = !!a && !a.paused;
+    const B = P.panel, r = P.h / 2;
     cx.save();
     // aire alrededor, para que no se pegue al pasto ni al follaje
     cx.globalCompositeOperation = 'destination-out';
-    capsule(cx, P.x - 6, P.y - 6, P.w + 12, P.h + 12);
+    pillShape(cx, B.x - 6, B.y - 6, B.w + 12, B.h + 12, r + 6);
     cx.fill();
     cx.globalCompositeOperation = 'source-over';
     cx.fillStyle = INK;
-    capsule(cx, P.x, P.y, P.w, P.h);
+    pillShape(cx, B.x, B.y, B.w, B.h, r);
     cx.fill();
     cx.globalCompositeOperation = 'destination-out';
     cx.fillStyle = '#000';
@@ -1129,6 +1254,26 @@ export function createSilhouette() {
     cx.textAlign = 'left';
     cx.textBaseline = 'middle';
     cx.fillText(P.label, P.x + P.padL + P.gw + P.gap, P.cy + 0.5);
+    // ▴ (lista cerrada) o ▾ (abierta), después del nombre
+    const kx = P.x + P.padL + P.gw + P.gap + P.tw + P.cw / 2, ks = P.h * 0.11;
+    cx.beginPath();
+    cx.moveTo(kx - ks * 1.1, P.cy + (listOpen ? -ks * 0.55 : ks * 0.55));
+    cx.lineTo(kx + ks * 1.1, P.cy + (listOpen ? -ks * 0.55 : ks * 0.55));
+    cx.lineTo(kx, P.cy + (listOpen ? ks * 0.75 : -ks * 0.75));
+    cx.closePath();
+    cx.fill();
+    // ↗ completa: una diagonal con su punta
+    const fx = P.full.x + P.full.w / 2, fsz = P.h * 0.15;
+    cx.lineWidth = 1.7;
+    cx.lineCap = 'round';
+    cx.lineJoin = 'round';
+    cx.beginPath();
+    cx.moveTo(fx - fsz, P.cy + fsz);
+    cx.lineTo(fx + fsz, P.cy - fsz);
+    cx.moveTo(fx - fsz * 0.25, P.cy - fsz);
+    cx.lineTo(fx + fsz, P.cy - fsz);
+    cx.lineTo(fx + fsz, P.cy + fsz * 0.25);
+    cx.stroke();
     // próxima: un triángulo con su barra
     const nx = P.next.x + P.next.w / 2 - P.padR / 2, ns = P.h * 0.17;
     cx.beginPath();
@@ -1138,6 +1283,35 @@ export function createSilhouette() {
     cx.closePath();
     cx.fill();
     cx.fillRect(nx + ns * 0.7, P.cy - ns, ns * 0.42, ns * 2);
+    // la lista, calada en la parte que creció: aparece de abajo arriba a
+    // medida que la pastilla se abre. La que suena lleva un ▸ a la altura del
+    // play; la que está bajo el mouse, una línea a mano
+    if (P.e > 0) {
+      cx.save();
+      pillShape(cx, B.x, B.y, B.w, B.h, r);
+      cx.clip();
+      cx.lineCap = 'round';
+      cx.lineWidth = 1.2;
+      cx.beginPath();
+      cx.moveTo(P.x + P.padL * 0.8, P.sepY);
+      cx.lineTo(P.x + P.w - P.padR - 2, P.sepY);
+      cx.stroke();
+      const tx = P.x + P.padL + P.gw + P.gap, ts = P.h * 0.15;
+      for (const row of P.rows) {
+        if (row.cy + P.lh / 2 < B.y) continue;
+        cx.fillText(row.s, tx, row.cy + 0.5);
+        if (row.i === music.i && music.started) {
+          cx.beginPath();
+          cx.moveTo(gx - ts * 0.7, row.cy - ts);
+          cx.lineTo(gx + ts, row.cy);
+          cx.lineTo(gx - ts * 0.7, row.cy + ts);
+          cx.closePath();
+          cx.fill();
+        }
+        if (hoverHud === 'music-track-' + row.i) underline(cx, tx, row.cy + P.h * 0.3, cx.measureText(row.s).width, 30 + row.i, 1.4);
+      }
+      cx.restore();
+    }
     // avance: una línea fina calada abajo, mientras suena
     if (music.started && a && a.duration > 0) {
       const x0 = P.x + P.h * 0.45, x1 = P.x + P.w - P.h * 0.45;
@@ -1402,6 +1576,12 @@ export function createSilhouette() {
     cx.restore();
   }
   addEventListener('keydown', (e) => {
+    if (e.key !== 'p' || e.metaKey || e.ctrlKey || e.altKey) return;
+    const u = new URL(location.href);
+    u.searchParams.set('foto', FOTOS[(FOTOS.indexOf(FOTO || 'estampilla') + 1) % FOTOS.length]);
+    location.href = u.toString();
+  });
+  addEventListener('keydown', (e) => {
     if (e.key !== 'f' || e.metaKey || e.ctrlKey || e.altKey) return;
     const u = new URL(location.href);
     u.searchParams.set('frame', FRAMES[(FRAMES.indexOf(FRAME) + 1) % FRAMES.length]);
@@ -1532,6 +1712,350 @@ export function createSilhouette() {
     return null;
   }
 
+  // ---- foto de "me" con estilo ----
+  // La caja (w × h) es la de afuera, con el origen en su centro. Cada estilo
+  // da la forma de la foto (`clip`), el rectángulo que la foto cubre (`win`) y
+  // su marco (`frame`), que se pinta una vez en su propio lienzo y se calca.
+  // `m`: cuánto puede salirse el marco de la caja (giro, argolla, tallo).
+  const TAU = Math.PI * 2;
+  function wobble(x, pts, close = true) {
+    x.beginPath();
+    pts.forEach(([px, py], i) => (i ? x.lineTo(px, py) : x.moveTo(px, py)));
+    if (close) x.closePath();
+  }
+  // contorno a mano de un óvalo
+  const handOval = (rx, ry, cy, seed, amp = 0.7) =>
+    Array.from({ length: 72 }, (_, i) => {
+      const a = (i / 72) * TAU;
+      const j = noise1((i / 72) * 6 + seed, 33) * amp;
+      return [(rx + j) * Math.cos(a), cy + (ry + j) * Math.sin(a)];
+    });
+  // hoja: eje inclinado, más ancha hacia la base, punta fina
+  function leafPts(w) {
+    const L = w * 1.2, Wm = w * 0.35, th = 0.6;
+    const d = [Math.sin(th), -Math.cos(th)], n = [Math.cos(th), Math.sin(th)];
+    const side = (sg) =>
+      Array.from({ length: 33 }, (_, i) => {
+        const t = sg > 0 ? i / 32 : 1 - i / 32;
+        const hw = Wm * Math.pow(Math.sin(Math.PI * t), 0.75) * (1.12 - 0.3 * t) + noise1(t * 7 + sg, 41) * 0.5;
+        const p = -L / 2 + L * t;
+        return [d[0] * p + n[0] * hw * sg, d[1] * p + n[1] * hw * sg];
+      });
+    return { pts: [...side(1), ...side(-1)], base: [-d[0] * L / 2, -d[1] * L / 2], d, n };
+  }
+  // borde rasgado: el contorno de un rectángulo con dientes chicos y algún
+  // desgarro más grande
+  function tornPts(w, h, inset, seed = 0) {
+    const pts = [];
+    const x0 = -w / 2 + inset, y0 = -h / 2 + inset, x1 = w / 2 - inset, y1 = h / 2 - inset;
+    const edges = [[x0, y0, x1, y0, 0, -1], [x1, y0, x1, y1, 1, 0], [x1, y1, x0, y1, 0, 1], [x0, y1, x0, y0, -1, 0]];
+    edges.forEach(([ax, ay, bx, by, nx, ny], e) => {
+      const len = Math.hypot(bx - ax, by - ay), k = Math.round(len / 2.5);
+      for (let i = 0; i < k; i++) {
+        const u = i / k;
+        const q = e * 3.1 + seed * 17.3;
+        const j = noise1(u * 9 + q, 51) * 1.3 + Math.max(0, noise1(u * 2.3 + q, 52)) * 2.6 + ((i * 7 + e + seed) % 3) * 0.35;
+        pts.push([ax + (bx - ax) * u - nx * j, ay + (by - ay) * u - ny * j]);
+      }
+    });
+    return pts;
+  }
+  const PHOTO_STYLES = {
+    lisa: { m: 0, clip: (x, w, h) => x.rect(-w / 2, -h / 2, w, h), win: (w, h) => [-w / 2, -h / 2, w, h] },
+    estampilla: {
+      rot: -0.06,
+      m: 8,
+      win: (w, h) => [-w / 2 + 9, -h / 2 + 9, w - 18, h - 32],
+      clip(x, w, h) {
+        x.rect(...this.win(w, h));
+      },
+      frame(x, w, h) {
+        x.fillRect(-w / 2, -h / 2, w, h);
+        x.globalCompositeOperation = 'destination-out';
+        const [a, b, ww, hh] = this.win(w, h);
+        x.fillRect(a - 1.5, b - 1.5, ww + 3, hh + 3);
+        // dientes: medios agujeros sobre el borde, también en las esquinas
+        const r = 3, step = 8.5;
+        x.beginPath();
+        for (const [ax, ay, bx, by] of [[-w / 2, -h / 2, w / 2, -h / 2], [w / 2, -h / 2, w / 2, h / 2], [w / 2, h / 2, -w / 2, h / 2], [-w / 2, h / 2, -w / 2, -h / 2]]) {
+          const k = Math.max(1, Math.round(Math.hypot(bx - ax, by - ay) / step));
+          for (let i = 0; i < k; i++) {
+            const px = ax + ((bx - ax) * i) / k, py = ay + ((by - ay) * i) / k;
+            x.moveTo(px + r, py);
+            x.arc(px, py, r, 0, TAU);
+          }
+        }
+        x.fill();
+        x.font = fontOf(10, 700);
+        x.textBaseline = 'middle';
+        x.textAlign = 'left';
+        x.fillText('natochi', -w / 2 + 10, h / 2 - 12);
+        x.textAlign = 'right';
+        x.fillText('26', w / 2 - 10, h / 2 - 12);
+        x.globalCompositeOperation = 'source-over';
+      },
+    },
+    camafeo: {
+      m: 6,
+      zoom: 1.1,
+      oval: (w, h) => [w * 0.34, h * 0.4, 6],
+      win(w, h) {
+        const [rx, ry, cy] = this.oval(w, h);
+        return [-rx, cy - ry, rx * 2, ry * 2];
+      },
+      clip(x, w, h) {
+        const [rx, ry, cy] = this.oval(w, h);
+        x.ellipse(0, cy, rx, ry, 0, 0, TAU);
+      },
+      frame(x, w, h) {
+        const [rx, ry, cy] = this.oval(w, h);
+        x.lineJoin = 'round';
+        wobble(x, handOval(rx + 4.5, ry + 4.5, cy, 1.3));
+        x.lineWidth = 2.6;
+        x.stroke();
+        wobble(x, handOval(rx + 9.5, ry + 9.5, cy, 4.1, 0.9));
+        x.lineWidth = 1;
+        x.stroke();
+        // argolla arriba
+        const top = cy - ry - 9.5;
+        x.beginPath();
+        x.ellipse(0, top - 5.5, 4.2, 5.2, 0, 0, TAU);
+        x.lineWidth = 1.8;
+        x.stroke();
+      },
+    },
+    hoja: {
+      m: 22,
+      win: (w, h) => [-w / 2, -h / 2, w, h],
+      clip(x, w) {
+        const { pts } = leafPts(w);
+        pts.forEach(([px, py], i) => (i ? x.lineTo(px, py) : x.moveTo(px, py)));
+        x.closePath();
+      },
+      frame(x, w) {
+        const { pts, base, d, n } = leafPts(w);
+        x.lineJoin = 'round';
+        wobble(x, pts);
+        x.lineWidth = 1.4;
+        x.stroke();
+        // tallo: sale de la base, se curva apenas y se afina
+        const L = 20;
+        x.beginPath();
+        x.moveTo(base[0] + n[0] * 1.6, base[1] + n[1] * 1.6);
+        x.quadraticCurveTo(base[0] - d[0] * L * 0.5 + n[0] * 3, base[1] - d[1] * L * 0.5 + n[1] * 3, base[0] - d[0] * L + n[0] * 5, base[1] - d[1] * L + n[1] * 5);
+        x.quadraticCurveTo(base[0] - d[0] * L * 0.5 + n[0] * 1, base[1] - d[1] * L * 0.5 + n[1] * 1, base[0] - n[0] * 1.6, base[1] - n[1] * 1.6);
+        x.fill();
+      },
+    },
+    pegada: {
+      rot: 0.05,
+      m: 14,
+      win: (w, h) => [-w / 2, -h / 2, w, h],
+      clip(x, w, h, seed) {
+        tornPts(w, h, 3, seed).forEach(([px, py], i) => (i ? x.lineTo(px, py) : x.moveTo(px, py)));
+        x.closePath();
+      },
+      // cinta: media tinta sobre la foto, cortes en zigzag y un filete calado
+      // que la separa de lo de abajo. Cada foto la lleva distinto (seed):
+      // una arriba al medio, dos en las esquinas de arriba, o en diagonal.
+      // Se dibuja directo (no se calca), a la escala de la foto (`s`).
+      tapes(x, w, h, seed, s) {
+        const tw = clamp(w * 0.34, 34, 62), th = 13;
+        const v = seed % 3;
+        const spots =
+          v === 1
+            ? [[-w * 0.05, -h / 2 + 2, -0.12]]
+            : v === 2
+              ? [[-w / 2 + 9, -h / 2 + 9, -0.75], [w / 2 - 9, -h / 2 + 9, 0.72]]
+              : [[-w / 2 + 9, -h / 2 + 9, -0.78], [w / 2 - 9, h / 2 - 9, -0.74]];
+        spots.forEach(([tx, ty, tr], k) => {
+          x.save();
+          x.translate(tx, ty);
+          x.rotate(tr);
+          const pts = [];
+          for (let i = 0; i <= 5; i++) pts.push([-tw / 2 + (i % 2) * 1.8, -th / 2 + (th * i) / 5]);
+          for (let i = 5; i >= 0; i--) pts.push([tw / 2 - ((i + 1) % 2) * 1.8 + noise1(i + seed * 3 + k, 61), -th / 2 + (th * i) / 5]);
+          wobble(x, pts);
+          x.globalCompositeOperation = 'destination-out';
+          x.lineWidth = 2.6 / s;
+          x.stroke();
+          x.globalCompositeOperation = 'source-over';
+          x.globalAlpha = 0.42;
+          x.fill();
+          x.restore();
+        });
+      },
+    },
+  };
+  const photoFrames = new Map(); // marco ya pintado, por estilo, tamaño y dpr
+  function photoFrame(name, st, w, h) {
+    const key = name + '|' + w + '|' + h + '|' + dpr;
+    let f = photoFrames.get(key);
+    if (f) return f;
+    f = document.createElement('canvas');
+    f.width = Math.ceil((w + 2 * st.m) * dpr);
+    f.height = Math.ceil((h + 2 * st.m) * dpr);
+    const x = f.getContext('2d');
+    x.setTransform(dpr, 0, 0, dpr, (w / 2 + st.m) * dpr, (h / 2 + st.m) * dpr);
+    x.fillStyle = INK;
+    x.strokeStyle = INK;
+    st.frame(x, w, h);
+    photoFrames.set(key, f);
+    return f;
+  }
+  // la foto cubre su rectángulo (recortada al centro, `zoom` la acerca)
+  function photoIn(cx, cv, [x, y, w, h], zoom = 1) {
+    let sw = cv.width, sh = cv.height;
+    if (sw / sh > w / h) sw = sh * (w / h);
+    else sh = sw / (w / h);
+    sw /= zoom;
+    sh /= zoom;
+    cx.drawImage(cv, (cv.width - sw) / 2, (cv.height - sh) / 2, sw, sh, x, y, w, h);
+  }
+  // Nota de una foto agrandada: unas palabras a mano arriba de la foto (o
+  // abajo, si no hay lugar), con una flecha curva que se dibuja hacia ella y
+  // el texto que se escribe detrás (t: 0..1). `\n` corta la línea.
+  function drawCaption(cx, G, note, t, vw, vh, seed, avoid = []) {
+    const fs = 14, lh = Math.round(fs * 1.38), maxW = Math.max(220, Math.min(320, G.w - 40));
+    cx.save();
+    cx.font = fontOf(fs, 500);
+    cx.textAlign = 'left';
+    cx.textBaseline = 'alphabetic';
+    cx.lineJoin = 'round';
+    cx.lineCap = 'round';
+    const lines = [];
+    for (const para of note.split('\n')) {
+      let cur = '';
+      for (const w of para.split(/\s+/)) {
+        const tryS = cur ? cur + ' ' + w : w;
+        if (cur && cx.measureText(tryS).width > maxW) {
+          lines.push(cur);
+          cur = w;
+        } else cur = tryS;
+      }
+      if (cur) lines.push(cur);
+    }
+    const bw = Math.max(...lines.map((l) => cx.measureText(l).width));
+    const bh = (lines.length - 1) * lh + fs;
+    // dónde: arriba de la foto (ahí suele haber papel libre, el cielo) o
+    // abajo, corriéndose a la derecha de las líneas del texto que pisaría
+    // (`avoid`); si no entra, al costado. La flecha sale del texto y se curva
+    // hasta el borde de la foto
+    const hit = (x, y) => avoid.filter((r) => r.y < y + bh + 6 && r.y + r.h > y - 6 && r.x < x + bw + 8 && r.x + r.w > x - 8);
+    let side = null, tx = 0, ty = 0;
+    for (const up of [true, false]) {
+      ty = up ? G.y - 38 - bh : G.y + G.h + 38;
+      if (ty < 18 || ty + bh > vh - 70) continue;
+      tx = clamp(G.x + 40, 26, vw - bw - 26);
+      const hs = hit(tx, ty);
+      if (hs.length) tx = Math.max(tx, ...hs.map((r) => r.x + r.w + 26));
+      if (tx + bw > vw - 26 || hit(tx, ty).length) continue;
+      side = up ? 'above' : 'below';
+      break;
+    }
+    if (!side) {
+      side = vw - (G.x + G.w) >= bw + 76 ? 'right' : 'left';
+      tx = side === 'right' ? G.x + G.w + 54 : G.x - 54 - bw;
+      ty = clamp(G.y + G.h * 0.2, 24, vh - bh - 90);
+    }
+    const midOf = (i) => ty + fs * 0.62 + i * lh;
+    let ax, ay, bx, by, qx, qy;
+    if (side === 'above' || side === 'below') {
+      ay = side === 'above' ? midOf(lines.length - 1) : midOf(0);
+      ax = tx - 9;
+      bx = clamp(tx - 20, G.x + 14, G.x + G.w - 14);
+      by = side === 'above' ? G.y - 7 : G.y + G.h + 7;
+      qx = Math.min(ax, bx) - 14;
+      qy = ay + (side === 'above' ? 2 : -2);
+    } else {
+      ay = midOf(0);
+      ax = side === 'right' ? tx - 9 : tx + bw + 9;
+      bx = side === 'right' ? G.x + G.w + 9 : G.x - 9;
+      by = ay + 34;
+      qx = (ax + bx) / 2 + (side === 'right' ? 4 : -4);
+      qy = ay - 14;
+    }
+    const ua = clamp(t / 0.45, 0, 1), N = 20;
+    const pts = [];
+    for (let i = 0; i <= Math.round(N * ua); i++) {
+      const u = i / N;
+      const px = (1 - u) * (1 - u) * ax + 2 * u * (1 - u) * qx + u * u * bx;
+      const py = (1 - u) * (1 - u) * ay + 2 * u * (1 - u) * qy + u * u * by;
+      pts.push([px + noise1(u * 4 + seed, 81) * 0.7, py + noise1(u * 4 + seed, 82) * 0.7]);
+    }
+    let head = null;
+    if (ua >= 1 && pts.length > 2) {
+      const [x1, y1] = pts[pts.length - 1], [x0, y0] = pts[pts.length - 3];
+      const ang = Math.atan2(y1 - y0, x1 - x0), L = 7.5;
+      head = [[x1 - L * Math.cos(ang - 0.5), y1 - L * Math.sin(ang - 0.5)], [x1, y1], [x1 - L * Math.cos(ang + 0.5), y1 - L * Math.sin(ang + 0.5)]];
+    }
+    const arrow = () => {
+      cx.beginPath();
+      pts.forEach(([px, py], i) => (i ? cx.lineTo(px, py) : cx.moveTo(px, py)));
+      if (head) {
+        cx.moveTo(...head[0]);
+        cx.lineTo(...head[1]);
+        cx.lineTo(...head[2]);
+      }
+    };
+    // el texto se escribe cuando la flecha va por la mitad
+    let left = Math.round(lines.join('').length * clamp((t - 0.25) / 0.75, 0, 1));
+    const shown = lines.map((l) => {
+      const k = Math.min(l.length, Math.max(0, left));
+      left -= l.length;
+      return l.slice(0, k);
+    });
+    // aire alrededor y después la tinta
+    cx.globalCompositeOperation = 'destination-out';
+    cx.lineWidth = fs * 0.72;
+    shown.forEach((l, i) => l && cx.strokeText(l, tx, ty + fs + i * lh));
+    cx.lineWidth = 7;
+    arrow();
+    cx.stroke();
+    cx.globalCompositeOperation = 'source-over';
+    cx.fillStyle = INK;
+    cx.strokeStyle = INK;
+    shown.forEach((l, i) => l && cx.fillText(l, tx, ty + fs + i * lh));
+    cx.lineWidth = 1.6;
+    arrow();
+    cx.stroke();
+    cx.restore();
+  }
+
+  // Se imprime de arriba abajo (f: 0..1), con centro, giro y escala (T: {cx,
+  // cy, rot, s}). Antes borra la tinta bajo su forma, con un filete: así tapa
+  // de verdad lo que tiene debajo (otra foto, su cinta, el pasto), porque las
+  // fotos se suman en el azul y si no se verían una a través de la otra.
+  function styledPhoto(cx, cv, im, f, name, T) {
+    const st = PHOTO_STYLES[name] || PHOTO_STYLES.lisa;
+    const { w, h } = im, m = st.m, seed = im.seed || 0;
+    cx.save();
+    cx.translate(T.cx, T.cy);
+    if (T.rot) cx.rotate(T.rot);
+    if (T.s !== 1) cx.scale(T.s, T.s);
+    cx.beginPath();
+    cx.rect(-w / 2 - m, -h / 2 - m, w + 2 * m, (h + 2 * m) * f);
+    cx.clip();
+    cx.save();
+    cx.globalCompositeOperation = 'destination-out';
+    cx.beginPath();
+    st.clip(cx, w, h, seed);
+    cx.fill();
+    cx.lineWidth = 4 / T.s;
+    cx.stroke();
+    cx.restore();
+    cx.save();
+    cx.beginPath();
+    st.clip(cx, w, h, seed);
+    cx.clip();
+    cx.globalCompositeOperation = 'lighter';
+    photoIn(cx, cv, st.win(w, h), st.zoom);
+    cx.restore();
+    if (st.tapes) st.tapes(cx, w, h, seed, T.s);
+    else if (st.frame) cx.drawImage(photoFrame(name, st, w, h), -w / 2 - m, -h / 2 - m, w + 2 * m, h + 2 * m);
+    cx.restore();
+  }
+
   // trazo a mano debajo de una etiqueta o un link (hover)
   function underline(cx, x, y, w, seed, lw = 1.5) {
     cx.beginPath();
@@ -1552,7 +2076,7 @@ export function createSilhouette() {
   // Lo fijo en pantalla ("back") no se tapa: una línea que lo tocaría se
   // esconde entera (nunca a medias). Las fotos se imprimen enteras; si pasan
   // por debajo de "back", la palabra se cala en ellas como en el follaje.
-  function drawDoc(cx, it, fontSize, hoverLink, fixed = []) {
+  function drawDoc(cx, it, fontSize, hoverLink, fixed = [], Z = {}) {
     const d = it.doc;
     const lh = it.lh;
     const hidden = (y) => fixed.some((r) => y + lh > r.y - 4 && y < r.y + r.h + 4 && it.x < r.x + r.w + 8 && it.x + d.w > r.x - 8);
@@ -1595,13 +2119,41 @@ export function createSilhouette() {
         i = j + 1;
       }
     }
-    // fotos: se imprimen de arriba abajo a medida que el texto llega
-    for (const im of d.imgs) {
-      const f = clamp((it.chars - im.c0) / (im.c1 - im.c0), 0, 1);
+    // fotos: se imprimen de arriba abajo a medida que el texto llega. Una
+    // pegada bajo el mouse se agranda, se endereza y va al final, encima de
+    // todo (Z.zoom: src → 0..1)
+    const zoomOf = (im) => (Z.zoom && Z.zoom.get(im.src)) || 0;
+    // se piden todas apenas se abre el texto, para que ninguna deje un hueco
+    // mientras carga cuando la hoja llega hasta ella
+    for (const im of d.imgs) photo(im.src);
+    const order = d.imgs.slice().sort((a, b) => zoomOf(a) - zoomOf(b));
+    for (const im of order) {
+      const f = clamp((it.chars - im.c0) / Math.max(1, im.c1 - im.c0), 0, 1);
       if (f <= 0) continue;
-      if (it.y + im.y + im.h < 0 || it.y + im.y > vhC) continue;
+      const z = zoomOf(im);
+      if (!z && (it.y + im.y + im.h < -20 || it.y + im.y > vhC + 20)) continue;
       const cv = photo(im.src);
       if (!cv) continue;
+      if (im.style) {
+        const name = FOTO || im.style;
+        const st = PHOTO_STYLES[name] || PHOTO_STYLES.lisa;
+        const B = { x: it.x + im.x, y: it.y + im.y, w: im.w, h: im.h };
+        const r0 = im.rot ?? st.rot ?? 0;
+        const T = { cx: B.x + B.w / 2, cy: B.y + B.h / 2, rot: r0, s: 1 };
+        let G = null;
+        if (z > 0) {
+          G = photoZoom(B, Z.vw, Z.vh);
+          const e = easeInOut(z);
+          T.cx = lerp(T.cx, G.x + G.w / 2, e);
+          T.cy = lerp(T.cy, G.y + G.h / 2, e);
+          T.rot = lerp(r0, 0, e);
+          T.s = lerp(1, G.s, e);
+        }
+        styledPhoto(cx, cv, im, f, name, T);
+        const ct = G && im.note && Z.cap ? Z.cap.get(im.src) || 0 : 0;
+        if (ct > 0) drawCaption(cx, G, im.note, ct, Z.vw, Z.vh, im.seed, d.lines.map((ln) => ({ x: it.x, y: it.y + ln.y, w: ln.end, h: lh })));
+        continue;
+      }
       const h = im.h * f;
       cx.save();
       cx.globalCompositeOperation = 'lighter';
@@ -1646,7 +2198,12 @@ export function createSilhouette() {
       cx.font = fontOf(fontSize, ln.kind === 'h' ? 700 : 500);
       for (const sg of ln.segs) cx.strokeText(sg.s, it.x + sg.x, y);
     }
-    for (const im of d.imgs) cx.fillRect(it.x + im.x - 6, it.y + im.y - 6, im.w + 12, im.h + 12);
+    // (una foto con estilo se gira o saca su marco afuera de la caja)
+    for (const im of d.imgs) {
+      if (im.pile) continue; // las pegadas borran sólo su forma (styledPhoto)
+      const p = im.style ? 6 + (PHOTO_STYLES[FOTO || im.style] || PHOTO_STYLES.lisa).m : 6;
+      cx.fillRect(it.x + im.x - p, it.y + im.y - p, im.w + p * 2, im.h + p * 2);
+    }
   }
 
   function label(cx, it, textW, fontSize) {
@@ -1690,21 +2247,54 @@ export function createSilhouette() {
     animating() {
       return parBusy();
     },
+    busy: () => animBusy,
+    // un click afuera o esc cierran la lista primero (y no hacen nada más)
+    dismiss() {
+      if (!listOpen) return false;
+      listOpen = false;
+      redraw();
+      return true;
+    },
     backBox(vw, vh, m) {
       const G = backGeom(vw, vh, m);
       return { x: G.x, y: G.y, w: G.w, h: G.h };
     },
-    hud(vw, vh, state, m) {
+    hud(vw, vh, state, m, atRoot) {
       if (!tracks.length) return [];
       pill = pillGeom(vw, vh, m);
-      return [
+      const hud = [
         { kind: 'pill', action: 'music-next', box: pill.next },
-        { kind: 'pill', action: 'music', box: pill.body },
+        { kind: 'pill', action: 'music', box: pill.play },
+        { kind: 'pill', action: 'music-list', box: pill.title },
+        { kind: 'pill', action: 'music-full', box: pill.full },
       ];
+      pillM = m;
+      // las canciones (y el resto de la pastilla abierta, que no hace nada):
+      // flotan, no mueven la cámara
+      if (listOpen) {
+        for (const r of pill.rows) hud.push({ kind: 'track', float: true, action: 'music-track-' + r.i, box: r.box });
+        hud.push({ kind: 'panel', float: true, action: 'music-panel', box: { x: pill.panel.x, y: pill.panel.y, w: pill.panel.w, h: pill.y - pill.panel.y } });
+      }
+      // la nota que apunta al reproductor: en la portada, hasta que suena algo
+      if (!music.started && atRoot && !listOpen) {
+        const N = noteGeom(pill, vw);
+        // blanda: no mueve la cámara, y si pisa una etiqueta no se muestra
+        hud.push({ kind: 'note', soft: true, action: 'music', box: { x: N.x, y: N.y, w: N.w, h: N.h } });
+      }
+      return hud;
     },
     act(a) {
       if (a === 'music') toggle();
       if (a === 'music-next') playTrack(music.i + 1);
+      if (a === 'music-list') {
+        listOpen = !listOpen;
+        redraw();
+      }
+      if (a.startsWith('music-track-')) playTrack(Number(a.slice(12)));
+      if (a === 'music-full') {
+        const t = tracks[music.i];
+        if (t) window.open(t.full || t.href, '_blank', 'noopener');
+      }
     },
     // largo de una ramita de la raíz: hasta salir del follaje, y un trecho
     // pelado más, para que la rama se lea afuera de la copa
@@ -1767,6 +2357,33 @@ export function createSilhouette() {
         printer.render(null, lastCam, dpr, null, stepPaper());
         return;
       }
+      // la foto bajo el mouse crece (~0,22 s) y las demás vuelven; mientras
+      // alguna se mueve, se piden más cuadros
+      animBusy = false;
+      const now = performance.now();
+      const dtZ = zoomClock && now - zoomClock < 200 ? (now - zoomClock) / 1000 : 1 / 60;
+      zoomClock = now;
+      if (F.hoverPhoto && !zoomT.has(F.hoverPhoto)) zoomT.set(F.hoverPhoto, 0);
+      for (const [src, t] of zoomT) {
+        const on = src === F.hoverPhoto;
+        const nt = on ? Math.min(1, t + dtZ / 0.22) : Math.max(0, t - dtZ / 0.18);
+        if (!on && nt === 0) zoomT.delete(src);
+        else zoomT.set(src, nt);
+        if (nt !== (on ? 1 : 0)) {
+          redraw();
+          animBusy = true;
+        }
+      }
+      // la nota aparece cuando la foto terminó de crecer (~0,9 s); se va con ella
+      for (const src of [...capT.keys()]) if (src !== F.hoverPhoto) capT.delete(src);
+      if (F.hoverPhoto && (zoomT.get(F.hoverPhoto) || 0) >= 1) {
+        const ct = capT.get(F.hoverPhoto) || 0;
+        if (ct < 1) {
+          capT.set(F.hoverPhoto, Math.min(1, ct + dtZ / 0.9));
+          redraw();
+          animBusy = true;
+        }
+      }
       c.setTransform(1, 0, 0, 1, 0, 0);
       c.globalCompositeOperation = 'source-over';
       c.clearRect(0, 0, ink.width, ink.height);
@@ -1816,7 +2433,7 @@ export function createSilhouette() {
       // y se imprimen. Los textos quedan fuera de "back", que se queda quieto
       // mientras la hoja se mueve
       for (const it of items) {
-        if (it.doc) drawDoc(c, it, fontSize, hoverLink, fixed);
+        if (it.doc) drawDoc(c, it, fontSize, hoverLink, fixed, { zoom: zoomT, cap: capT, vw: F.vw, vh: F.vh });
         else label(c, it, textW, fontSize);
       }
       for (const it of items) if (it.st.hover && !it.doc) underline(c, it.rect.x, it.rect.y + it.rect.h + 1, it.rect.w, it.node.id);
@@ -1833,7 +2450,19 @@ export function createSilhouette() {
         c.fillText(h.text, h.x, h.y);
       }
       c.globalCompositeOperation = 'source-over';
-      if (pill && tracks.length) drawPill(c, pill, F.vw);
+      // la lista se abre (~0,2 s) o se cierra; mientras se mueve, la pastilla
+      // se vuelve a medir y se piden más cuadros
+      const lt = listOpen ? Math.min(1, listT + dtZ / 0.2) : Math.max(0, listT - dtZ / 0.16);
+      if (lt !== listT) {
+        listT = lt;
+        if (pill) pill = pillGeom(F.vw, F.vh, pillM);
+        if (lt !== (listOpen ? 1 : 0)) {
+          redraw();
+          animBusy = true;
+        }
+      }
+      if (pill && tracks.length) drawPill(c, pill, F.vw, F.hoverHud);
+      if (pill && tracks.length && F.hud.some((h) => h.kind === 'note')) drawNote(c, pill, F.vw);
       const bh = hud.find((h) => h.kind === 'back');
       backG = bh ? { ...bh.box, cy: bh.box.y + bh.box.h / 2 } : null;
       if (backG) drawBack(c, backG);

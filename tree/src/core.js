@@ -23,6 +23,19 @@ export const lerp = (a, b, t) => a + (b - a) * t;
 export const easeOut = (u) => 1 - Math.pow(1 - u, 3);
 export const easeInOut = (u) => (u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2);
 
+// Una foto pegada al pasar el mouse: crece hasta ~380 px de lado largo (470 si
+// es muy apaisada; como mucho 3 veces), derecha y entera dentro de la pantalla. `b` es su caja en
+// pantalla; devuelve la caja agrandada y la escala.
+export function photoZoom(b, vw, vh, pad = 28) {
+  // las muy apaisadas (una foto grupal) crecen más, para que se vean las caras
+  const L = b.w / b.h > 1.5 ? 470 : 380;
+  const s = Math.max(1, Math.min(3, L / Math.max(b.w, b.h), (vw - pad * 2) / b.w, (vh - pad * 2) / b.h));
+  const w = b.w * s, h = b.h * s;
+  const cx = clamp(b.x + b.w / 2, pad + w / 2, vw - pad - w / 2);
+  const cy = clamp(b.y + b.h / 2, pad + h / 2, vh - pad - h / 2);
+  return { s, x: cx - w / 2, y: cy - h / 2, w, h };
+}
+
 // mulberry32
 export function rng(seed) {
   let a = seed >>> 0;
@@ -99,6 +112,8 @@ export class Node {
         : this.post
           ? postDoc(this.post, data)
           : null;
+    // "me" puede llevar fotos pegadas (`photos`: {style, beside, items})
+    if (doc && data.photos) doc.unshift({ t: 'pile', ...data.photos });
     this.kids = data.kids ? data.kids.map((k) => new Node(k, this)) : doc ? [new Node({ name: data.name + ' (texto)', doc }, this)] : [];
     this.open = false;
     // 1 = la ramita y la etiqueta a la vista; 0 = recogidas en la copa. Las
@@ -130,16 +145,30 @@ const ckey = (ix, iy) => (ix + 100000) * 200003 + (iy + 100000);
 class Occ {
   constructor() {
     this.cells = new Set();
+    this.list = []; // las mismas celdas, como pares ix, iy
     this.rects = [];
   }
   addPts(pts) {
-    for (const p of pts) this.cells.add(ckey(Math.floor(p.x / CELL), Math.floor(p.y / CELL)));
+    for (const p of pts) {
+      const ix = Math.floor(p.x / CELL), iy = Math.floor(p.y / CELL), k = ckey(ix, iy);
+      if (this.cells.has(k)) continue;
+      this.cells.add(k);
+      this.list.push(ix, iy);
+    }
   }
-  // celdas ocupadas por ramas dentro de un rect
+  // celdas ocupadas por ramas dentro de un rect. Un rect con más celdas que
+  // las ocupadas (el texto de una update larga, miles de px de alto) se
+  // cuenta recorriendo las ocupadas: antes, abrir una así trababa un cuadro
+  // hasta 2 s (2026-11-09). El resultado es el mismo.
   hits(r, pad = 0) {
     let n = 0;
     const x0 = Math.floor((r.x - pad) / CELL), x1 = Math.floor((r.x + r.w + pad) / CELL);
     const y0 = Math.floor((r.y - pad) / CELL), y1 = Math.floor((r.y + r.h + pad) / CELL);
+    const L = this.list;
+    if ((x1 - x0 + 1) * (y1 - y0 + 1) > L.length / 2) {
+      for (let i = 0; i < L.length; i += 2) if (L[i] >= x0 && L[i] <= x1 && L[i + 1] >= y0 && L[i + 1] <= y1) n++;
+      return n;
+    }
     for (let iy = y0; iy <= y1; iy++) for (let ix = x0; ix <= x1; ix++) if (this.cells.has(ckey(ix, iy))) n++;
     return n;
   }
@@ -216,6 +245,8 @@ export function start(renderer, canvas) {
   let active = root;
   let hover = null;
   let hoverLink = null;
+  let hoverPhoto = null; // src de la foto pegada bajo el mouse
+  let hoverHud = null; // control bajo el mouse (una canción de la lista)
   let hits = [];
   let hudHits = [];
   const cam = { x: 0, y: 0, tx: 0, ty: 0 };
@@ -231,6 +262,7 @@ export function start(renderer, canvas) {
   // qué carácter empieza, para escribirlo de a poco; las fotos cuentan como
   // 90 caracteres. Los links son tramos clickeables.
   const docs = new Map();
+  const PILE_ROT = [-0.07, 0.05, -0.035, 0.08, -0.055, 0.03];
   function docOf(n) {
     const W = n.parent && n.parent.post ? postW() : paraW();
     const key = n.id + '|' + fontSize + '|' + W;
@@ -239,8 +271,47 @@ export function start(renderer, canvas) {
     const spW = textW(' ');
     const lines = [], imgs = [];
     let y = 0, chars = 0;
-    n.para.forEach((b, bi) => {
-      if (bi > 0) y += Math.round(lh * (b.t === 'li' && n.para[bi - 1].t === 'li' ? 0.12 : 0.55));
+    // Fotos pegadas (las de "me"). En pantalla ancha, un collage al costado
+    // de la columna que no corre el texto: cada una apenas girada y montada
+    // sobre la anterior. En el teléfono van después del texto, una por fila y
+    // casi a lo ancho, para que siempre se vean bien.
+    const pile = n.para.find((b) => b.t === 'pile');
+    const blocks = n.para.filter((b) => b.t !== 'pile');
+    if (pile && vw < 700)
+      // en el teléfono, después del texto: cada foto con su nota abajo (↑)
+      pile.items.forEach((p, i) => {
+        blocks.push({ t: 'img', pile: true, src: p.src, w: p.w, h: p.h, style: pile.style, seed: i + 1, rot: PILE_ROT[i % PILE_ROT.length] * 0.4, first: i === 0 });
+        if (p.note) blocks.push({ t: 'cap', runs: [{ s: '↑ ' + p.note.replace(/\n/g, ' ') }] });
+      });
+    const wide = vw >= 700;
+    let boxW = W, boxH = 0;
+    if (pile && wide) {
+      const A = pile.beside, x0 = W + 28;
+      let py = 0;
+      pile.items.forEach((p, i) => {
+        const r = p.w / p.h;
+        const L = A * (r > 1.15 ? 0.58 : 0.5); // las apaisadas, más anchas
+        const w = Math.round(r >= 1 ? L : L * r), h = Math.round(r >= 1 ? L / r : L);
+        const jit = ((i * 37) % 11) - 5;
+        const x = x0 + (i % 2 ? A - w - 4 + jit * 0.6 : 4 + jit);
+        imgs.push({ src: p.src, style: pile.style, pile: true, seed: i + 1, rot: PILE_ROT[i % PILE_ROT.length], note: p.note || '', x, y: py, w, h, c0: 0, c1: 0 });
+        boxW = Math.max(boxW, x + w);
+        boxH = Math.max(boxH, py + h);
+        py += Math.round(h * 0.6);
+      });
+    }
+    blocks.forEach((b, bi) => {
+      if (bi > 0) y += Math.round(lh * (b.t === 'li' && blocks[bi - 1].t === 'li' ? 0.12 : b.t === 'cap' ? 0.3 : 0.55));
+      if (b.t === 'img' && b.pile) {
+        // una foto pegada (teléfono): casi a lo ancho, alternando el lado
+        y += Math.round(lh * (b.first ? 0.75 : 0.35));
+        const r = b.w / b.h;
+        const w = Math.round(W * (r > 1.15 ? 1 : r < 0.87 ? 0.78 : 0.86)), h = Math.round(w / r);
+        imgs.push({ src: b.src, style: b.style, pile: true, seed: b.seed, rot: b.rot, x: (b.seed - 1) % 2 ? W - w : 0, y, w, h, c0: chars, c1: chars + 90 });
+        chars += 90;
+        y += h;
+        return;
+      }
       if (b.t === 'img') {
         const h = Math.round((W * b.h) / b.w);
         imgs.push({ src: b.src, x: 0, y, w: W, h, c0: chars, c1: chars + 90 });
@@ -296,7 +367,16 @@ export function start(renderer, canvas) {
         y += lh;
       }
     });
-    const d = { lines, imgs, w: W, h: Math.max(lh, y), chars: Math.max(1, chars) };
+    if (pile && wide) {
+      // el collage se imprime de a una foto mientras se escribe el texto
+      const k = pile.items.length;
+      imgs.forEach((im) => {
+        if (!im.pile) return;
+        im.c0 = Math.round((chars * 0.85 * (im.seed - 1)) / k);
+        im.c1 = Math.min(chars, im.c0 + 50);
+      });
+    }
+    const d = { lines, imgs, w: boxW, h: Math.max(lh, y, boxH), chars: Math.max(1, chars) };
     docs.set(key, d);
     return d;
   }
@@ -556,7 +636,7 @@ export function start(renderer, canvas) {
       const box = renderer.backBox ? renderer.backBox(vw, vh, m) : null;
       hud.push(box ? { kind: 'back', action: 'back', box } : { text: 'back', x, y, align: 'left', action: 'back' });
     }
-    for (const h of renderer.hud ? renderer.hud(vw, vh, state, m) : []) hud.push(h);
+    for (const h of renderer.hud ? renderer.hud(vw, vh, state, m, forActive === root) : []) hud.push(h);
     return hud;
   }
   // un control puede traer su propio rectángulo (`box`), si no es texto suelto
@@ -598,7 +678,8 @@ export function start(renderer, canvas) {
   }
   function clearTitle(node) {
     // lo fijo en pantalla: el título y los controles (de la carpeta que va a quedar abierta)
-    const fixed = [titleRect(), ...hudRects(hudList(deepest(root)))];
+    // (lo blando y lo que flota encima, como la lista abierta, no la mueven)
+    const fixed = [titleRect(), ...hudRects(hudList(deepest(root)).filter((h) => !h.soft && !h.float))];
     const rects = visibleRects();
     const base = { x: cam.tx, y: cam.ty };
     const open = [];
@@ -660,7 +741,11 @@ export function start(renderer, canvas) {
 
   // ------------------------------------------------------------------ cuadro
 
-  const GROW = 1.1, SHRINK = 0.55, ROOT_GROW = 1.9;
+  // abrir y cerrar (la rama, las otras que se recogen y el texto) van PACE veces
+  // más rápido que al principio: el usuario pidió un 40% más (2026-11-09). El
+  // árbol que crece al cargar no cambia
+  const PACE = 1.4;
+  const GROW = 1.1 / PACE, SHRINK = 0.55 / PACE, ROOT_GROW = 1.9;
   let last = 0;
   let time = 0;
   let dirty = true;
@@ -693,7 +778,7 @@ export function start(renderer, canvas) {
           const ft = foldTarget(k);
           if (k.foldU !== ft) {
             changed = true;
-            k.foldU = REDUCED ? ft : ft ? Math.min(1, k.foldU + dt / 0.55) : Math.max(0, k.foldU - dt / 0.4);
+            k.foldU = REDUCED ? ft : ft ? Math.min(1, k.foldU + dt / (0.55 / PACE)) : Math.max(0, k.foldU - dt / (0.4 / PACE));
           }
           k.fold = easeInOut(k.foldU);
         }
@@ -704,8 +789,8 @@ export function start(renderer, canvas) {
           if (REDUCED) k.typed = target;
           else if (k.typed !== target) {
             const total = docOf(k).chars;
-            // un texto largo se escribe más rápido: nunca tarda más de unos 4 s
-            k.typed = target ? Math.min(1, k.typed + (dt * Math.max(220, total / 4.2)) / total) : Math.max(0, k.typed - dt * 4);
+            // un texto largo se escribe más rápido: nunca tarda más de unos 3 s
+            k.typed = target ? Math.min(1, k.typed + (dt * PACE * Math.max(220, total / 4.2)) / total) : Math.max(0, k.typed - dt * 4 * PACE);
           }
         }
       }
@@ -836,6 +921,14 @@ export function start(renderer, canvas) {
           for (const ln of d.lines)
             for (const sg of ln.segs)
               if (sg.href && chars >= sg.c0 + sg.s.length) hits.unshift({ node: k, link: sg.href, word: sg.s, x: sx + sg.x, y: sy + ln.y, w: sg.w, h: lineH() });
+          // fotos pegadas ya impresas (sólo con mouse: en el teléfono no se
+          // agrandan). La de arriba gana; la agrandada, con su caja grande.
+          if (vw >= 700)
+            for (const im of d.imgs.slice().sort((a, b) => (a.src === hoverPhoto) - (b.src === hoverPhoto))) {
+              if (!im.pile || chars < im.c1) continue;
+              const b = { x: sx + im.x, y: sy + im.y, w: im.w, h: im.h };
+              hits.unshift({ node: k, photo: im.src, inert: true, ...(im.src === hoverPhoto ? photoZoom(b, vw, vh) : b) });
+            }
           continue;
         }
         if (k.t > n.g) continue;
@@ -869,7 +962,8 @@ export function start(renderer, canvas) {
 
     const title = SHOW_TITLE ? (active.root ? 'natochi' : active.name) + '.' : '';
     const tAt = renderer.titleAt(vw, vh);
-    const hud = hudList();
+    // un control blando (la nota del reproductor) que pisaría una etiqueta no va
+    const hud = hudList().filter((h) => !h.soft || !hits.some((x) => !x.photo && !x.inert && overlaps(x, h.box, 4)));
     hudHits = hudRects(hud);
 
     // una sola tinta para todo (la tinta escasa quedó descartada)
@@ -877,7 +971,7 @@ export function start(renderer, canvas) {
       n.inkLite = false;
       for (const k of n.kids) k.inkLite = false;
     }
-    renderer.frame({ full, canvas, vw, vh, dpr, cam, time, root, active, branches, items, title, titleAt: tAt, hud, font, fontSize, state, textW, hoverLink, fixed: [titleRect(), ...hudHits].filter((r) => r.w > 0), redraw: () => (dirty = true) });
+    renderer.frame({ full, canvas, vw, vh, dpr, cam, time, root, active, branches, items, title, titleAt: tAt, hud, font, fontSize, state, textW, hoverLink, hoverPhoto, hoverHud, fixed: [titleRect(), ...hudHits].filter((r) => r.w > 0), redraw: () => (dirty = true) });
   }
 
   // ------------------------------------------------------------------ input
@@ -916,16 +1010,24 @@ export function start(renderer, canvas) {
       }
     }
     const h = find(hits, ev.clientX, ev.clientY);
-    const nh = h && !h.link ? h.node : null;
+    const nh = h && !h.link && !h.photo ? h.node : null;
     const nl = h && h.link ? h.link : null;
-    if (nh !== hover || nl !== hoverLink) dirty = true;
+    const np = h && h.photo ? h.photo : null;
+    if (nh !== hover || nl !== hoverLink || np !== hoverPhoto) dirty = true;
     hover = nh;
     hoverLink = nl;
-    canvas.style.cursor = (h && !h.inert) || find(hudHits, ev.clientX, ev.clientY) ? 'pointer' : 'default';
+    hoverPhoto = np;
+    const hh = find(hudHits, ev.clientX, ev.clientY);
+    const na = hh ? hh.action : null;
+    if (na !== hoverHud) dirty = true;
+    hoverHud = na;
+    canvas.style.cursor = (h && !h.inert) || hh ? 'pointer' : 'default';
   });
   canvas.addEventListener('pointerleave', () => {
     hover = null;
     hoverLink = null;
+    hoverPhoto = null;
+    hoverHud = null;
     dirty = true;
   });
   canvas.addEventListener('click', (ev) => {
@@ -935,6 +1037,8 @@ export function start(renderer, canvas) {
       dragged = false;
       return;
     }
+    // algo abierto del renderer (la lista de canciones) se cierra primero
+    if (renderer.dismiss && renderer.dismiss()) return (dirty = true);
     const h = find(hits, ev.clientX, ev.clientY);
     if (!h) return back();
     if (h.link) return window.open(h.link, '_blank', 'noopener');
@@ -944,7 +1048,9 @@ export function start(renderer, canvas) {
     else if (n.href) window.open(n.href, '_blank', 'noopener');
   });
   addEventListener('keydown', (ev) => {
-    if (ev.key === 'Escape' || ev.key === 'Backspace') back();
+    if (ev.key !== 'Escape' && ev.key !== 'Backspace') return;
+    if (renderer.dismiss && renderer.dismiss()) return (dirty = true);
+    back();
   });
   function act(a) {
     dirty = true;
@@ -988,8 +1094,13 @@ export function start(renderer, canvas) {
     },
     back,
     act,
+    // fotos pegadas a la vista: [{src, x, y, w, h}] en pantalla
+    photos: () => hits.filter((h) => h.photo).map(({ photo: src, x, y, w, h }) => ({ src, x, y, w, h })),
+    get hoverPhoto() {
+      return hoverPhoto;
+    },
     where(name) {
-      const h = hits.find((x) => x.node.name === name);
+      const h = hits.find((x) => x.node.name === name && !x.photo && !x.link);
       const m = INS();
       if (!h || h.x < m || h.y < m || h.x + h.w > vw - m || h.y + h.h > vh - m) return null;
       return { x: h.x + Math.min(h.w / 2, 20), y: h.y + h.h / 2 };
@@ -1006,7 +1117,7 @@ export function start(renderer, canvas) {
       // un texto más alto que la pantalla se recorre moviendo la hoja: ahí
       // sólo cuenta que entre a lo ancho y que su comienzo se vea
       return hits
-        .filter((h) => !h.link && h.node.parent === active)
+        .filter((h) => !h.link && !h.photo && h.node.parent === active)
         .filter((h) => h.x < INS() || h.x + h.w > vw - INS() || h.y < INS() || (h.h <= vh - 60 && h.y + h.h > vh - INS()))
         .map((h) => h.node.name);
     },
@@ -1030,7 +1141,7 @@ export function start(renderer, canvas) {
     },
     overlaps() {
       const out = [];
-      const vis = hits.filter((h) => !h.link && h.x + h.w > 0 && h.x < vw && h.y + h.h > 0 && h.y < vh);
+      const vis = hits.filter((h) => !h.link && !h.photo && h.x + h.w > 0 && h.x < vw && h.y + h.h > 0 && h.y < vh);
       const T = titleRect();
       if (T.w > 0) vis.push({ fixed: true, node: { name: '(título)' }, x: T.x + 10, y: T.y + T.h / 4, w: T.w - 20, h: T.h / 2 });
       for (const h of hudHits) vis.push({ fixed: true, node: { name: '(' + h.action + ')' }, x: h.x, y: h.y + 3, w: h.w, h: h.h - 6 });
@@ -1056,6 +1167,8 @@ export function start(renderer, canvas) {
         }
       };
       walk(root);
+      // y lo que anima el renderer (una foto que crece, la lista que se abre)
+      if (renderer.busy && renderer.busy()) busy = true;
       return !busy;
     },
     settle() {
