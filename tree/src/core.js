@@ -742,9 +742,9 @@ export function start(renderer, canvas) {
   // ------------------------------------------------------------------ cuadro
 
   // abrir y cerrar (la rama, las otras que se recogen y el texto) van PACE veces
-  // más rápido que al principio: el usuario pidió un 40% más (2026-11-09). El
-  // árbol que crece al cargar no cambia
-  const PACE = 1.4;
+  // más rápido. Estuvo en 1,4 por un malentendido (el 40% era para la nota de
+  // las fotos); queda en 1, como perilla. El árbol que crece al cargar no la usa
+  const PACE = 1;
   const GROW = 1.1 / PACE, SHRINK = 0.55 / PACE, ROOT_GROW = 1.9;
   let last = 0;
   let time = 0;
@@ -789,7 +789,7 @@ export function start(renderer, canvas) {
           if (REDUCED) k.typed = target;
           else if (k.typed !== target) {
             const total = docOf(k).chars;
-            // un texto largo se escribe más rápido: nunca tarda más de unos 3 s
+            // un texto largo se escribe más rápido: nunca tarda más de unos 4 s
             k.typed = target ? Math.min(1, k.typed + (dt * PACE * Math.max(220, total / 4.2)) / total) : Math.max(0, k.typed - dt * 4 * PACE);
           }
         }

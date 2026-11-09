@@ -2374,12 +2374,13 @@ export function createSilhouette() {
           animBusy = true;
         }
       }
-      // la nota aparece cuando la foto terminó de crecer (~0,9 s); se va con ella
+      // la nota aparece cuando la foto terminó de crecer y se dibuja en ~0,64 s
+      // (un 40% más rápido que al principio: lo pidió el usuario); se va con ella
       for (const src of [...capT.keys()]) if (src !== F.hoverPhoto) capT.delete(src);
       if (F.hoverPhoto && (zoomT.get(F.hoverPhoto) || 0) >= 1) {
         const ct = capT.get(F.hoverPhoto) || 0;
         if (ct < 1) {
-          capT.set(F.hoverPhoto, Math.min(1, ct + dtZ / 0.9));
+          capT.set(F.hoverPhoto, Math.min(1, ct + dtZ / (0.9 / 1.4)));
           redraw();
           animBusy = true;
         }
