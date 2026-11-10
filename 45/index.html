@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>natochi · 45</title>
+<meta name="description" content="A sun crossing the horizon. A study of the hero effect on anthropic.com.">
+<meta property="og:title" content="natochi · 45">
+<meta property="og:description" content="A sun crossing the horizon.">
+<meta property="og:image" content="https://natochi.cv/45/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Ccircle cx=%228%22 cy=%228%22 r=%225%22 fill=%22%23f4e2d8%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500&family=JetBrains+Mono&family=Newsreader:opsz,wght@6..72,400..500&display=block">
+<link rel="stylesheet" href="hero.css">
+</head>
+<body>
+<section aria-labelledby="hero-title" class="willy-hero" data-hero-ground="dark" data-hero-live="true">
+  <div class="stage">
+    <p class="eyebrow">natochi.cv / 45</p>
+    <h1 class="name" id="hero-title"><span class="line">natochi</span></h1>
+    <nav class="contents" aria-label="Contents"><ol class="toc">
+      <li><a href="/info/"><span class="num" aria-hidden="true">[1]</span><span class="dots" aria-hidden="true"></span><span>who am i</span></a></li>
+      <li><a href="/projects/"><span class="num" aria-hidden="true">[2]</span><span class="dots" aria-hidden="true"></span><span>projects</span></a></li>
+      <li><a href="/updates/"><span class="num" aria-hidden="true">[3]</span><span class="dots" aria-hidden="true"></span><span>updates</span></a></li>
+      <li><a href="/things/"><span class="num" aria-hidden="true">[4]</span><span class="dots" aria-hidden="true"></span><span>things i fancy</span></a></li>
+      <li><a href="/cv/"><span class="num" aria-hidden="true">[5]</span><span class="dots" aria-hidden="true"></span><span>cv</span></a></li>
+    </ol></nav>
+  </div>
+  <p class="credit">effect: a study of the <a href="https://www.anthropic.com/claude-fable-and-mythos-5-2" rel="noopener">anthropic.com</a> hero · <a href="?lab">knobs</a></p>
+</section>
+
+<script type="module">
+  import { mountLaunchHero, DEFAULTS } from './launch-hero.js';
+
+  // ?lab → parameter panel (saved in localStorage) · ?still=1&t=20 → static frame
+  const q = new URLSearchParams(location.search);
+  const KEY = 'natochi-45-lab';
+  const noPanel = !q.has('lab');
+  let saved = {};
+  if (!noPanel) try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch {}
+
+  const root = document.querySelector('.willy-hero');
+  const hero = mountLaunchHero(root, { startAt: q.has('t') ? +q.get('t') : 0, still: q.get('still') === '1', params: saved });
+  window.hero = hero;
+  hero.started.then(() => (document.documentElement.dataset.ready = '1')).catch((e) => { console.error(e); root.setAttribute('data-hero-failed', ''); });
+  if (!noPanel) await (async () => {
+
+  const { default: GUI } = await import('https://cdn.jsdelivr.net/npm/lil-gui@0.19.2/+esm');
+  const P = hero.params;
+  const save = () => {
+    const diff = {};
+    for (const k in P) if (JSON.stringify(P[k]) !== JSON.stringify(DEFAULTS[k])) diff[k] = P[k];
+    try { localStorage.setItem(KEY, JSON.stringify(diff)); } catch {}
+  };
+  const heavy = (c) => c.onFinishChange(() => { hero.rebuild(); save(); });
+  const light = (c) => c.onChange(() => { hero.redraw(); save(); });
+  // array params → proxy objects
+  const pair = (key, labels) => {
+    const o = {};
+    labels.forEach((l, i) => Object.defineProperty(o, l, { get: () => P[key][i], set: (v) => { P[key] = P[key].slice(); P[key][i] = v; }, enumerable: true }));
+    return o;
+  };
+
+  const gui = new GUI({ title: 'knobs  ·  H hides' });
+  const ui = {
+    get time() { return ((hero.time % P.period) + P.period) % P.period; }, set time(v) { hero.setTime(v); },
+    get playing() { return hero.playing; }, set playing(v) { hero.playing = v; },
+    get speed() { return hero.speed; }, set speed(v) { hero.speed = v; },
+    text: true,
+    ground: P.ground ?? '#0f0f0e',
+    replay: () => hero.replayIntro(),
+    copy: () => { const s = JSON.stringify(JSON.parse(localStorage.getItem(KEY) || '{}'), null, 2); navigator.clipboard?.writeText(s); console.log(s); },
+    reset: () => { try { localStorage.removeItem(KEY); } catch {} location.reload(); },
+  };
+
+  const fp = gui.addFolder('Playback');
+  fp.add(ui, 'playing').listen();
+  fp.add(ui, 'speed', 0.05, 10, 0.05);
+  fp.add(ui, 'time', 0, P.period, 0.01).listen().name('time (s)');
+  fp.add(ui, 'replay').name('replay intro');
+  fp.add(ui, 'text').name('show text').onChange((v) => root.classList.toggle('no-text', !v));
+  light(fp.add(P, 'fps', 4, 60, 1));
+  heavy(fp.add(P, 'period', 5, 200, 1));
+  heavy(fp.add(P, 'titleRush', 0, 4, 0.05).name('rush behind title'));
+
+  const fa = gui.addFolder('Arc');
+  heavy(fa.add(P, 'sag', 0, 0.3, 0.001).name('sag (× width)'));
+  heavy(fa.add(P, 'sagMaxH', 0, 0.5, 0.005).name('sag cap (× height)'));
+
+  const fb = gui.addFolder('Atmosphere');
+  light(fb.add(P, 'bandGlow', 0, 2, 0.01).name('opacity'));
+  light(fb.add(P, 'sunBoost', 0, 1, 0.01).name('sun boost'));
+  heavy(fb.add(P, 'bandSpread', 0.3, 3, 0.01).name('thickness'));
+  heavy(fb.add(P, 'bandGain', 0.3, 2, 0.01).name('texture gain (inv)'));
+  heavy(fb.add(P, 'bandNoise', 0, 1.5, 0.01).name('wobble'));
+  heavy(fb.add(P, 'bandNoiseFine', 0, 1, 0.01).name('wobble fine'));
+  light(fb.add(P, 'hoverBand', 0, 2, 0.01).name('hover highlight'));
+
+  const ff = gui.addFolder('Flare');
+  heavy(ff.add(P, 'flareRadius', 40, 700, 1).name('radius'));
+  heavy(ff.add(P, 'rays', 0, 64, 1).name('rays'));
+  const rw = pair('rayWidth', ['width', 'width jitter']);
+  heavy(ff.add(rw, 'width', 0.005, 0.4, 0.005).name('ray width'));
+  heavy(ff.add(rw, 'width jitter', 0, 0.4, 0.005));
+  heavy(ff.add(P, 'streaks').name('vertical streaks'));
+  const rs = pair('raySeeds', ['seed A', 'seed B']);
+  heavy(ff.add(rs, 'seed A', 1, 999, 1)); heavy(ff.add(rs, 'seed B', 1, 999, 1));
+  light(ff.add(P, 'rayWobble', 0, 0.5, 0.005).name('ray wobble'));
+  light(ff.add(P, 'rayPulse', 0, 6, 0.05).name('ray pulse'));
+  heavy(ff.add(P, 'coreStretch', 0, 3, 0.01).name('core stretch'));
+  heavy(ff.add(P, 'tintBlue', -60, 120, 1).name('blue tint'));
+  heavy(ff.add(P, 'flareShift', 0.5, 1.5, 0.01).name('rim warmth'));
+  heavy(ff.add(P, 'flareBoost', 0.5, 2, 0.01).name('mid boost'));
+  heavy(ff.add(P, 'speckle', 0, 0.5, 0.005));
+  const fl = pair('flicker', ['slow', 'fast']);
+  light(ff.add(fl, 'slow', 0, 0.3, 0.005).name('flicker slow')); light(ff.add(fl, 'fast', 0, 0.3, 0.005).name('flicker fast'));
+  light(ff.add(P, 'occludeTitle', 0, 1, 0.01).name('dim behind title'));
+  light(ff.add(P, 'occludeToc', 0, 1, 0.01).name('dim behind toc'));
+
+  const fm = gui.addFolder('Pointer');
+  light(fm.add(P, 'mouseLean', 0, 0.5, 0.005).name('ray lean'));
+  heavy(fm.add(P, 'ghostUnit', 20, 500, 1).name('ghost size'));
+
+  const fg = gui.addFolder('Grain & ground');
+  light(fg.add(P, 'grain', 0, 0.6, 0.005).name('grain'));
+  heavy(fg.add(P, 'grainScale', 0.25, 4, 0.05).name('grain scale'));
+  fg.addColor(ui, 'ground').onChange((v) => { P.ground = v; root.style.setProperty('--hero-bg', v); document.body.style.background = v; hero.redraw(); save(); });
+  if (P.ground) { root.style.setProperty('--hero-bg', P.ground); document.body.style.background = P.ground; }
+
+  gui.add(ui, 'copy').name('copy params (JSON)');
+  gui.add(ui, 'reset').name('reset to original');
+  for (const f of [fa, fb, ff, fm, fg]) f.close();
+  addEventListener('keydown', (e) => { if (e.key === 'h' && !e.target.closest?.('input')) gui.show(gui._hidden); });
+  })();
+</script>
+</body>
+</html>
