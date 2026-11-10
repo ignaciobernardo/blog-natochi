@@ -1,0 +1,1 @@
+import{t as e}from"./snap.4KRMmbQc.js";e();

@@ -1,0 +1,1 @@
+import{t as e}from"./reveal.CmBuCqnB.js";var t=document.querySelector(`.mr-hero`);t&&matchMedia(`(hover: hover) and (min-width: 1221px)`).matches&&e(t);
