@@ -1,0 +1,25 @@
+<!--
+  The SPAR tab mark: the isotype in Kairos Neutrals/50 on a full-bleed SPAR
+  Blue/200 tile.
+
+  Full-bleed rather than a transparent mark, for the same reason as the Kairos
+  one: a tab strip can be light or dark, and a mark that borrows its background
+  from the browser loses the shape on one of them. Blue/200 is the brand's own
+  accent, so the tile reads as SPAR at 16px even when the rosette itself is
+  smaller than the glyphs beside it.
+
+  The source is public/assets/spar/icon-spar.svg, whose artwork spans 0..34
+  including its stroke. The viewBox pads that by 4 on each side, so the mark
+  takes about 81% of the tile — the same proportion the Kairos favicon uses.
+  Stroke weight is the source's 3, unchanged.
+
+  Regenerate the rasters after editing:
+    node scripts/raster-spar-favicon.mjs
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 42 42" width="42" height="42">
+  <rect x="-4" y="-4" width="42" height="42" fill="#008ee7"/>
+  <g fill="none" stroke="#fffcf9" stroke-width="3" stroke-linejoin="round">
+    <path d="M32.5 17C32.5 20.5069 26.3051 21.7097 24.0074 24.0074C21.7097 26.3051 20.51 32.5 17 32.5C13.49 32.5 12.2903 26.3051 9.99263 24.0074C7.69492 21.7097 1.5 20.5069 1.5 17C1.5 13.4931 7.69492 12.2903 9.99263 9.99263C12.2903 7.69492 13.49 1.5 17 1.5C20.51 1.5 21.7097 7.69492 24.0074 9.99263C26.3051 12.2903 32.5 13.49 32.5 17Z"/>
+    <path d="M27.9582 27.9585C25.4764 30.4403 20.2494 26.9081 16.9996 26.9081C13.7498 26.9081 8.5197 30.4403 6.04109 27.9585C3.56249 25.4768 7.09156 20.2498 7.09156 17C7.09156 13.747 3.55932 8.52007 6.04109 6.04146C8.52287 3.56286 13.7498 7.09193 16.9996 7.09193C20.2494 7.09193 25.4796 3.55968 27.9582 6.04146C30.4368 8.52324 26.9077 13.7502 26.9077 17C26.9077 20.2498 30.4399 25.4799 27.9582 27.9585Z"/>
+  </g>
+</svg>
