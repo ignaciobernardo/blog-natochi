@@ -11,9 +11,9 @@
 // ramitas y texto van en el canal rojo, tinta plena. Todo sale en una sola
 // tinta: plata con grano de arena sobre carbón plano.
 
-import { rng, hash, noise1, lerp, clamp, at, easeInOut, photoZoom } from './core.js';
-import { createPrinter } from './print.js';
-import { PLAYLIST } from '../music/playlist.js';
+import { rng, hash, noise1, lerp, clamp, at, easeInOut, photoZoom } from './core.js?v=f6a70213a6';
+import { createPrinter } from './print.js?v=f6a70213a6';
+import { PLAYLIST } from '../music/playlist.js?v=f6a70213a6';
 
 // colores de la lámina (descripción de la referencia); el resto lo hace la impresión
 const LOOK = {
