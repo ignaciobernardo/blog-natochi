@@ -11,9 +11,9 @@
 // ramitas y texto van en el canal rojo, tinta plena. Todo sale en una sola
 // tinta: plata con grano de arena sobre carbón plano.
 
-import { rng, hash, noise1, lerp, clamp, at, easeInOut, photoZoom } from './core.js?v=5d2cc0e008';
-import { createPrinter } from './print.js?v=5d2cc0e008';
-import { PLAYLIST } from '../music/playlist.js?v=5d2cc0e008';
+import { rng, hash, noise1, lerp, clamp, at, easeInOut, photoZoom } from './core.js?v=809d14674b';
+import { createPrinter } from './print.js?v=809d14674b';
+import { PLAYLIST } from '../music/playlist.js?v=809d14674b';
 
 // colores de la lámina (descripción de la referencia); el resto lo hace la impresión
 const LOOK = {
@@ -1046,6 +1046,7 @@ export function createSilhouette() {
         sec = t;
         redraw();
       }
+      if (tracks.length > 1 && a.duration - a.currentTime < PREFETCH_S) prefetch(music.i + 1);
     });
     a.addEventListener('playing', () => (music.errors = 0));
     a.addEventListener('ended', () => playTrack(music.i + 1));
@@ -1058,13 +1059,53 @@ export function createSilhouette() {
     music.audio = a;
     return a;
   }
+  const wrap = (i) => ((i % tracks.length) + tracks.length) % tracks.length;
+  // relativa a la carpeta del árbol (v20/ acá, /tree/ en natochi.cv), no a la
+  // página: en natochi.cv la página está en / y "music/…" daba 404
+  const srcOf = (i) => new URL(tracks[i].preview, new URL('../', import.meta.url)).href;
+  // La próxima se baja entera unos segundos antes de que termine la que suena
+  // y queda en memoria (un blob), así el cambio es inmediato. Antes el <audio>
+  // pedía el archivo recién al terminar, y en Zen (Firefox) se notaba un
+  // silencio entre una y otra (~0,35 s con buena conexión, más con una lenta).
+  // Es el mismo <audio>, no uno segundo: Safari en el teléfono podría no
+  // dejar sonar un elemento que el usuario nunca tocó.
+  const PREFETCH_S = 30;
+  const pre = { i: -1, url: null, ctl: null };
+  function dropPre() {
+    if (pre.ctl) pre.ctl.abort();
+    if (pre.url) URL.revokeObjectURL(pre.url);
+    pre.i = -1;
+    pre.url = null;
+    pre.ctl = null;
+  }
+  function prefetch(i) {
+    i = wrap(i);
+    if (pre.i === i) return;
+    dropPre();
+    const ctl = new AbortController();
+    Object.assign(pre, { i, ctl });
+    fetch(srcOf(i), { signal: ctl.signal })
+      .then((r) => (r.ok ? r.blob() : Promise.reject(new Error(r.status))))
+      .then((b) => {
+        if (pre.ctl === ctl) pre.url = URL.createObjectURL(b);
+      })
+      // si falla, al terminar se pide como siempre
+      .catch(() => pre.ctl === ctl && dropPre());
+  }
   function playTrack(i) {
     if (!tracks.length) return;
-    music.i = ((i % tracks.length) + tracks.length) % tracks.length;
+    music.i = wrap(i);
     const a = player();
-    // relativa a la carpeta del árbol (v20/ acá, /tree/ en natochi.cv), no a
-    // la página: en natochi.cv la página está en / y "music/…" daba 404
-    a.src = new URL(tracks[music.i].preview, new URL('../', import.meta.url)).href;
+    const old = a.src.startsWith('blob:') ? a.src : null;
+    if (pre.i === music.i && pre.url) {
+      // ya está bajada: pasa a sonar desde la memoria
+      a.src = pre.url;
+      Object.assign(pre, { i: -1, url: null, ctl: null });
+    } else {
+      dropPre();
+      a.src = srcOf(music.i);
+    }
+    if (old) URL.revokeObjectURL(old);
     music.started = true;
     a.play().catch(() => redraw());
     redraw();
@@ -1079,7 +1120,7 @@ export function createSilhouette() {
   window.__music = {
     get state() {
       const a = music.audio;
-      return { started: music.started, playing: !!a && !a.paused, i: music.i, t: a ? a.currentTime : 0, title: tracks[music.i] && tracks[music.i].title, list: listOpen };
+      return { started: music.started, playing: !!a && !a.paused, i: music.i, t: a ? a.currentTime : 0, title: tracks[music.i] && tracks[music.i].title, list: listOpen, ready: pre.url ? pre.i : -1, blob: !!a && a.src.startsWith('blob:') };
     },
   };
 

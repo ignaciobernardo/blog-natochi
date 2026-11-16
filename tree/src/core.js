@@ -14,8 +14,8 @@
 //   renderer.titleAt(vw, vh)   dónde va el título (palabra suelta)
 //   renderer.hud(vw, vh)       controles extra: [{text, x, y, align, action}]
 
-import { TREE } from './data.js?v=5d2cc0e008';
-import { POSTS } from '../posts/posts.js?v=5d2cc0e008';
+import { TREE } from './data.js?v=809d14674b';
+import { POSTS } from '../posts/posts.js?v=809d14674b';
 
 export const PHI = (1 + Math.sqrt(5)) / 2;
 export const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
