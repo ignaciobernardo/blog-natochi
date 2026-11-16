@@ -134,7 +134,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-06-13-1.jpg",
     "w": 760,
-    "h": 507
+    "h": 507,
+    "color": "posts/img/color/updates-2026-06-13-1.jpg"
    },
    {
     "t": "p",
@@ -148,13 +149,15 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-06-13-2.jpg",
     "w": 760,
-    "h": 170
+    "h": 170,
+    "color": "posts/img/color/updates-2026-06-13-2.jpg"
    },
    {
     "t": "img",
     "src": "posts/img/updates-2026-06-13-3.jpg",
     "w": 616,
-    "h": 110
+    "h": 110,
+    "color": "posts/img/color/updates-2026-06-13-3.jpg"
    },
    {
     "t": "p",
@@ -168,7 +171,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-06-13-4.jpg",
     "w": 760,
-    "h": 428
+    "h": 428,
+    "color": "posts/img/color/updates-2026-06-13-4.jpg"
    },
    {
     "t": "p",
@@ -182,7 +186,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-06-13-5.jpg",
     "w": 665,
-    "h": 1182
+    "h": 1182,
+    "color": "posts/img/color/updates-2026-06-13-5.jpg"
    },
    {
     "t": "li",
@@ -196,7 +201,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-06-13-6.jpg",
     "w": 760,
-    "h": 558
+    "h": 558,
+    "color": "posts/img/color/updates-2026-06-13-6.jpg"
    },
    {
     "t": "li",
@@ -210,7 +216,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-06-13-7.jpg",
     "w": 760,
-    "h": 507
+    "h": 507,
+    "color": "posts/img/color/updates-2026-06-13-7.jpg"
    },
    {
     "t": "p",
@@ -224,7 +231,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-06-13-8.jpg",
     "w": 760,
-    "h": 436
+    "h": 436,
+    "color": "posts/img/color/updates-2026-06-13-8.jpg"
    },
    {
     "t": "li",
@@ -238,7 +246,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-06-13-9.jpg",
     "w": 760,
-    "h": 570
+    "h": 570,
+    "color": "posts/img/color/updates-2026-06-13-9.jpg"
    },
    {
     "t": "li",
@@ -252,7 +261,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-06-13-10.jpg",
     "w": 760,
-    "h": 430
+    "h": 430,
+    "color": "posts/img/color/updates-2026-06-13-10.jpg"
    },
    {
     "t": "li",
@@ -266,7 +276,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-06-13-11.jpg",
     "w": 760,
-    "h": 507
+    "h": 507,
+    "color": "posts/img/color/updates-2026-06-13-11.jpg"
    },
    {
     "t": "p",
@@ -320,7 +331,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-06-13-12.jpg",
     "w": 760,
-    "h": 760
+    "h": 760,
+    "color": "posts/img/color/updates-2026-06-13-12.jpg"
    }
   ]
  },
@@ -348,7 +360,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-05-10-1.jpg",
     "w": 760,
-    "h": 507
+    "h": 507,
+    "color": "posts/img/color/updates-2026-05-10-1.jpg"
    },
    {
     "t": "p",
@@ -370,7 +383,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-05-10-2.jpg",
     "w": 760,
-    "h": 838
+    "h": 838,
+    "color": "posts/img/color/updates-2026-05-10-2.jpg"
    },
    {
     "t": "p",
@@ -408,7 +422,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-05-10-3.jpg",
     "w": 760,
-    "h": 507
+    "h": 507,
+    "color": "posts/img/color/updates-2026-05-10-3.jpg"
    },
    {
     "t": "p",
@@ -430,7 +445,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-05-10-4.jpg",
     "w": 760,
-    "h": 507
+    "h": 507,
+    "color": "posts/img/color/updates-2026-05-10-4.jpg"
    },
    {
     "t": "p",
@@ -452,7 +468,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-05-10-5.jpg",
     "w": 760,
-    "h": 507
+    "h": 507,
+    "color": "posts/img/color/updates-2026-05-10-5.jpg"
    },
    {
     "t": "p",
@@ -466,7 +483,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-05-10-6.jpg",
     "w": 760,
-    "h": 507
+    "h": 507,
+    "color": "posts/img/color/updates-2026-05-10-6.jpg"
    },
    {
     "t": "p",
@@ -488,7 +506,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-05-10-7.jpg",
     "w": 760,
-    "h": 507
+    "h": 507,
+    "color": "posts/img/color/updates-2026-05-10-7.jpg"
    },
    {
     "t": "p",
@@ -502,7 +521,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-05-10-8.jpg",
     "w": 760,
-    "h": 507
+    "h": 507,
+    "color": "posts/img/color/updates-2026-05-10-8.jpg"
    },
    {
     "t": "p",
@@ -724,7 +744,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-04-23-1.jpg",
     "w": 760,
-    "h": 950
+    "h": 950,
+    "color": "posts/img/color/updates-2026-04-23-1.jpg"
    },
    {
     "t": "p",
@@ -792,7 +813,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-04-22-1.jpg",
     "w": 760,
-    "h": 443
+    "h": 443,
+    "color": "posts/img/color/updates-2026-04-22-1.jpg"
    },
    {
     "t": "p",
@@ -848,7 +870,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-04-22-2.jpg",
     "w": 760,
-    "h": 428
+    "h": 428,
+    "color": "posts/img/color/updates-2026-04-22-2.jpg"
    },
    {
     "t": "p",
@@ -870,7 +893,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-04-22-3.jpg",
     "w": 760,
-    "h": 705
+    "h": 705,
+    "color": "posts/img/color/updates-2026-04-22-3.jpg"
    },
    {
     "t": "li",
@@ -884,7 +908,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-04-22-4.jpg",
     "w": 760,
-    "h": 1013
+    "h": 1013,
+    "color": "posts/img/color/updates-2026-04-22-4.jpg"
    },
    {
     "t": "p",
@@ -974,7 +999,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-04-21-1.jpg",
     "w": 760,
-    "h": 950
+    "h": 950,
+    "color": "posts/img/color/updates-2026-04-21-1.jpg"
    },
    {
     "t": "li",
@@ -996,7 +1022,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-04-21-2.jpg",
     "w": 614,
-    "h": 616
+    "h": 616,
+    "color": "posts/img/color/updates-2026-04-21-2.jpg"
    },
    {
     "t": "li",
@@ -1010,7 +1037,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-04-21-3.jpg",
     "w": 760,
-    "h": 494
+    "h": 494,
+    "color": "posts/img/color/updates-2026-04-21-3.jpg"
    },
    {
     "t": "li",
@@ -1024,7 +1052,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-04-21-4.jpg",
     "w": 760,
-    "h": 314
+    "h": 314,
+    "color": "posts/img/color/updates-2026-04-21-4.jpg"
    },
    {
     "t": "p",
@@ -1115,7 +1144,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-04-20-1.jpg",
     "w": 760,
-    "h": 391
+    "h": 391,
+    "color": "posts/img/color/updates-2026-04-20-1.jpg"
    },
    {
     "t": "p",
@@ -1291,7 +1321,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-04-20-2.jpg",
     "w": 760,
-    "h": 722
+    "h": 722,
+    "color": "posts/img/color/updates-2026-04-20-2.jpg"
    },
    {
     "t": "p",
@@ -1313,7 +1344,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-04-20-3.jpg",
     "w": 760,
-    "h": 369
+    "h": 369,
+    "color": "posts/img/color/updates-2026-04-20-3.jpg"
    },
    {
     "t": "p",
@@ -1358,13 +1390,15 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-04-20-4.jpg",
     "w": 760,
-    "h": 995
+    "h": 995,
+    "color": "posts/img/color/updates-2026-04-20-4.jpg"
    },
    {
     "t": "img",
     "src": "posts/img/updates-2026-04-20-5.jpg",
     "w": 760,
-    "h": 775
+    "h": 775,
+    "color": "posts/img/color/updates-2026-04-20-5.jpg"
    },
    {
     "t": "li",
@@ -1386,7 +1420,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-04-20-6.jpg",
     "w": 720,
-    "h": 1280
+    "h": 1280,
+    "color": "posts/img/color/updates-2026-04-20-6.jpg"
    },
    {
     "t": "li",
@@ -1408,7 +1443,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-04-20-7.jpg",
     "w": 760,
-    "h": 327
+    "h": 327,
+    "color": "posts/img/color/updates-2026-04-20-7.jpg"
    },
    {
     "t": "p",
@@ -1453,7 +1489,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-04-20-8.jpg",
     "w": 760,
-    "h": 582
+    "h": 582,
+    "color": "posts/img/color/updates-2026-04-20-8.jpg"
    },
    {
     "t": "p",
@@ -1467,7 +1504,8 @@ export const POSTS = {
     "t": "img",
     "src": "posts/img/updates-2026-04-20-9.jpg",
     "w": 752,
-    "h": 1466
+    "h": 1466,
+    "color": "posts/img/color/updates-2026-04-20-9.jpg"
    },
    {
     "t": "p",

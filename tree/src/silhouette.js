@@ -11,9 +11,9 @@
 // ramitas y texto van en el canal rojo, tinta plena. Todo sale en una sola
 // tinta: plata con grano de arena sobre carbón plano.
 
-import { rng, hash, noise1, lerp, clamp, at, easeInOut, photoZoom } from './core.js?v=f6a70213a6';
-import { createPrinter } from './print.js?v=f6a70213a6';
-import { PLAYLIST } from '../music/playlist.js?v=f6a70213a6';
+import { rng, hash, noise1, lerp, clamp, at, easeInOut, photoZoom } from './core.js?v=5d2cc0e008';
+import { createPrinter } from './print.js?v=5d2cc0e008';
+import { PLAYLIST } from '../music/playlist.js?v=5d2cc0e008';
 
 // colores de la lámina (descripción de la referencia); el resto lo hace la impresión
 const LOOK = {
@@ -1714,6 +1714,65 @@ export function createSilhouette() {
     return null;
   }
 
+  // ---- fotos de notas y updates en color, con el mouse encima ----
+  // Lo pidió el usuario: "que les salga color y el efecto se desvanezca un
+  // poco para poder ver las fotos" (las de "me" no). La versión en color
+  // (posts/img/color/, la arma tools/v20-posts.py) se pide la primera vez que
+  // el mouse pasa por la foto y se pinta en un lienzo propio encima de la
+  // hoja impresa, casi opaca: la trama queda apenas debajo. Aparece en
+  // ~0,35 s, recién cuando la foto llegó, y se va en ~0,3 s.
+  const TINT_MAX = 0.9;
+  const colors = new Map(); // src de la gris → { img, ok }
+  const tintT = new Map(); // src de la gris → 0..1
+  const tintList = []; // lo que este cuadro pinta en color
+  let tintCv = null, tc = null, tintDrawn = false;
+  function colorOf(im) {
+    let p = colors.get(im.src);
+    if (!p) {
+      p = { img: new Image(), ok: false };
+      p.img.onload = () => {
+        p.ok = true;
+        redraw();
+      };
+      p.img.src = new URL('../' + im.color, import.meta.url).href;
+      colors.set(im.src, p);
+    }
+    return p.ok ? p.img : null;
+  }
+  function stepTint(hoverSrc, dt) {
+    for (const src of new Set([...tintT.keys(), ...(hoverSrc ? [hoverSrc] : [])])) {
+      const p = colors.get(src);
+      const t = tintT.get(src) || 0;
+      const nt = src === hoverSrc ? (p && p.ok ? Math.min(1, t + dt / 0.35) : t) : Math.max(0, t - dt / 0.3);
+      if (nt === 0) tintT.delete(src);
+      else tintT.set(src, nt);
+      if (nt !== t) {
+        redraw();
+        animBusy = true;
+      }
+    }
+  }
+  function paintTint(fixed) {
+    if (!tc || (!tintList.length && !tintDrawn)) return;
+    tc.setTransform(1, 0, 0, 1, 0, 0);
+    tc.clearRect(0, 0, tintCv.width, tintCv.height);
+    tc.setTransform(dpr, 0, 0, dpr, 0, 0);
+    for (const q of tintList) {
+      tc.save();
+      tc.beginPath();
+      tc.rect(q.x, q.y, q.w, q.shown);
+      tc.clip();
+      tc.globalAlpha = q.a;
+      tc.drawImage(q.img, q.x, q.y, q.w, q.h);
+      tc.restore();
+    }
+    // lo fijo ("back", el reproductor) queda encima, calado en la foto como
+    // en el follaje
+    if (tintList.length) for (const r of fixed) tc.clearRect(r.x - 6, r.y - 6, r.w + 12, r.h + 12);
+    tintDrawn = tintList.length > 0;
+    tintList.length = 0;
+  }
+
   // ---- foto de "me" con estilo ----
   // La caja (w × h) es la de afuera, con el origen en su centro. Cada estilo
   // da la forma de la foto (`clip`), el rectángulo que la foto cubre (`win`) y
@@ -2164,6 +2223,12 @@ export function createSilhouette() {
       cx.clip();
       cx.drawImage(cv, it.x + im.x, it.y + im.y, im.w, im.h);
       cx.restore();
+      if (im.color && Z.tint) {
+        if (im.src === Z.hover) colorOf(im);
+        const t = Z.tint.get(im.src) || 0;
+        const col = t > 0 ? colorOf(im) : null;
+        if (col) tintList.push({ img: col, x: it.x + im.x, y: it.y + im.y, w: im.w, h: im.h, shown: h, a: easeInOut(t) * TINT_MAX });
+      }
     }
   }
 
@@ -2226,6 +2291,18 @@ export function createSilhouette() {
       ink.width = Math.round(vw * dpr);
       ink.height = Math.round(vh * dpr);
       c = ink.getContext('2d');
+      // el lienzo de las fotos en color, encima de la hoja; no toma el mouse
+      if (!tintCv) {
+        tintCv = document.createElement('canvas');
+        Object.assign(tintCv.style, { position: 'fixed', left: '0', top: '0', pointerEvents: 'none' });
+        canvas.after(tintCv);
+      }
+      tintCv.width = Math.round(vw * dpr);
+      tintCv.height = Math.round(vh * dpr);
+      tintCv.style.width = vw + 'px';
+      tintCv.style.height = vh + 'px';
+      tc = tintCv.getContext('2d');
+      tintDrawn = false;
       lastCam = null;
       D = dims(vw, vh);
       chunks.clear();
@@ -2376,6 +2453,7 @@ export function createSilhouette() {
           animBusy = true;
         }
       }
+      stepTint(F.hoverPhoto, dtZ);
       // la nota aparece cuando la foto terminó de crecer y se dibuja en ~0,64 s
       // (un 40% más rápido que al principio: lo pidió el usuario); se va con ella
       for (const src of [...capT.keys()]) if (src !== F.hoverPhoto) capT.delete(src);
@@ -2436,7 +2514,7 @@ export function createSilhouette() {
       // y se imprimen. Los textos quedan fuera de "back", que se queda quieto
       // mientras la hoja se mueve
       for (const it of items) {
-        if (it.doc) drawDoc(c, it, fontSize, hoverLink, fixed, { zoom: zoomT, cap: capT, vw: F.vw, vh: F.vh });
+        if (it.doc) drawDoc(c, it, fontSize, hoverLink, fixed, { zoom: zoomT, cap: capT, tint: tintT, hover: F.hoverPhoto, vw: F.vw, vh: F.vh });
         else label(c, it, textW, fontSize);
       }
       for (const it of items) if (it.st.hover && !it.doc) underline(c, it.rect.x, it.rect.y + it.rect.h + 1, it.rect.w, it.node.id);
@@ -2476,6 +2554,7 @@ export function createSilhouette() {
       }
       lastCam = { x: ox / dpr, y: oy / dpr };
       printer.render(ink, lastCam, dpr, null, stepPaper());
+      paintTint(fixed);
     },
   };
 }

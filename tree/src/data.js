@@ -13,8 +13,8 @@ const ME = [
   "i'm natochi. dropout, based in santiago de chile.",
   'i look for growth levers in startups, ventures and cool things.',
   "over the last six years i've built businesses, communities and fun stuff wherever i've worked.",
-  'now: generalist at platanus, contracting for kairos and m3, helping run gen stream, and starting amigos fund.',
-  'into ai safety, cognitive science, venture capital, community stuff and anything borges.',
+  'now: generalist at platanus, contracting for kairos, and starting amigos, a microgrant for the best latam talent.',
+  'into ai safety, cognitive science, venture capital and anything borges.',
 ].join(' ');
 
 // "me" con formato, para las versiones que lo saben imprimir (v20): un
@@ -32,15 +32,11 @@ const ME_RICH = [
     { s: 'platanus', href: 'https://platan.us' },
     { s: ', contracting for ' },
     { s: 'kairos', href: 'https://kairos-project.org' },
-    { s: ' and ' },
-    { s: 'm3', href: 'https://m3fellowship.com' },
-    { s: ', helping run ' },
-    { s: 'gen stream', href: 'https://genstream.org' },
     { s: ', and starting ' },
-    { s: 'amigos fund', href: 'https://amigos.sh' },
-    { s: '.' },
+    { s: 'amigos', href: 'https://amigos.sh' },
+    { s: ', a microgrant for the best latam talent.' },
   ],
-  [{ s: 'into ai safety, cognitive science, venture capital, community stuff and ' }, { s: 'anything borges', mark: true }, { s: '.' }],
+  [{ s: 'into ai safety, cognitive science, venture capital and ' }, { s: 'anything borges', mark: true }, { s: '.' }],
 ];
 
 // fotos de "me" (v20), pegadas con cinta. Las arma tools/v20-me-photo.py.

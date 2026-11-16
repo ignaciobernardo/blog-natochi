@@ -14,8 +14,8 @@
 //   renderer.titleAt(vw, vh)   dónde va el título (palabra suelta)
 //   renderer.hud(vw, vh)       controles extra: [{text, x, y, align, action}]
 
-import { TREE } from './data.js?v=f6a70213a6';
-import { POSTS } from '../posts/posts.js?v=f6a70213a6';
+import { TREE } from './data.js?v=5d2cc0e008';
+import { POSTS } from '../posts/posts.js?v=5d2cc0e008';
 
 export const PHI = (1 + Math.sqrt(5)) / 2;
 export const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
@@ -76,6 +76,14 @@ const DEFAULTS = {
 // aire (px) que una rama nueva y sus etiquetas dejan alrededor de las
 // etiquetas que ya están en la hoja
 const CLEAR = 30;
+
+// cuánto más afuera de lo que se ve se toca cada cosa ([x, y] px; ver find).
+// Las etiquetas quedan en ~44 px de alto, lo que pide un dedo; entre dos que
+// se tocan gana la más cercana. Los links del texto, menos en vertical: las
+// líneas están a 1,6 letras.
+const PAD_LABEL = [18, 12];
+const PAD_LINK = [8, 6];
+const PAD_HUD = [4, 3];
 
 const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 // Las notas del blog llevan la fecha arriba; las updates ya se llaman por su fecha.
@@ -314,7 +322,7 @@ export function start(renderer, canvas) {
       }
       if (b.t === 'img') {
         const h = Math.round((W * b.h) / b.w);
-        imgs.push({ src: b.src, x: 0, y, w: W, h, c0: chars, c1: chars + 90 });
+        imgs.push({ src: b.src, color: b.color, x: 0, y, w: W, h, c0: chars, c1: chars + 90 });
         chars += 90;
         y += h;
         return;
@@ -920,7 +928,7 @@ export function start(renderer, canvas) {
           // links del texto, ya escritos: van primero para ganarle al párrafo
           for (const ln of d.lines)
             for (const sg of ln.segs)
-              if (sg.href && chars >= sg.c0 + sg.s.length) hits.unshift({ node: k, link: sg.href, word: sg.s, x: sx + sg.x, y: sy + ln.y, w: sg.w, h: lineH() });
+              if (sg.href && chars >= sg.c0 + sg.s.length) hits.unshift({ node: k, link: sg.href, word: sg.s, x: sx + sg.x, y: sy + ln.y, w: sg.w, h: lineH(), pad: PAD_LINK });
           // fotos pegadas ya impresas (sólo con mouse: en el teléfono no se
           // agrandan). La de arriba gana; la agrandada, con su caja grande.
           if (vw >= 700)
@@ -928,6 +936,13 @@ export function start(renderer, canvas) {
               if (!im.pile || chars < im.c1) continue;
               const b = { x: sx + im.x, y: sy + im.y, w: im.w, h: im.h };
               hits.unshift({ node: k, photo: im.src, inert: true, ...(im.src === hoverPhoto ? photoZoom(b, vw, vh) : b) });
+            }
+          // fotos de notas y updates: con el mouse encima se ven en color (no
+          // se agrandan; el renderer las tiñe)
+          if (vw >= 700)
+            for (const im of d.imgs) {
+              if (im.pile || !im.color || chars < im.c1) continue;
+              hits.unshift({ node: k, photo: im.src, inert: true, x: sx + im.x, y: sy + im.y, w: im.w, h: im.h, pad: [0, 0] });
             }
           continue;
         }
@@ -954,7 +969,7 @@ export function start(renderer, canvas) {
         const st = { hover: hover === k, open: k.isDir && k.open, inactive: n !== active, reveal, strong, lite: false };
         items.push({ node: k, text, full, x: k.align === 'right' ? sx + r.w : sx, y: sy + r.h / 2, align: k.align, rect: { x: sx, y: sy, w: r.w, h: r.h }, st, grow: Math.min(1, (n.g - k.t) * 5) });
         // sólo se puede tocar lo que está entero a la vista
-        if (k.fold >= 0.999) hits.push({ node: k, x: sx, y: sy, w: r.w, h: r.h });
+        if (k.fold >= 0.999) hits.push({ node: k, x: sx, y: sy, w: r.w, h: r.h, pad: PAD_LABEL });
         if (k.isDir) visit(k);
       }
     };
@@ -976,7 +991,31 @@ export function start(renderer, canvas) {
 
   // ------------------------------------------------------------------ input
 
-  const find = (list, x, y) => list.find((h) => x >= h.x - 4 && x < h.x + h.w + 4 && y >= h.y - 3 && y < h.y + h.h + 3) || null;
+  // Qué hay bajo el puntero. Cada caja se toca desde `pad` ([x, y] px) más
+  // afuera de lo que se ve, sin mover nada: las etiquetas de las ramas y los
+  // links del texto tienen cajas grandes (lo pidió el usuario: "hitbox más
+  // grande, no muevas nada visual"). Orden:
+  //  1. lo que está justo debajo, si se puede tocar (o es una foto), en el
+  //     orden de la lista (fotos, links, párrafos, etiquetas);
+  //  2. si no, lo tocable más cercano dentro de su margen;
+  //  3. si no, un párrafo (inerte) bajo el puntero, para que tocar el texto
+  //     no cierre la rama.
+  function find(list, x, y) {
+    let near = null, nd = Infinity, inert = null;
+    for (const h of list) {
+      const [px, py] = h.pad || PAD_HUD;
+      const dx = Math.max(h.x - x, 0, x - (h.x + h.w)), dy = Math.max(h.y - y, 0, y - (h.y + h.h));
+      if (dx > px || dy > py) continue;
+      if (dx === 0 && dy === 0 && (!h.inert || h.photo)) return h;
+      if (h.inert) {
+        if (!inert && !h.photo) inert = h;
+        continue;
+      }
+      const d = Math.hypot(dx, dy);
+      if (d < nd) (near = h), (nd = d);
+    }
+    return near || inert;
+  }
   // mover la hoja: rueda o arrastre, sólo si lo abierto no entra en pantalla
   function scrollBy(dy) {
     if (active.root) return;
@@ -1124,6 +1163,11 @@ export function start(renderer, canvas) {
     // calidad actual (para las pruebas de rendimiento)
     get quality() {
       return { dpr, level: QUALITY[qi], seen };
+    },
+    // caja (px) de lo que se ve de una etiqueta, sin el margen para tocarla
+    box(name) {
+      const h = hits.find((x) => x.node.name === name && !x.photo && !x.link);
+      return h ? { x: h.x, y: h.y, w: h.w, h: h.h } : null;
     },
     // centro (px) de un link del texto abierto, por su palabra
     link(word) {
