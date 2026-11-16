@@ -1,7 +1,9 @@
 @font-face {
   font-family: "Libre Franklin";
-  src: url(../fonts/LibreFranklin.ttf);
-  font-weight: 100 900;
+  /* recortada a latín y a los pesos 500-700 (tools/v20-font.py) */
+  src: url(/tree/fonts/LibreFranklin-v20.woff2?v=0b5986a181) format("woff2");
+  font-weight: 500 700;
+  font-display: swap;
 }
 html,
 body {
