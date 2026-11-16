@@ -1062,7 +1062,9 @@ export function createSilhouette() {
     if (!tracks.length) return;
     music.i = ((i % tracks.length) + tracks.length) % tracks.length;
     const a = player();
-    a.src = tracks[music.i].preview;
+    // relativa a la carpeta del árbol (v20/ acá, /tree/ en natochi.cv), no a
+    // la página: en natochi.cv la página está en / y "music/…" daba 404
+    a.src = new URL(tracks[music.i].preview, new URL('../', import.meta.url)).href;
     music.started = true;
     a.play().catch(() => redraw());
     redraw();
