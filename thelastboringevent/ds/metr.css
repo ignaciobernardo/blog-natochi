@@ -1,0 +1,116 @@
+/* The Last Boring Event · design system
+   Two voices: the dull slide (Arial, Office blue, grey) and the data (METR's chart grammar,
+   set in Instrument Sans). Load after the Google Fonts link for Instrument Sans. */
+
+:root{
+  /* slide */
+  --ink:#000;--dim:#404040;--grey:#7f7f7f;--paper:#fff;
+  --blue:#3f6fb5;      /* bar fill, series 1 (≈ METR blue #486cb4) */
+  --stripe:#a9c0e2;    /* template stripe, light fills */
+  --sel:#2b5cff;       /* selection box */
+  --well:#eee;--well-line:#9a9a9a;
+  /* chart */
+  --axis:#333;--grid:#dcdcdc;--ref:#8f9bb8;--lead:#9a9a9a;--faint:#c9ced6;
+  /* METR success-rate scale, 0 → 1 */
+  --s0:#7e4e1e;--s1:#d89c60;--s2:#a6adb8;--s3:#549684;--s4:#1e483c;
+  /* METR task sets */
+  --th11:#486cb4;--mirror:#cca85a;--th2v:#54967e;--th2h:#d9783a;
+  --font-slide:Arial,Arimo,"Liberation Sans",Helvetica,sans-serif;
+  --font-data:"Instrument Sans",Arial,sans-serif;
+}
+
+/* chart text + lines */
+svg.mc{display:block;width:100%;overflow:visible}
+svg.mc text{font-family:var(--font-data);font-size:13px;fill:var(--axis)}
+svg.mc .mc-tick{fill:var(--axis)}
+svg.mc .mc-title{font-size:14px}
+svg.mc .mc-note{fill:#595959}
+svg.mc .mc-strong{fill:var(--ink);font-weight:600}
+svg.mc .mc-strong .mc-sub{font-weight:400;fill:#595959}
+svg.mc .mc-lab{paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+svg.mc .mc-grid line{stroke:var(--grid);stroke-width:1;stroke-dasharray:4 4;shape-rendering:crispEdges}
+svg.mc .mc-axis line{stroke:var(--axis);stroke-width:1;shape-rendering:crispEdges}
+svg.mc .mc-lead{stroke:var(--lead);stroke-width:.8;fill:none}
+svg.mc .mc-ref{stroke:var(--ref);stroke-width:1.4;stroke-dasharray:.1 3.4;stroke-linecap:round;fill:none}
+svg.mc .mc-zero{stroke:var(--ref);stroke-width:1;fill:none;shape-rendering:crispEdges}
+@media (max-width:560px){svg.mc text{font-size:11px}}
+
+/* draw-in (added by MC when a chart first scrolls into view) */
+svg.mc.mc-anim .mc-fit{stroke-dasharray:1;stroke-dashoffset:1}
+svg.mc.mc-anim .mc-extra,svg.mc.mc-anim .mc-dot,svg.mc.mc-anim .mc-ci,svg.mc.mc-anim .mc-evt{opacity:0}
+svg.mc.mc-in .mc-fit{stroke-dashoffset:0;transition:stroke-dashoffset 1.6s cubic-bezier(.5,0,.2,1)}
+svg.mc.mc-in .mc-dot,svg.mc.mc-in .mc-ci{opacity:1;transition:opacity .4s}
+svg.mc.mc-in .mc-extra{opacity:1;transition:opacity .8s 1.5s}
+svg.mc.mc-in .mc-evt{opacity:1;transition:opacity .5s 2.1s}
+@media (prefers-reduced-motion:reduce){svg.mc.mc-anim *{transition:none!important;opacity:1!important;stroke-dashoffset:0!important}}
+
+/* legend line under a chart: ——●—— text */
+.mc-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 28px;font-family:var(--font-data);font-size:14px;color:var(--axis)}
+.mc-legend span{display:inline-flex;align-items:center;gap:10px}
+.mc-key-fit{position:relative;width:34px;height:2.4px;background:var(--blue)}
+.mc-key-fit::after{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 1px #fff}
+.mc-credit{font-family:var(--font-data);font-size:13px;color:#595959}
+.mc-credit a{text-decoration:underline;text-underline-offset:.15em}
+
+/* segmented scale (METR "Success rate" legend), also usable as a loader */
+.mc-scale{display:grid;gap:6px;font-family:var(--font-data);font-size:12px;color:var(--axis)}
+.mc-scale-ticks{position:relative;height:14px}
+.mc-scale-ticks span{position:absolute;top:0;transform:translateX(-50%)}
+.mc-scale-ticks span:first-child{transform:none}
+.mc-scale-ticks span:last-child{transform:translateX(-100%)}
+.mc-scale-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;height:14px}
+.mc-scale-bar i{position:relative;background:var(--well);overflow:hidden}
+.mc-scale-bar b{position:absolute;inset:0 auto 0 0;width:0}
+
+/* footers (pie.js): the speaker list's width, Arial, the loader's materials */
+.pie{width:min(420px,calc(100% - 32px));margin:0 auto;padding:6svh 0 18svh;display:grid;gap:12px;color:var(--dim)}
+.pie-cap{margin-top:14px;font-size:13px;line-height:1.45;color:var(--grey);text-align:center}
+.pie-cap a{text-decoration:underline;text-underline-offset:.15em}
+.pie-ends{display:flex;justify-content:space-between;font-size:13px;color:var(--grey)}
+.pozo{height:180px;border:1px solid var(--well-line);background:var(--well)}
+.pie-barras{display:grid;gap:8px}
+.pr{display:grid;grid-template-columns:78px 1fr 50px;gap:12px;align-items:center;font-size:13px}
+.pr .pn{color:var(--dim);text-align:right;white-space:nowrap}
+.pr .pv{color:var(--grey);white-space:nowrap}
+.pr.ev .pn{color:var(--ink)}
+.pb{display:block;height:14px;border:1px solid var(--well-line);background:var(--well)}
+.pb i{display:block;height:100%;width:0;background:var(--blue)}
+.pr.ev .pb i{background:var(--stripe)}
+.pie-cols{height:180px;display:flex;gap:6px}
+.pc{position:relative;flex:1;border:1px solid var(--well-line);background:var(--well)}
+.pc i{position:absolute;left:0;right:0;bottom:0;height:0;background:var(--blue)}
+.pc.ev{border-style:dashed}
+.pc.ev i{background:var(--stripe)}
+.pie-pts{height:200px}
+.pp-anim .pp-fit{stroke-dasharray:1;stroke-dashoffset:1}
+.pp-anim .pp-dot,.pp-anim .pp-late{opacity:0}
+.pp-in .pp-fit{stroke-dashoffset:0;transition:stroke-dashoffset 1.4s cubic-bezier(.5,0,.2,1)}
+.pp-in .pp-dot{opacity:1;transition:opacity .35s}
+.pp-in .pp-late{opacity:1;transition:opacity .6s 1.4s}
+.pie-spill{height:240px}
+.pie-pts text{font-family:var(--font-slide)}
+
+/* button: the classic grey-era system button, with its dotted focus rectangle always on.
+   .default is the dialog's default button (thicker outline). Hovering turns the focus rectangle blue. */
+.btn{position:relative;display:inline-block;padding:4px;background:#fff;border:1px solid var(--dim);font:15px/1.2 var(--font-slide);color:var(--ink);text-decoration:none;cursor:pointer}
+.btn > span:first-child{display:block;padding:8px 28px;border:1px dotted var(--dim)}
+.btn:hover,.btn:focus-visible{text-decoration:none;outline:none}
+.btn:hover > span:first-child,.btn:focus-visible > span:first-child{border-color:var(--blue);color:var(--blue)}
+.btn.default{border-width:2px;padding:3px}
+/* selection box from the deck (square handles); add .on to show it */
+.mc-sel{position:absolute;inset:-9px;border:1.5px solid var(--sel);opacity:0;pointer-events:none;transition:opacity .15s}
+.mc-sel i{position:absolute;width:9px;height:9px;background:#fff;border:1.5px solid var(--sel);transform:scale(0);transition:transform .28s cubic-bezier(.34,1.56,.64,1)}
+.mc-sel i:nth-child(1){left:-5.5px;top:-5.5px}.mc-sel i:nth-child(2){left:calc(50% - 4.5px);top:-5.5px}.mc-sel i:nth-child(3){right:-5.5px;top:-5.5px}
+.mc-sel i:nth-child(4){left:-5.5px;top:calc(50% - 4.5px)}.mc-sel i:nth-child(5){right:-5.5px;top:calc(50% - 4.5px)}
+.mc-sel i:nth-child(6){left:-5.5px;bottom:-5.5px}.mc-sel i:nth-child(7){left:calc(50% - 4.5px);bottom:-5.5px}.mc-sel i:nth-child(8){right:-5.5px;bottom:-5.5px}
+.mc-sel.on{opacity:1}
+.mc-sel.on i{transform:scale(1)}
+@media (prefers-reduced-motion:reduce){.mc-sel,.mc-sel i{transition:none}}
+
+/* brand: Platanus logo as a mask, so it takes the ink colour */
+.logo-platanus{display:block;width:104px;height:20px;background:var(--dim);-webkit-mask-image:var(--logo);mask-image:var(--logo);-webkit-mask-position:center;mask-position:center;-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+/* pass the image inline as mask-image:url(...) so the path resolves from the page, not from this file */
+
+/* pozo with the call to action in the middle */
+.pozo{position:relative}
+.pozo .btn{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
