@@ -75,13 +75,13 @@ textarea.field{min-height:84px;resize:vertical}
 
 /* send: two classic system buttons, the dotted focus rectangle always on; the default one has the thick outline */
 .send{margin-top:72px;display:grid;justify-items:center;gap:22px;text-align:center}
-.btns{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btns{display:flex;justify-content:center}
 .btn{display:inline-block;padding:4px;background:var(--paper);border:1px solid var(--dim);font:15px/1.2 var(--slide);color:var(--ink);text-decoration:none;cursor:pointer}
-.btn > span{display:block;padding:9px 12px;border:1px dotted var(--dim);text-align:center;white-space:nowrap}
+.btn > span{display:block;padding:13px 56px;border:1px dotted var(--dim);text-align:center;white-space:nowrap;font-size:17px}
 .btn:hover > span,.btn:focus-visible > span{border-color:var(--blue);color:var(--blue)}
 .btn:focus-visible{outline:none}
 .btn.default{border-width:2px;padding:3px}
-@media (max-width:420px){.btns{grid-template-columns:1fr}}
+@media (max-width:420px){.btns .btn{width:100%}}
 .status{min-height:1.4em;max-width:400px;font-size:14px;color:var(--grey);line-height:1.45}
 .status.ok{color:var(--ink)}
 .end{padding-block:96px 120px}
@@ -111,7 +111,7 @@ textarea.field{min-height:84px;resize:vertical}
       <div>
         <p class="me-n">Nacho Bernardo</p>
         <p class="me-b">Trabajo en Growth en <a href="https://platan.us" target="_blank" rel="noopener">Platanus</a> y cofundé <a href="https://indies.la" target="_blank" rel="noopener">Indies</a>. Ahora estoy haciendo una transición de carrera hacia AI safety.</p>
-        <p class="me-l"><a href="https://www.linkedin.com/in/natochi/" target="_blank" rel="noopener">LinkedIn</a><a href="https://x.com/natochi_" target="_blank" rel="noopener">X</a></p>
+        <p class="me-l"><a href="https://www.linkedin.com/in/natochi/" target="_blank" rel="noopener">LinkedIn</a><a href="https://x.com/natochi_" target="_blank" rel="noopener">x.com</a></p>
       </div>
     </div>
   </section>
@@ -133,6 +133,11 @@ textarea.field{min-height:84px;resize:vertical}
       <li>Si te interesa dar una charla y, si quieres, una idea del tema.</li>
       <li>Si conoces a alguien que debería estar, puedas tú o no.</li>
     </ul>
+  </section>
+
+  <section id="who">
+    <h2>Tu nombre</h2>
+    <input class="field" id="name" autocomplete="name" placeholder="Nombre y apellido" aria-label="Tu nombre">
   </section>
 
   <section>
@@ -167,17 +172,12 @@ textarea.field{min-height:84px;resize:vertical}
     <button class="more" id="more" type="button">Agregar otra persona</button>
   </section>
 
-  <section id="who">
-    <h2>Tu nombre</h2>
-    <input class="field" id="name" autocomplete="name" placeholder="Nombre y apellido" aria-label="Tu nombre">
-  </section>
 
   <div class="send">
     <div class="btns">
       <a class="btn default" id="save" href="#" role="button"><span>Enviar respuesta</span></a>
-      <a class="btn" id="wa" href="https://wa.me/56940361418" target="_blank" rel="noopener"><span>Enviar por WhatsApp</span></a>
     </div>
-    <p class="status" id="status" aria-live="polite">Enviar respuesta la guarda directo. Enviar por WhatsApp abre un chat conmigo, Nacho, con todo ya escrito.</p>
+    <p class="status" id="status" aria-live="polite"></p>
   </div>
 </main>
 <div class="end"></div>
@@ -324,7 +324,6 @@ textarea.field{min-height:84px;resize:vertical}
   const b64 = (s) => btoa(String.fromCharCode(...new TextEncoder().encode(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   function update() {
     const r = answer();
-    $('wa').href = 'https://wa.me/56940361418?text=' + encodeURIComponent(message(r));
     if (!HERE) $('save').href = API + '/enviar?d=' + b64(JSON.stringify(r));
     save();
   }
@@ -351,7 +350,7 @@ textarea.field{min-height:84px;resize:vertical}
       scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       $('label').textContent = 'Abriendo The Last Boring Event';
-      $('status').textContent = 'No se pudo guardar. Prueba de nuevo o escríbeme por WhatsApp con el otro botón.';
+      $('status').textContent = 'No se pudo guardar. Prueba de nuevo en un momento.';
     }
   });
 
