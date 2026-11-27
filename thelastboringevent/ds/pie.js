@@ -56,10 +56,10 @@
   const ends = (a, b) => `<div class="pie-ends"><span>${a}</span><span>${b}</span></div>`;
 
   // ── the bar grown into a box: area under the curve, blue up to today, light after
-  function pozo(root, json, iso, { cta } = {}) {
+  function pozo(root, json, iso, { cta, endLabel } = {}) {
     const c = K(), d = series(json, iso), x0 = day('2024-01-01');
     const btn = cta ? `<a class="btn" href="${cta.href}"><span>${cta.text}</span></a>` : '';
-    root.innerHTML = `<div class="pozo">${btn}</div>${ends('2024', dateLabel(d.te))}`;
+    root.innerHTML = `<div class="pozo">${btn}</div>${ends('2024', endLabel ?? dateLabel(d.te))}`;
     const box = root.querySelector('.pozo');
     const s = svgIn(box, '100%');
     if (cta) box.appendChild(box.querySelector('.btn'));

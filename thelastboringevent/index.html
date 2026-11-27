@@ -22,7 +22,8 @@ ul{padding:0;list-style:none}
 .row{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:center;color:var(--dim)}
 .row .f{width:44px;height:44px;object-fit:cover}
 .row .n{font-size:15px;line-height:1.25}
-.redact{display:inline-block;height:.8em;background:var(--dim);vertical-align:-.04em}
+.list-note{font-size:13px;color:var(--grey);margin-bottom:4px}
+.ph-img{display:block;width:44px;height:44px;background:linear-gradient(to top right,transparent calc(50% - .6px),#cfcfcf calc(50% - .6px),#cfcfcf calc(50% + .6px),transparent calc(50% + .6px)),linear-gradient(to bottom right,transparent calc(50% - .6px),#cfcfcf calc(50% - .6px),#cfcfcf calc(50% + .6px),transparent calc(50% + .6px)),#eee;border:1px solid #cfcfcf}
 .row .r{margin-top:2px;font-size:13px;color:var(--grey);line-height:1.3}
 .end{padding:8svh 16px 6svh;display:grid;justify-items:center;gap:10px;text-align:center;color:var(--dim)}
 .end .cta{font-size:15px;text-decoration:underline;text-underline-offset:.15em}
@@ -34,16 +35,17 @@ ul{padding:0;list-style:none}
 <body>
 <header class="load"><div class="dlg"><p class="label">Abriendo The Last Boring Event</p><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"><i></i></div><p class="meta">Miércoles 16 de diciembre, Santiago</p></div></header>
 <main class="list">
-  <div class="row"><img class="f" src="./fotos/s01.jpg" alt="Speaker por confirmar"><div><p class="n"><span class="redact" role="img" aria-label="Nombre por confirmar" style="width:9.9em"></span></p><p class="r">Founder & CEO, <a href="https://kairos-project.org/" target="_blank" rel="noopener">Kairos</a></p></div></div>
-  <div class="row"><img class="f" src="./fotos/s02.jpg" alt="Speaker por confirmar"><div><p class="n"><span class="redact" role="img" aria-label="Nombre por confirmar" style="width:10.4em"></span></p><p class="r">Research Fellow, <a href="https://www.anthropic.com/" target="_blank" rel="noopener">Anthropic</a></p></div></div>
-  <div class="row"><img class="f" src="./fotos/s03.jpg" alt="Speaker por confirmar"><div><p class="n"><span class="redact" role="img" aria-label="Nombre por confirmar" style="width:7.3em"></span></p><p class="r">Founder, <a href="https://m3fellowship.com/" target="_blank" rel="noopener">M3</a></p></div></div>
-  <div class="row"><img class="f" src="./fotos/s04.jpg" alt="Speaker por confirmar"><div><p class="n"><span class="redact" role="img" aria-label="Nombre por confirmar" style="width:7.3em"></span></p><p class="r">Contracting Comms, <a href="https://intelligence.org/" target="_blank" rel="noopener">MIRI</a></p></div></div>
-  <div class="row"><img class="f" src="./fotos/s05.jpg" alt="Speaker por confirmar"><div><p class="n"><span class="redact" role="img" aria-label="Nombre por confirmar" style="width:7.8em"></span></p><p class="r">Generalist, <a href="https://kairos-project.org/" target="_blank" rel="noopener">Kairos</a></p></div></div>
-  <div class="row"><img class="f" src="./fotos/s06.jpg" alt="Speaker por confirmar"><div><p class="n"><span class="redact" role="img" aria-label="Nombre por confirmar" style="width:7.8em"></span></p><p class="r">Researcher, <a href="https://sparai.org/" target="_blank" rel="noopener">SPAR y CENIA</a></p></div></div>
-  <div class="row"><img class="f" src="./fotos/s07.jpg" alt="Speaker por confirmar"><div><p class="n"><span class="redact" role="img" aria-label="Nombre por confirmar" style="width:5.7em"></span></p><p class="r">Lead, <a href="https://quorumai.org/" target="_blank" rel="noopener">Quorum</a></p></div></div>
-  <div class="row"><img class="f" src="./fotos/s08.jpg" alt="Speaker por confirmar"><div><p class="n"><span class="redact" role="img" aria-label="Nombre por confirmar" style="width:9.9em"></span></p><p class="r">Senior Events Associate, <a href="https://quorumai.org/" target="_blank" rel="noopener">Quorum</a></p></div></div>
-  <div class="row"><img class="f" src="./fotos/s09.jpg" alt="Speaker por confirmar"><div><p class="n"><span class="redact" role="img" aria-label="Nombre por confirmar" style="width:6.8em"></span></p><p class="r">Fellowships Lead, <a href="https://apartresearch.com/" target="_blank" rel="noopener">Apart Research</a></p></div></div>
-  <div class="row"><img class="f" src="./fotos/s10.jpg" alt="Speaker por confirmar"><div><p class="n"><span class="redact" role="img" aria-label="Nombre por confirmar" style="width:5.7em"></span></p><p class="r">Product Engineer, <a href="https://80000hours.org/" target="_blank" rel="noopener">80,000 Hours</a></p></div></div>
+  <p class="list-note">Speakers por anunciar</p>
+  <div class="row"><span class="f ph-img" role="img" aria-label="Foto por anunciar"></span><div><p class="n">Camila Rojas</p><p class="r">Research Scientist, Anthropic</p></div></div>
+  <div class="row"><span class="f ph-img" role="img" aria-label="Foto por anunciar"></span><div><p class="n">Diego Fuentes</p><p class="r">Member of Technical Staff, OpenAI</p></div></div>
+  <div class="row"><span class="f ph-img" role="img" aria-label="Foto por anunciar"></span><div><p class="n">Valentina Soto</p><p class="r">Research Fellow, SPAR</p></div></div>
+  <div class="row"><span class="f ph-img" role="img" aria-label="Foto por anunciar"></span><div><p class="n">Tomás Herrera</p><p class="r">Program Lead, Kairos</p></div></div>
+  <div class="row"><span class="f ph-img" role="img" aria-label="Foto por anunciar"></span><div><p class="n">Isidora Muñoz</p><p class="r">Fellowships Lead, Apart Research</p></div></div>
+  <div class="row"><span class="f ph-img" role="img" aria-label="Foto por anunciar"></span><div><p class="n">Martín Vergara</p><p class="r">Researcher, METR</p></div></div>
+  <div class="row"><span class="f ph-img" role="img" aria-label="Foto por anunciar"></span><div><p class="n">Josefa Araya</p><p class="r">Policy Researcher, GovAI</p></div></div>
+  <div class="row"><span class="f ph-img" role="img" aria-label="Foto por anunciar"></span><div><p class="n">Benjamín Castro</p><p class="r">Research Engineer, Redwood Research</p></div></div>
+  <div class="row"><span class="f ph-img" role="img" aria-label="Foto por anunciar"></span><div><p class="n">Florencia Díaz</p><p class="r">Researcher, CENIA</p></div></div>
+  <div class="row"><span class="f ph-img" role="img" aria-label="Foto por anunciar"></span><div><p class="n">Joaquín Pizarro</p><p class="r">Founder, Stealth</p></div></div>
 </main>
 
 <section class="pie" aria-label="Horizonte de tiempo de los modelos de IA, según METR"><div id="pie-g"></div><p class="pie-cap">Horizonte de tiempo de los modelos de IA según <a href="https://metr.org/blog/2026-11-20-q4-2026-capability-update/" target="_blank" rel="noopener">METR</a>. Se duplica cada 3,6 meses.</p></section>

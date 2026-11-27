@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Last Hackathon</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap"><link rel="stylesheet" href="../ds/metr.css"><style>
+:root{--ink:#000;--grey:#7f7f7f;--dim:#404040;--blue:#3f6fb5;--stripe:#a9c0e2;--sel:#2b5cff;--bg:#fff;color-scheme:light}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Arimo,"Liberation Sans",Helvetica,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:hover{text-decoration:underline;text-underline-offset:.15em}
+img{display:block}
+h1,h2,p,ul{margin:0;font-weight:400}
+ul{padding:0;list-style:none}
+.ph{display:block;background:#e6e6e6}
+
+.load{min-height:84svh;display:grid;place-items:center;padding:16px;text-align:center;color:var(--dim)}
+.dlg{display:grid;justify-items:center;gap:14px}
+.label{font-size:18px}
+.bar{width:min(320px,70vw);height:14px;border:1px solid #9a9a9a;background:#eee}
+.bar i{display:block;height:100%;width:0;background:var(--blue)}
+.meta{font-size:14px;color:var(--grey)}
+.col{width:min(440px,calc(100% - 32px));margin:0 auto}
+.intro{display:grid;gap:14px;font-size:16px;line-height:1.5;color:var(--dim)}
+.intro .big{font-size:22px;line-height:1.35;color:var(--ink)}
+.col section{margin-top:64px}
+.col h2{font-size:18px}
+.bul{margin-top:16px;display:grid;gap:10px}
+.bul li{position:relative;padding-left:1.5em;font-size:15px;line-height:1.45;color:var(--dim)}
+.bul li::before{content:"•";position:absolute;left:.1em;color:var(--ink)}
+.bul b{font-weight:400;color:var(--ink)}
+.hint{margin-top:8px;font-size:14px;color:var(--grey);line-height:1.45}
+.field{margin-top:12px;display:block;width:100%;border:1px solid #9a9a9a;background:#fff;font:15px/1.45 var(--font-slide);color:var(--ink);padding:10px 12px;border-radius:0}
+.field::placeholder{color:var(--grey)}
+.field:focus{outline:none;border-color:var(--sel)}
+.go{margin-top:22px;display:flex;justify-content:center}
+.go .btn > span{padding:13px 56px;font-size:17px}
+.status{margin-top:14px;min-height:1.4em;font-size:14px;color:var(--grey);text-align:center}
+.status.ok{color:var(--ink)}
+.brand{display:block;width:max-content;margin:0 auto;padding:0 0 12svh}
+.brand:hover{text-decoration:none}
+.brand:hover .logo-platanus{background:var(--ink)}
+@media (max-width:420px){.go .btn{width:100%}}</style><meta name="description" content="The Last Hackathon: una hackathon en Santiago de Chile. Premio de 10.000 dólares y un viaje a San Francisco."><script src="/js/views.js" defer></script></head>
+<body>
+<header class="load"><div class="dlg">
+  <p class="label">Abriendo The Last Hackathon</p>
+  <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"><i></i></div>
+  <p class="meta">Santiago de Chile</p>
+</div></header>
+<main class="col">
+  <div class="intro">
+    <p class="big">Una hackathon en Santiago de Chile. El equipo ganador se lleva 10.000 dólares y un viaje a San Francisco.</p>
+    <p>Según METR, la duración de las tareas que la IA puede hacer sola se duplica cada 3,6 meses. Por eso se llama The Last Hackathon: puede que sea una de las últimas en que el código lo escribimos nosotros.</p>
+  </div>
+  <section>
+    <h2>Premios</h2>
+    <ul class="bul">
+      <li><b>10.000 dólares</b> para el equipo ganador.</li>
+      <li><b>Un viaje a San Francisco.</b></li>
+      <li>Más premios por anunciar.</li>
+    </ul>
+  </section>
+  <section>
+    <h2>Agenda</h2>
+    <ul class="bul">
+      <li>Dónde: Santiago de Chile.</li>
+      <li>Cuándo: por definir.</li>
+      <li>Postulaciones: pronto.</li>
+    </ul>
+  </section>
+  <section id="avisame">
+    <h2>Te aviso cuando abran las postulaciones</h2>
+    <p class="hint">Solo un correo, cuando haya fecha.</p>
+    <form id="f" novalidate>
+      <input class="field" id="email" type="email" autocomplete="email" placeholder="tu@correo.com" aria-label="Correo" required>
+      <input class="field" id="nombre" autocomplete="name" placeholder="Nombre (opcional)" aria-label="Nombre">
+      <div class="go"><button class="btn default" id="send" type="submit"><span>Avísame</span></button></div>
+      <p class="status" id="status" aria-live="polite"></p>
+    </form>
+  </section>
+</main>
+<section class="pie" aria-label="Horizonte de tiempo de los modelos de IA, según METR"><div id="pie-g"></div><p class="pie-cap">Horizonte de tiempo de los modelos de IA según <a href="https://metr.org/blog/2026-11-20-q4-2026-capability-update/" target="_blank" rel="noopener">METR</a>. Se duplica cada 3,6 meses.</p></section>
+<a class="brand" href="https://platan.us" target="_blank" rel="noopener" aria-label="Platanus"><span class="logo-platanus" style="-webkit-mask-image:url(../ds/brand/platanus.svg);mask-image:url(../ds/brand/platanus.svg)"></span></a>
+<script src="../ds/metr.js"></script><script src="../ds/pie.js"></script><script src="../ds/lineas.js"></script>
+<script>
+const BASE="../";
+const bar=document.querySelector('.bar'),fill=bar.querySelector('i');
+bar.setAttribute('aria-valuenow',Math.round(MC.progress("2026-12-16",(v,ms)=>{fill.style.transition='width '+ms+'ms linear';fill.style.width=v*100+'%';})*100));
+fetch(BASE+'ds/data/metr-horizons.json').then(r=>r.json()).then(j=>PIE.pozo(document.getElementById('pie-g'),j,"2026-12-16",{cta:{text:'Avísame',href:'#avisame'},endLabel:'pronto'}));
+LINEAS.margenes({col:'main.col'});
+document.addEventListener('click',e=>{const a=e.target.closest('a[href="#avisame"]');if(a){e.preventDefault();document.getElementById('avisame').scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>document.getElementById('email').focus({preventScroll:true}),500);}});
+const f=document.getElementById('f'),st=document.getElementById('status');
+f.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const email=document.getElementById('email').value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){st.classList.remove('ok');st.textContent='Revisa el correo: parece que le falta algo.';document.getElementById('email').focus();return;}
+  st.classList.remove('ok');st.textContent='Guardando…';
+  try{
+    const r=await fetch("https://lbe-speakers.ignacioramosbernardo.workers.dev/api/interes",{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email,name:document.getElementById('nombre').value.trim()})});
+    if(!r.ok)throw 0;
+    st.classList.add('ok');st.textContent='Listo. Te escribo cuando abran las postulaciones.';
+    fill.style.transition='width .6s linear';fill.style.width='100%';
+    f.reset();
+  }catch(err){st.textContent='No se pudo guardar. Prueba de nuevo en un momento.';}
+});</script>
+</body></html>
