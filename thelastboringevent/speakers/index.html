@@ -191,17 +191,10 @@ textarea.field{min-height:84px;resize:vertical}
 
   // Personal links end in #first-name, e.g. …#agustin
   const PEOPLE = {
-    agustin: { name: 'Agustín Covarrubias', first: 'Agustín' },
-    antonia: { name: 'Antonia Boetsch', first: 'Antonia' },
-    eugenio: { name: 'Eugenio Herrera-Berg', first: 'Eugenio' },
-    juanfe: { name: 'Juan Federico Morel', first: 'JuanFe' },
-    david: { name: 'David Solar', first: 'David' },
-    fernando: { name: 'Fernando Smith', first: 'Fernando' },
-    natan: { name: 'Natán Brugueras', first: 'Natán' },
-    trinidad: { name: 'Trinidad Matta', first: 'Trinidad' },
-    ria: { name: 'Ria Deane', first: 'Ria' },
-    eitan: { name: 'Eitan Sprejer', first: 'Eitan', abroad: true },
-    luca: { name: 'Luca De Leo', first: 'Luca', abroad: true },
+    agustin: { first: 'Agustín' }, antonia: { first: 'Antonia' }, eugenio: { first: 'Eugenio' },
+    juanfe: { first: 'JuanFe' }, david: { first: 'David' }, fernando: { first: 'Fernando' },
+    natan: { first: 'Natán' }, trinidad: { first: 'Trinidad' }, ria: { first: 'Ria' },
+    eitan: { first: 'Eitan', abroad: true }, luca: { first: 'Luca', abroad: true },
   };
   const START = Date.UTC(2026, 11, 7), WEEKS = 2, DAY = 864e5;
   const OFF = new Set([]);
@@ -304,7 +297,7 @@ textarea.field{min-height:84px;resize:vertical}
   function answer() {
     return {
       slug: who ? slug : '',
-      name: who ? who.name : $('name').value.trim(),
+      name: who ? who.first : $('name').value.trim(),
       days: [...picked].sort(),
       travel: who && who.abroad ? val('travel') : '',
       talk: val('talk'),
